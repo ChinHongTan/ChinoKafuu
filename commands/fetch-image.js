@@ -63,7 +63,7 @@ module.exports = {
                         console.log(`Total: ${total}`);
                         let data = JSON.stringify(image, null, 2);
                         var filename = channel.name + '.json';
-                        fs.writeFileSync(`C:/Users/User/Desktop/Discord bot/images/` + filename, data);
+                        fs.writeFileSync(`./images/` + filename, data);
                         message.channel.send(`Done fetching ${channel.name}`)
                     })();
                     
