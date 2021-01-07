@@ -48,6 +48,6 @@ module.exports = {
 		});
 		let data = JSON.stringify(reports, null, 2);
         var filename = 'reports.json';
-        fs.writeFileSync(`C:/Users/User/Desktop/Discord bot/` + filename, data);
+        fs.writeFileSync(`./` + filename, data);
 	},
 };
