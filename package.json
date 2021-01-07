@@ -1,0 +1,24 @@
+{
+  "name": "discord-bot",
+  "version": "1.0.0",
+  "description": "My second shitty discord bot :D  ",
+  "main": "ChinoKafuu.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ChinHong",
+  "license": "ISC",
+  "dependencies": {
+    "discord-backup": "^2.2.5",
+    "discord.js": "^12.3.1",
+    "fetch-node": "0.0.1",
+    "http": "0.0.1-security",
+    "https": "^1.0.0",
+    "node-fetch": "^2.6.1",
+    "opusscript": "0.0.7",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6",
+    "require": "^2.4.20",
+    "ytdl-core": "^3.3.0"
+  }
+}
