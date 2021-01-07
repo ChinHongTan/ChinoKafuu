@@ -45,6 +45,8 @@ module.exports = {
 						msg.channel.send('图片已举报')
 					};
 				});
+				.catch(collected => {
+				});
 		});
 		let data = JSON.stringify(reports, null, 2);
         var filename = 'reports.json';
