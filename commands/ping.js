@@ -3,6 +3,6 @@ module.exports = {
 	description: 'Ping!',
 	cooldown: 5,
 	execute(message, args) {
-		message.channel.send('Pong.');
+		return message.channel.send(`Latency: **\`${this.client.ws.ping}ms\`**`);
 	},
 };
