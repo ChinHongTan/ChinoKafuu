@@ -22,6 +22,38 @@ client.once('ready', () => {
 	console.log('Ready!');
 });
 
+client.on('messageDelete', message => {
+	if (message.attachments.size > 0) {
+		const channel = message.client.channels.cache.get('764846009221251122');
+		var urlArray = [];
+		var snipes = new Object();
+        message.attachments.each(attachment => {
+            urlArray.push(attachment.proxyURL);
+        });
+        var content = message.content;
+        if (!content) {
+        	content = 'None';
+        };
+        urlArray.forEach(url => {
+			let embed = new Discord.MessageEmbed()
+				.setColor('#ffff00')
+				.setTitle(`**__Message Delete__**`)
+				.addFields(
+					{ name: '**User**', value: `${message.author.tag}`, inline: true },
+					{ name: '**Channel**', value: `${message.channel}`, inline: true },
+					{ name: '**Content**', value: `${content}` },
+				)
+				.setImage(url);
+			channel.send(embed);
+        });
+		snipes.author = message.author.tag
+		snipes.authorAvatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
+		snipes.content = message.content
+	} else {
+		return;
+	};
+});
+
 client.on('message', message => {
 	if (message.author.bot || !message.content.startsWith(prefix)) {
 		return;
