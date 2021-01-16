@@ -18,7 +18,7 @@ module.exports = {
 
 		const nsfw = ['發圖區（18r）.json','vtuber18r區域.json'];
 		const sfw = ['vtuber區.json','蘿莉圖.json','鯊鯊a片.json'];
-		const loli = ['蘿莉圖.json']
+		const loli = ['蘿莉圖.json'];
 		var random = Math.floor(Math.random() * loli.length);
 		var targetFile = loli[random];
 		var pic = pictures[targetFile];
