@@ -82,7 +82,7 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
 	editSnipe.timestamp = newMessage.editedAt.toUTCString([8]);
 	editSnipes.push(editSnipe);
 	let data = JSON.stringify(editSnipes, null, 2);
-	fs.writeFileSync(`./editSnipes.json`. data);
+	fs.writeFileSync(`./editSnipes.json`, data);
 });
 
 client.on('message', message => {
