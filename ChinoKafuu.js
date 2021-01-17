@@ -3,6 +3,15 @@ const Discord = require('discord.js');
 const ytdl = require("ytdl-core");
 const { prefix, token } = require('./config.json');
 
+fs.readFile('./editSnipes.json', (err, data) => {
+	var editSnipes = JSON.parse(data);
+	if (err) console.error(err);
+});
+fs.readFile('./snipes.json', (err, data) => {
+	var snipes = JSON.parse(data);
+	if (err) console.error(err);
+});
+
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 
@@ -23,17 +32,25 @@ client.once('ready', () => {
 });
 
 client.on('messageDelete', message => {
+	if (message.author.bot) return;
+	if (!message.guild) return;
+
+	var snipe = new Object();
+    var content = message.content;
+    if (!content) content = 'None';
+
+	snipe.author = message.author.tag;
+	snipe.authorAvatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
+	snipe.content = message.content;
+	snipe.timestamp = message.createdAt.toUTCString([8]);
+
 	if (message.attachments.size > 0) {
 		const channel = message.client.channels.cache.get('764846009221251122');
 		var urlArray = [];
-		var snipes = new Object();
         message.attachments.each(attachment => {
             urlArray.push(attachment.proxyURL);
         });
-        var content = message.content;
-        if (!content) {
-        	content = 'None';
-        };
+        snipe.attachments = urlArray
         urlArray.forEach(url => {
 			let embed = new Discord.MessageEmbed()
 				.setColor('#ffff00')
@@ -45,20 +62,34 @@ client.on('messageDelete', message => {
 				)
 				.setImage(url);
 			channel.send(embed);
-        });
-		snipes.author = message.author.tag
-		snipes.authorAvatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
-		snipes.content = message.content
+		});
+		snipes.push(snipe);
+        let data = JSON.stringify(snipes, null, 2);
+        fs.writeFileSync(`./snipes.json`, data);
 	} else {
-		return;
+		snipes.push(snipe);
+		let data = JSON.stringify(snipes, null, 2);
+        fs.writeFileSync(`./snipes.json`, data);
 	};
 });
 
-client.on('message', message => {
-	if (message.author.bot || !message.content.startsWith(prefix)) {
-		return;
-	};
+client.on('messageUpdate', (oldMessage, newMessage) => {
+	if (oldMessage.author.bot) return;
+	if (!oldMessage.guild) return;
 
+	var editSnipe = new Object();
+
+	editSnipe.author = newMessage.author.tag;
+	editSnipe.authorAvatar = newMessage.author.displayAvatarURL({ format: "png", dynamic: true});
+	editSnipe.content = oldMessage.content;
+	editSnipe.timestamp = newMessage.editedAt.toUTCString([8]);
+	editSnipes.push(editSnipe);
+	let data = JSON.stringify(editSnipes, null, 2);
+	fs.writeFileSync(`./editSnipes.json`. data);
+});
+
+client.on('message', message => {
+	if (message.author.bot || !message.content.startsWith(prefix)) return;
 
 	const args = message.content.slice(prefix.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();
