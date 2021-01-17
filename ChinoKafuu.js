@@ -3,14 +3,11 @@ const Discord = require('discord.js');
 const ytdl = require("ytdl-core");
 const { prefix, token } = require('./config.json');
 
-fs.readFile('./editSnipes.json', (err, data) => {
-	var editSnipes = JSON.parse(data);
-	if (err) console.error(err);
-});
-fs.readFile('./snipes.json', (err, data) => {
-	var snipes = JSON.parse(data);
-	if (err) console.error(err);
-});
+let rawData = fs.readFileSync('./editSnipes.json');
+let editSnipes = JSON.parse(rawData);
+let data = fs.readFileSync('./snipes.json');
+let snipes = JSON.parse(data);
+
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
