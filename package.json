@@ -2,6 +2,9 @@
   "name": "discord-bot",
   "version": "1.0.0",
   "description": "My second shitty discord bot :D  ",
+  "engines": {
+    "node": "14.x"
+  },
   "main": "ChinoKafuu.js",
   "scripts": {
     "start": "node ."
