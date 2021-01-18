@@ -18,7 +18,7 @@ module.exports = {
 
 		const nsfw = ['發圖區（18r）.json','vtuber18r區域.json'];
 		const sfw = ['vtuber區.json','蘿莉圖.json','鯊鯊a片.json'];
-		const loli = ['蘿莉圖.json']
+		const loli = ['蘿莉圖.json'];
 		var random = Math.floor(Math.random() * loli.length);
 		var targetFile = loli[random];
 		var pic = pictures[targetFile];
@@ -28,7 +28,7 @@ module.exports = {
 		var random = Math.floor(Math.random() * images.attachments.length);
 		var imageInfo = images.attachments[random];
 		let embed = new Discord.MessageEmbed()
-		    .setColor('#2d9af8').setTitle(`蘿莉圖！`).setDescription(`來源商：${images.author}`).setImage(imageInfo.url).setFooter(`蘿莉控的FBI避難所`, 'https://cdn.discordapp.com/icons/764839074228994069/5be3f532073fdae6a9d934e1c6f6a2b5.png?size=2048');
+		    .setColor('#2d9af8').setTitle(`蘿莉圖！`).setDescription(`來源商：${images.author}\n[圖片鏈接](${messageurl})`).setImage(imageInfo.url).setFooter(`蘿莉控的FBI避難所`, 'https://cdn.discordapp.com/icons/764839074228994069/5be3f532073fdae6a9d934e1c6f6a2b5.png?size=2048');
 		message.channel.send(embed).then(msg => {
 			msg.react('⚠️');
 
@@ -44,10 +44,12 @@ module.exports = {
 						console.log(messageurl);
 						msg.channel.send('图片已举报')
 					};
+				})
+				.catch(collected => {
 				});
 		});
 		let data = JSON.stringify(reports, null, 2);
         var filename = 'reports.json';
-        fs.writeFileSync(`C:/Users/User/Desktop/Discord bot/` + filename, data);
+        fs.writeFileSync(`./` + filename, data);
 	},
 };
