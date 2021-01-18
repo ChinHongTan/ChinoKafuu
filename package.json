@@ -6,6 +6,9 @@
   "scripts": {
     "start": "node ."
   },
+  "engines": {
+    "node": "14.x"
+  },
   "author": "ChinHong",
   "license": "ISC",
   "dependencies": {
