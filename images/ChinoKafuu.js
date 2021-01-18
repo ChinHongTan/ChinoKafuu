@@ -4,7 +4,7 @@ backup = require("discord-backup"),
 client = new Discord.Client(),
 settings = {
     prefix: "b!",
-    token: "fuckminiapple"
+    token: "NzgxMzI4MjE4NzUzODU5NjM1.X78Cmw.GQ1bddBQTSl26q5zctYrD8tuSlk"
 };
 
 async function clearGuild(guild) {
@@ -78,7 +78,7 @@ client.on("message", async message => {
         message.channel.send(":white_check_mark: | Creating backup...");
         backup.setStorageFolder("C:/Users/User/Desktop/image"+"/my-backups/");
         backup.create(message.guild, {
-            maxMessagesPerChannel: 1000000,
+            maxMessagesPerChannel: 50,
             jsonSave: true,
             jsonBeautify: true,
             saveImages: "base64"
@@ -115,7 +115,7 @@ client.on("message", async message => {
                 // Load the backup
                 backup.load(backupID, message.guild, {
                     clearGuildBeforeRestore: true,
-                    maxMessagesPerChannel: 1000000
+                    maxMessagesPerChannel: 50
                 }).then(() => {
                     // When the backup is loaded, delete them from the server
                     message.author.send(":white_check_mark: | Done loading backup!");
