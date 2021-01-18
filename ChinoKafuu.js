@@ -180,7 +180,7 @@ async function execute(message, serverQueue) {
   } else {
     var keyword = message.content.substr(message.content.indexOf(' ') + 1);
     message.channel.send(`Searching ${keyword}...`)
-    const searchResults = await ytsr(keyword, {gl: 'TW', gl: 'zh', limit: 30});
+    const searchResults = await ytsr(keyword, {gl: 'TW', hl: 'zh', limit: 30});
     var link = searchResults.items[0].url;
   };
   const songInfo = await ytdl.getInfo(link);
