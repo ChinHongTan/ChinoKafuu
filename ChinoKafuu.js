@@ -25,14 +25,6 @@ for (const file of commandFiles) {
 
 const cooldowns = new Discord.Collection();
 
-client.once("reconnecting", () => {
-  console.log("Reconnecting!");
-});
-
-client.once("disconnect", () => {
-  console.log("Disconnect!");
-});
-
 client.once('ready', () => {
 	console.log('Ready!');
 });
@@ -69,13 +61,13 @@ client.on('messageDelete', message => {
 				.setImage(url);
 			channel.send(embed);
 		});
-		snipes.push(snipe);
-		if (snipes.length > 10) snipes.shift();
+		snipes.unshift(snipe);
+		if (snipes.length > 10) snipes.pop();
         let data = JSON.stringify(snipes, null, 2);
         fs.writeFileSync(`./snipes.json`, data);
 	} else {
-		snipes.push(snipe);
-		if (snipes.length > 10) snipes.shift();
+		snipes.unshift(snipe);
+		if (snipes.length > 10) snipes.pop();
 		let data = JSON.stringify(snipes, null, 2);
         fs.writeFileSync(`./snipes.json`, data);
 	};
@@ -91,8 +83,8 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
 	editSnipe.authorAvatar = newMessage.author.displayAvatarURL({ format: "png", dynamic: true});
 	editSnipe.content = oldMessage.content;
   if (newMessage.editedAt) editSnipe.timestamp = newMessage.editedAt.toUTCString([8]);
-	editSnipes.push(editSnipe);
-	if (editSnipes.length > 10) editSnipes.shift();
+	editSnipes.unshift(editSnipe);
+	if (editSnipes.length > 10) editSnipes.pop();
 	let data = JSON.stringify(editSnipes, null, 2);
 	fs.writeFileSync(`./editSnipes.json`, data);
 });
@@ -148,7 +140,7 @@ client.on("message", async message => {
 
   const serverQueue = queue.get(message.guild.id);
 
-  if (message.content.startsWith(`${prefix}play`)) {
+  if (message.content.startsWith(`${prefix}play`) || message.content.startsWith(`${prefix}p`)) {
     execute(message, serverQueue);
     return;
   } else if (message.content.startsWith(`${prefix}skip`)) {
@@ -157,8 +149,44 @@ client.on("message", async message => {
   } else if (message.content.startsWith(`${prefix}stop`)) {
     stop(message, serverQueue);
     return;
-  }; 
-});
+  } else if (message.content.startsWith(`${prefix}queue`) || message.content.startsWith(`${prefix}q`)) {
+    if (serverQueue) {
+      var songQueue = serverQueue.songs.slice(1);
+      var printQueue = ''
+      songQueue.forEach((item, index) => {
+        var songNo = index + 1;
+        var songTitle = item.title;
+        var songURL = item.url;
+        var songLength = item.length;
+        var queueString = `${songNo}.[${songTitle}](${songURL}) | ${songLength}\n\n`
+        printQueue += queueString
+      })
+      let embed = new Discord.MessageEmbed()
+        .setColor('#ff0000')
+        .setTitle('Song Queue')
+        .setDescription(`**Now playing**\n[${serverQueue.songs[0].title}](${serverQueue.songs[0].url})\n\n**Queued Songs**\n${printQueue}${serverQueue.songs.length} songs in queue`);
+      return message.channel.send(embed);
+    } else return message.channel.send("There is no song in the queue!");
+  } else if (message.content.startsWith(`${prefix}remove`) || message.content.startsWith(`${prefix}r`)) {
+    if (serverQueue) {
+      const args = message.content.split(' ');
+      args.shift();
+      args.forEach(number => {
+        queuenum = Number(number)
+        if (Number.isInteger(queuenum) && queuenum <= serverQueue.songs.length && queuenum > 0) {
+          serverQueue.songs.splice(queuenum, 1);
+        } else {
+          message.channel.send("You have to enter a valid integer!")
+        }
+      });
+    };
+  } else if (message.content.startsWith(`${prefix}search`)) {
+      var keyword = message.content.substr(message.content.indexOf(' ') + 1);
+      message.channel.send(`Searching ${keyword}...`)
+      const filters1 = await ytsr.getFilters(keyword);
+      const filter1 = filters1.get('Type').get('Video');
+      const searchResults = await ytsr(filter1.url, {gl: 'TW', hl: 'zh-Hant', limit: 100});
+  }});
 
 async function execute(message, serverQueue) {
   const args = message.content.split(" ");
@@ -180,13 +208,16 @@ async function execute(message, serverQueue) {
   } else {
     var keyword = message.content.substr(message.content.indexOf(' ') + 1);
     message.channel.send(`Searching ${keyword}...`)
-    const searchResults = await ytsr(keyword, {gl: 'TW', hl: 'zh', limit: 30});
+    const filters1 = await ytsr.getFilters(keyword);
+    const filter1 = filters1.get('Type').get('Video');
+    const searchResults = await ytsr(filter1.url, {gl: 'TW', hl: 'zh-Hant', limit: 1});
     var link = searchResults.items[0].url;
   };
   const songInfo = await ytdl.getInfo(link);
   const song = {
         title: songInfo.videoDetails.title,
         url: songInfo.videoDetails.video_url,
+        length: songInfo.videoDetails.lengthSeconds,
    };
 
   if (!serverQueue) {
