@@ -65,7 +65,7 @@ module.exports = {
                     var numbers = new Object();
                     message.client.channels.fetch(ID)
                         .then(channel => {
-                            message.channel.send(`Fetching ${channel.name}`);
+                            console.log(`Fetching ${channel.name}`);
                             var total = 0;
                             (async () => {
                                 for await (const messages of loadAllMessages(channel)) {
@@ -100,7 +100,7 @@ module.exports = {
                                 let data = JSON.stringify(image, null, 2);
                                 var filename = channel.name + '.json';
                                 fs.writeFileSync(`./images/` + filename, data);
-                                message.channel.send(`Done fetching ${channel.name}`);
+                                console.log(`Done fetching ${channel.name}`);
                                 resolve(channelInfo);
                             })();
                             
@@ -136,7 +136,7 @@ module.exports = {
                             imagesSendByUser[channelName] = picsInChannel[name];
                             if (user && picsInChannel[name] >= 25 && channelID === '764840462707326986') {
                                 user.roles.add(loliPic25);
-                                message.channel.send(`Added ${loliPic25.name} to ${user.user.username}`);
+                                console.log(`Added ${loliPic25.name} to ${user.user.username}`);
                             };
                         };
                     });
@@ -153,28 +153,28 @@ module.exports = {
 
                     if (user && vtuberSum >= 25) {
                         user.roles.add(vtuberPic25);
-                        message.channel.send(`Added ${vtuberPic25.name} to ${user.user.username}`);
+                        console.log(`Added ${vtuberPic25.name} to ${user.user.username}`);
                     };
                     if (user && _18rSum >= 25) {
                         user.roles.add(explicitPic25);
-                        message.channel.send(`Added ${explicitPic25.name} to ${user.user.username}`);
+                        console.log(`Added ${explicitPic25.name} to ${user.user.username}`);
                     };
 
                     if (user && number >= 300) {
                         user.roles.add(tolPic300);
-                        message.channel.send(`Added ${tolPic300.name} to ${user.user.username}`);
+                        console.log(`Added ${tolPic300.name} to ${user.user.username}`);
                     };
                     if (user && number >= 500) {
                         user.roles.add(tolPic500);
-                        message.channel.send(`Added ${tolPic500.name} to ${user.user.username}`);
+                        console.log(`Added ${tolPic500.name} to ${user.user.username}`);
                     };
                     if (user && number >= 700) {
                         user.roles.add(tolPic700);
-                        message.channel.send(`Added ${tolPic700.name} to ${user.user.username}`);
+                        console.log(`Added ${tolPic700.name} to ${user.user.username}`);
                     }
                     if (user && number >= 1000) {
                         user.roles.add(tolPic1000);
-                        message.channel.send(`Added ${tolPic1000.name} to ${user.user.username}`);
+                        console.log(`Added ${tolPic1000.name} to ${user.user.username}`);
                     };
                     memberProfile.push(userInfo);
                     console.log(`User Info: ${JSON.stringify(userInfo, null, 2)}`);
@@ -183,6 +183,9 @@ module.exports = {
         };
         if(!message.member.hasPermission("ADMINISTRATOR")){
             return message.channel.send(":x: | You must be an administrator of this server to load a backup!");
+        };
+        if(imageChannels.length < 1) {
+            var imageChannels = ['765176655407874081', '766636820066074656', '765525905807769621', '768430617733496842', '764840462707326986'];
         };
         fetchImageChannels(imageChannels);       
     },

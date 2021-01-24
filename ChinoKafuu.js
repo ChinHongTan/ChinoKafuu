@@ -26,7 +26,8 @@ for (const file of commandFiles) {
 const cooldowns = new Discord.Collection();
 
 client.once('ready', () => {
-	console.log('Ready!');
+  console.log('Ready!');
+  client.user.setPresence({ activity: { name: 'c!help', type: 'LISTENING'}, status: 'dnd' });
 });
 
 client.on('messageDelete', message => {
@@ -136,6 +137,24 @@ client.on('message', message => {
 
 client.on("message", async message => {
   if (message.author.bot) return;
+  if (message.channel.id === '779192010418421762') {
+    if (message.attachments.size > 0) {
+      message.attachments.each(attachment => {
+        let embed = new Discord.MessageEmbed()
+          .setColor('#000fff')
+          .setDescription(message.content)
+          .setImage(attachment.proxyURL);
+        message.channel.send(embed);
+      });
+      message.delete();
+    } else {
+      let embed = new Discord.MessageEmbed()
+        .setColor('#000fff')
+        .setDescription(message.content);
+      message.channel.send(embed);
+      message.delete();
+    };
+  };
   if (!message.content.startsWith(prefix)) return;
 
   const serverQueue = queue.get(message.guild.id);
@@ -185,7 +204,8 @@ client.on("message", async message => {
       message.channel.send(`Searching ${keyword}...`)
       const filters1 = await ytsr.getFilters(keyword);
       const filter1 = filters1.get('Type').get('Video');
-      const searchResults = await ytsr(filter1.url, {gl: 'TW', hl: 'zh-Hant', limit: 100});
+      const searchResults = await ytsr(filter1.url, {gl: 'TW', hl: 'zh-Hant', limit: 10});
+      
   }});
 
 async function execute(message, serverQueue) {

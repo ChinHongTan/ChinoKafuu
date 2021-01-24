@@ -12,7 +12,7 @@
   "author": "ChinHong",
   "license": "ISC",
   "dependencies": {
-    "discord-backup": "^2.2.5",
+    "discord-backup": "^2.4.1",
     "discord-ytdl-core": "^5.0.0",
     "discord.js": "^12.3.1",
     "fetch-node": "0.0.1",
