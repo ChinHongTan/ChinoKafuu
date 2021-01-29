@@ -1,10 +1,12 @@
 module.exports = {
-	name: 'loli',
+	name: 'hentai',
 	cooldown: 3,
-	description: 'get a picture of a loli',
+	description: 'get a 18r picture',
 	execute(message, args) {
 		const fs = require('fs');
 		const Discord = require('discord.js');
+
+		if (!message.channel.nsfw) return message.channel.send("This is not a nsfw channel!");
 
 		const imageFiles = fs.readdirSync('./images').filter(file => file.endsWith('.json'));
 		var reports = [];
@@ -20,8 +22,8 @@ module.exports = {
 		const nsfw = ['發圖區（18r）.json','vtuber18r區域.json'];
 		const sfw = ['vtuber區.json','蘿莉圖.json','鯊鯊a片.json'];
 		const loli = ['蘿莉圖.json'];
-		var random = Math.floor(Math.random() * loli.length);
-		var targetFile = loli[random];
+		var random = Math.floor(Math.random() * nsfw.length);
+		var targetFile = nsfw[random];
 		var pic = pictures[targetFile];
 		var random = Math.floor(Math.random() * pic.length);
 		var images = pic[random];
@@ -42,8 +44,9 @@ module.exports = {
 					const reaction = collected.first();
 
 					if (reaction.emoji.name === '⚠️') {
+						console.log(messageurl);
 						reports.push(messageurl);
-						msg.channel.send('图片已举报');
+						msg.channel.send('图片已举报')
 					};
 				})
 				.catch(collected => {
