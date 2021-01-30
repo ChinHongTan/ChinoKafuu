@@ -62,14 +62,14 @@ module.exports = {
             return embed;
         };
 
-        async function createHomepageFlip(embed, homepage) {
+        function createHomepageFlip(embed, homepage) {
             message.channel.send(embed).then(embedMessage => {
                 embedMessage.react('⬅️')
                 .then(embedMessage.react('➡️'))
                 .then(embedMessage.react('▶️'));
                 const filter = (reaction, user) => ['⬅️', '➡️', '▶️'].includes(reaction.emoji.name) && !user.bot;
                 const collector = embedMessage.createReactionCollector(filter, { idle: 600000, dispose: true });
-                collector.on('collect', r => {
+                collector.on('collect', async (r) => {
                     if (r.emoji.name === '⬅️') {
                         page -= 1;
                         if (page < 0) page = homepage.length - 1;
@@ -104,13 +104,13 @@ module.exports = {
             });
         };
 
-        async function createDoujinFlip(embed, doujin) {
+        function createDoujinFlip(embed, doujin) {
             message.channel.send(embed).then(embedMessage => {
                 embedMessage.react('◀️')
                 .then(embedMessage.react('▶️'));
                 const filter = (reaction, user) => ['◀️', '▶️'].includes(reaction.emoji.name) && !user.bot;
                 const collector = embedMessage.createReactionCollector(filter, { idle: 600000 });
-                collector.on('collect', r => {
+                collector.on('collect', async (r) => {
                     if (r.emoji.name === '▶️') {
                         collector.stop();
                         var page = 0;
@@ -127,7 +127,7 @@ module.exports = {
             });
         };
 
-        async function createSearchFlip(embed, result) {
+        function createSearchFlip(embed, result) {
             message.channel.send(embed).then(embedMessage => {
                 embedMessage.react('◀️')
                 .then(embedMessage.react('⬅️'))
@@ -135,7 +135,7 @@ module.exports = {
                 .then(embedMessage.react('▶️'));
                 const filter = (reaction, user) => ['◀️', '⬅️', '➡️', '▶️'].includes(reaction.emoji.name) && !user.bot;
                 const collector = embedMessage.createReactionCollector(filter, { idle: 600000, dispose: true });
-                collector.on('collect', r => {
+                collector.on('collect', async (r) => {
                     if (r.emoji.name === '⬅️') {
                         page -= 1;
                         if (page < 0) page = result.results.length - 1;
@@ -183,7 +183,7 @@ module.exports = {
                 .then(embedMessage.react('➡️'));
                 const filter = (reaction, user) => ['◀️', '⬅️', '➡️'].includes(reaction.emoji.name) && !user.bot;
                 const collector = embedMessage.createReactionCollector(filter, { idle: 600000, dispose: true });
-                collector.on('collect', r => {
+                collector.on('collect', async (r) => {
                     if (r.emoji.name === '⬅️') {
                         page -= 1;
                         if (page < 0) page = pages.length - 1;
