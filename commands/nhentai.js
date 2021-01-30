@@ -4,6 +4,7 @@ module.exports = {
 	description: 'Search for a doujin on nhentai.',
 	execute(message, args) {
         const nhentai = require('nhentai-js');
+	const Discord = require('discord.js');
 
         function createHomepageEmbed(homepage, page) {
             let embed = new Discord.MessageEmbed()
