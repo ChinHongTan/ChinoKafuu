@@ -18,7 +18,7 @@ module.exports = {
             return embed;
         };
 
-        function createDoujinEmbed(doujin, page) {
+        function createDoujinEmbed(doujin) {
 			var description = '';
             for (const [key, value] of Object.entries(doujin.details)) {
 				var info = '';
@@ -55,6 +55,7 @@ module.exports = {
         };
 
         function createHomepageFlip(embed, homepage, g) {
+			var page = 0;
             message.channel.send(embed).then(embedMessage => {
                 embedMessage.react('⬅️')
                 .then(embedMessage.react('➡️'))
@@ -76,7 +77,7 @@ module.exports = {
                         collector.stop();
                         const doujin = await nhentai.getDoujin(homepage.results[page].bookId);
                         var page = 0;
-                        var embed = createDoujinEmbed(doujin, page);
+                        var embed = createDoujinEmbed(doujin);
                         createDoujinFlip(embed, doujin);
                     };
                 });
@@ -97,6 +98,7 @@ module.exports = {
         };
 
         function createDoujinFlip(embed, doujin) {
+			var page = 0;
             message.channel.send(embed).then(embedMessage => {
                 embedMessage.react('◀️')
                 .then(embedMessage.react('▶️'));
@@ -121,6 +123,7 @@ module.exports = {
         };
 
         function createSearchFlip(embed, result) {
+			var page = 0;
             message.channel.send(embed).then(embedMessage => {
                 embedMessage.react('◀️')
                 .then(embedMessage.react('⬅️'))
@@ -150,7 +153,7 @@ module.exports = {
                         collector.stop();
                         const doujin = await nhentai.getDoujin(result.results[page].bookId);
                         var page = 0;
-                        var embed = createDoujinEmbed(doujin, page);
+                        var embed = createDoujinEmbed(doujin);
                         createDoujinFlip(embed, doujin);
                     };
                 });
@@ -171,6 +174,7 @@ module.exports = {
         };
 
         function createBookFlip(embed, pages) {
+			var page = 0;
             message.channel.send(embed).then(embedMessage => {
                 embedMessage.react('◀️')
                 .then(embedMessage.react('⬅️'))
@@ -224,7 +228,7 @@ module.exports = {
                 if (nhentai.exists(args[0])) {
                     const doujin = await nhentai.getDoujin(args[0]);
                     var page = 0;
-                    var embed = createDoujinEmbed(doujin, page);
+                    var embed = createDoujinEmbed(doujin);
                     createDoujinFlip(embed, doujin);
                 } else {
                     const result = await nhentai.search(message.substring(message.content.indexOf('c!nhentai '), message.content.length));
