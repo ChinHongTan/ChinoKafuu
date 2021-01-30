@@ -26,6 +26,7 @@ module.exports = {
 			    	info += `${element}  `;
 				});
 				description += `${key}: ${info}`;
+			};
             let embed = new Discord.MessageEmbed()
             .setTitle(doujin.title)
             .setDescription(`${description}`)
