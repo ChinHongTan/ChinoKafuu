@@ -239,7 +239,7 @@ module.exports = {
                     var embed = createDoujinEmbed(doujin);
                     createDoujinFlip(embed, doujin);
                 } else {
-                    const result = await nhentai.search(message.substring(message.content.indexOf('c!nhentai '), message.content.length));
+                    const result = await nhentai.search(message.content.substr(message.content.indexOf(' ')));
                     var page = 0;
                     var embed = createSearchEmbed(result, page);
                     createSearchFlip(embed, result);
