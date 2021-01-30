@@ -19,30 +19,18 @@ module.exports = {
         };
 
         function createDoujinEmbed(doujin, page) {
-            let parodiesInfo = charactersInfo = tagsInfo = groupsInfo = languagesInfo = categoriesInfo = '';
-            doujin.details.parodies.forEach(parody => {
-                parodiesInfo += `${parody}\n`;
-            });
-            doujin.details.characters.forEach(character => {
-                charactersInfo += `${character}\n`;
-            });
-            doujin.details.tags.forEach(tag => {
-                tagsInfo += `${tag}\n`;
-            });
-            doujin.details.groups.forEach(group => {
-                groupsInfo += `${group}\n`;
-            });
-            doujin.details.languages.forEach(language => {
-                languagesInfo += `${language}\n`;
-            });
-            doujin.details.categories.forEach(category => {
-                categoriesInfo += `${category}\n`;
-            });
+			var description = '';
+            for (const [key, value] of Object.entries(doujin.details)) {
+				var info = '';
+		    	value.forEach(element => {
+			    	info += `${element}  `;
+				});
+				description += `${key}: ${info}`;
             let embed = new Discord.MessageEmbed()
             .setTitle(doujin.title)
-            .setDescription(`Parodies: ${parodiesInfo}\nCharacters: ${charactersInfo}\nTags: ${tagsInfo}\nGroups: ${groupsInfo}\nLanguages: ${languagesInfo}\nCategories: ${categoriesInfo}`)
+            .setDescription(`${description}`)
             .setColor('#ff0000')
-            .setImage(doujin.details.pages[0])
+            .setImage(doujin.thumbnails[0])
             .addField('Link', doujin.link)
             .setFooter('◀️: Homepage, ▶️: Read the book');
             return embed;
@@ -117,8 +105,8 @@ module.exports = {
                     if (r.emoji.name === '▶️') {
                         collector.stop();
                         var page = 0;
-                        var embed = createBookEmbed(doujin.details.pages, page);
-                        createBookFlip(embed, doujin.details.page);
+                        var embed = createBookEmbed(doujin.pages, page);
+                        createBookFlip(embed, doujin.pages);
                     } else if (r.emoji.name === '◀️') {
                         collector.stop();
                         const homepage = await nhentai.getHomepage(1);
