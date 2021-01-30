@@ -1,7 +1,6 @@
 module.exports = {
-    name: 'nhentai',
+    name: 'n',
     cooldown: 3,
-	aliases: ['n'],
 	description: 'Try it!',
 	execute(message, args) {
         if (args.length < 1) {
