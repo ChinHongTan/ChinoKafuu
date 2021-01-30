@@ -14,12 +14,13 @@
   "dependencies": {
     "discord-backup": "^2.4.1",
     "discord-ytdl-core": "^5.0.0",
-    "discord.js": "^12.3.1",
+    "discord.js": "^12.5.1",
     "fetch-node": "0.0.1",
     "ffmpeg-static": "^4.2.7",
     "file-type": "^16.2.0",
     "http": "0.0.1-security",
     "https": "^1.0.0",
+    "nhentai-js": "^4.0.0",
     "node-fetch": "^2.6.1",
     "opusscript": "0.0.7",
     "request": "^2.88.2",
@@ -28,6 +29,9 @@
     "sagiri": "^3.1.1",
     "saucenao": "0.0.2",
     "ytdl-core": "^4.4.5",
-    "ytsr": "^3.2.1"
+    "ytsr": "^3.2.3"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.22"
   }
 }
