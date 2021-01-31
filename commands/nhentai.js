@@ -239,11 +239,13 @@ module.exports = {
                     var embed = createDoujinEmbed(doujin);
                     createDoujinFlip(embed, doujin);
                 } else {
-                    const result = await nana.search(message.content.substr(message.content.indexOf(' ')));
-                    var page = 0;
-                    var embed = createSearchEmbed(result, page);
-                    createSearchFlip(embed, result);
-                };
+					return message.channel.send("The book ID doesn't exist!");
+				};
+			} else {
+                const result = await nana.search(message.content.substr(message.content.indexOf(' ')));
+                var page = 0;
+                var embed = createSearchEmbed(result, page);
+                createSearchFlip(embed, result);
             };
         })();
 	},
