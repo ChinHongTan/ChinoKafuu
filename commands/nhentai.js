@@ -25,7 +25,7 @@ module.exports = {
 		    	value.forEach(element => {
 			    	info += `${element}  `;
 				});
-				description += `${key}: ${info}`;
+				description += `${key}: ${info}\n`;
 			};
             let embed = new Discord.MessageEmbed()
             .setTitle(doujin.title)
@@ -40,9 +40,9 @@ module.exports = {
         function createSearchEmbed(result, page) {
             let embed = new Discord.MessageEmbed()
             .setTitle(result.results[page].title)
-            .setDescription(`bookId: ${result.results[page].bookId}`)
+            .setDescription(`Book Id: ${result.results[page].id}\nLanguage: ${result.results[page].language}`)
             .setColor('#ff0000')
-            .setImage(result.results[page].thumbnail)
+            .setImage(result.results[page].thumbnail.s)
             .setFooter('◀️: Homepage, ⬅️: Back, ➡️: Forward, ▶️: Read the book');
             return embed;
         };
@@ -156,7 +156,7 @@ module.exports = {
 			});
                     } else if (r.emoji.name === '▶️') {
                         collector.stop();
-                        nhentai.getDoujin(result.results[page].bookId).then(doujin => {
+                        nhentai.getDoujin(result.results[page].id).then(doujin => {
 				var page = 0;
 				var embed = createDoujinEmbed(doujin);
 				createDoujinFlip(embed, doujin);
@@ -239,7 +239,7 @@ module.exports = {
                     var embed = createDoujinEmbed(doujin);
                     createDoujinFlip(embed, doujin);
                 } else {
-                    const result = await nhentai.search(message.content.substr(message.content.indexOf(' ')));
+                    const result = await nana.search(message.content.substr(message.content.indexOf(' ')));
                     var page = 0;
                     var embed = createSearchEmbed(result, page);
                     createSearchFlip(embed, result);
