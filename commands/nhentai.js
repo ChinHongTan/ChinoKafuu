@@ -8,10 +8,10 @@ module.exports = {
 		const nanaApi = require('nana-api');
 		const nana = new nanaApi();
 
-        function createHomepageEmbed(g, homepage, page) {
+        function createHomepageEmbed(g, page) {
             let embed = new Discord.MessageEmbed()
-            .setTitle(homepage.results[page].title)
-            .setDescription(`bookId: ${homepage.results[page].bookId}`)
+            .setTitle(g.results[page].title)
+            .setDescription(`book ID: ${g.results[page].id}`)
             .setColor('#ff0000')
             .setImage(g.results[page].thumbnail.s)
             .setFooter('⬅️: Back, ➡️: Forward, ▶️: Book info');
@@ -54,7 +54,7 @@ module.exports = {
             return embed;
         };
 
-        function createHomepageFlip(embed, homepage, g) {
+        function createHomepageFlip(embed, g) {
 			var page = 0;
             message.channel.send(embed).then(embedMessage => {
                 embedMessage.react('⬅️')
@@ -65,33 +65,33 @@ module.exports = {
                 collector.on('collect', r => {
                     if (r.emoji.name === '⬅️') {
                         page -= 1;
-                        if (page < 0) page = homepage.length - 1;
-                        var editedEmbed = createHomepageEmbed(g, homepage, page);
+                        if (page < 0) page = g.results.length - 1;
+                        var editedEmbed = createHomepageEmbed(g, page);
                         embedMessage.edit(editedEmbed);
                     } else if (r.emoji.name === '➡️') {
                         page += 1;
-                        if (page + 1 > homepage.length) page = 0;
-                        var editedEmbed = createHomepageEmbed(g, homepage, page);
+                        if (page + 1 > g.results.length) page = 0;
+                        var editedEmbed = createHomepageEmbed(g, page);
                         embedMessage.edit(editedEmbed);
                     } else if (r.emoji.name === '▶️') {
                         collector.stop();
-                        nhentai.getDoujin(homepage.results[page].bookId).then(doujin => {
-				var page = 0;
-                        	var embed = createDoujinEmbed(doujin);
-                        	createDoujinFlip(embed, doujin);
-			});
+                        nhentai.getDoujin(g.results[page].bookId).then(doujin => {
+                            var page = 0;
+                            var embed = createDoujinEmbed(doujin);
+                            createDoujinFlip(embed, doujin);
+                        });
                     };
                 });
                 collector.on('remove', r => {
                     if (r.emoji.name === '⬅️') {
                         page -= 1;
-                        if (page < 0) page = homepage.length - 1;
-                        var editedEmbed = createHomepageEmbed(g, homepage, page);
+                        if (page < 0) page = g.results.length - 1;
+                        var editedEmbed = createHomepageEmbed(g, page);
                         embedMessage.edit(editedEmbed);
                     } else if (r.emoji.name === '➡️') {
                         page += 1;
-                        if (page + 1 > homepage.length) page = 0;
-                        var editedEmbed = createHomepageEmbed(g, homepage, page);
+                        if (page + 1 > g.results.length) page = 0;
+                        var editedEmbed = createHomepageEmbed(g, page);
                         embedMessage.edit(editedEmbed);
                     };
                 });
@@ -113,13 +113,11 @@ module.exports = {
                         createBookFlip(embed, doujin.pages);
                     } else if (r.emoji.name === '◀️') {
                         collector.stop();
-                        nhentai.getHomepage(1).then(homepage => {
-				nana.homepage(1).then(g => {
-					var page = 0;
-					var embed = createHomepageEmbed(g, homepage, page);
-					createHomepageFlip(embed, homepage, g);
-				});
-			});
+                        nana.homepage(1).then(g => {
+                            var page = 0;
+                            var embed = createHomepageEmbed(g, page);
+                            createHomepageFlip(embed, g);
+                        });
                     };
                 });
             });
@@ -147,20 +145,18 @@ module.exports = {
                         embedMessage.edit(editedEmbed);
                     } else if (r.emoji.name === '◀️') {
                         collector.stop();
-                        nhentai.getHomepage(1).then(homepage => {
-				nana.homepage(1).then(g => {
-					var page = 0;
-					var embed = createHomepageEmbed(g, homepage, page);
-					createHomepageFlip(embed, homepage, g);
-				});
-			});
+                        nana.homepage(1).then(g => {
+                            var page = 0;
+                            var embed = createHomepageEmbed(g, page);
+                            createHomepageFlip(embed, g);
+                        });
                     } else if (r.emoji.name === '▶️') {
                         collector.stop();
                         nhentai.getDoujin(result.results[page].id).then(doujin => {
-				var page = 0;
-				var embed = createDoujinEmbed(doujin);
-				createDoujinFlip(embed, doujin);
-			});
+                            var page = 0;
+                            var embed = createDoujinEmbed(doujin);
+                            createDoujinFlip(embed, doujin);
+                        });
                     };
                 });
                 collector.on('remove', r => {
@@ -200,13 +196,11 @@ module.exports = {
                         embedMessage.edit(editedEmbed);
                     } else if (r.emoji.name === '◀️') {
                         collector.stop();
-                        nhentai.getHomepage(1).then(homepage => {
-				nana.homepage(1).then(g => {
-					var page = 0;
-					var embed = createHomepageEmbed(g, homepage, page);
-					createHomepageFlip(embed, homepage, g);
-				});
-			});
+                        nana.homepage(1).then(g => {
+                            var page = 0;
+                            var embed = createHomepageEmbed(g, page);
+                            createHomepageFlip(embed, g);
+                        });
                     };
                 });
                 collector.on('remove', r => {
@@ -227,11 +221,10 @@ module.exports = {
         
         (async () => {
             if (args.length < 1) {
-                const homepage = await nhentai.getHomepage(1);
 				const g = await nana.homepage(1);
                 var page = 0;
-                var embed = createHomepageEmbed(g, homepage, page);
-                createHomepageFlip(embed, homepage, g);
+                var embed = createHomepageEmbed(g, page);
+                createHomepageFlip(embed, g);
             } else if (Number(args[0])) {
                 if (nhentai.exists(args[0])) {
                     const doujin = await nhentai.getDoujin(args[0]);
