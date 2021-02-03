@@ -17,8 +17,3 @@ module.exports = {
 	    message.channel.send(avatarList);
 	},
 };
-
-
-//    if (!cooldowns.has(message.author.id)) {
-//      	cooldowns.set(message.authur.id, new Discord.Collection());
-//  }

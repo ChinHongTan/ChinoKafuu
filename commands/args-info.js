@@ -12,13 +12,3 @@ module.exports = {
   
     },
 };
-
-
-/*
-async function download (url, filename, time) {
-            const response = await fetch(url);
-            const buffer = await response.buffer();
-            fs.writeFile(`C:/Users/User/Desktop/images/` + time + filename, buffer, () => 
-                console.log(`finished downloading ${filename}!`));
-        };
-*/

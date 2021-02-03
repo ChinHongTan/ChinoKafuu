@@ -1,5 +1,5 @@
 module.exports = {
-	name: 'infos',
+	name: 'backup-info',
 	cooldown: 10,
 	aliases: ['bi'],
 	description: 'Load a backup info.',
