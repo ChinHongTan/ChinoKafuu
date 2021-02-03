@@ -235,6 +235,7 @@ client.on("message", async message => {
       const searchResults = await ytsr(filter1.url, {gl: 'TW', hl: 'zh-Hant', limit: 10});
       var item = searchResults.items;
       var page = 0;
+      if (item.length < 1) return message.channel.send(`No video was found for ${keyword}!`);
       var embed = createEmbed(item, page);
 
       message.channel.send(embed).then(embedMessage => {
@@ -402,7 +403,7 @@ function createEmbed(item, page) {
     .addField('Views', item[page].views)
     .addField('Duration', item[page].duration)
     .addField('Uploaded at', item[page].uploadedAt)
-    .setFooter(item[page].author.name, item[page].author.bestAvatar.url);
+    .setFooter(`${item[page].author.name}\nPage${page + 1}/${item.length}`, item[page].author.bestAvatar.url);
   return embed;
 };
 client.login(token);
