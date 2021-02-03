@@ -80,6 +80,7 @@ module.exports = {
                             var embed = createDoujinEmbed(doujin);
                             createDoujinFlip(embed, doujin);
                         });
+                        embedMessage.delete();
                     };
                 });
                 collector.on('remove', r => {
@@ -111,6 +112,7 @@ module.exports = {
                         var page = 0;
                         var embed = createBookEmbed(doujin.pages, page);
                         createBookFlip(embed, doujin.pages);
+                        embedMessage.delete();
                     } else if (r.emoji.name === '◀️') {
                         collector.stop();
                         nana.homepage(1).then(g => {
@@ -118,6 +120,7 @@ module.exports = {
                             var embed = createHomepageEmbed(g, page);
                             createHomepageFlip(embed, g);
                         });
+                        embedMessage.delete();
                     };
                 });
             });
@@ -157,6 +160,7 @@ module.exports = {
                             var embed = createDoujinEmbed(doujin);
                             createDoujinFlip(embed, doujin);
                         });
+                        embedMessage.delete();
                     };
                 });
                 collector.on('remove', r => {
@@ -201,6 +205,7 @@ module.exports = {
                             var embed = createHomepageEmbed(g, page);
                             createHomepageFlip(embed, g);
                         });
+                        embedMessage.delete();
                     };
                 });
                 collector.on('remove', r => {

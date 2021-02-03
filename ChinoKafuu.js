@@ -241,20 +241,26 @@ client.on("message", async message => {
       message.channel.send(embed).then(embedMessage => {
           embedMessage.react('⬅️')
           .then(embedMessage.react('➡️'))
-          const filter = (reaction, user) => ['⬅️', '➡️'].includes(reaction.emoji.name) && !user.bot;
+          .then(embedMessage.react('▶️'));
+          const filter = (reaction, user) => ['⬅️', '➡️', '▶️'].includes(reaction.emoji.name) && !user.bot;
           const collector = embedMessage.createReactionCollector(filter, { idle: 12000, dispose: true });
           collector.on('collect', r => {
               if (r.emoji.name === '⬅️') {
-                  page -= 1;
-                  if (page < 0) page = item.length - 1;
-                  var editedEmbed = createEmbed(item, page);
-                  embedMessage.edit(editedEmbed);
+                page -= 1;
+                if (page < 0) page = item.length - 1;
+                var editedEmbed = createEmbed(item, page);
+                embedMessage.edit(editedEmbed);
               } else if (r.emoji.name === '➡️') {
-                  page += 1;
-                  if (page + 1 > item.length) page = 0;
-                  var editedEmbed = createEmbed(item, page);
-                  embedMessage.edit(editedEmbed);
-              };
+                page += 1;
+                if (page + 1 > item.length) page = 0;
+                var editedEmbed = createEmbed(item, page);
+                embedMessage.edit(editedEmbed);
+              } else if (r.emoji.name === '▶️') {
+                collector.stop();
+                message.content = `c!play ${item[page].url}`;
+                execute(message, serverQueue);
+                embedMessage.delete();
+              }
           });
           collector.on('remove', r => {
               if (r.emoji.name === '⬅️') {
