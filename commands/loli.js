@@ -1,5 +1,6 @@
 module.exports = {
 	name: 'loli',
+	cooldown: 3,
 	description: 'get a picture of a loli',
 	execute(message, args) {
 		const fs = require('fs');
@@ -41,8 +42,8 @@ module.exports = {
 					const reaction = collected.first();
 
 					if (reaction.emoji.name === '⚠️') {
-						console.log(messageurl);
-						msg.channel.send('图片已举报')
+						reports.push(messageurl);
+						msg.channel.send('图片已举报');
 					};
 				})
 				.catch(collected => {

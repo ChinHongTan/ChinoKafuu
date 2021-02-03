@@ -25,16 +25,9 @@ for (const file of commandFiles) {
 
 const cooldowns = new Discord.Collection();
 
-client.once("reconnecting", () => {
-  console.log("Reconnecting!");
-});
-
-client.once("disconnect", () => {
-  console.log("Disconnect!");
-});
-
 client.once('ready', () => {
-	console.log('Ready!');
+  console.log('Ready!');
+  client.user.setPresence({ activity: { name: 'c!help', type: 'LISTENING'}, status: 'dnd' });
 });
 
 client.on('messageDelete', message => {
@@ -53,29 +46,29 @@ client.on('messageDelete', message => {
 	if (message.attachments.size > 0) {
 		const channel = message.client.channels.cache.get('764846009221251122');
 		var urlArray = [];
-        message.attachments.each(attachment => {
-            urlArray.push(attachment.proxyURL);
-        });
-        snipe.attachments = urlArray
-        urlArray.forEach(url => {
-			let embed = new Discord.MessageEmbed()
-				.setColor('#ffff00')
-				.setTitle(`**__Message Delete__**`)
-				.addFields(
-					{ name: '**User**', value: `${message.author.tag}`, inline: true },
-					{ name: '**Channel**', value: `${message.channel}`, inline: true },
-					{ name: '**Content**', value: `${content}` },
-				)
-				.setImage(url);
+    message.attachments.each(attachment => {
+        urlArray.push(attachment.proxyURL);
+    });
+    snipe.attachments = urlArray
+    urlArray.forEach(url => {
+      let embed = new Discord.MessageEmbed()
+        .setColor('#ffff00')
+        .setTitle(`**__Message Delete__**`)
+        .addFields(
+          { name: '**User**', value: `${message.author.tag}`, inline: true },
+          { name: '**Channel**', value: `${message.channel}`, inline: true },
+          { name: '**Content**', value: `${content}` },
+        )
+        .setImage(url);
 			channel.send(embed);
 		});
-		snipes.push(snipe);
-		if (snipes.length > 10) snipes.shift();
+		snipes.unshift(snipe);
+		if (snipes.length > 10) snipes.pop();
         let data = JSON.stringify(snipes, null, 2);
         fs.writeFileSync(`./snipes.json`, data);
 	} else {
-		snipes.push(snipe);
-		if (snipes.length > 10) snipes.shift();
+		snipes.unshift(snipe);
+		if (snipes.length > 10) snipes.pop();
 		let data = JSON.stringify(snipes, null, 2);
         fs.writeFileSync(`./snipes.json`, data);
 	};
@@ -91,8 +84,8 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
 	editSnipe.authorAvatar = newMessage.author.displayAvatarURL({ format: "png", dynamic: true});
 	editSnipe.content = oldMessage.content;
   if (newMessage.editedAt) editSnipe.timestamp = newMessage.editedAt.toUTCString([8]);
-	editSnipes.push(editSnipe);
-	if (editSnipes.length > 10) editSnipes.shift();
+	editSnipes.unshift(editSnipe);
+	if (editSnipes.length > 10) editSnipes.pop();
 	let data = JSON.stringify(editSnipes, null, 2);
 	fs.writeFileSync(`./editSnipes.json`, data);
 });
@@ -144,11 +137,57 @@ client.on('message', message => {
 
 client.on("message", async message => {
   if (message.author.bot) return;
+  if (message.channel.id === '779192010418421762') {
+    if (message.attachments.size > 0) {
+      message.attachments.each(attachment => {
+        let embed = new Discord.MessageEmbed()
+          .setColor('#000fff')
+          .setDescription(message.content)
+          .setImage(attachment.proxyURL);
+        message.channel.send(embed);
+      });
+      message.delete();
+    } else {
+      let embed = new Discord.MessageEmbed()
+        .setColor('#000fff')
+        .setDescription(message.content);
+      message.channel.send(embed);
+      message.delete();
+    };
+  } else if (message.channel.id === '803270261604352040') {
+    let rawData = fs.readFileSync('./countingData.json');
+    let countingData = JSON.parse(rawData);
+    if (!Number(message.content)) return;
+    if (countingData.counter == '0' || !countingData.counter) {
+      if (message.content != '1') return;
+      countingData.author = message.author.tag;
+      countingData.counter = message.content;
+      let data = JSON.stringify(countingData, null, 2);
+      fs.writeFileSync('./countingData.json', data);
+      return message.react('✅');
+    };
+    if (message.author.tag != countingData.author) {
+      if (message.content != Number(countingData.counter) + 1) {
+        countingData.counter = '0';
+        countingData.author = '';
+        let data = JSON.stringify(countingData, null, 2);
+        fs.writeFileSync('./countingData.json', data);
+        return message.react('❌');
+      } else {
+        countingData.counter = message.content;
+        countingData.author = message.author.tag;
+        let data = JSON.stringify(countingData, null, 2);
+        fs.writeFileSync('./countingData.json', data);
+        return message.react('✅');
+      };
+    };
+  };
+
   if (!message.content.startsWith(prefix)) return;
 
   const serverQueue = queue.get(message.guild.id);
 
-  if (message.content.startsWith(`${prefix}play`)) {
+  if (message.content.startsWith(`${prefix}play`) || message.content.startsWith(`${prefix}p`)) {
     execute(message, serverQueue);
     return;
   } else if (message.content.startsWith(`${prefix}skip`)) {
@@ -157,8 +196,80 @@ client.on("message", async message => {
   } else if (message.content.startsWith(`${prefix}stop`)) {
     stop(message, serverQueue);
     return;
-  }; 
-});
+  } else if (message.content.startsWith(`${prefix}queue`) || message.content.startsWith(`${prefix}q`)) {
+    if (serverQueue) {
+      var songQueue = serverQueue.songs.slice(1);
+      var printQueue = ''
+      songQueue.forEach((item, index) => {
+        var songNo = index + 1;
+        var songTitle = item.title;
+        var songURL = item.url;
+        var songLength = item.length;
+        var queueString = `${songNo}.[${songTitle}](${songURL}) | ${format(songLength)}\n\n`;
+        printQueue += queueString;
+      });
+      let embed = new Discord.MessageEmbed()
+        .setColor('#ff0000')
+        .setTitle('Song Queue')
+        .setDescription(`**Now playing**\n[${serverQueue.songs[0].title}](${serverQueue.songs[0].url})\n\n**Queued Songs**\n${printQueue}${serverQueue.songs.length} songs in queue`);
+      return message.channel.send(embed);
+    } else return message.channel.send("There is no song in the queue!");
+  } else if (message.content.startsWith(`${prefix}remove`) || message.content.startsWith(`${prefix}r`)) {
+    if (serverQueue) {
+      const args = message.content.split(' ');
+      args.shift();
+      args.forEach(number => {
+        queuenum = Number(number);
+        if (Number.isInteger(queuenum) && queuenum <= serverQueue.songs.length && queuenum > 0) {
+          serverQueue.songs.splice(queuenum, 1);
+        } else {
+          message.channel.send("You have to enter a valid integer!");
+        }
+      });
+    };
+  } else if (message.content.startsWith(`${prefix}search`)) {
+      var keyword = message.content.substr(message.content.indexOf(' ') + 1);
+      message.channel.send(`Searching ${keyword}...`);
+      const filters1 = await ytsr.getFilters(keyword);
+      const filter1 = filters1.get('Type').get('Video');
+      const searchResults = await ytsr(filter1.url, {gl: 'TW', hl: 'zh-Hant', limit: 10});
+      var item = searchResults.items;
+      var page = 0;
+      var embed = createEmbed(item, page);
+
+      message.channel.send(embed).then(embedMessage => {
+          embedMessage.react('⬅️')
+          .then(embedMessage.react('➡️'))
+          const filter = (reaction, user) => ['⬅️', '➡️'].includes(reaction.emoji.name) && !user.bot;
+          const collector = embedMessage.createReactionCollector(filter, { idle: 12000, dispose: true });
+          collector.on('collect', r => {
+              if (r.emoji.name === '⬅️') {
+                  page -= 1;
+                  if (page < 0) page = item.length - 1;
+                  var editedEmbed = createEmbed(item, page);
+                  embedMessage.edit(editedEmbed);
+              } else if (r.emoji.name === '➡️') {
+                  page += 1;
+                  if (page + 1 > item.length) page = 0;
+                  var editedEmbed = createEmbed(item, page);
+                  embedMessage.edit(editedEmbed);
+              };
+          });
+          collector.on('remove', r => {
+              if (r.emoji.name === '⬅️') {
+                  page -= 1;
+                  if (page < 0) page = item.length - 1;
+                  var editedEmbed = createEmbed(item, page);
+                  embedMessage.edit(editedEmbed);
+              } else if (r.emoji.name === '➡️') {
+                  page += 1;
+                  if (page + 1 > item.length) page = 0;
+                  var editedEmbed = createEmbed(item, page);
+                  embedMessage.edit(editedEmbed);
+              };
+          });
+      });
+  }});
 
 async function execute(message, serverQueue) {
   const args = message.content.split(" ");
@@ -179,14 +290,17 @@ async function execute(message, serverQueue) {
     var link = args[1];
   } else {
     var keyword = message.content.substr(message.content.indexOf(' ') + 1);
-    message.channel.send(`Searching ${keyword}...`)
-    const searchResults = await ytsr(keyword, {gl: 'TW', gl: 'zh', limit: 30});
+    message.channel.send(`Searching ${keyword}...`);
+    const filters1 = await ytsr.getFilters(keyword);
+    const filter1 = filters1.get('Type').get('Video');
+    const searchResults = await ytsr(filter1.url, {gl: 'TW', hl: 'zh-Hant', limit: 1});
     var link = searchResults.items[0].url;
   };
   const songInfo = await ytdl.getInfo(link);
   const song = {
         title: songInfo.videoDetails.title,
         url: songInfo.videoDetails.video_url,
+        length: songInfo.videoDetails.lengthSeconds,
    };
 
   if (!serverQueue) {
@@ -258,6 +372,37 @@ function play(guild, song) {
     .on("error", error => console.error(error));
   dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
   serverQueue.textChannel.send(`Start playing: **${song.title}**`);
+};
+
+function format(duration) {   
+    // Hours, minutes and seconds
+    var hrs = ~~(duration / 3600);
+    var mins = ~~((duration % 3600) / 60);
+    var secs = ~~duration % 60;
+
+    // Output like "1:01" or "4:03:59" or "123:03:59"
+    var ret = "";
+
+    if (hrs > 0) {
+        ret += "" + hrs + ":" + (mins < 10 ? "0" : "");
+    }
+
+    ret += "" + mins + ":" + (secs < 10 ? "0" : "");
+    ret += "" + secs;
+    return ret;
+};
+
+function createEmbed(item, page) {
+  let embed = new Discord.MessageEmbed()
+    .setTitle(`[${item[page].title}](${item[page].url})`)
+    .setDescription(item[page].description)
+    .setColor('#ff0000')
+    .setImage(item[page].bestThumbnail.url)
+    .addField('Views', item.views)
+    .addField('Duration', item.duration)
+    .addField('Uploaded at', item.uploadedAt)
+    .setFooter(`[${item[page].author.name}](${item[page].author.url})`, item[page].author.bestAvatar.url);
+  return embed;
 };
 
 client.login(token);
