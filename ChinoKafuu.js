@@ -187,7 +187,7 @@ client.on("message", async message => {
 
   const serverQueue = queue.get(message.guild.id);
 
-  if (message.content.startsWith(`${prefix}play`) || message.content.startsWith(`${prefix}p`)) {
+  if (message.content.startsWith(`${prefix}play`)) {
     execute(message, serverQueue);
     return;
   } else if (message.content.startsWith(`${prefix}skip`)) {
@@ -196,7 +196,7 @@ client.on("message", async message => {
   } else if (message.content.startsWith(`${prefix}stop`)) {
     stop(message, serverQueue);
     return;
-  } else if (message.content.startsWith(`${prefix}queue`) || message.content.startsWith(`${prefix}q`)) {
+  } else if (message.content.startsWith(`${prefix}queue`)) {
     if (serverQueue) {
       var songQueue = serverQueue.songs.slice(1);
       var printQueue = ''
@@ -394,14 +394,14 @@ function format(duration) {
 
 function createEmbed(item, page) {
   let embed = new Discord.MessageEmbed()
-    .setTitle(`[${item[page].title}](${item[page].url})`)
+    .setTitle([item[page].title](item[page].url))
     .setDescription(item[page].description)
     .setColor('#ff0000')
     .setImage(item[page].bestThumbnail.url)
     .addField('Views', item.views)
     .addField('Duration', item.duration)
     .addField('Uploaded at', item.uploadedAt)
-    .setFooter(`[${item[page].author.name}](${item[page].author.url})`, item[page].author.bestAvatar.url);
+    .setFooter([item[page].author.name](item[page].author.url), item[page].author.bestAvatar.url);
   return embed;
 };
 client.login(token);
