@@ -399,9 +399,9 @@ function createEmbed(item, page) {
     .setDescription(item[page].description)
     .setColor('#ff0000')
     .setImage(item[page].bestThumbnail.url)
-    .addField('Views', item.views)
-    .addField('Duration', item.duration)
-    .addField('Uploaded at', item.uploadedAt)
+    .addField('Views', item[page].views)
+    .addField('Duration', item[page].duration)
+    .addField('Uploaded at', item[page].uploadedAt)
     .setFooter(item[page].author.name, item[page].author.bestAvatar.url);
   return embed;
 };
