@@ -394,14 +394,15 @@ function format(duration) {
 
 function createEmbed(item, page) {
   let embed = new Discord.MessageEmbed()
-    .setTitle(`**[${item[page].title}](${item[page].url})**`)
+    .setURL(item[page].url)
+    .setTitle(item[page].title)
     .setDescription(item[page].description)
     .setColor('#ff0000')
     .setImage(item[page].bestThumbnail.url)
     .addField('Views', item.views)
     .addField('Duration', item.duration)
     .addField('Uploaded at', item.uploadedAt)
-    .setFooter(`**[${item[page].author.name}](${item[page].author.url})**`, item[page].author.bestAvatar.url);
+    .setFooter(item[page].author.name, item[page].author.bestAvatar.url);
   return embed;
 };
 client.login(token);
