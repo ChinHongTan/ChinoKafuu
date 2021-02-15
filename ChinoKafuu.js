@@ -3,6 +3,7 @@ const Discord = require('discord.js');
 const { prefix, token } = require('./config.json');
 const ytdl = require("ytdl-core");
 const ytsr = require('ytsr');
+const Sequelize = require('sequelize');
 
 let rawData = fs.readFileSync('./editSnipes.json');
 let editSnipes = JSON.parse(rawData);
@@ -199,7 +200,7 @@ client.on("message", async message => {
   } else if (message.content.startsWith(`${prefix}queue`)) {
     if (serverQueue) {
       var songQueue = serverQueue.songs.slice(1);
-      var printQueue = ''
+      var printQueue = '';
       songQueue.forEach((item, index) => {
         var songNo = index + 1;
         var songTitle = item.title;

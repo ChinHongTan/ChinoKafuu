@@ -8,6 +8,24 @@ module.exports = {
         const request = require('request');
         const Discord = require('discord.js');
         var http = require("http");
+        const Sequelize = require('sequelize');
+
+        const sequelize = new Sequelize('database', 'user', 'password', {
+            host: 'localhost',
+            dialect: 'sqlite',
+            logging: false,
+            // SQLite only
+            storage: 'database.sqlite',
+        });
+
+        const Tags = sequelize.define('tags', {
+            name: {
+                type: Sequelize.STRING,
+                unique: true,
+            },
+            imagesSendByUser: Sequelize.INTEGER,
+            total: Sequelize.INTEGER,
+        });
 
         const guild = message.client.guilds.cache.get('764839074228994069');
         const totalImageCount = [];
@@ -179,6 +197,7 @@ module.exports = {
                     memberProfile.push(userInfo);
                     console.log(`User Info: ${JSON.stringify(userInfo, null, 2)}`);
                 };
+                return message.channel.send("Done saving image urls.");
             });
         };
         if(!message.member.hasPermission("ADMINISTRATOR")){
