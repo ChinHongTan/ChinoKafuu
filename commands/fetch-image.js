@@ -5,28 +5,7 @@ module.exports = {
     description: 'fetch images send in guild (partially useless command)',
     execute(message, imageChannels) {
         const fs = require('fs');
-        const request = require('request');
         const Discord = require('discord.js');
-        var http = require("http");
-        const Sequelize = require('sequelize');
-
-        const sequelize = new Sequelize('database', 'user', 'password', {
-            host: 'localhost',
-            dialect: 'sqlite',
-            logging: false,
-            // SQLite only
-            storage: 'database.sqlite',
-        });
-
-        const Tags = sequelize.define('tags', {
-            name: {
-                type: Sequelize.STRING,
-                unique: true,
-            },
-            imagesSendByUser: Sequelize.INTEGER,
-            total: Sequelize.INTEGER,
-        });
-
         const guild = message.client.guilds.cache.get('764839074228994069');
         const totalImageCount = [];
 
@@ -197,6 +176,8 @@ module.exports = {
                     memberProfile.push(userInfo);
                     console.log(`User Info: ${JSON.stringify(userInfo, null, 2)}`);
                 };
+                let data = JSON.stringify(memberProfile, null, 2);
+                fs.writeFileSync(`./memberProfile.json`);
                 return message.channel.send("Done saving image urls.");
             });
         };
@@ -206,6 +187,7 @@ module.exports = {
         if(imageChannels.length < 1) {
             var imageChannels = ['765176655407874081', '766636820066074656', '765525905807769621', '768430617733496842', '764840462707326986'];
         };
+        Tags.sync();
         fetchImageChannels(imageChannels);       
     },
 };
