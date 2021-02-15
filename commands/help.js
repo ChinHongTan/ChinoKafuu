@@ -22,7 +22,9 @@ module.exports = {
 		)
 		.setFooter("22 commands available")
 		.setTimestamp();
-		message.channel.send(embed)
+		if (message.channel.type != 'dm') {
+			message.channel.send(embed);
+		};
 		const data = [];
         const { commands } = message.client;
 
