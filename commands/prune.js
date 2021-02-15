@@ -1,7 +1,8 @@
 module.exports = {
 	name: 'prune',
 	aliases: ['cut', 'delete', 'del'],
-	description: 'Delete some messages',
+	guildOnly: true,
+	description: 'Delete messages.',
 	execute(message, args) {
 	const amount = parseInt(args[0]) + 1;
 

@@ -189,15 +189,19 @@ client.on("message", async message => {
   const serverQueue = queue.get(message.guild.id);
 
   if (message.content.startsWith(`${prefix}play`)) {
+    if (message.channel.type === 'dm') return message.channel.send("I can't execute that command inside DMs!");
     execute(message, serverQueue);
     return;
   } else if (message.content.startsWith(`${prefix}skip`)) {
+    if (message.channel.type === 'dm') return message.channel.send("I can't execute that command inside DMs!");
     skip(message, serverQueue);
     return;
   } else if (message.content.startsWith(`${prefix}stop`)) {
+    if (message.channel.type === 'dm') return message.channel.send("I can't execute that command inside DMs!");
     stop(message, serverQueue);
     return;
   } else if (message.content.startsWith(`${prefix}queue`)) {
+    if (message.channel.type === 'dm') return message.channel.send("I can't execute that command inside DMs!");
     if (serverQueue) {
       var songQueue = serverQueue.songs.slice(1);
       var printQueue = '';
@@ -216,6 +220,7 @@ client.on("message", async message => {
       return message.channel.send(embed);
     } else return message.channel.send("There is no song in the queue!");
   } else if (message.content.startsWith(`${prefix}remove`) || message.content.startsWith(`${prefix}r`)) {
+    if (message.channel.type === 'dm') return message.channel.send("I can't execute that command inside DMs!");
     if (serverQueue) {
       const args = message.content.split(' ');
       args.shift();
@@ -229,6 +234,7 @@ client.on("message", async message => {
       });
     };
   } else if (message.content.startsWith(`${prefix}search`)) {
+      if (message.channel.type === 'dm') return message.channel.send("I can't execute that command inside DMs!");
       var keyword = message.content.substr(message.content.indexOf(' ') + 1);
       message.channel.send(`Searching ${keyword}...`);
       const filters1 = await ytsr.getFilters(keyword);

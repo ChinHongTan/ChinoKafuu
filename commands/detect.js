@@ -1,7 +1,8 @@
 module.exports = {
 	name: 'detect',
 	aliases: ['embed'],
-	description: "Detects embed from bots ",
+	guildOnly: true,
+	description: "Detects embed from bots (useless command)",
 	execute(message, args) {
 
         const fs = require('fs');

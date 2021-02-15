@@ -2,7 +2,7 @@ module.exports = {
     name: 'fetchimage',
     cooldown: 60,
     aliases: ['fi', 'fetch-image', 'imagefetch'],
-    description: 'fetch some images',
+    description: 'fetch images send in guild (partially useless command)',
     execute(message, imageChannels) {
         const fs = require('fs');
         const request = require('request');

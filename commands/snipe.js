@@ -1,5 +1,6 @@
 module.exports = {
 	name: 'snipe',
+	guildOnly: true,
 	description: 'Snipe a message.',
 	execute(message, args) {
 		const fs = require('fs');

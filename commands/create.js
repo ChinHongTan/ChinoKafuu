@@ -2,6 +2,7 @@ module.exports = {
 	name: 'create',
 	cooldown: 10,
 	aliases: ['backup'],
+    guildOnly: true,
 	description: 'Create a server backup',
 	execute(message, args) {
         backup = require("discord-backup");
