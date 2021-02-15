@@ -9,6 +9,7 @@ module.exports = {
 		}).then((hook) => {
 			hook.send(args.join(' '));
 		});
+		message.delete();
 	},
 };
 
