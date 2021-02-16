@@ -12,7 +12,10 @@ module.exports = {
 			message.channel.send(`Your username: ${message.author.username}\nYour ID: ${message.author.id}\nDate created: ${message.author.createdAt}\nYour Tag: ${message.author.tag}`);
 			for(const profile of memberProfiles) {
 				if (profile.name != message.author.username) continue;
-				message.channel.send(`User Info: ${JSON.stringify(profile, null, 2)}`);
+				for (const [key, value] of Object.entries(profile)) {
+					info += `${key} : ${value}\n`;
+				};
+				message.channel.send(`User Info: ${info}`);
 				break;
 			};
 			return message.channel.send(`Last updated: ${timestamp}`); 
