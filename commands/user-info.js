@@ -7,9 +7,9 @@ module.exports = {
 		const rawData = fs.readFileSync('./memberProfile.json');
 		const memberProfiles = JSON.parse(rawData);
 		message.channel.send(`Your username: ${message.author.username}\nYour ID: ${message.author.id}\nDate created: ${message.author.createdAt}\nYour Tag: ${message.author.tag}`);
-		memberProfiles.forEach(profile => {
+		for(const profile of memberProfiles) {
 			if (profile.name != message.author.username) continue;
 			message.channel.send(`User Info: ${JSON.stringify(profile, null, 2)}`)
-		});
+		};
 	},
 };
