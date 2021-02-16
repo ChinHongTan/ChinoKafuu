@@ -176,7 +176,9 @@ module.exports = {
                     memberProfile.push(userInfo);
                     console.log(`User Info: ${JSON.stringify(userInfo, null, 2)}`);
                 };
-                let data = JSON.stringify(memberProfile, null, 2);
+                profileWithTimestamp = new Object();
+                profileWithTimestamp[new Date().toLocaleString()] = memberProfile;
+                let data = JSON.stringify(profileWithTimestamp, null, 2);
                 fs.writeFileSync(`./memberProfile.json`);
                 return message.channel.send("Done saving image urls.");
             });
@@ -187,7 +189,6 @@ module.exports = {
         if(imageChannels.length < 1) {
             var imageChannels = ['765176655407874081', '766636820066074656', '765525905807769621', '768430617733496842', '764840462707326986'];
         };
-        Tags.sync();
         fetchImageChannels(imageChannels);       
     },
 };
