@@ -179,7 +179,7 @@ module.exports = {
                 profileWithTimestamp = new Object();
                 profileWithTimestamp[new Date().toLocaleString()] = memberProfile;
                 let data = JSON.stringify(profileWithTimestamp, null, 2);
-                fs.writeFileSync(`./memberProfile.json`);
+                fs.writeFileSync(`./memberProfile.json`, data);
                 return message.channel.send("Done saving image urls.");
             });
         };
