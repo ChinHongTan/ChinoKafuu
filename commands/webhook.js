@@ -3,7 +3,7 @@ module.exports = {
 	aliases: ['w'],
 	description: 'Create a webhook.',
 	execute(message, args) {
-		message.channel.createWebhook('智乃乃' , {
+		message.channel.createWebhook(message.author.username, {
 			name: message.author.username,
 			avatar: message.author.avatarURL(),
 		}).then((hook) => {
