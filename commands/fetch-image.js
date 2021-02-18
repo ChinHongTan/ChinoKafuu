@@ -5,9 +5,10 @@ module.exports = {
     description: 'fetch images send in guild (partially useless command)',
     execute(message, imageChannels) {
         const fs = require('fs');
-        const Discord = require('discord.js');
         const guild = message.client.guilds.cache.get('764839074228994069');
         const totalImageCount = [];
+        const memberProfile = [];
+        const channelArray = [];
 
         async function * messagesIterator (channel) {
             let before = null;
@@ -105,8 +106,6 @@ module.exports = {
                 }));
             });
             await Promise.all(totalImageCount).then((value) => {
-                memberProfile = [];
-                channelArray = [];
 
                 const loliPic25 = guild.roles.cache.find(role => role.id === '765215141641060412');
                 const explicitPic25 = guild.roles.cache.find(role => role.id === '765571817003286569');
@@ -120,8 +119,8 @@ module.exports = {
                     channelArray.push(Object.values(ch)[0]);
                 });
                 var imageCount = getGrandTotal(channelArray);
-                var userInfo = new Object();
                 for (const [name, number] of Object.entries(imageCount)) {
+                    var userInfo = new Object();
                     userInfo.name = name;
                     var user = guild.members.cache.find(member => member.user.username === name);
                     imagesSendByUser = new Object();
@@ -173,8 +172,9 @@ module.exports = {
                         user.roles.add(tolPic1000);
                         console.log(`Added ${tolPic1000.name} to ${user.user.username}`);
                     };
-                    memberProfile.push(userInfo);
+                    console.log(JSON.stringify(memberProfile, null, 2));
                     console.log(`User Info: ${JSON.stringify(userInfo, null, 2)}`);
+                    memberProfile.push(userInfo);
                 };
                 profileWithTimestamp = new Object();
                 profileWithTimestamp[new Date().toLocaleString()] = memberProfile;
