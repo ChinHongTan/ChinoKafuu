@@ -57,11 +57,11 @@ module.exports = {
 						{ name: 'Avatar URL', value: `[Click here](${author.user.displayAvatarURL({ format: "png", dynamic: true })})`, inline: true },
 						{ name: 'Created At', value: author.user.createdAt.toLocaleDateString('zh-TW'), inline: true },
 						{ name: 'Joined At', value: author.joinedAt.toLocaleDateString('zh-TW'), inline: true },
-						{ name: `Roles(${author.roles.cache.size})`, value: author.roles.cache.map(roles => `${roles}`).join(', '), inline: true },
 						{ name: "Activity", value: `${activityDescription}`, inline: true },
 						{ name: 'Status', value: author.presence.status, inline: true },
 						{ name: 'Device', value: Object.keys(author.presence.clientStatus).join(', '), inline: true },
-						{ name: 'Images send', value: description, inline: false }
+						{ name: 'Images send', value: description, inline: true },
+						{ name: `Roles(${author.roles.cache.size})`, value: author.roles.cache.map(roles => `${roles}`).join(', '), inline: false }
 					)
 					.setTimestamp()
 					.setFooter(`Last updated: ${timestamp}`);
