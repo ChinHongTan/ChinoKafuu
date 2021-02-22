@@ -79,7 +79,7 @@ module.exports = {
 
 	    const userInfoList = message.mentions.members.map(user => {
 	    	let embed = getUserInfo(user);
-			return `${embed}`;
+			return embed;
 	    });
 		message.channel.send(userInfoList);
 	},
