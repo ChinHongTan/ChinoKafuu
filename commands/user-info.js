@@ -59,7 +59,7 @@ module.exports = {
 						{ name: 'Joined At', value: author.joinedAt.toLocaleDateString('zh-TW'), inline: true },
 						{ name: "Activity", value: `${activityDescription}`, inline: true },
 						{ name: 'Status', value: author.presence.status, inline: true },
-						{ name: 'Device', value: Object.keys(author.presence.clientStatus).join(', '), inline: true },
+						{ name: 'Device', value: author.presence.clientStatus ? Object.keys(author.presence.clientStatus).join(', ') : 'None', inline: true },
 						{ name: 'Images send', value: description, inline: true },
 						{ name: `Roles(${author.roles.cache.size})`, value: author.roles.cache.map(roles => `${roles}`).join(', '), inline: false }
 					)
