@@ -42,9 +42,8 @@ module.exports = {
 						};
 					};
 				} else {
-					activityDescription = 'User is not playing.'
-				}
-				console.log(author.presence.activities);
+					activityDescription = 'User is not playing.';
+				};
 				const embed = new Discord.MessageEmbed()
 					.setColor('#0099ff')
 					.setTitle('User Info')
@@ -57,7 +56,7 @@ module.exports = {
 						{ name: 'Avatar URL', value: `[Click here](${author.user.displayAvatarURL({ format: "png", dynamic: true })})`, inline: true },
 						{ name: 'Created At', value: author.user.createdAt.toLocaleDateString('zh-TW'), inline: true },
 						{ name: 'Joined At', value: author.joinedAt.toLocaleDateString('zh-TW'), inline: true },
-						{ name: "Activity", value: `${activityDescription}`, inline: true },
+						{ name: "Activity", value: activityDescription ? activityDescription : 'None', inline: true },
 						{ name: 'Status', value: author.presence.status, inline: true },
 						{ name: 'Device', value: author.presence.clientStatus ? Object.keys(author.presence.clientStatus).join(', ') : 'None', inline: true },
 						{ name: 'Images send', value: description, inline: true },
