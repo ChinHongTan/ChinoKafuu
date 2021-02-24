@@ -1,6 +1,7 @@
 module.exports = {
 	name: 'user-info',
-	aliases: ['user'],
+	aliases: ['user', 'ui'],
+	guildOnly: true,
 	description: "User's information ",
 	execute(message, args) {
 		const fs = require('fs');
