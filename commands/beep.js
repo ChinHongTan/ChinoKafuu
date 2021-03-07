@@ -1,5 +1,3 @@
-const { Channel } = require("discord.js");
-
 module.exports = {
 	name: 'beep',
 	description: 'Beep!',

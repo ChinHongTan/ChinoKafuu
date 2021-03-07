@@ -3,8 +3,9 @@ const Discord = require('discord.js');
 const { prefix, token } = require('./config.json');
 const ytdl = require("ytdl-core");
 const ytsr = require('ytsr');
-const Sequelize = require('sequelize');
 
+const currency = new Discord.Collection();
+const { Users } = require('./dbObjects');
 let rawData = fs.readFileSync('./editSnipes.json');
 let editSnipes = JSON.parse(rawData);
 let data = fs.readFileSync('./snipes.json');
@@ -26,7 +27,30 @@ for (const file of commandFiles) {
 
 const cooldowns = new Discord.Collection();
 
-client.once('ready', () => {
+Reflect.defineProperty(currency, 'add', {
+	/* eslint-disable-next-line func-name-matching */
+	value: async function add(id, amount) {
+		const user = currency.get(id);
+		if (user) {
+			user.balance += Number(amount);
+			return user.save();
+		}
+		const newUser = await Users.create({ user_id: id, balance: amount });
+		currency.set(id, newUser);
+		return newUser;
+	},
+});
+
+Reflect.defineProperty(currency, 'getBalance', {
+	/* eslint-disable-next-line func-name-matching */
+	value: function getBalance(id) {
+		const user = currency.get(id);
+		return user ? user.balance : 0;
+	},
+});
+client.once('ready', async () => {
+  const storedBalances = await Users.findAll();
+  storedBalances.forEach(b => currency.set(b.user_id, b));
   console.log('Ready!');
   client.user.setPresence({ activity: { name: 'c!help', type: 'LISTENING'}, status: 'dnd' });
 });
@@ -42,9 +66,10 @@ client.on('messageDelete', message => {
 	snipe.author = message.author.tag;
 	snipe.authorAvatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
 	snipe.content = message.content;
+  snipe.guildId = message.guild.id;
 	snipe.timestamp = message.createdAt.toUTCString([8]);
 
-	if (message.attachments.size > 0) {
+	if (message.attachments.size > 0 && message.guild.id === '764839074228994069') {
 		const channel = message.client.channels.cache.get('764846009221251122');
 		var urlArray = [];
     message.attachments.each(attachment => {
@@ -93,7 +118,9 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
 
 
 client.on('message', message => {
-	if (message.author.bot || !message.content.startsWith(prefix)) return;
+	if (message.author.bot) return;
+  currency.add(message.author.id, 1);
+  if (!message.content.startsWith(prefix)) return;
 
 	const args = message.content.slice(prefix.length).trim().split(/ +/);
   const commandName = args.shift().toLowerCase();

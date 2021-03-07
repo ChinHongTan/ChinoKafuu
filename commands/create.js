@@ -18,6 +18,7 @@ module.exports = {
             return message.channel.send(":x: | You must be an administrator of this server to request a backup!");
         }
         // Create the backup
+        message.channel.send(`Start creating backup...\nMax Messages per Channel: ${max}\nSave Images: base64`);
         backup.create(message.guild, {
             maxMessagesPerChannel: max,
             jsonSave: true,
