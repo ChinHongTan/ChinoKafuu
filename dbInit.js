@@ -1,6 +1,19 @@
 const Sequelize = require('sequelize');
 
-const sequelize = new Sequelize('postgres://qtravabjlpauov:2b929125d81a36a17c9d92aed00aad154ffb65eca7c0f3fe3f1b9d021451e430@ec2-54-198-252-9.compute-1.amazonaws.com:5432/d1j44igonolhjv');
+const sequelize = new Sequelize({
+	database: "d1j44igonolhjv",
+	username: "qtravabjlpauov",
+	password: "2b929125d81a36a17c9d92aed00aad154ffb65eca7c0f3fe3f1b9d021451e430",
+	host: "ec2-54-198-252-9.compute-1.amazonaws.com",
+	port: 5432,
+	dialect: "postgres",
+	dialectOptions: {
+	  ssl: {
+		require: true, 
+		rejectUnauthorized: false 
+	  }
+	},
+  });
 
 const CurrencyShop = require('./models/CurrencyShop')(sequelize, Sequelize.DataTypes);
 require('./models/Users')(sequelize, Sequelize.DataTypes);
