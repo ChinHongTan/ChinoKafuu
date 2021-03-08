@@ -24,6 +24,7 @@
     "nhentai-js": "^4.0.0",
     "node-fetch": "^2.6.1",
     "opusscript": "0.0.7",
+    "pg": "^8.5.1",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
     "require": "^2.4.20",
@@ -31,7 +32,7 @@
     "saucenao": "0.0.2",
     "sequelize": "^6.5.0",
     "sqlite3": "^5.0.0",
-    "ytdl-core": "^4.4.5",
+    "ytdl-core": "^4.5.0",
     "ytsr": "^3.2.3"
   },
   "devDependencies": {
