@@ -8,7 +8,13 @@ module.exports = {
 		const Discord = require('discord.js');
 
 		let rawData = fs.readFileSync('./editSnipes.json');
-		let editsnipes = JSON.parse(rawData);
+		let editSnipesWithGuild = new Map(JSON.parse(rawData));
+
+		if (editSnipesWithGuild.has(message,guild.id)) {
+			var editsnipes = editSnipesWithGuild.get(message.guild.id);
+		} else {
+			return message.channel.send("There's nothing to snipe!");
+		};
 		if (args.length < 1) {
 			let embed = new Discord.MessageEmbed()
 				.setColor('RANDOM')

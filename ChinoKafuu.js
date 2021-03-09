@@ -7,9 +7,9 @@ const ytsr = require('ytsr');
 const currency = new Discord.Collection();
 const { Users } = require('./dbObjects');
 let rawData = fs.readFileSync('./editSnipes.json');
-let editSnipes = JSON.parse(rawData);
 let data = fs.readFileSync('./snipes.json');
-let snipes = JSON.parse(data);
+let snipeWithGuild = new Map(JSON.parse(data));
+let editSnipesWithGuild = new Map(JSON.parse(rawData));
 const queue = new Map();
 
 const client = new Discord.Client();
@@ -60,13 +60,17 @@ client.on('messageDelete', message => {
 	if (!message.guild) return;
 
 	var snipe = new Object();
-    var content = message.content;
-    if (!content) content = 'None';
+  var content = message.content;
+  if (!content) content = 'None';
+  if (snipeWithGuild.has(message.guild.id)) {
+    snipes = snipeWithGuild.get(message.guild.id);
+  } else {
+    var snipes = [];
+  }
 
 	snipe.author = message.author.tag;
 	snipe.authorAvatar = message.author.displayAvatarURL({ format: "png", dynamic: true });
 	snipe.content = message.content;
-  snipe.guildId = message.guild.id;
 	snipe.timestamp = message.createdAt.toUTCString([8]);
 
 	if (message.attachments.size > 0 && message.guild.id === '764839074228994069') {
@@ -90,13 +94,15 @@ client.on('messageDelete', message => {
 		});
 		snipes.unshift(snipe);
 		if (snipes.length > 10) snipes.pop();
-        let data = JSON.stringify(snipes, null, 2);
-        fs.writeFileSync(`./snipes.json`, data);
+    snipeWithGuild.set(message.guild.id, snipes);
+    let data = JSON.stringify(Array.from(snipeWithGuild.entries()), null, 2);
+    fs.writeFileSync(`./snipes.json`, data);
 	} else {
 		snipes.unshift(snipe);
 		if (snipes.length > 10) snipes.pop();
-		let data = JSON.stringify(snipes, null, 2);
-        fs.writeFileSync(`./snipes.json`, data);
+    snipeWithGuild.set(message.guild.id, snipes);
+		let data = JSON.stringify(Array.from(snipeWithGuild.entries()), null, 2);
+    fs.writeFileSync(`./snipes.json`, data);
 	};
 });
 
@@ -105,6 +111,11 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
 	if (!oldMessage.guild) return;
 
 	var editSnipe = new Object();
+  if (editSnipesWithGuild.has(oldMessage.guild.id)) {
+    editSnipes = editSnipesWithGuild.get(oldMessage.guild.id);
+  } else {
+    var editSnipes = [];
+  }
 
 	editSnipe.author = newMessage.author.tag;
 	editSnipe.authorAvatar = newMessage.author.displayAvatarURL({ format: "png", dynamic: true});
@@ -112,7 +123,8 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
   if (newMessage.editedAt) editSnipe.timestamp = newMessage.editedAt.toUTCString([8]);
 	editSnipes.unshift(editSnipe);
 	if (editSnipes.length > 10) editSnipes.pop();
-	let data = JSON.stringify(editSnipes, null, 2);
+  editSnipesWithGuild.set(oldMessage.guild.id, editSnipes);
+	let data = JSON.stringify(Array.from(editSnipesWithGuild.entries()), null, 2);
 	fs.writeFileSync(`./editSnipes.json`, data);
 });
 

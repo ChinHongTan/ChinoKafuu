@@ -7,7 +7,13 @@ module.exports = {
 		const Discord = require('discord.js');
 
 		let rawData = fs.readFileSync('./snipes.json');
-		let snipes = JSON.parse(rawData);
+		let snipeWithGuild = new Map(JSON.parse(rawData));
+
+		if (snipeWithGuild.has(message.guild.id)) {
+			var snipes = snipeWithGuild.get(message.guild.id);
+		} else {
+			return message.channel.send("There's nothing to snipe!");
+		}
 		let arg = args[0] ?? 1;
 		let image = '';
 
