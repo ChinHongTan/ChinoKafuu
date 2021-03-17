@@ -17,8 +17,6 @@ module.exports = {
 		let arg = args[0] ?? 1;
 		let image = '';
 
-		if (Number(arg) > 10) return message.channel.send("You can't snipe beyond 10!");
-
 		if (snipes[Number(arg) - 1].attachments && snipes[Number(arg) - 1].attachments.length === 1) image = snipes[Number(arg) - 1].attachments[0];
 		if (snipes[0].attachments && snipes[0].attachments.length > 1) {
 			snipes[0].attachments.forEach(url => {
