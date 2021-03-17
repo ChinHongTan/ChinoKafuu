@@ -10,7 +10,7 @@ module.exports = {
 		let rawData = fs.readFileSync('./editSnipes.json');
 		let editSnipesWithGuild = new Map(JSON.parse(rawData));
 
-		if (editSnipesWithGuild.has(message,guild.id)) {
+		if (editSnipesWithGuild.has(message.guild.id)) {
 			var editsnipes = editSnipesWithGuild.get(message.guild.id);
 		} else {
 			return message.channel.send("There's nothing to snipe!");
@@ -23,6 +23,7 @@ module.exports = {
 				.setFooter(editsnipes[0].timestamp);
 			return message.channel.send(embed);
 		} else {
+			if (Number(args[0]) > 10) return message.channel.send("You can't snipe beyond 10!")
 			let embed = new Discord.MessageEmbed()
 				.setColor('RANDOM')
 				.setAuthor(editsnipes[Number(args[0]) - 1].author, editsnipes[Number(args[0]) - 1].authorAvatar)
