@@ -1,7 +1,7 @@
 module.exports = {
 	name: 'transfer',
 	cooldown: 10,
-	aliases: ['pay', 'give'],
+	aliases: ['pay'],
 	description: 'Send the url of an avatar.',
 	execute(message, args) {
                 (async () => {
