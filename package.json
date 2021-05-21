@@ -24,7 +24,7 @@
     "nhentai-js": "^4.0.0",
     "node-fetch": "^2.6.1",
     "novelcovid": "^3.0.1",
-    "opusscript": "0.0.7",
+    "opusscript": "0.0.8",
     "pg": "^8.6.0",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
