@@ -1,8 +1,10 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const { prefix, token } = require('./config.json');
-const ytdl = require("ytdl-core");
+const ytdl = require("discord-ytdl-core");
 const ytsr = require('ytsr');
+const Canvas = require('canvas');
+const bot = require('discord-rich-presence')('781328218753859635');
 
 const currency = new Discord.Collection();
 const { Users } = require('./dbObjects');
@@ -52,7 +54,16 @@ client.once('ready', async () => {
   const storedBalances = await Users.findAll();
   storedBalances.forEach(b => currency.set(b.user_id, b));
   console.log('Ready!');
-  client.user.setPresence({ activity: { name: 'c!help', type: 'LISTENING'}, status: 'dnd' });
+  //client.user.setPresence({ activity: { name: 'c!help', type: 'LISTENING'}, status: 'dnd' });
+  bot.updatePresence({
+    state: 'slithering',
+    details: '🐍',
+    startTimestamp: Date.now(),
+    endTimestamp: Date.now() + 1337,
+    largeImageKey: 'p1',
+    smallImageKey: 'p2',
+    instance: true,
+  });
 });
 
 client.on('messageDelete', message => {
@@ -128,6 +139,138 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
 	fs.writeFileSync(`./editSnipes.json`, data);
 });
 
+const applyText = (canvas, text) => {
+	const context = canvas.getContext('2d');
+	let fontSize = 70;
+
+	do {
+		context.font = `${fontSize -= 10}px sans-serif`;
+	} while (context.measureText(text).width > canvas.width - 300);
+
+	return context.font;
+};
+
+client.on('guildMemberAdd', async member => {
+	const channel = member.guild.channels.cache.find(ch => ch.name === '閒聊-chat');
+	if (!channel) return;
+
+	const canvas = Canvas.createCanvas(700, 250);
+	const context = canvas.getContext('2d');
+
+	const background = await Canvas.loadImage('./wallpaper.jpg');
+	context.drawImage(background, 0, 0, canvas.width, canvas.height);
+
+	context.strokeStyle = '#74037b';
+	context.strokeRect(0, 0, canvas.width, canvas.height);
+
+	context.font = '28px sans-serif';
+	context.fillStyle = '#ffffff';
+	context.fillText('Welcome to the server,', canvas.width / 2.5, canvas.height / 3.5);
+
+	context.font = applyText(canvas, `${member.displayName}!`);
+	context.fillStyle = '#ffffff';
+	context.fillText(`${member.displayName}!`, canvas.width / 2.5, canvas.height / 1.8);
+
+  context.font = applyText(canvas, `${member.displayName}!`);
+	context.fillStyle = '#ffffff';
+  context.fillText(`bruuuuuuuuuuuuuuuuuh`, canvas.width / 2.5, canvas.height / 0.8);
+
+	context.beginPath();
+	context.arc(125, 125, 100, 0, Math.PI * 2, true);
+	context.closePath();
+	context.clip();
+
+	const avatar = await Canvas.loadImage(member.user.displayAvatarURL({ format: 'jpg' }));
+	context.drawImage(avatar, 25, 25, 200, 200);
+
+	const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png');
+
+	channel.send(`Welcome to the server, ${member}!`, attachment);
+});
+
+/*
+
+// Pass the entire Canvas object because you'll need access to its width and context
+const applyText = (canvas, text) => {
+	const context = canvas.getContext('2d');
+
+	// Declare a base size of the font
+	let fontSize = 70;
+
+	do {
+		// Assign the font to the context and decrement it so it can be measured again
+		context.font = `${fontSize -= 10}px sans-serif`;
+		// Compare pixel width of the text to the canvas minus the approximate avatar size
+	} while (context.measureText(text).width > canvas.width - 300);
+
+	// Return the result to use in the actual canvas
+	return context.font;
+};
+
+client.on('guildMemberAdd', async member => {
+	const channel = member.guild.channels.cache.find(ch => ch.name === '閒聊-chat');
+	if (!channel) return;
+
+	// Create a 700x250 pixels canvas and get its context
+	// The context will be used to modify the canvas
+	const canvas = Canvas.createCanvas(700, 250);
+	const context = canvas.getContext('2d');
+
+  // Since the image takes time to load, you should await it
+	const background = await Canvas.loadImage('./wallpaper.jpg');
+	// This uses the canvas dimensions to stretch the image onto the entire canvas
+	context.drawImage(background, 0, 0, canvas.width, canvas.height);
+
+  // Set the color of the stroke
+	context.strokeStyle = '#74037b';
+	// Draw a rectangle with the dimensions of the entire canvas
+	context.strokeRect(0, 0, canvas.width, canvas.height);
+
+  // Slightly smaller text placed above the member's display name
+	context.font = '28px sans-serif';
+	context.fillStyle = '#ffffff';
+	context.fillText('Welcome to the server,', canvas.width / 2.5, canvas.height / 3.5);
+
+	// Add an exclamation point here and below
+	context.font = applyText(canvas, `${member.displayName}!`);
+	context.fillStyle = '#ffffff';
+	context.fillText(`${member.displayName}!`, canvas.width / 2.5, canvas.height / 1.8);
+
+  // Assign the decided font to the canvas
+	context.font = applyText(canvas, member.displayName);
+	context.fillStyle = '#ffffff';
+	context.fillText(member.displayName, canvas.width / 2.5, canvas.height / 1.8);
+
+  // Select the font size and type from one of the natively available fonts
+	context.font = '60px sans-serif';
+	// Select the style that will be used to fill the text in
+	context.fillStyle = '#ffffff';
+	// Actually fill the text with a solid color
+	context.fillText(member.displayName, canvas.width / 2.5, canvas.height / 1.8);
+
+  // Pick up the pen
+	context.beginPath();
+	// Start the arc to form a circle
+	context.arc(125, 125, 100, 0, Math.PI * 2, true);
+	// Put the pen down
+	context.closePath();
+	// Clip off the region you drew on
+	context.clip();
+
+  // Wait for Canvas to load the image
+	const avatar = await Canvas.loadImage(member.user.displayAvatarURL({ format: 'jpg' }));
+  // Move the image downwards vertically and constrain its height to 200, so that it's square
+	context.drawImage(avatar, 25, 25, 200, 200);
+	// Draw a shape onto the main canvas
+	context.drawImage(avatar, 25, 0, 200, canvas.height);
+
+	// Use the helpful Attachment class structure to process the file for you
+	const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png');
+
+	channel.send(`Welcome to the server, ${member}!`, attachment);
+});
+
+*/
 
 client.on('message', message => {
 	if (message.author.bot) return;
@@ -354,7 +497,7 @@ async function execute(message, serverQueue) {
         title: songInfo.videoDetails.title,
         url: songInfo.videoDetails.video_url,
         length: songInfo.videoDetails.lengthSeconds,
-   };
+  };
 
   if (!serverQueue) {
     const queueContruct = {
@@ -417,7 +560,7 @@ function play(guild, song) {
   };
 
   const dispatcher = serverQueue.connection
-    .play(ytdl(song.url, {quality: 'highestaudio', highWaterMark : 1 << 25 } ))
+    .play(ytdl(song.url, {quality: 'highestaudio', highWaterMark : 1 << 25,  } ))
     .on("finish", () => {
       serverQueue.songs.shift();
       play(guild, serverQueue.songs[0]);
