@@ -61,6 +61,7 @@ module.exports = {
 				var editedEmbed = createEmbed(response, page);
 				embedMessage.edit(editedEmbed);
 			};
+			return page;
 		};
 
 		function reactHandler2(r, page, response, embedMessage) {
@@ -75,6 +76,7 @@ module.exports = {
 				var editedEmbed = createEmbed2(response, page);
 				embedMessage.edit(editedEmbed);
 			};
+			return page;
 		};
 
 		function sendEmbed(embed, response, page = 0, mode) {
@@ -86,18 +88,18 @@ module.exports = {
 				switch (mode) {
 					case 1:
 						collector.on('collect', r => {
-							reactHandler(r, page, response, embedMessage);
+							page = reactHandler(r, page, response, embedMessage);
 						});
 						collector.on('remove', r => {
-							reactHandler(r, page, response, embedMessage);
+							page = reactHandler(r, page, response, embedMessage);
 						});
 						break;
 					case 2:
 						collector.on('collect', r => {
-							reactHandler2(r, page, response, embedMessage);
+							page = reactHandler2(r, page, response, embedMessage);
 						});
 						collector.on('remove', r => {
-							reactHandler2(r, page, response, embedMessage);
+							page = reactHandler2(r, page, response, embedMessage);
 						});
 				};
 				
