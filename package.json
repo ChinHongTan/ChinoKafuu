@@ -15,7 +15,7 @@
     "ascii2d": "^3.0.1",
     "canvas": "^2.8.0",
     "discord-backup": "^2.5.0",
-    "discord-buttons": "^4.0.0",
+    "discord-buttons": "^3.0.1",
     "discord-rich-presence": "0.0.8",
     "discord-rpc": "^3.2.0",
     "discord-together": "^1.1.14",
