@@ -3,12 +3,34 @@ module.exports = {
 	guildOnly: true,
     musicCommand: true,
 	description: 'Check the current song queue.',
-	execute(message, args, serverQueue, queue) {
+	execute(message, args) {
+        const queueData = require("../queueData");
+        let queue = queueData.queue;
+        let serverQueue = queue.get(message.guild.id);
+        const Discord = require('discord.js');
+
+        function format(duration) {
+            // Hours, minutes and seconds
+            var hrs = ~~(duration / 3600);
+            var mins = ~~((duration % 3600) / 60);
+            var secs = ~~duration % 60;
+        
+            // Output like "1:01" or "4:03:59" or "123:03:59"
+            var ret = "";
+        
+            if (hrs > 0) {
+                ret += "" + hrs + ":" + (mins < 10 ? "0" : "");
+            }
+        
+            ret += "" + mins + ":" + (secs < 10 ? "0" : "");
+            ret += "" + secs;
+            return ret;
+        }
+
 		if (message.channel.type === "dm"){
             message.channel.send(
                 "I can't execute that command inside DMs!"
             );
-            return [serverQueue, queue];
         }
         if (serverQueue) {
             var songQueue = serverQueue.songs.slice(1);
@@ -29,11 +51,9 @@ module.exports = {
                 .setDescription(
                     `**Now playing**\n[${serverQueue.songs[0].title}](${serverQueue.songs[0].url})\n\n**Queued Songs**\n${printQueue}${serverQueue.songs.length} songs in queue`
                 );
-            message.channel.send(embed);
-            return [serverQueue, queue];
+            return message.channel.send(embed);
         } else {
-            message.channel.send("There is no song in the queue!");
-            return [serverQueue, queue];
+            return message.channel.send("There is no song in the queue!");
         }
 	},
 };

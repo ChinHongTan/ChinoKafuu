@@ -3,10 +3,9 @@ module.exports = {
 	guildOnly: true,
     musicCommand: true,
 	description: 'Play a song based on a given url or a keyword',
-    musicCommand: true,
 	async execute(message, args) {
         const ytsr = require("ytsr");
-        const ytdl = require("discord-ytdl-core");
+        const ytdl = require("ytdl-core");
         const queueData = require("../queueData");
         let queue = queueData.queue;
         let serverQueue = queue.get(message.guild.id);
