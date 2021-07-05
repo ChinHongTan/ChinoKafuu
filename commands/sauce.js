@@ -2,7 +2,7 @@ module.exports = {
 	name: 'sauce',
 	description: 'Search SauceNao for an image source.',
 	cooldown: 5,
-	execute(message, args) {
+	execute(client, message, args) {
 		const Discord = require('discord.js');
 		const sagiri = require('sagiri');
 		let mySauce = sagiri('340f20a8a7eeb9d0506c8c07e20621c382c66ae9');
@@ -112,7 +112,7 @@ module.exports = {
 			mySauce(searchImage, { results: 10})
 			.then(result => {
 				let response = result.filter(r => r.similarity > 80);
-				console.log('request sucessful');
+				console.log('request successful');
 
 				if (response.length < 1) {
 					searchByUrl(searchImage, 'bovw').then(result2 => {

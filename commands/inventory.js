@@ -3,7 +3,7 @@ module.exports = {
 	cooldown: 10,
 	aliases: ['inv'],
 	description: 'Show your inventory.',
-	execute(message, args) {
+	execute(client, message, args) {
 		const { Users } = require('../dbObjects');
 		const Discord = require('discord.js');
 		let currency = new Discord.Collection();

@@ -2,7 +2,7 @@ module.exports = {
 	name: 'buy',
 	cooldown: 10,
 	description: 'Buy an item from the shop.',
-	execute(message, args) {
+	execute(client, message, args) {
         const { Op } = require('sequelize');
         const { Users, CurrencyShop } = require('../dbObjects');
         const Discord = require('discord.js');

@@ -2,7 +2,7 @@ module.exports = {
 	name: 'shop',
 	cooldown: 10,
 	description: 'Show the shop items.',
-	execute(message, args) {
+	execute(client, message, args) {
 		(async () => {
 			const { CurrencyShop } = require('../dbObjects');
 			const items = await CurrencyShop.findAll();

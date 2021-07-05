@@ -1,11 +1,8 @@
-const { DH_CHECK_P_NOT_SAFE_PRIME } = require('constants');
-
 module.exports = {
     name: 'butt',
     cooldown: 3,
 	description: 'Test button function!',
-	execute(message, args) {
-        const client = message.client;
+	execute(client, message, args) {
         const disbut = require('discord-buttons')(client);
 
         let button = new disbut.MessageButton()

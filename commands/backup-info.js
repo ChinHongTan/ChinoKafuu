@@ -3,7 +3,7 @@ module.exports = {
 	cooldown: 10,
 	aliases: ['bi'],
 	description: 'Load a backup info.',
-	execute(message, args) {
+	execute(client, message, args) {
 		backup = require("discord-backup");
         let backupID = args[0];
         if(!backupID){

@@ -2,9 +2,8 @@ module.exports = {
     name: 'chess',
     cooldown: 3,
 	description: 'Play chess together!',
-	execute(message, args) {
+	execute(client, message, args) {
         const Discord = require('discord.js');
-        const client = new Discord.Client();
         const { DiscordTogether } = require('discord-together');
 
         client.discordTogether = new DiscordTogether(client);

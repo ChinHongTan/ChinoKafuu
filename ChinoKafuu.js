@@ -1,63 +1,66 @@
+//Dependcies
 const fs = require("fs");
 const Discord = require("discord.js");
 const { prefix, token } = require("./config.json");
 
-const currency = new Discord.Collection();
-const { Users } = require("./dbObjects");
-
+//initialization
 const client = new Discord.Client();
+let cooldowns = new Discord.Collection();
 client.commands = new Discord.Collection();
+client.queue = new Map();
 let functions = {}
 
+//Database
+client.currency = new Discord.Collection();
+const { Users } = require("./dbObjects");
+
+//Load commands
 const commandFiles = fs
     .readdirSync("./commands")
     .filter((file) => file.endsWith(".js"));
 
 for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
-
-    // set a new item in the Collection
-    // with the key as the command name and the value as the exported module
-    client.commands.set(command.name, command);
+    client.commands.set(command.name, command);    //Set a new item in the Collection with the key as the command name and the value as the exported module
+    console.log(`Loaded command ${file}`);
 }
-
-const cooldowns = new Discord.Collection();
-
+//Load some useful function
 const functionFiles = fs
     .readdirSync("./functions")
     .filter((file) => file.endsWith(".js"));
 
 for (const file of functionFiles) {
     const func = require(`./functions/${file}`);
-
     functions[func.name] = func.func;
+    console.log(`Loaded function ${file}`);
 }
-console.log(functions);
 
-Reflect.defineProperty(currency, "add", {
+Reflect.defineProperty(client.currency, "add", {
     /* eslint-disable-next-line func-name-matching */
     value: async function add(id, amount) {
-        const user = currency.get(id);
+        let user = client.currency.get(id);
         if (user) {
             user.balance += Number(amount);
-            return user.save();
+            return await user.save();
         }
-        const newUser = await Users.create({ user_id: id, balance: amount });
-        currency.set(id, newUser);
+        let newUser = await Users.create({ user_id: id, balance: amount });
+        client.currency.set(id, newUser);
         return newUser;
     },
 });
 
-Reflect.defineProperty(currency, "getBalance", {
+Reflect.defineProperty(client.currency, "getBalance", {
     /* eslint-disable-next-line func-name-matching */
     value: function getBalance(id) {
-        const user = currency.get(id);
+        let user = client.currency.get(id);
         return user ? user.balance : 0;
     },
 });
+
+
 client.once("ready", async () => {
     const storedBalances = await Users.findAll();
-    storedBalances.forEach((b) => currency.set(b.user_id, b));
+    storedBalances.forEach((b) => client.currency.set(b.user_id, b)); //cache all users currency
     console.log("Ready!");
     client.user.setPresence({
         activity: { name: "c!help", type: "LISTENING" },
@@ -83,12 +86,12 @@ client.on("guildMemberAdd", async (member) => {
 
 client.on("message", async (message) => {
     if (message.author.bot) return;
-    currency.add(message.author.id, 1);
     if (!message.content.startsWith(prefix)) return;
+
+    client.currency.add(message.author.id, 1);
 
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();
-
     const command =
         client.commands.get(commandName) ||
         client.commands.find(
@@ -125,7 +128,7 @@ client.on("message", async (message) => {
     }
 
     try {
-        await command.execute(message, args);
+        await command.execute(client, message, args);
     } catch (error) {
         console.error(error);
         message.reply("there was an error trying to execute that command!");

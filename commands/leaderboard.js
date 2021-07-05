@@ -2,7 +2,7 @@ module.exports = {
 	name: 'leaderboard',
 	cooldown: 10,
 	description: 'Show the leaderboard.',
-	execute(message, args) {
+	execute(client, message, args) {
         (async () => {
             const Discord = require('discord.js');
             const { Users } = require('../dbObjects');

@@ -2,7 +2,7 @@ module.exports = {
 	name: 'loli',
 	cooldown: 3,
 	description: 'get a picture of a loli',
-	execute(message, args) {
+	execute(client, message, args) {
 		const fs = require('fs');
 		const Discord = require('discord.js');
 

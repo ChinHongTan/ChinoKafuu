@@ -3,7 +3,7 @@ module.exports = {
 	cooldown: 10,
 	aliases: ['pay'],
 	description: 'Send the url of an avatar.',
-	execute(message, args) {
+	execute(client, message, args) {
                 (async () => {
                         const { Users } = require('../dbObjects');
                         const Discord = require('discord.js');

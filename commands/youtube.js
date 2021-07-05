@@ -2,8 +2,7 @@ module.exports = {
     name: 'youtube',
     cooldown: 3,
 	description: 'Watch youtube together!',
-	execute(message, args) {
-        const client = message.client;
+	execute(client, message, args) {
         const { DiscordTogether } = require('discord-together');
 
         client.discordTogether = new DiscordTogether(client);

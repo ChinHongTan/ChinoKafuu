@@ -2,7 +2,7 @@ module.exports = {
     name: 'n',
     cooldown: 3,
 	description: 'Try it!',
-	execute(message, args) {
+	execute(client, message, args) {
         if (args.length < 1) {
             return message.channel.send('You need to provide a 6 digit number!');
         } else {

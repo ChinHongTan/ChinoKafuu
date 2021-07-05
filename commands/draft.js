@@ -2,7 +2,7 @@ module.exports = {
     name: 'board',
     cooldown: 3,
 	description: 'Test board function!',
-	execute(message, args) {
+	execute(client, message, args) {
         const Canvas = require('canvas');
         const Discord = require('discord.js');
         const newLocal = 'imgbb-uploader';

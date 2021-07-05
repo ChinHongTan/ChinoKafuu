@@ -2,7 +2,7 @@ module.exports = {
     name: 'nhentai',
     cooldown: 10,
 	description: 'Search for a doujin on nhentai.',
-	execute(message, args) {
+	execute(client, message, args) {
         const nhentai = require('nhentai-js');
 		const Discord = require('discord.js');
 		const nanaApi = require('nana-api');

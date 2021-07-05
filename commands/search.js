@@ -3,10 +3,7 @@ module.exports = {
 	guildOnly: true,
     musicCommand: true,
 	description: 'Search for a keyword on YouTube.',
-	execute(message, args) {
-        let play = require("./play");
-        const { prefix, token } = require("../config.json");
-
+	execute(client, message, args) {
         const ytsr = require("ytsr");
         const Discord = require('discord.js');
 
@@ -31,8 +28,9 @@ module.exports = {
             message.channel.send(
                 "I can't execute that command inside DMs!"
             );
+            return [serverQueue, queue];
         }
-        async function search(message){
+        async function search(message, serverQueue, queue){
             var keyword = message.content.substr(message.content.indexOf(" ") + 1);
             message.channel.send(`Searching ${keyword}...`);
             const filters1 = await ytsr.getFilters(keyword);
@@ -46,6 +44,7 @@ module.exports = {
             var page = 0;
             if (item.length < 1){
                 message.channel.send(`No video was found for ${keyword}!`);
+                return [serverQueue, queue];
             }
             var embed = createEmbed(item, page);
 
@@ -74,9 +73,9 @@ module.exports = {
                     } else if (r.emoji.name === "▶️") {
                         collector.stop();
                         message.content = `c!play ${item[page].url}`;
-                        const args = message.content.slice(prefix.length).trim().split(/ +/);
-                        play.execute(message, args);
+                        [serverQueue, queue] = exec(message, serverQueue);
                         embedMessage.delete();
+                        return [serverQueue, queue];
                     }
                 });
                 collector.on("remove", (r) => {
@@ -94,6 +93,7 @@ module.exports = {
                 });
             });
         }
-        search(message);
+        [serverQueue, queue] = search(message, serverQueue, queue);
+        return [serverQueue, queue];
 	},
 };

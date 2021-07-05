@@ -3,7 +3,7 @@ module.exports = {
 	aliases: ['embed'],
 	guildOnly: true,
 	description: "Detects embed from bots (useless command)",
-	execute(message, args) {
+	execute(client, message, args) {
 
         const fs = require('fs');
 

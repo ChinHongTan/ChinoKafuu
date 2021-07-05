@@ -6,7 +6,7 @@ module.exports = {
 	aliases: ['commands'],
 	usage: '[command name]',
 	cooldown: 5,
-	execute(message, args) {
+	execute(client, message, args) {
 		const Discord = require('discord.js');
 		let embed = new Discord.MessageEmbed()
 		.setTitle("ChinoKafuu Help")

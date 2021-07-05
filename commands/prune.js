@@ -3,7 +3,7 @@ module.exports = {
 	aliases: ['cut', 'delete', 'del'],
 	guildOnly: true,
 	description: 'Delete messages.',
-	execute(message, args) {
+	execute(client, message, args) {
 	const amount = parseInt(args[0]) + 1;
 
 	if (isNaN(amount)) {

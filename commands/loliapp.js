@@ -2,8 +2,7 @@ module.exports = {
     name: 'loliapp',
     cooldown: 3,
 	description: 'Watch loli together!',
-	execute(message, args) {
-        const client = message.client;
+	execute(client, message, args) {
         const { DiscordTogether } = require('discord-together');
 
         client.discordTogether = new DiscordTogether(client);
