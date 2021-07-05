@@ -5,7 +5,7 @@ module.exports = {
 	description: 'Search for a keyword on YouTube.',
 	execute(message, args) {
         let play = require("./play");
-        const { prefix, token } = require("../config.json");
+        const { prefix, token } = require("../data/config.json");
 
         const ytsr = require("ytsr");
         const Discord = require('discord.js');

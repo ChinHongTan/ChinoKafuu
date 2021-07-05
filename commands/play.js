@@ -6,7 +6,7 @@ module.exports = {
 	async execute(message, args) {
         const ytsr = require("ytsr");
         const ytdl = require("ytdl-core");
-        const queueData = require("../queueData");
+        const queueData = require("../data/queueData");
         let queue = queueData.queue;
         let serverQueue = queue.get(message.guild.id);
 
@@ -75,8 +75,6 @@ module.exports = {
 
         function play(guild, song, queue) {
             const serverQueue = queue.get(guild.id);
-            console.log(serverQueue);
-            console.log('-------------------------------------------------------------------------');
             if (!song) {
                 serverQueue.voiceChannel.leave();
                 queue.delete(guild.id);

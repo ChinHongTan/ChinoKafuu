@@ -5,7 +5,7 @@ module.exports = {
 	execute(message, args) {
         (async () => {
             const Discord = require('discord.js');
-            const { Users } = require('../dbObjects');
+            const { Users } = require('../data/dbObjects');
             let currency = new Discord.Collection();
             const storedBalances = await Users.findAll();
             storedBalances.forEach(b => currency.set(b.user_id, b));

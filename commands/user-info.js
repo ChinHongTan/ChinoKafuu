@@ -9,7 +9,7 @@ module.exports = {
 
 		function getUserInfo(author) {
 			try{
-				const rawData = fs.readFileSync('./memberProfile.json');
+				const rawData = fs.readFileSync('../data/memberProfile.json');
 				const profileWithTimestamp = JSON.parse(rawData);
 				const timestamp = Object.keys(profileWithTimestamp)[0];
 				const memberProfiles = profileWithTimestamp[Object.keys(profileWithTimestamp)[0]];

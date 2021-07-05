@@ -1,9 +1,9 @@
 const fs = require("fs");
 const Discord = require("discord.js");
-const { prefix, token } = require("./config.json");
+const { prefix, token } = require("./data/config.json");
 
 const currency = new Discord.Collection();
-const { Users } = require("./dbObjects");
+const { Users } = require("./data/dbObjects");
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();

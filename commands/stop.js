@@ -4,7 +4,7 @@ module.exports = {
     musicCommand: true,
 	description: 'Stops playing songs.',
 	execute(message, args) {
-        const queueData = require("../queueData");
+        const queueData = require("../data/queueData");
         let queue = queueData.queue;
         let serverQueue = queue.get(message.guild.id);
 

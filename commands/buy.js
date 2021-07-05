@@ -4,7 +4,7 @@ module.exports = {
 	description: 'Buy an item from the shop.',
 	execute(message, args) {
         const { Op } = require('sequelize');
-        const { Users, CurrencyShop } = require('../dbObjects');
+        const { Users, CurrencyShop } = require('../data/dbObjects');
         const Discord = require('discord.js');
 
 		let currency = new Discord.Collection();

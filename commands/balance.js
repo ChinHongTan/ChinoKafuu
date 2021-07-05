@@ -5,7 +5,7 @@ module.exports = {
 	description: 'Check your balance.',
 	execute(message, args) {
 		(async () => {
-			const { Users } = require('../dbObjects');
+			const { Users } = require('../data/dbObjects');
 			const Discord = require('discord.js');
 			let currency = new Discord.Collection();
 			const storedBalances = await Users.findAll();
