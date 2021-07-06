@@ -1,7 +1,6 @@
 module.exports = {
 	name: 'search',
 	guildOnly: true,
-    musicCommand: true,
 	description: 'Search for a keyword on YouTube.',
 	execute(client, message, args) {
         const ytsr = require("ytsr");
@@ -24,12 +23,6 @@ module.exports = {
             return embed;
         }
 
-		if (message.channel.type === "dm"){
-            message.channel.send(
-                "I can't execute that command inside DMs!"
-            );
-            return [serverQueue, queue];
-        }
         async function search(message, serverQueue, queue){
             var keyword = message.content.substr(message.content.indexOf(" ") + 1);
             message.channel.send(`Searching ${keyword}...`);

@@ -1,7 +1,7 @@
 module.exports = {
     name: 'skip',
     guildOnly: true,
-    musicCommand: true,
+    aliases: ['s'],
     description: 'Skips a song.',
     execute(client, message, args) {
         let serverQueue = client.queue.get(message.guild.id);

@@ -3,7 +3,7 @@ const Discord = require("discord.js");
 module.exports = {
 	name: 'queue',
 	guildOnly: true,
-    musicCommand: true,
+    aliases: ['q'],
 	description: 'Check the current song queue.',
 	execute(client, message, args) {
         let serverQueue = client.queue.get(message.guild.id);

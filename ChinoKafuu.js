@@ -1,7 +1,7 @@
 //Dependcies
 const fs = require("fs");
 const Discord = require("discord.js");
-const { prefix, token } = require("./config.json");
+const { prefix, token } = require("./data/config.json");
 
 //initialization
 const client = new Discord.Client();
@@ -12,7 +12,7 @@ let functions = {}
 
 //Database
 client.currency = new Discord.Collection();
-const { Users } = require("./dbObjects");
+const { Users } = require("./data/dbObjects");
 
 //Load commands
 const commandFiles = fs

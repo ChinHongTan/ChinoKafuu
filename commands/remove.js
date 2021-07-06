@@ -1,15 +1,10 @@
 module.exports = {
 	name: 'remove',
 	guildOnly: true,
-    musicCommand: true,
+    aliases: ['r'],
 	description: 'Removes a song from the queue',
 	execute(client, message, args) {
-        if (message.channel.type === "dm"){
-            message.channel.send(
-                "I can't execute that command inside DMs!"
-            );
-            return [serverQueue, queue];
-        }
+        let serverQueue = client.queue.get(message.guild.id);
         if (serverQueue) {
             args.forEach((number) => {
                 queuenum = Number(number);
@@ -19,10 +14,8 @@ module.exports = {
                     queuenum > 0
                 ) {
                     serverQueue.songs.splice(queuenum, 1);
-                    return [serverQueue, queue];
                 } else {
                     message.channel.send("You have to enter a valid integer!");
-                    return [serverQueue, queue];
                 }
             });
         }

@@ -4,9 +4,8 @@ const ytdl = require('ytdl-core');
 module.exports = {
 	name: 'play',
 	guildOnly: true,
-    musicCommand: true,
+    aliases: ['p'],
 	description: 'Play a song based on a given url or a keyword',
-    musicCommand: true,
 	async execute(client, message, args) {
         const voiceChannel = message.member.voice.channel;
         const permissions = voiceChannel.permissionsFor(message.client.user);

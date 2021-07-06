@@ -54,6 +54,6 @@ module.exports = {
 		});
 		let data = JSON.stringify(reports, null, 2);
         var filename = 'reports.json';
-        fs.writeFileSync(`./` + filename, data);
+        fs.writeFileSync(`../data/` + filename, data);
 	},
 };

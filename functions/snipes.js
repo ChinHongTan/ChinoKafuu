@@ -3,7 +3,7 @@ module.exports = {
     func: function (message) {
         const fs = require("fs");
         const Discord = require("Discord.js");
-        let data = fs.readFileSync("./snipes.json");
+        let data = fs.readFileSync("../data/snipes.json");
         let snipeWithGuild = new Map(JSON.parse(data));
         if (message.author.bot) return;
         if (!message.guild) return;
@@ -63,7 +63,7 @@ module.exports = {
                 null,
                 2
             );
-            fs.writeFileSync(`./snipes.json`, data);
+            fs.writeFileSync(`../data/snipes.json`, data);
         } else {
             snipes.unshift(snipe);
             if (snipes.length > 10) snipes.pop();
@@ -73,7 +73,7 @@ module.exports = {
                 null,
                 2
             );
-            fs.writeFileSync(`./snipes.json`, data);
+            fs.writeFileSync(`../data/snipes.json`, data);
         };
     },
 };

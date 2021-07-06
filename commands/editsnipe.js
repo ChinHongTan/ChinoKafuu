@@ -7,7 +7,7 @@ module.exports = {
 		const fs = require('fs');
 		const Discord = require('discord.js');
 
-		let rawData = fs.readFileSync('./editSnipes.json');
+		let rawData = fs.readFileSync('../data/editSnipes.json');
 		let editSnipesWithGuild = new Map(JSON.parse(rawData));
 
 		if (editSnipesWithGuild.has(message.guild.id)) {

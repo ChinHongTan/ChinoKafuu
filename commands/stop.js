@@ -1,7 +1,6 @@
 module.exports = {
     name: 'stop',
     guildOnly: true,
-    musicCommand: true,
     description: 'Stops playing songs.',
     execute(client, message, args) {
         let serverQueue = client.queue.get(message.guild.id);
