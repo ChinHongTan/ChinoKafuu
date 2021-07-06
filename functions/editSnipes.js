@@ -2,7 +2,7 @@ module.exports = {
     name: 'storeEditSnipes',
     func: function (oldMessage, newMessage) {
         const fs = require("fs");
-        let rawData = fs.readFileSync("../data/editSnipes.json");
+        let rawData = fs.readFileSync("./data/editSnipes.json");
         let editSnipesWithGuild = new Map(JSON.parse(rawData));
 
         if (oldMessage.author.bot) return;
@@ -32,6 +32,6 @@ module.exports = {
             null,
             2
         );
-        fs.writeFileSync(`../data/editSnipes.json`, data);
+        fs.writeFileSync(`./data/editSnipes.json`, data);
     },
 };
