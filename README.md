@@ -1,6 +1,8 @@
 # **ChinoKafuu**
 A nice little discord bot I make to learn JavaScript and how bots works XD
+
 The bot is not quite done yet but I will keep on updating!
+
 This bot runs on Node.js
 
 ## Invite link
