@@ -1,7 +1,7 @@
 module.exports = {
 	name: 'skip',
 	guildOnly: true,
-    musicCommand: true,
+    aliases: ['s'],
 	description: 'Skips a song.',
 	execute(message, args) {
         const queueData = require("../data/queueData");
@@ -11,7 +11,7 @@ module.exports = {
 		function skip(message, serverQueue) {
             if (!message.member.voice.channel) {
                 message.channel.send(
-                    "You have to be in a voice channel to stop the music!"
+                    "You have to be in a voice channel to skip the music!"
                 );
             } 
             if (!serverQueue){

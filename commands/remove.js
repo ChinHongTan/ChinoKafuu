@@ -1,18 +1,13 @@
 module.exports = {
 	name: 'remove',
 	guildOnly: true,
-    musicCommand: true,
+    aliases: ['r'],
 	description: 'Removes a song from the queue',
 	execute(message, args) {
         const queueData = require("../data/queueData");
         let queue = queueData.queue;
         let serverQueue = queue.get(message.guild.id);
 
-        if (message.channel.type === "dm"){
-            message.channel.send(
-                "I can't execute that command inside DMs!"
-            );
-        }
         if (serverQueue) {
             args.forEach((number) => {
                 queuenum = Number(number);

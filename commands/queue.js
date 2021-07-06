@@ -1,7 +1,7 @@
 module.exports = {
 	name: 'queue',
 	guildOnly: true,
-    musicCommand: true,
+    aliases: ['q'],
 	description: 'Check the current song queue.',
 	execute(message, args) {
         const queueData = require("../data/queueData");
@@ -27,11 +27,6 @@ module.exports = {
             return ret;
         }
 
-		if (message.channel.type === "dm"){
-            message.channel.send(
-                "I can't execute that command inside DMs!"
-            );
-        }
         if (serverQueue) {
             var songQueue = serverQueue.songs.slice(1);
             var printQueue = "";

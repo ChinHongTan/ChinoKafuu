@@ -1,7 +1,6 @@
 module.exports = {
 	name: 'stop',
 	guildOnly: true,
-    musicCommand: true,
 	description: 'Stops playing songs.',
 	execute(message, args) {
         const queueData = require("../data/queueData");

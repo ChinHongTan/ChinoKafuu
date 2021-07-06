@@ -1,5 +1,3 @@
-const { DH_CHECK_P_NOT_SAFE_PRIME } = require('constants');
-
 module.exports = {
     name: 'butt',
     cooldown: 3,
