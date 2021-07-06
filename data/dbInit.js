@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 
 const sequelize = new Sequelize({
+	logging: false,
 	database: "d1j44igonolhjv",
 	username: "qtravabjlpauov",
 	password: "2b929125d81a36a17c9d92aed00aad154ffb65eca7c0f3fe3f1b9d021451e430",
