@@ -5,7 +5,7 @@ module.exports = {
 	execute(message, args) {
 		const Discord = require('discord.js');
 		const sagiri = require('sagiri');
-		let mySauce = sagiri('340f20a8a7eeb9d0506c8c07e20621c382c66ae9');
+		let mySauce = sagiri(process.env.SAGIRI);
 		const { searchByUrl, searchByFile } = require('ascii2d');
 
 		function createEmbed (response, page) {
