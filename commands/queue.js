@@ -3,7 +3,7 @@ module.exports = {
 	guildOnly: true,
     aliases: ['q'],
 	description: 'Check the current song queue.',
-	execute(message, args) {
+	execute(message) {
         const queueData = require("../data/queueData");
         let queue = queueData.queue;
         let serverQueue = queue.get(message.guild.id);

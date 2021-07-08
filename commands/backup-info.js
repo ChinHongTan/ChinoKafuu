@@ -28,6 +28,7 @@ module.exports = {
             message.channel.send(embed);
         }).catch((err) => {
             // if the backup wasn't found
+            console.log(err);
             return message.channel.send(":x: | No backup found for `"+backupID+"`!");
         });
 	},

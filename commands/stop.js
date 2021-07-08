@@ -2,7 +2,7 @@ module.exports = {
 	name: 'stop',
 	guildOnly: true,
 	description: 'Stops playing songs.',
-	execute(message, args) {
+	execute(message) {
         const queueData = require("../data/queueData");
         let queue = queueData.queue;
         let serverQueue = queue.get(message.guild.id);
