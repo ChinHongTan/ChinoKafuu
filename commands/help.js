@@ -6,24 +6,6 @@ module.exports = {
 	cooldown: 5,
 	execute(message, args) {
         const prefix = process.env.PREFIX || require('../config/config.json');
-		const Discord = require('discord.js');
-		let embed = new Discord.MessageEmbed()
-		.setTitle("ChinoKafuu Help")
-		.setColor("0000FF")
-		.setDescription("Here's a list of all my commands:")
-		.addFields(
-			{ name: "**General--8**", value: "\`avatar\`, \`beep\`, \`snipe\`, \`editsnipe\`, \`prune\`, \`server\`, \`user-info\`, \`help\`"},
-			{ name: "**Music--5**", value: "\`play\`, \`stop\`, \`queue\`, \`skip\`, \`search\`"},
-			{ name: "**Server backup(admin)--3**", value: "\`create\`, \`load\`, \`backup-info\`"},
-			{ name: "**Images--3**", value: "\`fetch-image(admin)\`, \`loli\`, \`sauce\`"},
-			{ name: "**NSFW--3**", value: "\`hentai\`, \`n\`, \`nhentai\`"},
-			{ name: "**Invitation Link**", value: "[Click here](https://discord.com/api/oauth2/authorize?client_id=781328218753859635&permissions=8&redirect_uri=https%3A%2F%2Fdiscord.com%2Fapi%2Foauth2%2Fauthorize%3Fclient_id%3D781328218753859635%26permissions%3D8%26redirect_uri%3Dhttps%253A%252F%252Fdiscord.com%252Fapi%252Foauth2%252Fauthorize%253Fclient_id%253D781328&scope=bot%20applications.commands)"}
-		)
-		.setFooter("22 commands available")
-		.setTimestamp();
-		if (message.channel.type != 'dm') {
-			message.channel.send(embed);
-		};
 		const data = [];
         const { commands } = message.client;
 
