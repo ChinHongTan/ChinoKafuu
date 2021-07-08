@@ -47,7 +47,7 @@ module.exports = {
 						console.log(messageurl);
 						reports.push(messageurl);
 						msg.channel.send('图片已举报')
-					};
+					}
 				})
 				.catch(collected => {
 				});

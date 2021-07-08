@@ -14,7 +14,7 @@ module.exports = {
 			var editsnipes = editSnipesWithGuild.get(message.guild.id);
 		} else {
 			return message.channel.send("There's nothing to snipe!");
-		};
+		}
 		if (args.length < 1) {
 			let embed = new Discord.MessageEmbed()
 				.setColor('RANDOM')
@@ -30,6 +30,6 @@ module.exports = {
 				.setDescription(editsnipes[Number(args[0]) - 1].content)
 				.setFooter(editsnipes[Number(args[0]) - 1].timestamp);
 			return message.channel.send(embed);
-		};
+		}
 	},
 };

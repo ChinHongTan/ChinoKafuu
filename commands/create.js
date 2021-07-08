@@ -11,7 +11,7 @@ module.exports = {
             var max = 10;
         } else {
             var max = args[0];
-        };
+        }
         backup.setStorageFolder("./my-backups/");
         // Check member permissions
         if(!message.member.hasPermission("ADMINISTRATOR")){

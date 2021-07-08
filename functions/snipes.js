@@ -74,6 +74,6 @@ module.exports = {
                 2
             );
             fs.writeFileSync(`./data/snipes.json`, data);
-        };
+        }
     },
 };
