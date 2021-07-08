@@ -3,7 +3,7 @@ const Discord = require("discord.js");
 try {
     const { prefix, token } = require("./config/config.json");
 } catch (err) {
-    // pass
+    const prefix = process.env.PREFIX;
 }
 
 
@@ -89,9 +89,9 @@ client.on("guildMemberAdd", async (member) => {
 client.on("message", async (message) => {
     if (message.author.bot) return;
     currency.add(message.author.id, 1);
-    if (!message.content.startsWith(prefix || process.env.PREFIX)) return;
+    if (!message.content.startsWith(prefix)) return;
 
-    const args = message.content.slice(prefix.length || process.env.PREFIX.length).trim().split(/ +/);
+    const args = message.content.slice(prefix.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();
 
     const command =
@@ -144,7 +144,7 @@ client.on("message", async (message) => {
         functions.count(message);
     }
 
-    if (!message.content.startsWith(prefix || process.env.PREFIX)) return;
+    if (!message.content.startsWith(prefix)) return;
     },
 );
 */

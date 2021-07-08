@@ -7,7 +7,7 @@ module.exports = {
         try {
             const { prefix } = require("../config/config.json");
         } catch (err) {
-            // pass
+            const prefix = process.env.PREFIX;
         }
 
         const ytsr = require("ytsr");
@@ -72,7 +72,7 @@ module.exports = {
                     } else if (r.emoji.name === "▶️") {
                         collector.stop();
                         message.content = `${prefix || process.env.PREFIX}play ${item[page].url}`;
-                        const args = message.content.slice(prefix.length || process.env.PREFIX.length).trim().split(/ +/);
+                        const args = message.content.slice(prefix.length).trim().split(/ +/);
                         play.execute(message, args);
                         embedMessage.delete();
                     }
