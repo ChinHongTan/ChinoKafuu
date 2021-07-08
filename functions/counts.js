@@ -1,7 +1,7 @@
 module.exports = {
-    name: 'count',
-    func: function(message) {
-        const fs = require('fs');
+    name: "count",
+    func: function (message) {
+        const fs = require("fs");
 
         let rawData = fs.readFileSync("../data/countingData.json");
         let countingData = JSON.parse(rawData);

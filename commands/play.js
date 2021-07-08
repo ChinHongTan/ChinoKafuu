@@ -1,9 +1,9 @@
 module.exports = {
-	name: 'play',
-	guildOnly: true,
-    aliases: ['p'],
-	description: 'Play a song based on a given url or a keyword',
-	async execute(message, args) {
+    name: "play",
+    guildOnly: true,
+    aliases: ["p"],
+    description: "Play a song based on a given url or a keyword",
+    async execute(message, args) {
         const ytsr = require("ytsr");
         const ytdl = require("ytdl-core");
         const queueData = require("../data/queueData");
@@ -21,11 +21,13 @@ module.exports = {
                 "I need the permissions to join and speak in your voice channel!"
             );
         }
-    
+
         if (ytdl.validateURL(args[0])) {
             var link = args[0];
         } else {
-            var keyword = message.content.substr(message.content.indexOf(" ") + 1);
+            var keyword = message.content.substr(
+                message.content.indexOf(" ") + 1
+            );
             message.channel.send(`Searching ${keyword}...`);
             const filters1 = await ytsr.getFilters(keyword);
             const filter1 = filters1.get("Type").get("Video");
@@ -42,7 +44,7 @@ module.exports = {
             url: songInfo.videoDetails.video_url,
             length: songInfo.videoDetails.lengthSeconds,
         };
-    
+
         if (!serverQueue) {
             const queueContruct = {
                 textChannel: message.channel,
@@ -52,11 +54,11 @@ module.exports = {
                 volume: 5,
                 playing: true,
             };
-    
+
             queue.set(message.guild.id, queueContruct);
-    
+
             queueContruct.songs.push(song);
-    
+
             try {
                 var connection = await voiceChannel.join();
                 queueContruct.connection = connection;
@@ -67,9 +69,7 @@ module.exports = {
             }
         } else {
             serverQueue.songs.push(song);
-            message.channel.send(
-                `${song.title} has been added to the queue!`
-            );
+            message.channel.send(`${song.title} has been added to the queue!`);
         }
 
         function play(guild, song, queue) {
@@ -81,7 +81,10 @@ module.exports = {
 
             const dispatcher = serverQueue.connection
                 .play(
-                    ytdl(song.url, { quality: "highestaudio", highWaterMark: 1 << 25 })
+                    ytdl(song.url, {
+                        quality: "highestaudio",
+                        highWaterMark: 1 << 25,
+                    })
                 )
                 .on("finish", () => {
                     serverQueue.songs.shift();
@@ -91,5 +94,5 @@ module.exports = {
             dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
             serverQueue.textChannel.send(`Start playing: **${song.title}**`);
         }
-	},
+    },
 };

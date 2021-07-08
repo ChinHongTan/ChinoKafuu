@@ -1,6 +1,6 @@
 module.exports = {
-    name: 'dynamic',
-    func: function(oldState, newState) {
+    name: "dynamic",
+    func: function (oldState, newState) {
         if (newState.member.user.bot) return;
         let mainChannel = oldState.guild.channels.cache.find(
             (channel) => channel.id === "860456123953840128"

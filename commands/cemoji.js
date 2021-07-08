@@ -1,8 +1,8 @@
 module.exports = {
-    name: 'cemoji',
+    name: "cemoji",
     cooldown: 3,
-	description: 'Copy emoji!',
-	execute(message, args) {
-        console.log(args)
-	},
-};    
+    description: "Copy emoji!",
+    execute(message, args) {
+        console.log(args);
+    },
+};

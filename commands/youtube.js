@@ -1,16 +1,18 @@
 module.exports = {
-    name: 'youtube',
+    name: "youtube",
     cooldown: 3,
-	description: 'Watch youtube together!',
-	execute(message, args) {
+    description: "Watch youtube together!",
+    execute(message, args) {
         const client = message.client;
-        const { DiscordTogether } = require('discord-together');
+        const { DiscordTogether } = require("discord-together");
 
         client.discordTogether = new DiscordTogether(client);
         if (message.member.voice.channel) {
-            client.discordTogether.createTogetherCode(message.member.voice.channelID, 'youtube').then(async invite => {
-                return message.channel.send(`${invite.code}`);
-            });
-        };
-	},
+            client.discordTogether
+                .createTogetherCode(message.member.voice.channelID, "youtube")
+                .then(async (invite) => {
+                    return message.channel.send(`${invite.code}`);
+                });
+        }
+    },
 };

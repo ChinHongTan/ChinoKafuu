@@ -1,13 +1,13 @@
 module.exports = {
-	name: 'search',
-	guildOnly: true,
-	description: 'Search for a keyword on YouTube.',
-	execute(message) {
+    name: "search",
+    guildOnly: true,
+    description: "Search for a keyword on YouTube.",
+    execute(message) {
         let play = require("./play");
-        const prefix = process.env.PREFIX || require('../config/config.json');
+        const prefix = process.env.PREFIX || require("../config/config.json");
 
         const ytsr = require("ytsr");
-        const Discord = require('discord.js');
+        const Discord = require("discord.js");
 
         function createEmbed(item, page) {
             let embed = new Discord.MessageEmbed()
@@ -25,9 +25,11 @@ module.exports = {
                 );
             return embed;
         }
-        
-        async function search(message){
-            var keyword = message.content.substr(message.content.indexOf(" ") + 1);
+
+        async function search(message) {
+            var keyword = message.content.substr(
+                message.content.indexOf(" ") + 1
+            );
             message.channel.send(`Searching ${keyword}...`);
             const filters1 = await ytsr.getFilters(keyword);
             const filter1 = filters1.get("Type").get("Video");
@@ -38,7 +40,7 @@ module.exports = {
             });
             var item = searchResults.items;
             var page = 0;
-            if (item.length < 1){
+            if (item.length < 1) {
                 message.channel.send(`No video was found for ${keyword}!`);
             }
             var embed = createEmbed(item, page);
@@ -49,7 +51,8 @@ module.exports = {
                     .then(embedMessage.react("➡️"))
                     .then(embedMessage.react("▶️"));
                 const filter = (reaction, user) =>
-                    ["⬅️", "➡️", "▶️"].includes(reaction.emoji.name) && !user.bot;
+                    ["⬅️", "➡️", "▶️"].includes(reaction.emoji.name) &&
+                    !user.bot;
                 const collector = embedMessage.createReactionCollector(filter, {
                     idle: 12000,
                     dispose: true,
@@ -67,8 +70,13 @@ module.exports = {
                         embedMessage.edit(editedEmbed);
                     } else if (r.emoji.name === "▶️") {
                         collector.stop();
-                        message.content = `${prefix || process.env.PREFIX}play ${item[page].url}`;
-                        const args = message.content.slice(prefix.length).trim().split(/ +/);
+                        message.content = `${
+                            prefix || process.env.PREFIX
+                        }play ${item[page].url}`;
+                        const args = message.content
+                            .slice(prefix.length)
+                            .trim()
+                            .split(/ +/);
                         play.execute(message, args);
                         embedMessage.delete();
                     }
@@ -89,5 +97,5 @@ module.exports = {
             });
         }
         search(message);
-	},
+    },
 };

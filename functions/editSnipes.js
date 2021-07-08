@@ -1,5 +1,5 @@
 module.exports = {
-    name: 'storeEditSnipes',
+    name: "storeEditSnipes",
     func: function (oldMessage, newMessage) {
         const fs = require("fs");
         let rawData = fs.readFileSync("./data/editSnipes.json");

@@ -1,5 +1,5 @@
 module.exports = {
-    name: 'storeSnipes',
+    name: "storeSnipes",
     func: function (message) {
         const fs = require("fs");
         const Discord = require("Discord.js");
@@ -29,7 +29,8 @@ module.exports = {
             message.attachments.size > 0 &&
             message.guild.id === "764839074228994069"
         ) {
-            const channel = message.client.channels.cache.get("764846009221251122");
+            const channel =
+                message.client.channels.cache.get("764846009221251122");
             var urlArray = [];
             message.attachments.each((attachment) => {
                 urlArray.push(attachment.proxyURL);
