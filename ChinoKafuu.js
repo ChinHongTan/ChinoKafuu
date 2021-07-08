@@ -1,13 +1,6 @@
 const fs = require("fs");
 const Discord = require("discord.js");
-try {
-    const { prefix, token } = require("./config/config.json");
-} catch (err) {
-    // pass
-}
-if (!prefix) {
-    const prefix = process.env.PREFIX;
-}
+const prefix = process.env.PREFIX || require('../config/config.json');
 
 
 const currency = new Discord.Collection();

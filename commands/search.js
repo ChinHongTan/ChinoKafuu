@@ -4,14 +4,7 @@ module.exports = {
 	description: 'Search for a keyword on YouTube.',
 	execute(message) {
         let play = require("./play");
-        try {
-            const { prefix } = require("../config/config.json");
-        } catch (err) {
-            // pass
-        }
-        if (!prefix) {
-            const prefix = process.env.PREFIX;
-        }
+        const prefix = process.env.PREFIX || require('../config/config.json');
 
         const ytsr = require("ytsr");
         const Discord = require('discord.js');

@@ -1,12 +1,3 @@
-try {
-    const { prefix } = require('../config/config.json');
-} catch (e) {
-    // pass
-}
-if (!prefix) {
-    const prefix = process.env.PREFIX;
-}
-
 module.exports = {
 	name: 'help',
 	description: 'List all of my commands or info about a specific command.',
@@ -14,6 +5,7 @@ module.exports = {
 	usage: '[command name]',
 	cooldown: 5,
 	execute(message, args) {
+        const prefix = process.env.PREFIX || require('../config/config.json');
 		const Discord = require('discord.js');
 		let embed = new Discord.MessageEmbed()
 		.setTitle("ChinoKafuu Help")
