@@ -14,11 +14,11 @@ module.exports = {
                         activityDescription += `__Custom Status__\n<:${activity.emoji.name}:${activity.emoji.id}> ${activity.state}\n`;
                     } else {
                         activityDescription += `__${activity.type}__\n${activity.name}\n${activity.details ? activity.details : ''}`;
-                    };
-                };
+                    }
+                }
             } else {
                 activityDescription = 'User is not playing.';
-            };
+            }
             const embed = new Discord.MessageEmbed()
                 .setColor('#0099ff')
                 .setTitle('User Info')
@@ -39,11 +39,11 @@ module.exports = {
                 .setTimestamp()
                 .setFooter(`Last updated: ${timestamp}`);
 				return embed;
-		};
+		}
 		if (!message.mentions.members.size) {
 	    	let embed = getUserInfo(message.member);
 			return message.channel.send(embed);
-	    };
+	    }
 
 	    const userInfoList = message.mentions.members.map(user => {
 	    	let embed = getUserInfo(user);
