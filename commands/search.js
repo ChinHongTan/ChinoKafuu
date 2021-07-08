@@ -4,7 +4,11 @@ module.exports = {
 	description: 'Search for a keyword on YouTube.',
 	execute(message) {
         let play = require("./play");
-        const { prefix } = require("../config/config.json");
+        try {
+            const { prefix } = require("../config/config.json");
+        } catch (err) {
+            // pass
+        }
 
         const ytsr = require("ytsr");
         const Discord = require('discord.js');

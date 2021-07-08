@@ -1,6 +1,11 @@
 const fs = require("fs");
 const Discord = require("discord.js");
-const { prefix, token } = require("./config/config.json");
+try {
+    const { prefix, token } = require("./config/config.json");
+} catch (err) {
+    // pass
+}
+
 
 const currency = new Discord.Collection();
 const { Users } = require("./data/dbObjects");

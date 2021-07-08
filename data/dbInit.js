@@ -1,5 +1,9 @@
 const Sequelize = require('sequelize');
-const { host, database, password, username } = require("../config/config.json");
+try {
+    const { host, database, password, username } = require("../config/config.json");
+} catch (err) {
+    // pass
+}
 
 const sequelize = new Sequelize({
 	database: process.env.DATABASE || database,
