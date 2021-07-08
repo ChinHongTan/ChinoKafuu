@@ -2,7 +2,7 @@ module.exports = {
     name: "storeSnipes",
     func: function (message) {
         const fs = require("fs");
-        const Discord = require("Discord.js");
+        const Discord = require("discord.js");
         let data = fs.readFileSync("./data/snipes.json");
         let snipeWithGuild = new Map(JSON.parse(data));
         if (message.author.bot) return;
