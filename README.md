@@ -6,6 +6,10 @@ The bot is not quite done yet but I will keep on updating!
 
 This bot runs on Node.js
 
+[![CodeFactor](https://www.codefactor.io/repository/github/chinhongtan/chinokafuu/badge/main)](https://www.codefactor.io/repository/github/chinhongtan/chinokafuu/overview/main)
+[![codebeat badge](https://codebeat.co/badges/756b4af6-5758-4bdd-b34b-c312e8f6cf7a)](https://codebeat.co/projects/github-com-chinhongtan-chinokafuu-main)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/3db0f95584064f65acafc9b751c1d042)](https://www.codacy.com/gh/ChinHongTan/ChinoKafuu/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ChinHongTan/ChinoKafuu&amp;utm_campaign=Badge_Grade)
+
 ## Invite link
 
 [Invite link](https://discord.com/api/oauth2/authorize?client_id=859653069276839967&permissions=8&scope=bot)
