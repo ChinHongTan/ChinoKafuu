@@ -1,14 +1,13 @@
 const fs = require("fs");
 const Discord = require("discord.js");
-const prefix = process.env.PREFIX || require('../config/config.json');
-
+const prefix = process.env.PREFIX || require("../config/config.json");
 
 const currency = new Discord.Collection();
 const { Users } = require("./data/dbObjects");
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
-let functions = {}
+let functions = {};
 
 const commandFiles = fs
     .readdirSync("./commands")
@@ -117,7 +116,11 @@ client.on("message", async (message) => {
         if (now < expirationTime) {
             const timeLeft = (expirationTime - now) / 1000;
             return message.reply(
-                `please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${command.name}\` command.`
+                `please wait ${timeLeft.toFixed(
+                    1
+                )} more second(s) before reusing the \`${
+                    command.name
+                }\` command.`
             );
         }
 
