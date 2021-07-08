@@ -44,7 +44,7 @@ module.exports = {
 					if (reaction.emoji.name === '⚠️') {
 						reports.push(messageurl);
 						msg.channel.send('图片已举报');
-					};
+					}
 				})
 				.catch(collected => {
 				});

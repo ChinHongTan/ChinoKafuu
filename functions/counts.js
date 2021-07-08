@@ -13,7 +13,7 @@ module.exports = {
             let data = JSON.stringify(countingData, null, 2);
             fs.writeFileSync("../data/countingData.json", data);
             return message.react("✅");
-        };
+        }
         if (message.author.tag != countingData.author) {
             if (message.content != Number(countingData.counter) + 1) {
                 countingData.counter = "0";
@@ -27,7 +27,7 @@ module.exports = {
                 let data = JSON.stringify(countingData, null, 2);
                 fs.writeFileSync("../data/countingData.json", data);
                 return message.react("✅");
-            };
-        };
+            }
+        }
     },
 };

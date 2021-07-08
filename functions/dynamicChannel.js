@@ -11,9 +11,9 @@ module.exports = {
                 if (channel.id === "860456123953840128") return;
                 if (channel.members.size < 1) {
                     channel.delete();
-                };
+                }
             });
-        };
+        }
         if (newState.channelID === "860456123953840128") {
             newState.guild.channels
                 .create(`${newState.member.displayName}的頻道`, {
@@ -27,6 +27,6 @@ module.exports = {
                 .then((voiceChannel) => {
                     newState.member.voice.setChannel(voiceChannel);
                 });
-        };
+        }
     },
 };
