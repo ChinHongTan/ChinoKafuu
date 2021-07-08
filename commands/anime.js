@@ -1,5 +1,3 @@
-const { Certificate } = require("crypto");
-
 module.exports = {
     name: "anime",
     guildOnly: true,

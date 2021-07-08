@@ -26,6 +26,7 @@ This bot runs on Node.js
     -   `anime [image / link]` -> search trace.moe for anime screenshots / scene
     -   `loli` -> sends a loli image xD
 -   **Economy**
+
     ~~not actually useful but who cares~~
     Send a message to earn $1
     -   `balance` -> see how much money you've got
@@ -35,6 +36,7 @@ This bot runs on Node.js
     -   `inventory` -> see what you've got in your bag!
     -   `leaderboard` -> see who's the richest person
 -   **Games**
+
     (\*Join a channel before using this command!)
     -   `betrayal` -> ~~I haven't tried this command too so I don't know what's inside~~
     -   `chess` -> plays chess together
@@ -43,6 +45,7 @@ This bot runs on Node.js
     -   `youtube` -> watch youtube together
     -   `draft` -> ~~I don't know why I give it this name~~ plays a simple connect four game
 -   **Server backup**
+
     As the backup files are huge, I am not storing it in database, so all the data will disappear after restarting the bot
     -   `create [max]` -> creates a server backup with max messages per channel
     -   `backup-info [ID]` -> checks a backup info based on its ID
