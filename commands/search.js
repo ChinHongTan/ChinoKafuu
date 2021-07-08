@@ -7,7 +7,10 @@ module.exports = {
         try {
             const { prefix } = require("../config/config.json");
         } catch (err) {
-            const prefix = process.env.PREFIX;
+            // pass
+        }
+        if (!prefix) {
+            prefix = process.env.PREFIX;
         }
 
         const ytsr = require("ytsr");

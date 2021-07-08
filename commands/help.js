@@ -1,7 +1,10 @@
 try {
     const { prefix } = require('../config/config.json');
 } catch (e) {
-    const prefix = process.env.PREFIX;
+    // pass
+}
+if (!prefix) {
+    prefix = process.env.PREFIX;
 }
 
 module.exports = {

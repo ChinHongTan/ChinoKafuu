@@ -3,7 +3,10 @@ const Discord = require("discord.js");
 try {
     const { prefix, token } = require("./config/config.json");
 } catch (err) {
-    const prefix = process.env.PREFIX;
+    // pass
+}
+if (!prefix) {
+    prefix = process.env.PREFIX;
 }
 
 
