@@ -2,7 +2,7 @@ module.exports = {
     name: "butt",
     cooldown: 3,
     description: "Test button function!",
-    execute(message, args) {
+    execute(message) {
         const client = message.client;
         const disbut = require("discord-buttons")(client);
 
