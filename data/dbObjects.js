@@ -7,8 +7,8 @@ try {
 
 const sequelize = new Sequelize({
 	database: database || process.env.DATABASE,
-	username: username || process.env.PASSWORD,
-	password: password || process.env.USERNAME,
+	username: username || process.env.USERNAME,
+	password: password || process.env.PASSWORD,
 	host: process.env.HOST || host,
 	port: 5432,
 	dialect: "postgres",
