@@ -4,13 +4,9 @@ module.exports = {
     cooldown: 5,
     execute(message, args) {
         const Discord = require("discord.js");
-        try {
-            const { sagiri_token } = require("../config/config.json");
-        } catch (err) {
-            // pass
-        }
+        const sagiri_token = process.env.SAGIRI || require("../config/config.json").sagiri_token;
         const sagiri = require("sagiri");
-        let mySauce = sagiri(process.env.SAGIRI || sagiri_token);
+        let mySauce = sagiri(sagiri_token);
         const { searchByUrl } = require("ascii2d");
 
         function createEmbed(response, page) {

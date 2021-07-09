@@ -1,11 +1,13 @@
 const fs = require("fs");
 const Discord = require("discord.js");
-const prefix = process.env.PREFIX || require("../config/config.json");
+const prefix = process.env.PREFIX || require("./config/config.json").prefix;
+const token = process.env.TOKEN || require("./config/config.json").token;
 
 const currency = new Discord.Collection();
 const { Users } = require("./data/dbObjects");
 
 const client = new Discord.Client();
+
 client.commands = new Discord.Collection();
 let functions = {};
 
@@ -148,4 +150,4 @@ client.on("message", async (message) => {
 );
 */
 
-client.login(process.env.TOKEN || token);
+client.login(token);

@@ -1,17 +1,18 @@
 const Sequelize = require('sequelize');
 try {
-    const { host, database, password, username } = require("../config/config.json");
+    var { host, database, password, username } = require("../config/config.json");
 } catch (err) {
     // pass
 }
 
 const sequelize = new Sequelize({
-	database: process.env.DATABASE || database,
-	username: process.env.USERNAME || username,
-	password: process.env.PASSWORD || password,
+	database: database || process.env.DATABASE,
+	username: username || process.env.PASSWORD,
+	password: password || process.env.USERNAME,
 	host: process.env.HOST || host,
 	port: 5432,
 	dialect: "postgres",
+    logging: false,
 	dialectOptions: {
 	  ssl: {
 		require: true, 
