@@ -42,12 +42,8 @@ This bot runs on Node.js
 -   ### Games
 
     (\*Join a channel before using this command!)
-    -   `betrayal` -> ~~I haven't tried this command too so I don't know what's inside~~
-    -   `chess` -> plays chess together
-    -   `fishing` -> fish together
-    -   `poker` -> plays poker together
     -   `youtube` -> watch youtube together
-    -   `draft` -> ~~I don't know why I give it this name~~ plays a simple connect four game
+    -   `game` ->  plays a simple connect four game
 -   ### Server backup
 
     As the backup files are huge, I am not storing it in database, so all the data will disappear after restarting the bot
@@ -74,7 +70,7 @@ This bot runs on Node.js
 
 ## ToDoList
 
--   [ ] Delete unused codes and functions
+-   [x] Delete unused codes and functions
 -   [ ] Make a language option
 -   [ ] Customisable commands and prefixes
 -   [ ] Add slash commands
