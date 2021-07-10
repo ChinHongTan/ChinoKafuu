@@ -124,6 +124,29 @@ module.exports = {
             });
         }
 
+        function doMove(r) {
+            [win, coordinate] = place(
+                reactCol[r.emoji.name],
+                round,
+                squares
+            );
+            draw(squares, coordinate, round).then((url) => {
+                let editedEmbed = createEmbed(round, url);
+                embedMessage.edit(editedEmbed);
+            });
+            if (win) {
+                collector.stop();
+                return message.channel.send(
+                    `${round} had won the game!`
+                );
+            }
+            if (round == "red") {
+                round = "yellow";
+            } else {
+                round = "red";
+            }
+        }
+
         const canvas = Canvas.createCanvas(700, 600);
         const context = canvas.getContext("2d");
 
@@ -184,48 +207,10 @@ module.exports = {
                     dispose: true,
                 });
                 collector.on("collect", (r) => {
-                    [win, coordinate] = place(
-                        reactCol[r.emoji.name],
-                        round,
-                        squares
-                    );
-                    draw(squares, coordinate, round).then((url) => {
-                        let editedEmbed = createEmbed(round, url);
-                        embedMessage.edit(editedEmbed);
-                    });
-                    if (win) {
-                        collector.stop();
-                        return message.channel.send(
-                            `${round} had won the game!`
-                        );
-                    }
-                    if (round == "red") {
-                        round = "yellow";
-                    } else {
-                        round = "red";
-                    }
+                    doMove(r);
                 });
                 collector.on("remove", (r) => {
-                    [win, coordinate] = place(
-                        reactCol[r.emoji.name],
-                        round,
-                        squares
-                    );
-                    draw(squares, coordinate, round).then((url) => {
-                        let editedEmbed = createEmbed(round, url);
-                        embedMessage.edit(editedEmbed);
-                    });
-                    if (win) {
-                        collector.stop();
-                        return message.channel.send(
-                            `${round} had won the game!`
-                        );
-                    }
-                    if (round == "red") {
-                        round = "yellow";
-                    } else {
-                        round = "red";
-                    }
+                    doMove(r);
                 });
             });
         });
