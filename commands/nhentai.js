@@ -8,16 +8,6 @@ module.exports = {
         const nanaApi = require("nana-api");
         const nana = new nanaApi();
 
-        function createHomepageEmbed(g, page) {
-            let embed = new Discord.MessageEmbed()
-                .setTitle(g.results[page].title)
-                .setDescription(`book ID: ${g.results[page].id}`)
-                .setColor("#ff0000")
-                .setImage(g.results[page].thumbnail.s)
-                .setFooter("⬅️: Back, ➡️: Forward, ▶️: Book info");
-            return embed;
-        }
-
         function createDoujinEmbed(doujin) {
             var description = "";
             for (const [key, value] of Object.entries(doujin.details)) {
@@ -58,7 +48,27 @@ module.exports = {
             return embed;
         }
 
-        function createHomepageFlip(embed, g) {
+        function createDoujinFlip(embed, doujin) {
+            message.channel.send(embed).then((embedMessage) => {
+                embedMessage.react("▶️");
+                const filter = (reaction, user) =>
+                    ["▶️"].includes(reaction.emoji.name) && !user.bot;
+                const collector = embedMessage.createReactionCollector(filter, {
+                    idle: 600000,
+                });
+                collector.on("collect", (r) => {
+                    if (r.emoji.name === "▶️") {
+                        collector.stop();
+                        var page = 0;
+                        var embed = createBookEmbed(doujin.pages, page);
+                        createBookFlip(embed, doujin.pages);
+                        embedMessage.delete();
+                    }
+                });
+            });
+        }
+
+        function createSearchFlip(embed, result) {
             var page = 0;
             message.channel.send(embed).then((embedMessage) => {
                 embedMessage
@@ -75,89 +85,6 @@ module.exports = {
                 collector.on("collect", (r) => {
                     if (r.emoji.name === "⬅️") {
                         page -= 1;
-                        if (page < 0) page = g.results.length - 1;
-                        var editedEmbed = createHomepageEmbed(g, page);
-                        embedMessage.edit(editedEmbed);
-                    } else if (r.emoji.name === "➡️") {
-                        page += 1;
-                        if (page + 1 > g.results.length) page = 0;
-                        var editedEmbed = createHomepageEmbed(g, page);
-                        embedMessage.edit(editedEmbed);
-                    } else if (r.emoji.name === "▶️") {
-                        collector.stop();
-                        nhentai
-                            .getDoujin(g.results[page].bookId)
-                            .then((doujin) => {
-                                var page = 0;
-                                var embed = createDoujinEmbed(doujin);
-                                createDoujinFlip(embed, doujin);
-                            });
-                        embedMessage.delete();
-                    }
-                });
-                collector.on("remove", (r) => {
-                    if (r.emoji.name === "⬅️") {
-                        page -= 1;
-                        if (page < 0) page = g.results.length - 1;
-                        var editedEmbed = createHomepageEmbed(g, page);
-                        embedMessage.edit(editedEmbed);
-                    } else if (r.emoji.name === "➡️") {
-                        page += 1;
-                        if (page + 1 > g.results.length) page = 0;
-                        var editedEmbed = createHomepageEmbed(g, page);
-                        embedMessage.edit(editedEmbed);
-                    }
-                });
-            });
-        }
-
-        function createDoujinFlip(embed, doujin) {
-            var page = 0;
-            message.channel.send(embed).then((embedMessage) => {
-                embedMessage.react("◀️").then(embedMessage.react("▶️"));
-                const filter = (reaction, user) =>
-                    ["◀️", "▶️"].includes(reaction.emoji.name) && !user.bot;
-                const collector = embedMessage.createReactionCollector(filter, {
-                    idle: 600000,
-                });
-                collector.on("collect", (r) => {
-                    if (r.emoji.name === "▶️") {
-                        collector.stop();
-                        var page = 0;
-                        var embed = createBookEmbed(doujin.pages, page);
-                        createBookFlip(embed, doujin.pages);
-                        embedMessage.delete();
-                    } else if (r.emoji.name === "◀️") {
-                        collector.stop();
-                        nana.homepage(1).then((g) => {
-                            var page = 0;
-                            var embed = createHomepageEmbed(g, page);
-                            createHomepageFlip(embed, g);
-                        });
-                        embedMessage.delete();
-                    }
-                });
-            });
-        }
-
-        function createSearchFlip(embed, result) {
-            var page = 0;
-            message.channel.send(embed).then((embedMessage) => {
-                embedMessage
-                    .react("◀️")
-                    .then(embedMessage.react("⬅️"))
-                    .then(embedMessage.react("➡️"))
-                    .then(embedMessage.react("▶️"));
-                const filter = (reaction, user) =>
-                    ["◀️", "⬅️", "➡️", "▶️"].includes(reaction.emoji.name) &&
-                    !user.bot;
-                const collector = embedMessage.createReactionCollector(filter, {
-                    idle: 600000,
-                    dispose: true,
-                });
-                collector.on("collect", (r) => {
-                    if (r.emoji.name === "⬅️") {
-                        page -= 1;
                         if (page < 0) page = result.results.length - 1;
                         var editedEmbed = createSearchEmbed(result, page);
                         embedMessage.edit(editedEmbed);
@@ -166,13 +93,6 @@ module.exports = {
                         if (page + 1 > result.results.length) page = 0;
                         var editedEmbed = createSearchEmbed(result, page);
                         embedMessage.edit(editedEmbed);
-                    } else if (r.emoji.name === "◀️") {
-                        collector.stop();
-                        nana.homepage(1).then((g) => {
-                            var page = 0;
-                            var embed = createHomepageEmbed(g, page);
-                            createHomepageFlip(embed, g);
-                        });
                     } else if (r.emoji.name === "▶️") {
                         collector.stop();
                         nhentai
@@ -205,11 +125,10 @@ module.exports = {
             var page = 0;
             message.channel.send(embed).then((embedMessage) => {
                 embedMessage
-                    .react("◀️")
-                    .then(embedMessage.react("⬅️"))
+                    .react("⬅️")
                     .then(embedMessage.react("➡️"));
                 const filter = (reaction, user) =>
-                    ["◀️", "⬅️", "➡️"].includes(reaction.emoji.name) &&
+                    ["⬅️", "➡️"].includes(reaction.emoji.name) &&
                     !user.bot;
                 const collector = embedMessage.createReactionCollector(filter, {
                     idle: 600000,
@@ -226,14 +145,6 @@ module.exports = {
                         if (page + 1 > pages.length) page = 0;
                         var editedEmbed = createBookEmbed(pages, page);
                         embedMessage.edit(editedEmbed);
-                    } else if (r.emoji.name === "◀️") {
-                        collector.stop();
-                        nana.homepage(1).then((g) => {
-                            var page = 0;
-                            var embed = createHomepageEmbed(g, page);
-                            createHomepageFlip(embed, g);
-                        });
-                        embedMessage.delete();
                     }
                 });
                 collector.on("remove", (r) => {
@@ -253,12 +164,7 @@ module.exports = {
         }
 
         (async () => {
-            if (args.length < 1) {
-                const g = await nana.homepage(1);
-                var page = 0;
-                var embed = createHomepageEmbed(g, page);
-                createHomepageFlip(embed, g);
-            } else if (Number(args[0])) {
+            if (Number(args[0])) {
                 if (nhentai.exists(args[0])) {
                     const doujin = await nhentai.getDoujin(args[0]);
                     var page = 0;
