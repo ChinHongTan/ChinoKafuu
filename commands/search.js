@@ -37,7 +37,7 @@ module.exports = {
                 case "➡️":
                     page += 1;
                     if (page + 1 > item.length) page = 0;
-                    let editedEmbed = createEmbed(item, page);
+                    editedEmbed = createEmbed(item, page);
                     embedMessage.edit(editedEmbed);
                   break;
                 case "▶️":
