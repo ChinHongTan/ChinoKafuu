@@ -81,7 +81,6 @@ module.exports = {
                     embedMessage.edit(editedEmbed);
                     break;
                 case "▶️":
-                    console.log(collector);
                     collector.stop();
                     collectorFunc(result);
                     embedMessage.delete();

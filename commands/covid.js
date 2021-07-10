@@ -128,7 +128,7 @@ module.exports = {
         }
 
         if (args[0] === "countries") {
-            if (args.length == 1) {
+            if (args.length === 1) {
                 // get a list of data of all countries sorted by cases
                 api.countries({ sort: "cases", allowNull: false }).then(
                     (result) => {

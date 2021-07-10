@@ -135,11 +135,9 @@ module.exports = {
                         searchByUrl(searchImage, "bovw").then((result2) => {
                             if (!result2 || result2.length < 1)
                                 return message.channel.send("No result!");
-                            console.log(result2);
                             let response2 = result2.items.filter(
                                 (r2) => r2.source !== 0
                             );
-                            console.log(response2);
                             let embed = createEmbed2(response2, page);
                             mode = 2;
                             sendEmbed(embed, response2, page, mode);
