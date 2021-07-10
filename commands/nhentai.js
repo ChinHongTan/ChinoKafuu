@@ -94,7 +94,7 @@ module.exports = {
                     idle: 600000,
                 });
                 collector.on("collect", (r) => {
-                    flipEmbeds(r, page = page, collector = collector, collectorFunc = generateContent(doujin));
+                    flipEmbeds(r, page = page, collector, collectorFunc = generateContent(doujin));
                 });
             });
         }
