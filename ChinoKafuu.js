@@ -34,7 +34,6 @@ for (const file of functionFiles) {
 
     functions[func.name] = func.func;
 }
-console.log(functions);
 
 Reflect.defineProperty(currency, "add", {
     /* eslint-disable-next-line func-name-matching */
