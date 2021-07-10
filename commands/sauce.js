@@ -10,8 +10,8 @@ module.exports = {
         const { searchByUrl } = require("ascii2d");
 
         function createEmbed(response, page) {
-            var sourceURL = response[page].url;
-            var info = "";
+            let sourceURL = response[page].url;
+            let info = "";
             for (const [key, value] of Object.entries(
                 response[page].raw.data
             )) {
@@ -52,32 +52,20 @@ module.exports = {
             return embed;
         }
 
-        function reactHandler(r, page, response, embedMessage) {
-            if (r.emoji.name === "⬅️") {
-                page -= 1;
-                if (page < 0) page = response.length - 1;
-                var editedEmbed = createEmbed(response, page);
-                embedMessage.edit(editedEmbed);
-            } else if (r.emoji.name === "➡️") {
-                page += 1;
-                if (page + 1 > response.length) page = 0;
-                var editedEmbed = createEmbed(response, page);
-                embedMessage.edit(editedEmbed);
-            }
-            return page;
-        }
-
-        function reactHandler2(r, page, response, embedMessage) {
-            if (r.emoji.name === "⬅️") {
-                page -= 1;
-                if (page < 0) page = response.length - 1;
-                var editedEmbed = createEmbed2(response, page);
-                embedMessage.edit(editedEmbed);
-            } else if (r.emoji.name === "➡️") {
-                page += 1;
-                if (page + 1 > response.length) page = 0;
-                var editedEmbed = createEmbed2(response, page);
-                embedMessage.edit(editedEmbed);
+        function reactHandler(r, page, response, embedMessage, embedFunc) {
+            switch (r.emoji.name) {
+                case "⬅️":
+                    page -= 1;
+                    if (page < 0) page = response.length - 1;
+                    let editedEmbed = embedFunc(response, page);
+                    embedMessage.edit(editedEmbed);
+                    break;
+                case "➡️":
+                    page += 1;
+                    if (page + 1 > response.length) page = 0;
+                    let editedEmbed = embedFunc(response, page);
+                    embedMessage.edit(editedEmbed);
+                    break;
             }
             return page;
         }
@@ -98,7 +86,8 @@ module.exports = {
                                 r,
                                 page,
                                 response,
-                                embedMessage
+                                embedMessage,
+                                createEmbed(response, page)
                             );
                         });
                         collector.on("remove", (r) => {
@@ -106,17 +95,19 @@ module.exports = {
                                 r,
                                 page,
                                 response,
-                                embedMessage
+                                embedMessage,
+                                createEmbed(response, page)
                             );
                         });
                         break;
                     case 2:
                         collector.on("collect", (r) => {
-                            page = reactHandler2(
+                            page = reactHandler(
                                 r,
                                 page,
                                 response,
-                                embedMessage
+                                embedMessage,
+                                createEmbed2(response, page)
                             );
                         });
                         collector.on("remove", (r) => {
@@ -124,7 +115,8 @@ module.exports = {
                                 r,
                                 page,
                                 response,
-                                embedMessage
+                                embedMessage,
+                                createEmbed2(response, page)
                             );
                         });
                 }
