@@ -7,10 +7,11 @@ module.exports = {
     execute(message, args) {
         backup = require("discord-backup");
         const prefix = "c!";
+        let max;
         if (args.length < 1) {
-            var max = 10;
+            max = 10;
         } else {
-            var max = args[0];
+            max = args[0];
         }
         backup.setStorageFolder("./my-backups/");
         // Check member permissions

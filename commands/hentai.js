@@ -22,14 +22,14 @@ module.exports = {
         }
 
         const nsfw = ["發圖區（18r）.json", "vtuber18r區域.json"];
-        var random = Math.floor(Math.random() * nsfw.length);
-        var targetFile = nsfw[random];
-        var pic = pictures[targetFile];
-        var random = Math.floor(Math.random() * pic.length);
-        var images = pic[random];
-        var messageurl = images.messageurl;
-        var random = Math.floor(Math.random() * images.attachments.length);
-        var imageInfo = images.attachments[random];
+        let random = Math.floor(Math.random() * nsfw.length);
+        let targetFile = nsfw[random];
+        let pic = pictures[targetFile];
+        let random = Math.floor(Math.random() * pic.length);
+        let images = pic[random];
+        let messageurl = images.messageurl;
+        let random = Math.floor(Math.random() * images.attachments.length);
+        let imageInfo = images.attachments[random];
         let embed = new Discord.MessageEmbed()
             .setColor("#2d9af8")
             .setTitle(`蘿莉圖！`)

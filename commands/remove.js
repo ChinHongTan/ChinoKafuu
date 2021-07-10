@@ -10,7 +10,7 @@ module.exports = {
 
         if (serverQueue) {
             args.forEach((number) => {
-                queuenum = Number(number);
+                let queuenum = Number(number);
                 if (
                     Number.isInteger(queuenum) &&
                     queuenum <= serverQueue.songs.length &&

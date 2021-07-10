@@ -56,7 +56,7 @@ module.exports = {
                 let directions = [11, 1, 9, 10, -11, -1, -9, -10];
                 for (let direction of directions) {
                     let win = checkWin(direction, round, squares);
-                    if (win == true) return [win, coordinate];
+                    if (win === true) return [win, coordinate];
                 }
                 return [win, coordinate];
             }
@@ -201,7 +201,9 @@ module.exports = {
                     }
                     if (round == "red") {
                         round = "yellow";
-                    } else round = "red";
+                    } else {
+                        round = "red";
+                    }
                 });
                 collector.on("remove", (r) => {
                     [win, coordinate] = place(
@@ -221,7 +223,9 @@ module.exports = {
                     }
                     if (round == "red") {
                         round = "yellow";
-                    } else round = "red";
+                    } else {
+                        round = "red";
+                    }
                 });
             });
         });
