@@ -23,7 +23,7 @@ module.exports = {
                 .setColor("#ff0000")
                 .setImage(doujin.thumbnails[0])
                 .addField("Link", doujin.link)
-                .setFooter("◀️: Homepage, ▶️: Read the book");
+                .setFooter("▶️: Read the book");
             return embed;
         }
 
@@ -36,7 +36,7 @@ module.exports = {
                 .setColor("#ff0000")
                 .setImage(result.results[page].thumbnail.s)
                 .setFooter(
-                    "◀️: Homepage, ⬅️: Back, ➡️: Forward, ▶️: Read the book"
+                    "⬅️: Back, ➡️: Forward, ▶️: Read the book"
                 );
             return embed;
         }
@@ -44,8 +44,45 @@ module.exports = {
         function createBookEmbed(pages, page) {
             let embed = new Discord.MessageEmbed()
                 .setImage(pages[page])
-                .setFooter("◀️: Homepage, ⬅️: Back, ➡️: Forward");
+                .setFooter("⬅️: Back, ➡️: Forward");
             return embed;
+        }
+
+        function generateDoujin(result) {
+            nhentai
+                .getDoujin(result.results[page].id)
+                .then((doujin) => {
+                    var embed = createDoujinEmbed(doujin);
+                    createDoujinFlip(embed, doujin);
+                });
+        }
+
+        function generateContent(doujin) {
+            var page = 0;
+            var embed = createBookEmbed(doujin.pages, page);
+            createBookFlip(embed, doujin.pages);
+        }
+
+        function flipEmbeds(r, createFunc, collectorFunc) {
+            switch(r.emoji.name) {
+                case "⬅️":
+                    page -= 1;
+                    if (page < 0) page = result.results.length - 1;
+                    editedEmbed = createFunc(result, page);
+                    embedMessage.edit(editedEmbed);
+                  break;
+                case "➡️":
+                    page += 1;
+                    if (page + 1 > result.results.length) page = 0;
+                    editedEmbed = createFunc(result, page);
+                    embedMessage.edit(editedEmbed);
+                  break;
+                case "▶️":
+                    collector.stop();
+                    collectorFunc(result);
+                    embedMessage.delete();
+                  break;
+            }
         }
 
         function createDoujinFlip(embed, doujin) {
@@ -57,13 +94,7 @@ module.exports = {
                     idle: 600000,
                 });
                 collector.on("collect", (r) => {
-                    if (r.emoji.name === "▶️") {
-                        collector.stop();
-                        var page = 0;
-                        var embed = createBookEmbed(doujin.pages, page);
-                        createBookFlip(embed, doujin.pages);
-                        embedMessage.delete();
-                    }
+                    flipEmbeds(r, collectorFunc = generateContent(doujin));
                 });
             });
         }
@@ -83,40 +114,10 @@ module.exports = {
                     dispose: true,
                 });
                 collector.on("collect", (r) => {
-                    if (r.emoji.name === "⬅️") {
-                        page -= 1;
-                        if (page < 0) page = result.results.length - 1;
-                        var editedEmbed = createSearchEmbed(result, page);
-                        embedMessage.edit(editedEmbed);
-                    } else if (r.emoji.name === "➡️") {
-                        page += 1;
-                        if (page + 1 > result.results.length) page = 0;
-                        var editedEmbed = createSearchEmbed(result, page);
-                        embedMessage.edit(editedEmbed);
-                    } else if (r.emoji.name === "▶️") {
-                        collector.stop();
-                        nhentai
-                            .getDoujin(result.results[page].id)
-                            .then((doujin) => {
-                                var page = 0;
-                                var embed = createDoujinEmbed(doujin);
-                                createDoujinFlip(embed, doujin);
-                            });
-                        embedMessage.delete();
-                    }
+                    flipEmbeds(r, createSearchEmbed(result, page), generateDoujin(embed));
                 });
                 collector.on("remove", (r) => {
-                    if (r.emoji.name === "⬅️") {
-                        page -= 1;
-                        if (page < 0) page = result.results.length - 1;
-                        var editedEmbed = createSearchEmbed(result, page);
-                        embedMessage.edit(editedEmbed);
-                    } else if (r.emoji.name === "➡️") {
-                        page += 1;
-                        if (page + 1 > result.results.length) page = 0;
-                        var editedEmbed = createSearchEmbed(result, page);
-                        embedMessage.edit(editedEmbed);
-                    }
+                    flipEmbeds(r, createSearchEmbed(result, page));
                 });
             });
         }
@@ -135,30 +136,10 @@ module.exports = {
                     dispose: true,
                 });
                 collector.on("collect", (r) => {
-                    if (r.emoji.name === "⬅️") {
-                        page -= 1;
-                        if (page < 0) page = pages.length - 1;
-                        var editedEmbed = createBookEmbed(pages, page);
-                        embedMessage.edit(editedEmbed);
-                    } else if (r.emoji.name === "➡️") {
-                        page += 1;
-                        if (page + 1 > pages.length) page = 0;
-                        var editedEmbed = createBookEmbed(pages, page);
-                        embedMessage.edit(editedEmbed);
-                    }
+                    flipEmbeds(r, createBookEmbed(pages, page));
                 });
                 collector.on("remove", (r) => {
-                    if (r.emoji.name === "⬅️") {
-                        page -= 1;
-                        if (page < 0) page = response.length - 1;
-                        var editedEmbed = createBookEmbed(pages, page);
-                        embedMessage.edit(editedEmbed);
-                    } else if (r.emoji.name === "➡️") {
-                        page += 1;
-                        if (page + 1 > pages.length) page = 0;
-                        var editedEmbed = createBookEmbed(pages, page);
-                        embedMessage.edit(editedEmbed);
-                    }
+                    flipEmbeds(r, createSearchEmbed(result, page));
                 });
             });
         }
