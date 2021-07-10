@@ -44,7 +44,7 @@
     "ytsr": "^3.5.0"
   },
   "devDependencies": {
-    "@types/discord-rpc": "3.0.5",
+    "@types/discord-rpc": "3.0.6",
     "@types/ffmpeg-static": "3.0.0",
     "@types/node": "14.17.5",
     "@types/node-fetch": "2.5.10",
