@@ -35,9 +35,7 @@ module.exports = {
                 )
                 .setColor("#ff0000")
                 .setImage(result.results[page].thumbnail.s)
-                .setFooter(
-                    "⬅️: Back, ➡️: Forward, ▶️: Read the book"
-                );
+                .setFooter("⬅️: Back, ➡️: Forward, ▶️: Read the book");
             return embed;
         }
 
@@ -49,12 +47,10 @@ module.exports = {
         }
 
         function generateDoujin(result, page) {
-            nhentai
-                .getDoujin(result.results[page].id)
-                .then((doujin) => {
-                    let embed = createDoujinEmbed(doujin);
-                    createDoujinFlip(embed, doujin);
-                });
+            nhentai.getDoujin(result.results[page].id).then((doujin) => {
+                let embed = createDoujinEmbed(doujin);
+                createDoujinFlip(embed, doujin);
+            });
         }
 
         function generateContent(doujin) {
@@ -63,26 +59,33 @@ module.exports = {
             createBookFlip(embed, doujin.pages);
         }
 
-        function flipEmbeds({r, page, result, createFunc, collector, collectorFunc}) {
-            switch(r.emoji.name) {
+        function flipEmbeds({
+            r,
+            page,
+            result,
+            createFunc,
+            collector,
+            collectorFunc,
+        }) {
+            switch (r.emoji.name) {
                 case "⬅️":
                     page -= 1;
                     if (page < 0) page = result.results.length - 1;
                     editedEmbed = createFunc(result, page);
                     embedMessage.edit(editedEmbed);
-                  break;
+                    break;
                 case "➡️":
                     page += 1;
                     if (page + 1 > result.results.length) page = 0;
                     editedEmbed = createFunc(result, page);
                     embedMessage.edit(editedEmbed);
-                  break;
+                    break;
                 case "▶️":
                     console.log(collector);
                     collector.stop();
                     collectorFunc(result);
                     embedMessage.delete();
-                  break;
+                    break;
             }
         }
 
@@ -95,7 +98,12 @@ module.exports = {
                     idle: 600000,
                 });
                 collector.on("collect", (r) => {
-                    flipEmbeds({r: r, collector: collector, result: doujin, collectorFunc: generateContent(doujin)});
+                    flipEmbeds({
+                        r: r,
+                        collector: collector,
+                        result: doujin,
+                        collectorFunc: generateContent(doujin),
+                    });
                 });
             });
         }
@@ -115,10 +123,22 @@ module.exports = {
                     dispose: true,
                 });
                 collector.on("collect", (r) => {
-                    flipEmbeds({r: r, page: page, result: result, createFunc: createSearchEmbed(result, page), collector: collector, collectorFunc: generateDoujin(embed, page)});
+                    flipEmbeds({
+                        r: r,
+                        page: page,
+                        result: result,
+                        createFunc: createSearchEmbed(result, page),
+                        collector: collector,
+                        collectorFunc: generateDoujin(embed, page),
+                    });
                 });
                 collector.on("remove", (r) => {
-                    flipEmbeds({r: r, page: page, result: result, createFunc: createSearchEmbed(result, page)});
+                    flipEmbeds({
+                        r: r,
+                        page: page,
+                        result: result,
+                        createFunc: createSearchEmbed(result, page),
+                    });
                 });
             });
         }
@@ -126,21 +146,28 @@ module.exports = {
         function createBookFlip(embed, pages) {
             let page = 0;
             message.channel.send(embed).then((embedMessage) => {
-                embedMessage
-                    .react("⬅️")
-                    .then(embedMessage.react("➡️"));
+                embedMessage.react("⬅️").then(embedMessage.react("➡️"));
                 const filter = (reaction, user) =>
-                    ["⬅️", "➡️"].includes(reaction.emoji.name) &&
-                    !user.bot;
+                    ["⬅️", "➡️"].includes(reaction.emoji.name) && !user.bot;
                 let collector = embedMessage.createReactionCollector(filter, {
                     idle: 600000,
                     dispose: true,
                 });
                 collector.on("collect", (r) => {
-                    flipEmbeds({r: r, page: page, result: pages, createFunc: createBookEmbed(pages, page)});
+                    flipEmbeds({
+                        r: r,
+                        page: page,
+                        result: pages,
+                        createFunc: createBookEmbed(pages, page),
+                    });
                 });
                 collector.on("remove", (r) => {
-                    flipEmbeds({r: r, page: page, result: pages, createFunc: createSearchEmbed(result, page)});
+                    flipEmbeds({
+                        r: r,
+                        page: page,
+                        result: pages,
+                        createFunc: createSearchEmbed(pages, page),
+                    });
                 });
             });
         }
