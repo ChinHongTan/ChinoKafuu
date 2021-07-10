@@ -85,7 +85,7 @@ module.exports = {
                 case "➡️":
                     page += 1;
                     if (page + 1 > result.length) page = 0;
-                    let editedEmbed = createEmbed(result[page]);
+                    editedEmbed = createEmbed(result[page]);
                     embedMessage.edit(editedEmbed);
                     break;
             }

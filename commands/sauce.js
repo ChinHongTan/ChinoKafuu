@@ -63,7 +63,7 @@ module.exports = {
                 case "➡️":
                     page += 1;
                     if (page + 1 > response.length) page = 0;
-                    let editedEmbed = embedFunc(response, page);
+                    editedEmbed = embedFunc(response, page);
                     embedMessage.edit(editedEmbed);
                     break;
             }
