@@ -11,17 +11,17 @@ module.exports = {
 
         function createEmbed(item, page) {
             let embed = new Discord.MessageEmbed()
-                .setURL(item[page].url)
-                .setTitle(item[page].title)
-                .setDescription(item[page].description)
+                .setURL(item.url)
+                .setTitle(item.title)
+                .setDescription(item.description)
                 .setColor("#ff0000")
-                .setImage(item[page].bestThumbnail.url)
-                .addField("Views", item[page].views)
-                .addField("Duration", item[page].duration)
-                .addField("Uploaded at", item[page].uploadedAt)
+                .setImage(item.bestThumbnail.url)
+                .addField("Views", item.views)
+                .addField("Duration", item.duration)
+                .addField("Uploaded at", item.uploadedAt)
                 .setFooter(
-                    `${item[page].author.name}\nPage${page + 1}/${item.length}`,
-                    item[page].author.bestAvatar.url
+                    `${item.author.name}\nPage${page + 1}/${item.length}`,
+                    item.author.bestAvatar.url
                 );
             return embed;
         }
@@ -31,13 +31,13 @@ module.exports = {
                 case "⬅️":
                     page -= 1;
                     if (page < 0) page = item.length - 1;
-                    let editedEmbed = createEmbed(item, page);
+                    let editedEmbed = createEmbed(item[page], page);
                     embedMessage.edit(editedEmbed);
                   break;
                 case "➡️":
                     page += 1;
                     if (page + 1 > item.length) page = 0;
-                    editedEmbed = createEmbed(item, page);
+                    editedEmbed = createEmbed(item[page], page);
                     embedMessage.edit(editedEmbed);
                   break;
                 case "▶️":
