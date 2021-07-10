@@ -26,8 +26,37 @@ module.exports = {
             return embed;
         }
 
+        function flipEmbed(r) {
+            switch(r.emoji.name) {
+                case "⬅️":
+                    page -= 1;
+                    if (page < 0) page = item.length - 1;
+                    let editedEmbed = createEmbed(item, page);
+                    embedMessage.edit(editedEmbed);
+                  break;
+                case "➡️":
+                    page += 1;
+                    if (page + 1 > item.length) page = 0;
+                    let editedEmbed = createEmbed(item, page);
+                    embedMessage.edit(editedEmbed);
+                  break;
+                case "▶️":
+                    collector.stop();
+                    message.content = `${
+                        prefix
+                    }play ${item[page].url}`;
+                    const args = message.content
+                        .slice(prefix.length)
+                        .trim()
+                        .split(/ +/);
+                    play.execute(message, args);
+                    embedMessage.delete();
+                  break;
+            }
+        }
+
         async function search(message) {
-            var keyword = message.content.substr(
+            let keyword = message.content.substr(
                 message.content.indexOf(" ") + 1
             );
             message.channel.send(`Searching ${keyword}...`);
@@ -38,8 +67,8 @@ module.exports = {
                 hl: "zh-Hant",
                 limit: 10,
             });
-            var item = searchResults.items;
-            var page = 0;
+            let item = searchResults.items;
+            let page = 0;
             if (item.length < 1) {
                 message.channel.send(`No video was found for ${keyword}!`);
             }
@@ -58,41 +87,10 @@ module.exports = {
                     dispose: true,
                 });
                 collector.on("collect", (r) => {
-                    if (r.emoji.name === "⬅️") {
-                        page -= 1;
-                        if (page < 0) page = item.length - 1;
-                        var editedEmbed = createEmbed(item, page);
-                        embedMessage.edit(editedEmbed);
-                    } else if (r.emoji.name === "➡️") {
-                        page += 1;
-                        if (page + 1 > item.length) page = 0;
-                        var editedEmbed = createEmbed(item, page);
-                        embedMessage.edit(editedEmbed);
-                    } else if (r.emoji.name === "▶️") {
-                        collector.stop();
-                        message.content = `${
-                            prefix || process.env.PREFIX
-                        }play ${item[page].url}`;
-                        const args = message.content
-                            .slice(prefix.length)
-                            .trim()
-                            .split(/ +/);
-                        play.execute(message, args);
-                        embedMessage.delete();
-                    }
+                    flipEmbed(r);
                 });
                 collector.on("remove", (r) => {
-                    if (r.emoji.name === "⬅️") {
-                        page -= 1;
-                        if (page < 0) page = item.length - 1;
-                        var editedEmbed = createEmbed(item, page);
-                        embedMessage.edit(editedEmbed);
-                    } else if (r.emoji.name === "➡️") {
-                        page += 1;
-                        if (page + 1 > item.length) page = 0;
-                        var editedEmbed = createEmbed(item, page);
-                        embedMessage.edit(editedEmbed);
-                    }
+                    flipEmbed(r);
                 });
             });
         }
