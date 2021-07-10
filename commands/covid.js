@@ -12,9 +12,7 @@ module.exports = {
             const date = new Date(result.updated);
             const embed = new Discord.MessageEmbed()
                 .setColor("RANDOM")
-                .setTitle(
-                    `**${result.country} COVID-19 data**`
-                )
+                .setTitle(`**${result.country} COVID-19 data**`)
                 .setAuthor(
                     "ChinoKafuu",
                     "https://cdn.discordapp.com/avatars/781328218753859635/af716f0a9958679bdb17edfc0add53a6.png?size=256"
@@ -76,17 +74,20 @@ module.exports = {
             return embed;
         }
 
-        function updateEmbed(r, page, result) {
-            if (r.emoji.name === "⬅️") {
-                page -= 1;
-                if (page < 0) page = result.length - 1;
-                let editedEmbed = createEmbed(result[page]);
-                embedMessage.edit(editedEmbed);
-            } else if (r.emoji.name === "➡️") {
-                page += 1;
-                if (page + 1 > result.length) page = 0;
-                let editedEmbed = createEmbed(result[page]);
-                embedMessage.edit(editedEmbed);
+        function updateEmbed(r, page, result, embedMessage) {
+            switch (r.emoji.name) {
+                case "⬅️":
+                    page -= 1;
+                    if (page < 0) page = result.length - 1;
+                    let editedEmbed = createEmbed(result[page]);
+                    embedMessage.edit(editedEmbed);
+                    break;
+                case "➡️":
+                    page += 1;
+                    if (page + 1 > result.length) page = 0;
+                    let editedEmbed = createEmbed(result[page]);
+                    embedMessage.edit(editedEmbed);
+                    break;
             }
         }
 
@@ -94,22 +95,18 @@ module.exports = {
             let page = 0;
             let embed = createEmbed(result[page]);
             message.channel.send(embed).then((embedMessage) => {
-                embedMessage
-                    .react("⬅️")
-                    .then(embedMessage.react("➡️"));
+                embedMessage.react("⬅️").then(embedMessage.react("➡️"));
                 const filter = (reaction, user) =>
-                    ["⬅️", "➡️"].includes(reaction.emoji.name) &&
-                    !user.bot;
-                const collector =
-                    embedMessage.createReactionCollector(filter, {
-                        idle: 60000,
-                        dispose: true,
-                    });
+                    ["⬅️", "➡️"].includes(reaction.emoji.name) && !user.bot;
+                const collector = embedMessage.createReactionCollector(filter, {
+                    idle: 60000,
+                    dispose: true,
+                });
                 collector.on("collect", (r) => {
-                    updateEmbed(r, page, result);
+                    updateEmbed(r, page, result, embedMessage);
                 });
                 collector.on("remove", (r) => {
-                    updateEmbed(r, page, result);
+                    updateEmbed(r, page, result, embedMessage);
                 });
             });
         }
