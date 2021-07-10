@@ -48,7 +48,7 @@ module.exports = {
             return embed;
         }
 
-        function generateDoujin(result) {
+        function generateDoujin(result, page) {
             nhentai
                 .getDoujin(result.results[page].id)
                 .then((doujin) => {
@@ -63,7 +63,7 @@ module.exports = {
             createBookFlip(embed, doujin.pages);
         }
 
-        function flipEmbeds(r, createFunc, collectorFunc) {
+        function flipEmbeds(r, page, createFunc, collector, collectorFunc) {
             switch(r.emoji.name) {
                 case "⬅️":
                     page -= 1;
@@ -94,7 +94,7 @@ module.exports = {
                     idle: 600000,
                 });
                 collector.on("collect", (r) => {
-                    flipEmbeds(r, collectorFunc = generateContent(doujin));
+                    flipEmbeds(r, page = page, collector = collector, collectorFunc = generateContent(doujin));
                 });
             });
         }
@@ -114,10 +114,10 @@ module.exports = {
                     dispose: true,
                 });
                 collector.on("collect", (r) => {
-                    flipEmbeds(r, createSearchEmbed(result, page), generateDoujin(embed));
+                    flipEmbeds(r, page, createSearchEmbed(result, page), collector, generateDoujin(embed, page));
                 });
                 collector.on("remove", (r) => {
-                    flipEmbeds(r, createSearchEmbed(result, page));
+                    flipEmbeds(r, page, createSearchEmbed(result, page));
                 });
             });
         }
@@ -136,10 +136,10 @@ module.exports = {
                     dispose: true,
                 });
                 collector.on("collect", (r) => {
-                    flipEmbeds(r, createBookEmbed(pages, page));
+                    flipEmbeds(r, page, createBookEmbed(pages, page));
                 });
                 collector.on("remove", (r) => {
-                    flipEmbeds(r, createSearchEmbed(result, page));
+                    flipEmbeds(r, page, createSearchEmbed(result, page));
                 });
             });
         }
