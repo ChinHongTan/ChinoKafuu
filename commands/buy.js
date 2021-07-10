@@ -37,7 +37,9 @@ module.exports = {
             const item = await CurrencyShop.findOne({
                 where: { name: { [Op.like]: args[0] } },
             });
-            if (!item) return message.channel.send(`That item doesn't exist.`);
+            if (!item) {
+                return message.channel.send("That item doesn't exist.");
+            }
             if (item.cost > currency.getBalance(message.author.id)) {
                 return message.channel.send(
                     `You currently have ${currency.getBalance(

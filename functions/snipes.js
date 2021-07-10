@@ -5,16 +5,19 @@ module.exports = {
         const Discord = require("discord.js");
         let data = fs.readFileSync("./data/snipes.json");
         let snipeWithGuild = new Map(JSON.parse(data));
-        if (message.author.bot) return;
-        if (!message.guild) return;
+        if (message.author.bot) {return;}
+        if (!message.guild) {return;}
 
-        var snipe = new Object();
-        var content = message.content;
-        if (!content) content = "None";
+        let snipe = new Object();
+        let content = message.content;
+        if (!content) {
+            content = "None";
+        }
+        let snipes;
         if (snipeWithGuild.has(message.guild.id)) {
             snipes = snipeWithGuild.get(message.guild.id);
         } else {
-            var snipes = [];
+            snipes = [];
         }
 
         snipe.author = message.author.tag;
@@ -39,7 +42,7 @@ module.exports = {
             urlArray.forEach((url) => {
                 let embed = new Discord.MessageEmbed()
                     .setColor("#ffff00")
-                    .setTitle(`**__Message Delete__**`)
+                    .setTitle("**__Message Delete__**")
                     .addFields(
                         {
                             name: "**User**",
@@ -64,7 +67,7 @@ module.exports = {
                 null,
                 2
             );
-            fs.writeFileSync(`./data/snipes.json`, data);
+            fs.writeFileSync("./data/snipes.json", data);
         } else {
             snipes.unshift(snipe);
             if (snipes.length > 10) snipes.pop();
@@ -74,7 +77,7 @@ module.exports = {
                 null,
                 2
             );
-            fs.writeFileSync(`./data/snipes.json`, data);
+            fs.writeFileSync("./data/snipes.json", data);
         }
     },
 };
