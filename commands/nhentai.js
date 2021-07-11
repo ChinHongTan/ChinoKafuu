@@ -8,6 +8,15 @@ module.exports = {
         const nanaApi = require("nana-api");
         const nana = new nanaApi();
 
+        /**
+         * Send an embed message with the doujin cover.
+         * @param {object} doujin - The doujin contained in the embed message.
+         * @param {object} doujin.details - All the details about the doujin.
+         * @param {string} doujin.title - The title of the doujin.
+         * @param {array} doujin.thumbnails - A list of the thumbnail images of the doujin.
+         * @param {string} doujin.link - The URL of the doujin.
+         * @returns {class} Discord embed.
+         */
         function createDoujinEmbed(doujin) {
             let description = "";
             for (const [key, value] of Object.entries(doujin.details)) {
@@ -27,6 +36,13 @@ module.exports = {
             return embed;
         }
 
+        /**
+         * An embed with the doujin search result.
+         * @param {object} result - The result from the search. Consist of an array of doujins.
+         * @param {array} result.results - An array of doujins.
+         * @param {number} page - The position of displayed doujin in the array.
+         * @returns {class} Discord embed.
+         */
         function createSearchEmbed(result, page) {
             let embed = new Discord.MessageEmbed()
                 .setTitle(result.results[page].title)
@@ -39,6 +55,12 @@ module.exports = {
             return embed;
         }
 
+        /**
+         * An embed with the doujin object.
+         * @param {array} pages - The list of pages of the doujin.
+         * @param {number} page - The page number of the doujin being displayed. 
+         * @returns {class} Discord embed.
+         */
         function createBookEmbed(pages, page) {
             let embed = new Discord.MessageEmbed()
                 .setImage(pages[page])
@@ -46,6 +68,12 @@ module.exports = {
             return embed;
         }
 
+        /**
+         * Generate and display an reactable message of a doujin cover. React with emojis to change the message content.
+         * @param {object} result - The result from the search. Consist of an array of doujins. 
+         * @param {array} result.results - An array of doujins.
+         * @param {number} page - The position of displayed doujin in the array.
+         */
         function generateDoujin(result, page) {
             nhentai.getDoujin(result.results[page].id).then((doujin) => {
                 let embed = createDoujinEmbed(doujin);
@@ -53,12 +81,29 @@ module.exports = {
             });
         }
 
-        function generateContent(doujin) {
-            let page = 0;
+        /**
+         * Generate and display an reactable message of a doujin. React with emojis to change the message content.
+         * @param {object} doujin - The doujin to be displayed.
+         * @param {array} doujin.pages - The list of pages of the doujin.
+         * @param {number} [page = 0] - The page number of the doujin being displayed.
+         */
+        function generateContent(doujin, page = 0) {
             let embed = createBookEmbed(doujin.pages, page);
             createBookFlip(embed, doujin.pages);
         }
 
+        /**
+         * Edit the message after user had reacted.
+         * @param {Object} options - How the function should edit the message.
+         * @param {object} options.r - The reaction from the user.
+         * @param {number} options.page - The page number of the doujin being displayed.
+         * @param {object} options.result - The result from the search.
+         * @param {object} options.embedMessage - The message to be edited.
+         * @param {function} options.createFunc - How the message should be edited.
+         * @param {object} options.collector - The collector to detect user's reactions.
+         * @param {function} options.collectorFunc - What type of reactable message to be generated.
+         * @returns 
+         */
         function flipEmbeds({
             r,
             page,
@@ -91,6 +136,11 @@ module.exports = {
             return page;
         }
 
+        /**
+         * Generate an reactable message of the doujin cover page. React with emojis to change the message content.
+         * @param {object} embed - The displayed embed message
+         * @param {object} doujin - The doujin object.
+         */
         function createDoujinFlip(embed, doujin) {
             message.channel.send(embed).then((embedMessage) => {
                 embedMessage.react("▶️");
@@ -111,6 +161,11 @@ module.exports = {
             });
         }
 
+        /**
+         * Generate an reactable message of the search page. React with emojis to change the message content.
+         * @param {object} embed - The displayed embed message.
+         * @param {object} result - The result from the search.
+         */
         function createSearchFlip(embed, result) {
             let page = 0;
             message.channel.send(embed).then((embedMessage) => {
@@ -148,6 +203,11 @@ module.exports = {
             });
         }
 
+        /**
+         * Generate an reactable message of the doujin page. React with emojis to change the message content.
+         * @param {object} embed - The displayed embed message.
+         * @param {object} pages - The list of pages of the doujin.
+         */
         function createBookFlip(embed, pages) {
             let page = 0;
             message.channel.send(embed).then((embedMessage) => {
