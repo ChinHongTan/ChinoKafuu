@@ -78,10 +78,7 @@ module.exports = {
             nhentai.getDoujin(result.results[page].id).then((doujin) => {
                 let embed = createDoujinEmbed(doujin);
                 let options = {
-                    r: r,
-                    collector: collector,
                     result: doujin,
-                    embedMessage: embedMessage,
                     collectorFunc: generateContent(doujin),
                 }
                 createFlip(embed, options, ["▶️"]);
@@ -97,10 +94,8 @@ module.exports = {
         function generateContent(doujin, page = 0) {
             let embed = createBookEmbed(doujin.pages, page);
             let options = {
-                r: r,
                 page: page,
-                result: pages,
-                embedMessage: embedMessage,
+                result: doujin.pages,
                 createFunc: createBookEmbed(pages, page),
             }
             createBookFlip(embed, options, ["⬅️", "➡️"]);
@@ -158,7 +153,7 @@ module.exports = {
          */
         function createFlip(embed, options, emojiList) {
             message.channel.send(embed).then(async (embedMessage) => {
-                for (emoji in emojiList) {
+                for (let emoji in emojiList) {
                     await embedMessage.react(emoji);
                 }
                 const filter = (reaction, user) => emojiList.includes(reaction.emoji.name) && !user.bot;
@@ -167,11 +162,17 @@ module.exports = {
                     dispose: true
                 });
                 collector.on("collect", (r) => {
+                    options.r = r;
+                    options.collector = collector;
+                    options.embedMessage = embedMessage;
                     flipEmbeds(options);
                 });
                 collector.on("remove", (r) => {
+                    options.r = r;
+                    options.collector = collector;
+                    options.embedMessage = embedMessage;
                     flipEmbeds(options);
-                })
+                });
             });
         }
 
@@ -181,10 +182,7 @@ module.exports = {
                     const doujin = await nhentai.getDoujin(args[0]);
                     let embed = createDoujinEmbed(doujin);
                     let options = {
-                        r: r,
-                        collector: collector,
                         result: doujin,
-                        embedMessage: embedMessage,
                         collectorFunc: generateContent(doujin),
                     }
                     createFlip(embed, options, ["▶️"]);
@@ -198,12 +196,9 @@ module.exports = {
                 let page = 0;
                 let embed = createSearchEmbed(result, page);
                 let options = {
-                    r: r,
                     page: page,
                     result: result,
-                    embedMessage: embedMessage,
                     createFunc: createSearchEmbed(result, page),
-                    collector: collector,
                     collectorFunc: generateDoujin(embed, page),
                 }
                 createFlip(embed, options, ["⬅️", "➡️", "▶️"]);
