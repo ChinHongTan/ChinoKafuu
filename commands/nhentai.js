@@ -5,9 +5,88 @@ module.exports = {
     execute(message, args) {
         const nhentai = require("nhentai-js");
         const Discord = require("discord.js");
-        const nanaApi = require("nana-api");
-        const nana = new nanaApi();
+        const NanaApi = require("nana-api");
+        const nana = new NanaApi();
 
+        /**
+         * Edit the message after user had reacted.
+         * @param {Object} options - How the function should edit the message.
+         * @param {object} options.r - The reaction from the user.
+         * @param {number} options.page - The page number of the doujin being displayed.
+         * @param {object} options.result - The result from the search.
+         * @param {object} options.embedMessage - The message to be edited.
+         * @param {function} options.createFunc - How the message should be edited.
+         * @param {object} options.collector - The collector to detect user's reactions.
+         * @param {function} options.collectorFunc - What type of reactable message to be generated.
+         * @returns 
+         */
+         function flipEmbeds({
+            r,
+            page,
+            result,
+            embedMessage,
+            createFunc,
+            collector,
+            collectorFunc,
+        }) {
+            let editedEmbed;
+            switch (r.emoji.name) {
+                case "⬅️":
+                    page -= 1;
+                    if (page < 0) {
+                        page = result.results.length - 1;
+                    }
+                    editedEmbed = createFunc(result, page);
+                    embedMessage.edit(editedEmbed);
+                    break;
+                case "➡️":
+                    page += 1;
+                    if (page + 1 > result.results.length) {
+                        page = 0;
+                    }
+                    editedEmbed = createFunc(result, page);
+                    embedMessage.edit(editedEmbed);
+                    break;
+                case "▶️":
+                    collector.stop();
+                    collectorFunc(result);
+                    embedMessage.delete();
+                    break;
+            }
+            return page;
+        }
+
+        /**
+         * Generate an reactable message. React with emojis to change the message content.
+         * @param {object} embed - The displayed embed message.
+         * @param {object} options - How the message should be displayed and how to edit it.
+         * @param {array} emojiList - A list of emoji to react.
+         */
+        function createFlip(embed, options, emojiList) {
+            message.channel.send(embed).then(async (embedMessage) => {
+                for (let emoji in emojiList) {
+                    await embedMessage.react(emoji);
+                }
+                const filter = (reaction, user) => emojiList.includes(reaction.emoji.name) && !user.bot;
+                let collector = embedMessage.createReactionCollector(filter, {
+                    idle: 60000,
+                    dispose: true
+                });
+                collector.on("collect", (r) => {
+                    options.r = r;
+                    options.collector = collector;
+                    options.embedMessage = embedMessage;
+                    flipEmbeds(options);
+                });
+                collector.on("remove", (r) => {
+                    options.r = r;
+                    options.collector = collector;
+                    options.embedMessage = embedMessage;
+                    flipEmbeds(options);
+                });
+            });
+        }
+        
         /**
          * Send an embed message with the doujin cover.
          * @param {object} doujin - The doujin contained in the embed message.
@@ -69,6 +148,22 @@ module.exports = {
         }
 
         /**
+         * Generate and display an reactable message of a doujin. React with emojis to change the message content.
+         * @param {object} doujin - The doujin to be displayed.
+         * @param {array} doujin.pages - The list of pages of the doujin.
+         * @param {number} [page = 0] - The page number of the doujin being displayed.
+         */
+         function generateContent(doujin, page = 0) {
+            let embed = createBookEmbed(doujin.pages, page);
+            let options = {
+                page: page,
+                result: doujin.pages,
+                createFunc: createBookEmbed(doujin.pages, page),
+            }
+            createFlip(embed, options, ["⬅️", "➡️"]);
+        }
+
+        /**
          * Generate and display an reactable message of a doujin cover. React with emojis to change the message content.
          * @param {object} result - The result from the search. Consist of an array of doujins. 
          * @param {array} result.results - An array of doujins.
@@ -82,97 +177,6 @@ module.exports = {
                     collectorFunc: generateContent(doujin),
                 }
                 createFlip(embed, options, ["▶️"]);
-            });
-        }
-
-        /**
-         * Generate and display an reactable message of a doujin. React with emojis to change the message content.
-         * @param {object} doujin - The doujin to be displayed.
-         * @param {array} doujin.pages - The list of pages of the doujin.
-         * @param {number} [page = 0] - The page number of the doujin being displayed.
-         */
-        function generateContent(doujin, page = 0) {
-            let embed = createBookEmbed(doujin.pages, page);
-            let options = {
-                page: page,
-                result: doujin.pages,
-                createFunc: createBookEmbed(pages, page),
-            }
-            createBookFlip(embed, options, ["⬅️", "➡️"]);
-        }
-
-        /**
-         * Edit the message after user had reacted.
-         * @param {Object} options - How the function should edit the message.
-         * @param {object} options.r - The reaction from the user.
-         * @param {number} options.page - The page number of the doujin being displayed.
-         * @param {object} options.result - The result from the search.
-         * @param {object} options.embedMessage - The message to be edited.
-         * @param {function} options.createFunc - How the message should be edited.
-         * @param {object} options.collector - The collector to detect user's reactions.
-         * @param {function} options.collectorFunc - What type of reactable message to be generated.
-         * @returns 
-         */
-        function flipEmbeds({
-            r,
-            page,
-            result,
-            embedMessage,
-            createFunc,
-            collector,
-            collectorFunc,
-        }) {
-            let editedEmbed;
-            switch (r.emoji.name) {
-                case "⬅️":
-                    page -= 1;
-                    if (page < 0) page = result.results.length - 1;
-                    editedEmbed = createFunc(result, page);
-                    embedMessage.edit(editedEmbed);
-                    break;
-                case "➡️":
-                    page += 1;
-                    if (page + 1 > result.results.length) page = 0;
-                    editedEmbed = createFunc(result, page);
-                    embedMessage.edit(editedEmbed);
-                    break;
-                case "▶️":
-                    collector.stop();
-                    collectorFunc(result);
-                    embedMessage.delete();
-                    break;
-            }
-            return page;
-        }
-
-        /**
-         * Generate an reactable message. React with emojis to change the message content.
-         * @param {object} embed - The displayed embed message.
-         * @param {object} options - How the message should be displayed and how to edit it.
-         * @param {array} emojiList - A list of emoji to react.
-         */
-        function createFlip(embed, options, emojiList) {
-            message.channel.send(embed).then(async (embedMessage) => {
-                for (let emoji in emojiList) {
-                    await embedMessage.react(emoji);
-                }
-                const filter = (reaction, user) => emojiList.includes(reaction.emoji.name) && !user.bot;
-                let collector = embedMessage.createReactionCollector(filter, {
-                    idle: 60000,
-                    dispose: true
-                });
-                collector.on("collect", (r) => {
-                    options.r = r;
-                    options.collector = collector;
-                    options.embedMessage = embedMessage;
-                    flipEmbeds(options);
-                });
-                collector.on("remove", (r) => {
-                    options.r = r;
-                    options.collector = collector;
-                    options.embedMessage = embedMessage;
-                    flipEmbeds(options);
-                });
             });
         }
 
