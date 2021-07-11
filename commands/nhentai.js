@@ -18,9 +18,9 @@ module.exports = {
          * @param {function} options.createFunc - How the message should be edited.
          * @param {object} options.collector - The collector to detect user's reactions.
          * @param {function} options.collectorFunc - What type of reactable message to be generated.
-         * @returns 
+         * @returns
          */
-         function flipEmbeds({
+        function flipEmbeds({
             r,
             page,
             result,
@@ -67,10 +67,11 @@ module.exports = {
                 for (let emoji in emojiList) {
                     await embedMessage.react(emoji);
                 }
-                const filter = (reaction, user) => emojiList.includes(reaction.emoji.name) && !user.bot;
+                const filter = (reaction, user) =>
+                    emojiList.includes(reaction.emoji.name) && !user.bot;
                 let collector = embedMessage.createReactionCollector(filter, {
                     idle: 60000,
-                    dispose: true
+                    dispose: true,
                 });
                 collector.on("collect", (r) => {
                     options.r = r;
@@ -86,7 +87,7 @@ module.exports = {
                 });
             });
         }
-        
+
         /**
          * Send an embed message with the doujin cover.
          * @param {object} doujin - The doujin contained in the embed message.
@@ -137,7 +138,7 @@ module.exports = {
         /**
          * An embed with the doujin object.
          * @param {array} pages - The list of pages of the doujin.
-         * @param {number} page - The page number of the doujin being displayed. 
+         * @param {number} page - The page number of the doujin being displayed.
          * @returns {class} Discord embed.
          */
         function createBookEmbed(pages, page) {
@@ -153,19 +154,19 @@ module.exports = {
          * @param {array} doujin.pages - The list of pages of the doujin.
          * @param {number} [page = 0] - The page number of the doujin being displayed.
          */
-         function generateContent(doujin, page = 0) {
+        function generateContent(doujin, page = 0) {
             let embed = createBookEmbed(doujin.pages, page);
             let options = {
                 page: page,
                 result: doujin.pages,
                 createFunc: createBookEmbed(doujin.pages, page),
-            }
+            };
             createFlip(embed, options, ["⬅️", "➡️"]);
         }
 
         /**
          * Generate and display an reactable message of a doujin cover. React with emojis to change the message content.
-         * @param {object} result - The result from the search. Consist of an array of doujins. 
+         * @param {object} result - The result from the search. Consist of an array of doujins.
          * @param {array} result.results - An array of doujins.
          * @param {number} page - The position of displayed doujin in the array.
          */
@@ -175,7 +176,7 @@ module.exports = {
                 let options = {
                     result: doujin,
                     collectorFunc: generateContent(doujin),
-                }
+                };
                 createFlip(embed, options, ["▶️"]);
             });
         }
@@ -188,7 +189,7 @@ module.exports = {
                     let options = {
                         result: doujin,
                         collectorFunc: generateContent(doujin),
-                    }
+                    };
                     createFlip(embed, options, ["▶️"]);
                 } else {
                     return message.channel.send("The book ID doesn't exist!");
@@ -204,7 +205,7 @@ module.exports = {
                     result: result,
                     createFunc: createSearchEmbed(result, page),
                     collectorFunc: generateDoujin(embed, page),
-                }
+                };
                 createFlip(embed, options, ["⬅️", "➡️", "▶️"]);
             }
         })();
