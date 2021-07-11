@@ -3,7 +3,7 @@ module.exports = {
 	aliases: ['user', 'ui'],
 	guildOnly: true,
 	description: "User's information ",
-	execute(message, args) {
+	execute(client, message, args) {
 		const fs = require('fs');
 		const Discord = require('discord.js');
 

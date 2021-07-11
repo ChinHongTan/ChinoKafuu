@@ -3,7 +3,7 @@ module.exports = {
     cooldown: 60,
     aliases: ['fi', 'fetch-image', 'imagefetch'],
     description: 'fetch images send in guild (partially useless command)',
-    execute(message, imageChannels) {
+    execute(client, message, args) {
         const fs = require('fs');
         const guild = message.client.guilds.cache.get('764839074228994069');
         const totalImageCount = [];

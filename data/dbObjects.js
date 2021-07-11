@@ -1,30 +1,44 @@
-const Sequelize = require('sequelize');
+const Sequelize = require("sequelize");
+const process = require("process");
+const {
+	host,
+	database,
+	password,
+	username
+} = require("../config/config.json");
 
 const sequelize = new Sequelize({
-	database: "d1j44igonolhjv",
-	username: "qtravabjlpauov",
-	password: "2b929125d81a36a17c9d92aed00aad154ffb65eca7c0f3fe3f1b9d021451e430",
-	host: "ec2-54-198-252-9.compute-1.amazonaws.com",
+	logging: false,
+	database: database || process.env.DATABASE,
+	username: username || process.env.USERNAME,
+	password: password || process.env.PASSWORD,
+	host: host || process.env.HOST ,
 	port: 5432,
 	dialect: "postgres",
 	dialectOptions: {
-	  ssl: {
-		require: true, 
-		rejectUnauthorized: false 
-	  }
+		ssl: {
+			require: true,
+			rejectUnauthorized: false
+		}
 	},
-  });
+});
 
 const Users = require('../models/Users')(sequelize, Sequelize.DataTypes);
 const CurrencyShop = require('../models/CurrencyShop')(sequelize, Sequelize.DataTypes);
 const UserItems = require('../models/UserItems')(sequelize, Sequelize.DataTypes);
 
-UserItems.belongsTo(CurrencyShop, { foreignKey: 'item_id', as: 'item' });
+UserItems.belongsTo(CurrencyShop, {
+	foreignKey: 'item_id',
+	as: 'item'
+});
 
 /* eslint-disable-next-line func-names */
-Users.prototype.addItem = async function(item) {
+Users.prototype.addItem = async function (item) {
 	const userItem = await UserItems.findOne({
-		where: { user_id: this.user_id, item_id: item.id },
+		where: {
+			user_id: this.user_id,
+			item_id: item.id
+		},
 	});
 
 	if (userItem) {
@@ -32,15 +46,25 @@ Users.prototype.addItem = async function(item) {
 		return userItem.save();
 	}
 
-	return UserItems.create({ user_id: this.user_id, item_id: item.id, amount: 1 });
+	return UserItems.create({
+		user_id: this.user_id,
+		item_id: item.id,
+		amount: 1
+	});
 };
 
 /* eslint-disable-next-line func-names */
-Users.prototype.getItems = function() {
+Users.prototype.getItems = function () {
 	return UserItems.findAll({
-		where: { user_id: this.user_id },
+		where: {
+			user_id: this.user_id
+		},
 		include: ['item'],
 	});
 };
 
-module.exports = { Users, CurrencyShop, UserItems };
+module.exports = {
+	Users,
+	CurrencyShop,
+	UserItems
+};

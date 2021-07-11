@@ -2,7 +2,8 @@ module.exports = {
     name: 'board',
     cooldown: 3,
 	description: 'Test board function!',
-	execute(message, args) {
+	// eslint-disable-next-line no-unused-vars
+	execute(client, message, args) {
         const Canvas = require('canvas');
         const Discord = require('discord.js');
         const newLocal = 'imgbb-uploader';
@@ -15,22 +16,22 @@ module.exports = {
             constructor(occupied, coordinate) {
                 this.occupied = occupied;
                 this.coordinate = coordinate;
-            };
+            }
             // calculate where to draw the coloured discs
             pixel(width, height)  {
                 let array = this.coordinate.split('');
                 x = (array[0] - 0.5) * width / 7;
                 y = (array[1] - 0.5) * height / 6; 
                 return [x, y];
-            };
+            }
             // whether this square had been occupied
             get isOccupied() {
                 return this.occupied;
-            };
+            }
             set isOccupied(round) {
                 this.occupied = round;
-            };
-        };
+            }
+        }
 
         //a function to place new coloured discs
         function place(column, round, squares) {
@@ -47,8 +48,8 @@ module.exports = {
                     square.isOccupied = round;
                     placed = true;
                     break;
-                };
-            };
+                }
+            }
             //if a new disc can’t be placed in this column
             if (!placed) {
                 return message.channel.send("You can’t place the disc here!");
@@ -57,10 +58,10 @@ module.exports = {
                 for ( let direction of directions ) {
                     let win = checkWin(direction, round, squares);
                     if (win == true) return [win, coordinate];
-                };
+                }
                 return [win, coordinate];
-            };
-        };
+            }
+        }
 
         function checkWin(d, r, s) {
             let win = false;
@@ -68,16 +69,16 @@ module.exports = {
             for (let [coordinate, square] of Object.entries(s)) {
                 if (square.isOccupied == r) {
                     spaces.push(coordinate);
-                };
-            };
+                }
+            }
             for ( let c of spaces ) {
                 if (spaces.includes(String(+c + +d)) && spaces.includes(String(+c + 2 * +d)) && spaces.includes(String(+c + 3 * +d))) {
                     win = true;
                     break;
-                };
-            };
+                }
+            }
             return win;
-        };
+        }
 
         async function draw(squares, coordinate, round) {
             return new Promise((resolve, reject) => {
@@ -90,7 +91,7 @@ module.exports = {
                     resolve(url);
                 });
             });
-        };
+        }
 
         function createEmbed(round, url) {
             let embed = new Discord.MessageEmbed()
@@ -99,7 +100,7 @@ module.exports = {
             .setColor('#ff0000')
             .setImage(url);
             return embed;
-        };
+        }
 
         async function getImageUrl(buffer, coordinate) {
             return new Promise((resolve, reject) => {
@@ -118,7 +119,7 @@ module.exports = {
                     })
                     .catch((error) => console.error(error));
             });
-        };
+        }
 
         const canvas = Canvas.createCanvas(700, 600);
         const context = canvas.getContext('2d');
@@ -182,7 +183,7 @@ module.exports = {
                     if (win) {
                         collector.stop();
                         return message.channel.send(`${round} had won the game!`);
-                    };
+                    }
                     if (round == 'red') {
                         round = 'yellow';
                     } else round = 'red';
@@ -197,7 +198,7 @@ module.exports = {
                     if (win) {
                         collector.stop();
                         return message.channel.send(`${round} had won the game!`);
-                    };
+                    }
                     if (round == 'red') {
                         round = 'yellow';
                     } else round = 'red';

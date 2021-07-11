@@ -1,21 +1,22 @@
+const Discord = require('discord.js');
+const sagiri = require('sagiri');
+const { sagiri_token } = require("../config/config.json");
+const { searchByUrl} = require('ascii2d');
+const process = require('process');
+let mySauce = sagiri(process.env.SAGIRI || sagiri_token);
+
 module.exports = {
 	name: 'sauce',
 	description: 'Search SauceNao for an image source.',
 	cooldown: 5,
-	execute(message, args) {
-		const Discord = require('discord.js');
-        const { sagiri_token } = require("../config/config.json");
-		const sagiri = require('sagiri');
-		let mySauce = sagiri(process.env.SAGIRI || sagiri_token);
-		const { searchByUrl } = require('ascii2d');
-
+	execute(client, message, args) {
 		function createEmbed (response, page) {
 			var sourceURL = response[page].url;
 			var info = '';
 			for (const [key, value] of Object.entries(response[page].raw.data)) {
 				if (key === 'ext_urls') continue;
 				info += `\`${key} : ${value}\`\n`;
-			};
+			}
 			let embed = new Discord.MessageEmbed()
 			.setTitle(response[page].site)
 			.setDescription(`Similarity: ${response[page].similarity}%`)
@@ -27,7 +28,7 @@ module.exports = {
 			)
 			.setFooter(`page ${page + 1}/${response.length}`)
 			return embed;
-		};
+		}
 
 		function createEmbed2 (response, page) {
 			let sourceURL = response[page].source.url;
@@ -36,7 +37,7 @@ module.exports = {
 			if (response[page].source.author) {
 				let authorinfo = response[page].source.author;
 				author = `Name: ${authorinfo.name}\nLink: ${authorinfo.url}`;
-			}; 
+			} 
 			let embed = new Discord.MessageEmbed()
 			.setTitle(response[page].source.type)
 			.setColor('#008000')
@@ -48,7 +49,7 @@ module.exports = {
 			)
 			.setFooter(`page ${page + 1}/${response.length}`)
 			return embed;
-		};
+		}
 
 		function reactHandler(r, page, response, embedMessage) {
 			if (r.emoji.name === '⬅️') {
@@ -61,9 +62,9 @@ module.exports = {
 				if (page + 1 > response.length) page = 0;
 				var editedEmbed = createEmbed(response, page);
 				embedMessage.edit(editedEmbed);
-			};
+			}
 			return page;
-		};
+		}
 
 		function reactHandler2(r, page, response, embedMessage) {
 			if (r.emoji.name === '⬅️') {
@@ -76,9 +77,9 @@ module.exports = {
 				if (page + 1 > response.length) page = 0;
 				var editedEmbed = createEmbed2(response, page);
 				embedMessage.edit(editedEmbed);
-			};
+			}
 			return page;
-		};
+		}
 
 		function sendEmbed(embed, response, page = 0, mode) {
 			message.channel.send(embed).then(embedMessage => {
@@ -102,10 +103,10 @@ module.exports = {
 						collector.on('remove', r => {
 							page = reactHandler2(r, page, response, embedMessage);
 						});
-				};
+				}
 				
 			});
-		};
+		}
 
 		function searchForImage(searchImage) {
 			let page = 0;
@@ -113,7 +114,7 @@ module.exports = {
 			mySauce(searchImage, { results: 10})
 			.then(result => {
 				let response = result.filter(r => r.similarity > 80);
-				console.log('request sucessful');
+				console.log('request successful');
 
 				if (response.length < 1) {
 					searchByUrl(searchImage, 'bovw').then(result2 => {
@@ -128,7 +129,7 @@ module.exports = {
 				} else {
 				let embed = createEmbed(response, page);
 				sendEmbed(embed, response, page, mode);
-				};
+				}
 			})
 			.catch(error => {
 				console.error(error);
@@ -144,14 +145,14 @@ module.exports = {
 					if (msg.attachments.size > 0) {
 						searchImage = msg.attachments.first().proxyURL;
 						break;
-					};
-				};
+					}
+				}
 				if (!searchImage) return message.channel.send("You have to upload an image before using this command!");
 				searchForImage(searchImage);
 			});
 		} else {
 			searchImage = args[0];
 			searchForImage(searchImage);
-		};
+		}
 	},
 };

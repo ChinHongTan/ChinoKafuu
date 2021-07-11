@@ -1,9 +1,0 @@
-{
-	"prefix": "c!",
-	"token": "discord-bot-token-here",
-    "sagiri_token": "saucenao-api-token-here",
-    "host": "database-host-here",
-    "database": "database-here",
-    "password": "database-password-here",
-    "username": "database-username-here"
-}

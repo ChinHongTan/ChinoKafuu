@@ -4,7 +4,7 @@ module.exports = {
 	aliases: ['backup'],
     guildOnly: true,
 	description: 'Create a server backup',
-	execute(message, args) {
+	execute(client, message, args) {
         backup = require("discord-backup");
         const prefix = 'c!';
         if (args.length < 1) {

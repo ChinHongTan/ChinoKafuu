@@ -1,24 +1,41 @@
-const { Certificate } = require('crypto');
+const fetch = require('node-fetch');
+const Discord = require('discord.js');
 
 module.exports = {
-	name: 'anime',
+    name: 'anime',
 	guildOnly: true,
 	description: 'Search for anime details or search anime with frames.',
-	execute(message, args) {
-		const fetch = require('node-fetch');
-        const Discord = require('discord.js');
+	execute(client, message, args) {        
+        if (args.length > 0) {
+            if (isValidHttpUrl(args[0])) {
+                fetchImage(args[0]);
+                return;
+            }
+        } else {
+            let searchImage = '';
+            message.channel.messages.fetch({ limit: 25 })
+            .then(messages => {
+                for (const msg of messages.values()) {
+                    if (msg.attachments.size > 0) {
+                        searchImage = msg.attachments.first().proxyURL;
+                        break;
+                    }
+                }
+                if (!searchImage) return message.channel.send("You have to upload an image before using this command!");
+                fetchImage(searchImage);
+                return;
+            });
+        }
 
         function isValidHttpUrl(string) {
             let url;
-            
             try {
-              url = new URL(string);
+             url = new URL(string);
             } catch (_) {
               return false;  
-            };
-          
+            }
             return url.protocol === "http:" || url.protocol === "https:";
-        };
+        }
 
         function createEmbed (response, page = 0) {
 			let sourceURL = response[page].video;
@@ -44,7 +61,7 @@ module.exports = {
 			)
 			.setFooter(`page ${page + 1}/${response.length}`)
 			return [embed, sourceURL];
-		};
+		}
 
         function reactHandler(r, page, response, embedMessage, msg) {
 			if (r.emoji.name === '⬅️') {
@@ -59,9 +76,9 @@ module.exports = {
 				let [editedEmbed, video] = createEmbed(response, page);
 				embedMessage.edit(editedEmbed);
                 msg.edit(video);
-			};
+			}
             return page;
-		};
+		}
 
         function sendEmbed(embed, response, video, page = 0) {
 			message.channel.send(embed).then(embedMessage => {
@@ -78,37 +95,14 @@ module.exports = {
                     });
                 });
 			});
-		};
-        
-        if (args.length > 0) {
-            if (isValidHttpUrl(args[0])) {
-                fetch(`https://api.trace.moe/search?cutBorders&anilistInfo&url=${encodeURIComponent(args[0])}`)
+		}
+        function fetchImage(target){
+            fetch(`https://api.trace.moe/search?cutBorders&anilistInfo&url=${encodeURIComponent(target)}`)
                 .then(e => e.json().then(response => {
                     let result = response.result;
                     let [embed, video] = createEmbed(result);
                     sendEmbed(embed, result, video);
                 }));
-                return;
-            };
-        } else {
-            let searchImage = '';
-            message.channel.messages.fetch({ limit: 25 })
-            .then(messages => {
-                for (const msg of messages.values()) {
-                    if (msg.attachments.size > 0) {
-                        searchImage = msg.attachments.first().proxyURL;
-                        break;
-                    };
-                };
-                if (!searchImage) return message.channel.send("You have to upload an image before using this command!");
-                fetch(`https://api.trace.moe/search?cutBorders&anilistInfo&url=${encodeURIComponent(searchImage)}`)
-                .then(e => e.json().then(response => {
-                    let result = response.result;
-                    let [embed, video] = createEmbed(result);
-                    sendEmbed(embed, result, video);
-                }));
-                return;
-            });
-        };
+        }
 	},
 };

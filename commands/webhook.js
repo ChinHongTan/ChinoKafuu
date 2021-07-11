@@ -2,7 +2,7 @@ module.exports = {
 	name: 'webhook',
 	aliases: ['w'],
 	description: 'Create a webhook.',
-	execute(message, args) {
+	execute(client, message, args) {
 		message.channel.createWebhook(message.author.username, {
 			name: message.author.username,
 			avatar: message.author.avatarURL(),

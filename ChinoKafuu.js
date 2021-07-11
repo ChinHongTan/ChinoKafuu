@@ -1,66 +1,92 @@
+//Dependcies
 const fs = require("fs");
 const Discord = require("discord.js");
-const { prefix, token } = require("./config/config.json");
+const {
+    prefix,
+    token,
+    SpotifyClientID,
+    SpotifyClientSecret
+} = require("./config/config.json");
+const process = require("process");
+const spotify = require('./functions/spotify');
 
-const currency = new Discord.Collection();
-const { Users } = require("./data/dbObjects");
-
+//initialization
 const client = new Discord.Client();
+let cooldowns = new Discord.Collection();
 client.commands = new Discord.Collection();
+client.queue = new Map();
+client.spotify = new spotify(SpotifyClientID,SpotifyClientSecret);
 let functions = {}
 
-const commandFiles = fs
+//Database
+client.currency = new Discord.Collection();
+const {
+    Users
+} = require("./data/dbObjects");
+
+//Load commands
+const commands = fs
     .readdirSync("./commands")
     .filter((file) => file.endsWith(".js"));
 
-for (const file of commandFiles) {
+for (const file of commands) {
     const command = require(`./commands/${file}`);
-
-    // set a new item in the Collection
-    // with the key as the command name and the value as the exported module
-    client.commands.set(command.name, command);
+    client.commands.set(command.name, command); //Set a new item in the Collection with the key as the command name and the value as the exported module
+    console.log(`Loaded command ${file}`);
 }
-
-const cooldowns = new Discord.Collection();
-
+//Load some useful function
 const functionFiles = fs
     .readdirSync("./functions")
     .filter((file) => file.endsWith(".js"));
 
 for (const file of functionFiles) {
     const func = require(`./functions/${file}`);
-
     functions[func.name] = func.func;
+    console.log(`Loaded function ${file}`);
 }
-console.log(functions);
+//Load pictures
+const imageFiles = fs.readdirSync('./images').filter(file => file.endsWith('.json'));
+client.pictures = new Object();
 
-Reflect.defineProperty(currency, "add", {
+for (const filename of imageFiles) {
+    let rawdata = fs.readFileSync(`./images/${filename}`);
+    let imagefile = JSON.parse(rawdata);
+    client.pictures[filename] = imagefile;
+}
+
+Reflect.defineProperty(client.currency, "add", {
     /* eslint-disable-next-line func-name-matching */
     value: async function add(id, amount) {
-        const user = currency.get(id);
+        let user = client.currency.get(id);
         if (user) {
             user.balance += Number(amount);
-            return user.save();
+            return await user.save();
         }
-        const newUser = await Users.create({ user_id: id, balance: amount });
-        currency.set(id, newUser);
+        let newUser = await Users.create({
+            user_id: id,
+            balance: amount
+        });
+        client.currency.set(id, newUser);
         return newUser;
     },
 });
 
-Reflect.defineProperty(currency, "getBalance", {
+Reflect.defineProperty(client.currency, "getBalance", {
     /* eslint-disable-next-line func-name-matching */
     value: function getBalance(id) {
-        const user = currency.get(id);
+        let user = client.currency.get(id);
         return user ? user.balance : 0;
     },
 });
+
+
 client.once("ready", async () => {
-    const storedBalances = await Users.findAll();
-    storedBalances.forEach((b) => currency.set(b.user_id, b));
     console.log("Ready!");
     client.user.setPresence({
-        activity: { name: "c!help", type: "LISTENING" },
+        activity: {
+            name: "c!help",
+            type: "LISTENING"
+        },
         status: "dnd",
     });
 });
@@ -83,12 +109,12 @@ client.on("guildMemberAdd", async (member) => {
 
 client.on("message", async (message) => {
     if (message.author.bot) return;
-    currency.add(message.author.id, 1);
     if (!message.content.startsWith(prefix)) return;
+
+    client.currency.add(message.author.id, 1);
 
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();
-
     const command =
         client.commands.get(commandName) ||
         client.commands.find(
@@ -124,8 +150,20 @@ client.on("message", async (message) => {
         setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
     }
 
+    const missingPerm = (member, perms) => {
+        const missingPerm = member.permissions.missing(perms)
+            .map(str => `\`${str.replace(/_/g, ' ').toLowerCase().replace(/\b(\w)/g, char => char.toUpperCase())}\``)
+
+        return missingPerm.length > 1 ?
+            `${missingPerm.slice(0, -1).join(", ")} and ${missingPerm.slice(-1)[0]}` :
+            missingPerm[0];
+    }
+
+    if (command.userPerms && !message.member.permissions.has(command.userPerms)) return message.reply(`You must have the ${missingPerm(message.member, command.userPerms)} Permissions to use the command`);
+    if (command.botPerms && !message.guild.me.permissions.has(command.botPerms)) return message.reply(`Bot missing the following Permissions :${missingPerm(message.guild.me, command.botPerms)} to use the command`);
+
     try {
-        await command.execute(message, args);
+        await command.execute(client, message, args);
     } catch (error) {
         console.error(error);
         message.reply("there was an error trying to execute that command!");
@@ -144,4 +182,12 @@ client.on("message", async (message) => {
 );
 */
 
-client.login(process.env.TOKEN || token);
+async function start(){
+    console.log('syncing database')
+    const storedBalances = await Users.findAll();
+    storedBalances.forEach((b) => client.currency.set(b.user_id, b))
+    console.log('database synced!')
+    client.login(token || process.env.TOKEN);
+  }
+start()
+

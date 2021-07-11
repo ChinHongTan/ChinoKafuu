@@ -2,7 +2,7 @@ module.exports = {
 	name: 'loli',
 	cooldown: 3,
 	description: 'get a picture of a loli',
-	execute(message, args) {
+	execute(client, message, args) {
 		const fs = require('fs');
 		const Discord = require('discord.js');
 
@@ -17,8 +17,8 @@ module.exports = {
 			pictures[filename] = imagefile;
 		}
 
-		const nsfw = ['發圖區（18r）.json','vtuber18r區域.json'];
-		const sfw = ['vtuber區.json','蘿莉圖.json','鯊鯊a片.json'];
+		//const nsfw = ['發圖區（18r）.json','vtuber18r區域.json'];
+		//const sfw = ['vtuber區.json','蘿莉圖.json','鯊鯊a片.json'];
 		const loli = ['蘿莉圖.json'];
 		var random = Math.floor(Math.random() * loli.length);
 		var targetFile = loli[random];
@@ -51,6 +51,6 @@ module.exports = {
 		});
 		let data = JSON.stringify(reports, null, 2);
         var filename = 'reports.json';
-        fs.writeFileSync(`./` + filename, data);
+        fs.writeFileSync(`../data/` + filename, data);
 	},
 };

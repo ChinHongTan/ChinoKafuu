@@ -1,20 +1,22 @@
-const Sequelize = require('sequelize');
+const Sequelize = require("sequelize");
+const process = require("process");
 const { host, database, password, username } = require("../config/config.json");
 
 const sequelize = new Sequelize({
-	database: process.env.DATABASE || database,
-	username: process.env.USERNAME || username,
-	password: process.env.PASSWORD || password,
-	host: process.env.HOST || host,
+	logging: false,
+	database: database || process.env.DATABASE,
+	username: username || process.env.USERNAME,
+	password: password || process.env.PASSWORD,
+	host: host || process.env.HOST ,
 	port: 5432,
 	dialect: "postgres",
 	dialectOptions: {
-	  ssl: {
-		require: true, 
-		rejectUnauthorized: false 
-	  }
+		ssl: {
+			require: true,
+			rejectUnauthorized: false
+		}
 	},
-  });
+});
 
 const CurrencyShop = require('../models/CurrencyShop')(sequelize, Sequelize.DataTypes);
 require('./models/Users')(sequelize, Sequelize.DataTypes);

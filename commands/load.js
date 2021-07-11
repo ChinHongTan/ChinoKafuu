@@ -3,7 +3,7 @@ module.exports = {
 	cooldown: 10,
     guildOnly: true,
 	description: 'Load a server backup based on backup ID.',
-	execute(message, args) {
+	execute(client, message, args) {
         const backup = require("discord-backup");
         const fs = require("fs");
         // Check member permissions

@@ -1,7 +1,7 @@
 module.exports = {
 	name: 'covid',
 	description: 'Latest global/country covid status!',
-	execute(message, args) {
+	execute(client, message, args) {
         const Discord = require('discord.js');
         const api = require('novelcovid');
         api.settings({
