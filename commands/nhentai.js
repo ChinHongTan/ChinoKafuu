@@ -77,7 +77,14 @@ module.exports = {
         function generateDoujin(result, page) {
             nhentai.getDoujin(result.results[page].id).then((doujin) => {
                 let embed = createDoujinEmbed(doujin);
-                createDoujinFlip(embed, doujin);
+                let options = {
+                    r: r,
+                    collector: collector,
+                    result: doujin,
+                    embedMessage: embedMessage,
+                    collectorFunc: generateContent(doujin),
+                }
+                createFlip(embed, options, ["▶️"]);
             });
         }
 
@@ -89,7 +96,14 @@ module.exports = {
          */
         function generateContent(doujin, page = 0) {
             let embed = createBookEmbed(doujin.pages, page);
-            createBookFlip(embed, doujin.pages);
+            let options = {
+                r: r,
+                page: page,
+                result: pages,
+                embedMessage: embedMessage,
+                createFunc: createBookEmbed(pages, page),
+            }
+            createBookFlip(embed, options, ["⬅️", "➡️"]);
         }
 
         /**
@@ -137,105 +151,27 @@ module.exports = {
         }
 
         /**
-         * Generate an reactable message of the doujin cover page. React with emojis to change the message content.
-         * @param {object} embed - The displayed embed message
-         * @param {object} doujin - The doujin object.
-         */
-        function createDoujinFlip(embed, doujin) {
-            message.channel.send(embed).then((embedMessage) => {
-                embedMessage.react("▶️");
-                const filter = (reaction, user) =>
-                    ["▶️"].includes(reaction.emoji.name) && !user.bot;
-                let collector = embedMessage.createReactionCollector(filter, {
-                    idle: 600000,
-                });
-                collector.on("collect", (r) => {
-                    flipEmbeds({
-                        r: r,
-                        collector: collector,
-                        result: doujin,
-                        embedMessage: embedMessage,
-                        collectorFunc: generateContent(doujin),
-                    });
-                });
-            });
-        }
-
-        /**
-         * Generate an reactable message of the search page. React with emojis to change the message content.
+         * Generate an reactable message. React with emojis to change the message content.
          * @param {object} embed - The displayed embed message.
-         * @param {object} result - The result from the search.
+         * @param {object} options - How the message should be displayed and how to edit it.
+         * @param {array} emojiList - A list of emoji to react.
          */
-        function createSearchFlip(embed, result) {
-            let page = 0;
-            message.channel.send(embed).then((embedMessage) => {
-                embedMessage
-                    .react("⬅️")
-                    .then(embedMessage.react("➡️"))
-                    .then(embedMessage.react("▶️"));
-                const filter = (reaction, user) =>
-                    ["⬅️", "➡️", "▶️"].includes(reaction.emoji.name) &&
-                    !user.bot;
+        function createFlip(embed, options, emojiList) {
+            message.channel.send(embed).then(async (embedMessage) => {
+                for (emoji in emojiList) {
+                    await embedMessage.react(emoji);
+                }
+                const filter = (reaction, user) => emojiList.includes(reaction.emoji.name) && !user.bot;
                 let collector = embedMessage.createReactionCollector(filter, {
-                    idle: 600000,
-                    dispose: true,
+                    idle: 60000,
+                    dispose: true
                 });
                 collector.on("collect", (r) => {
-                    page = flipEmbeds({
-                        r: r,
-                        page: page,
-                        result: result,
-                        embedMessage: embedMessage,
-                        createFunc: createSearchEmbed(result, page),
-                        collector: collector,
-                        collectorFunc: generateDoujin(embed, page),
-                    });
+                    flipEmbeds(options);
                 });
                 collector.on("remove", (r) => {
-                    page = flipEmbeds({
-                        r: r,
-                        page: page,
-                        result: result,
-                        embedMessage: embedMessage,
-                        createFunc: createSearchEmbed(result, page),
-                    });
-                });
-            });
-        }
-
-        /**
-         * Generate an reactable message of the doujin page. React with emojis to change the message content.
-         * @param {object} embed - The displayed embed message.
-         * @param {object} pages - The list of pages of the doujin.
-         */
-        function createBookFlip(embed, pages) {
-            let page = 0;
-            message.channel.send(embed).then((embedMessage) => {
-                embedMessage.react("⬅️").then(embedMessage.react("➡️"));
-                const filter = (reaction, user) =>
-                    ["⬅️", "➡️"].includes(reaction.emoji.name) && !user.bot;
-                let collector = embedMessage.createReactionCollector(filter, {
-                    idle: 600000,
-                    dispose: true,
-                });
-                collector.on("collect", (r) => {
-                    page = flipEmbeds({
-                        r: r,
-                        page: page,
-                        result: pages,
-                        embedMessage: embedMessage,
-                        createFunc: createBookEmbed(pages, page),
-                    });
-                });
-                collector.on("remove", (r) => {
-                    page = flipEmbeds({
-                        r: r,
-                        page: page,
-                        result: pages,
-                        embedMessage: embedMessage,
-                        createFunc: createSearchEmbed(pages, page),
-                    });
-                });
+                    flipEmbeds(options);
+                })
             });
         }
 
@@ -244,7 +180,14 @@ module.exports = {
                 if (nhentai.exists(args[0])) {
                     const doujin = await nhentai.getDoujin(args[0]);
                     let embed = createDoujinEmbed(doujin);
-                    createDoujinFlip(embed, doujin);
+                    let options = {
+                        r: r,
+                        collector: collector,
+                        result: doujin,
+                        embedMessage: embedMessage,
+                        collectorFunc: generateContent(doujin),
+                    }
+                    createFlip(embed, options, ["▶️"]);
                 } else {
                     return message.channel.send("The book ID doesn't exist!");
                 }
@@ -254,7 +197,16 @@ module.exports = {
                 );
                 let page = 0;
                 let embed = createSearchEmbed(result, page);
-                createSearchFlip(embed, result);
+                let options = {
+                    r: r,
+                    page: page,
+                    result: result,
+                    embedMessage: embedMessage,
+                    createFunc: createSearchEmbed(result, page),
+                    collector: collector,
+                    collectorFunc: generateDoujin(embed, page),
+                }
+                createFlip(embed, options, ["⬅️", "➡️", "▶️"]);
             }
         })();
     },
