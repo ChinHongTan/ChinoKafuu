@@ -53,12 +53,11 @@ module.exports = {
         }
 
         function reactHandler(r, page, response, embedMessage, embedFunc) {
-            let editedEmbed;
             switch (r.emoji.name) {
                 case "⬅️":
                     page -= 1;
                     if (page < 0) page = response.length - 1;
-                    editedEmbed = embedFunc(response, page);
+                    let editedEmbed = embedFunc(response, page);
                     embedMessage.edit(editedEmbed);
                     break;
                 case "➡️":
@@ -88,7 +87,7 @@ module.exports = {
                                 page,
                                 response,
                                 embedMessage,
-                                createEmbed
+                                createEmbed(response, page)
                             );
                         });
                         collector.on("remove", (r) => {
@@ -97,7 +96,7 @@ module.exports = {
                                 page,
                                 response,
                                 embedMessage,
-                                createEmbed
+                                createEmbed(response, page)
                             );
                         });
                         break;
@@ -108,7 +107,7 @@ module.exports = {
                                 page,
                                 response,
                                 embedMessage,
-                                createEmbed2
+                                createEmbed2(response, page)
                             );
                         });
                         collector.on("remove", (r) => {
@@ -117,7 +116,7 @@ module.exports = {
                                 page,
                                 response,
                                 embedMessage,
-                                createEmbed2
+                                createEmbed2(response, page)
                             );
                         });
                 }

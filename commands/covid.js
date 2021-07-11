@@ -75,12 +75,11 @@ module.exports = {
         }
 
         function updateEmbed(r, page, result, embedMessage) {
-            let editedEmbed;
             switch (r.emoji.name) {
                 case "⬅️":
                     page -= 1;
                     if (page < 0) page = result.length - 1;
-                    editedEmbed = createEmbed(result[page], page);
+                    let editedEmbed = createEmbed(result[page]);
                     embedMessage.edit(editedEmbed);
                     break;
                 case "➡️":
@@ -90,7 +89,6 @@ module.exports = {
                     embedMessage.edit(editedEmbed);
                     break;
             }
-            return page;
         }
 
         function createEmbedFlip(result) {
@@ -105,10 +103,10 @@ module.exports = {
                     dispose: true,
                 });
                 collector.on("collect", (r) => {
-                    page = updateEmbed(r, page, result, embedMessage);
+                    updateEmbed(r, page, result, embedMessage);
                 });
                 collector.on("remove", (r) => {
-                    page = updateEmbed(r, page, result, embedMessage);
+                    updateEmbed(r, page, result, embedMessage);
                 });
             });
         }

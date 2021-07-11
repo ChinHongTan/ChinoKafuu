@@ -63,12 +63,10 @@ module.exports = {
             r,
             page,
             result,
-            embedMessage,
             createFunc,
             collector,
             collectorFunc,
         }) {
-            let editedEmbed;
             switch (r.emoji.name) {
                 case "⬅️":
                     page -= 1;
@@ -88,7 +86,6 @@ module.exports = {
                     embedMessage.delete();
                     break;
             }
-            return page;
         }
 
         function createDoujinFlip(embed, doujin) {
@@ -104,7 +101,6 @@ module.exports = {
                         r: r,
                         collector: collector,
                         result: doujin,
-                        embedMessage: embedMessage,
                         collectorFunc: generateContent(doujin),
                     });
                 });
@@ -126,22 +122,20 @@ module.exports = {
                     dispose: true,
                 });
                 collector.on("collect", (r) => {
-                    page = flipEmbeds({
+                    flipEmbeds({
                         r: r,
                         page: page,
                         result: result,
-                        embedMessage: embedMessage,
                         createFunc: createSearchEmbed(result, page),
                         collector: collector,
                         collectorFunc: generateDoujin(embed, page),
                     });
                 });
                 collector.on("remove", (r) => {
-                    page = flipEmbeds({
+                    flipEmbeds({
                         r: r,
                         page: page,
                         result: result,
-                        embedMessage: embedMessage,
                         createFunc: createSearchEmbed(result, page),
                     });
                 });
@@ -159,20 +153,18 @@ module.exports = {
                     dispose: true,
                 });
                 collector.on("collect", (r) => {
-                    page = flipEmbeds({
+                    flipEmbeds({
                         r: r,
                         page: page,
                         result: pages,
-                        embedMessage: embedMessage,
                         createFunc: createBookEmbed(pages, page),
                     });
                 });
                 collector.on("remove", (r) => {
-                    page = flipEmbeds({
+                    flipEmbeds({
                         r: r,
                         page: page,
                         result: pages,
-                        embedMessage: embedMessage,
                         createFunc: createSearchEmbed(pages, page),
                     });
                 });
