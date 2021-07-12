@@ -7,15 +7,15 @@ module.exports = {
         const Discord = require("discord.js");
         if (!args) {
             const embed = new Discord.MessageEmbed()
-            .setTitle("__Your avatar__")
-            .setColor("RANDOM")
-            .setImage(
-                `${message.author.displayAvatarURL({
-                    format: "png",
-                    dynamic: true,
-                    size: 1024
-                })}`
-            );
+                .setTitle("__Your avatar__")
+                .setColor("RANDOM")
+                .setImage(
+                    `${message.author.displayAvatarURL({
+                        format: "png",
+                        dynamic: true,
+                        size: 2048,
+                    })}`
+                );
             return message.channel.send(embed);
         }
         if (message.mentions.users.size) {
@@ -24,29 +24,35 @@ module.exports = {
                     .setTitle(`__${user.username}'s avatar__`)
                     .setColor("RANDOM")
                     .setImage(
-                        `${user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`
+                        `${user.displayAvatarURL({
+                            format: "png",
+                            dynamic: true,
+                            size: 2048,
+                        })}`
                     );
                 return embed;
             });
-    
+
             // send the entire array of strings as a message
             // by default, discord.js will `.join()` the array with `\n`
-            avatarList.forEach (embed => {
+            avatarList.forEach((embed) => {
                 message.channel.send(embed);
-            })
+            });
         }
 
-        const avatarArray = []
+        const avatarArray = [];
         for (let id in args) {
-            let user = client.user.cache.find((user) => user.id === id);
+            let user = message.client.user.cache.find((user) => user.id === id);
             if (user) {
                 return avatarArray.push(user);
             }
-            user = client.user.cache.find((user) => user.displayName === id);
+            user = message.client.user.cache.find(
+                (user) => user.displayName === id
+            );
             if (user) {
                 return avatarArray.push(user);
             }
-            user = client.user.cache.find((user) => user.tag === id);
+            user = message.client.user.cache.find((user) => user.tag === id);
             if (user) {
                 return avatarArray.push(user);
             }
@@ -56,13 +62,17 @@ module.exports = {
                 .setTitle(`__${user.username}'s avatar__`)
                 .setColor("RANDOM")
                 .setImage(
-                    `${user.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}`
+                    `${user.displayAvatarURL({
+                        format: "png",
+                        dynamic: true,
+                        size: 2048,
+                    })}`
                 );
             return embed;
         });
 
-        avatarList.forEach (embed => {
+        avatarList.forEach((embed) => {
             message.channel.send(embed);
-        })
+        });
     },
 };
