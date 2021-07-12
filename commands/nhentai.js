@@ -32,9 +32,9 @@ module.exports = {
             let editedEmbed;
             let content;
             if (Array.isArray(result)) {
-                content = result
+                content = result;
             } else {
-                content = result.results
+                content = result.results;
             }
             switch (r.emoji.name) {
                 case "⬅️":
@@ -58,7 +58,7 @@ module.exports = {
                     collectorFunc(result);
                     embedMessage.delete();
                     break;
-            }              
+            }
             return page;
         }
 
