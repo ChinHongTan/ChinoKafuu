@@ -85,7 +85,7 @@ module.exports = {
          * @param {number} page - Which result to be displayed
          * @param {object} result - The result from the API.
          * @param {object} embedMessage - Discord embed message.
-         * @returns 
+         * @returns {number} Page
          */
         function updateEmbed(r, page, result, embedMessage) {
             let editedEmbed;

@@ -117,7 +117,7 @@ module.exports = {
          * @param {string} doujin.title - The title of the doujin.
          * @param {array} doujin.thumbnails - A list of the thumbnail images of the doujin.
          * @param {string} doujin.link - The URL of the doujin.
-         * @returns {class} Discord embed.
+         * @returns {object} Discord embed.
          */
         function createDoujinEmbed(doujin) {
             let description = "";
@@ -143,7 +143,7 @@ module.exports = {
          * @param {object} result - The result from the search. Consist of an array of doujins.
          * @param {array} result.results - An array of doujins.
          * @param {number} page - The position of displayed doujin in the array.
-         * @returns {class} Discord embed.
+         * @returns {object} Discord embed.
          */
         function createSearchEmbed(result, page) {
             let embed = new Discord.MessageEmbed()
@@ -161,7 +161,7 @@ module.exports = {
          * An embed with the doujin object.
          * @param {array} pages - The list of pages of the doujin.
          * @param {number} page - The page number of the doujin being displayed.
-         * @returns {class} Discord embed.
+         * @returns {object} Discord embed.
          */
         function createBookEmbed(pages, page) {
             let embed = new Discord.MessageEmbed()

@@ -72,7 +72,7 @@ module.exports = {
          * @param {object} response - The response object from the API call
          * @param {object} embedMessage - Message to be edited
          * @param {function} embedFunc - Function to create embedMessage
-         * @returns {number} - Page
+         * @returns {number} Page
          */
         function reactHandler(r, page, response, embedMessage, embedFunc) {
             let editedEmbed;

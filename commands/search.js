@@ -14,7 +14,7 @@ module.exports = {
          * Creates a discord embed message
          * @param {object} item - Youtube video information
          * @param {number} page - Total number of videos
-         * @returns {object} - Discord embed
+         * @returns {object} Discord embed
          */
         function createEmbed(item, page) {
             let embed = new Discord.MessageEmbed()
