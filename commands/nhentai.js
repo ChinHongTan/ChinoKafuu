@@ -18,7 +18,7 @@ module.exports = {
          * @param {function} options.createFunc - How the message should be edited.
          * @param {object} options.collector - The collector to detect user's reactions.
          * @param {function} options.collectorFunc - What type of reactable message to be generated.
-         * @returns {number}
+         * @returns {number} - page
          */
         function flipEmbeds({
             r,
@@ -30,59 +30,35 @@ module.exports = {
             collectorFunc,
         }) {
             let editedEmbed;
-            switch (Array.isArray(result)) {
-                case true:
-                    switch (r.emoji.name) {
-                        case "⬅️":
-                            page -= 1;
-                            if (page < 0) {
-                                page = result.length - 1;
-                            }
-                            editedEmbed = createFunc(result, page);
-                            embedMessage.edit(editedEmbed);
-                            break;
-                        case "➡️":
-                            page += 1;
-                            if (page + 1 > result.length) {
-                                page = 0;
-                            }
-                            editedEmbed = createFunc(result, page);
-                            embedMessage.edit(editedEmbed);
-                            break;
-                        case "▶️":
-                            collector.stop();
-                            collectorFunc(result);
-                            embedMessage.delete();
-                            break;
+            let content;
+            if (Array.isArray(result)) {
+                content = result
+            } else {
+                content = result.results
+            }
+            switch (r.emoji.name) {
+                case "⬅️":
+                    page -= 1;
+                    if (page < 0) {
+                        page = content.length - 1;
                     }
+                    editedEmbed = createFunc(result, page);
+                    embedMessage.edit(editedEmbed);
                     break;
-                case false:
-                    switch (r.emoji.name) {
-                        case "⬅️":
-                            page -= 1;
-                            if (page < 0) {
-                                page = result.results.length - 1;
-                            }
-                            editedEmbed = createFunc(result, page);
-                            embedMessage.edit(editedEmbed);
-                            break;
-                        case "➡️":
-                            page += 1;
-                            if (page + 1 > result.results.length) {
-                                page = 0;
-                            }
-                            editedEmbed = createFunc(result, page);
-                            embedMessage.edit(editedEmbed);
-                            break;
-                        case "▶️":
-                            collector.stop();
-                            collectorFunc(result);
-                            embedMessage.delete();
-                            break;
+                case "➡️":
+                    page += 1;
+                    if (page + 1 > content.length) {
+                        page = 0;
                     }
+                    editedEmbed = createFunc(result, page);
+                    embedMessage.edit(editedEmbed);
                     break;
-            }               
-            
+                case "▶️":
+                    collector.stop();
+                    collectorFunc(result);
+                    embedMessage.delete();
+                    break;
+            }              
             return page;
         }
 
@@ -228,6 +204,7 @@ module.exports = {
         }
 
         (async () => {
+            // if an id is provided
             if (Number(args[0])) {
                 if (nhentai.exists(args[0])) {
                     const doujin = await nhentai.getDoujin(args[0]);
@@ -241,6 +218,7 @@ module.exports = {
                     return message.channel.send("The book ID doesn't exist!");
                 }
             } else {
+                // search the keyword given
                 const result = await nana.search(
                     message.content.substr(message.content.indexOf(" "))
                 );
