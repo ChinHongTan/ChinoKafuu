@@ -7,7 +7,7 @@ module.exports = {
     execute(message, args) {
         const Discord = require("discord.js");
         const fuzzysort = require("fuzzysort");
-        if (!args) {
+        if (args.length < 1) {
             const embed = new Discord.MessageEmbed()
                 .setTitle("__Your avatar__")
                 .setColor("RANDOM")
