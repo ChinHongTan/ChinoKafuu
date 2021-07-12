@@ -64,8 +64,10 @@ module.exports = {
          */
         function createFlip(embed, options, emojiList) {
             message.channel.send(embed).then(async (embedMessage) => {
-                for (let emoji in emojiList) {
+                console.log(emojiList);
+                for (let emoji of emojiList) {
                     await embedMessage.react(emoji);
+                    console.log("Reacted: " + emoji);
                 }
                 const filter = (reaction, user) =>
                     emojiList.includes(reaction.emoji.name) && !user.bot;
