@@ -65,7 +65,6 @@ module.exports = {
             memberInfo.username = member.user.username;
             memberInfo.tag = member.user.tag;
             memberInfo.discriminator = member.user.discriminator;
-            console.log(memberInfo);
             return memberInfo;
         });
         let result = fuzzysort.go(keyword, arr, { keys: ['nickname', 'username', 'tag', 'discriminator'], limit: 1 });
