@@ -18,7 +18,7 @@ module.exports = {
          * @param {function} options.createFunc - How the message should be edited.
          * @param {object} options.collector - The collector to detect user's reactions.
          * @param {function} options.collectorFunc - What type of reactable message to be generated.
-         * @returns
+         * @returns {number}
          */
         function flipEmbeds({
             r,
@@ -30,29 +30,59 @@ module.exports = {
             collectorFunc,
         }) {
             let editedEmbed;
-            switch (r.emoji.name) {
-                case "⬅️":
-                    page -= 1;
-                    if (page < 0) {
-                        page = result.results.length - 1;
+            switch (Array.isArray(result)) {
+                case true:
+                    switch (r.emoji.name) {
+                        case "⬅️":
+                            page -= 1;
+                            if (page < 0) {
+                                page = result.length - 1;
+                            }
+                            editedEmbed = createFunc(result, page);
+                            embedMessage.edit(editedEmbed);
+                            break;
+                        case "➡️":
+                            page += 1;
+                            if (page + 1 > result.length) {
+                                page = 0;
+                            }
+                            editedEmbed = createFunc(result, page);
+                            embedMessage.edit(editedEmbed);
+                            break;
+                        case "▶️":
+                            collector.stop();
+                            collectorFunc(result);
+                            embedMessage.delete();
+                            break;
                     }
-                    editedEmbed = createFunc(result, page);
-                    embedMessage.edit(editedEmbed);
                     break;
-                case "➡️":
-                    page += 1;
-                    if (page + 1 > result.results.length) {
-                        page = 0;
+                case false:
+                    switch (r.emoji.name) {
+                        case "⬅️":
+                            page -= 1;
+                            if (page < 0) {
+                                page = result.results.length - 1;
+                            }
+                            editedEmbed = createFunc(result, page);
+                            embedMessage.edit(editedEmbed);
+                            break;
+                        case "➡️":
+                            page += 1;
+                            if (page + 1 > result.results.length) {
+                                page = 0;
+                            }
+                            editedEmbed = createFunc(result, page);
+                            embedMessage.edit(editedEmbed);
+                            break;
+                        case "▶️":
+                            collector.stop();
+                            collectorFunc(result);
+                            embedMessage.delete();
+                            break;
                     }
-                    editedEmbed = createFunc(result, page);
-                    embedMessage.edit(editedEmbed);
                     break;
-                case "▶️":
-                    collector.stop();
-                    collectorFunc(result);
-                    embedMessage.delete();
-                    break;
-            }
+            }               
+            
             return page;
         }
 
@@ -60,15 +90,25 @@ module.exports = {
          * Generate an reactable message. React with emojis to change the message content.
          * @param {object} embed - The displayed embed message.
          * @param {object} options - How the message should be displayed and how to edit it.
+         * @param {object} options.r - The reaction from the user.
+         * @param {number} options.page - The page number of the doujin being displayed.
+         * @param {object} options.result - The result from the search.
+         * @param {object} options.embedMessage - The message to be edited.
+         * @param {function} options.createFunc - How the message should be edited.
+         * @param {object} options.collector - The collector to detect user's reactions.
+         * @param {function} options.collectorFunc - What type of reactable message to be generated.
          * @param {array} emojiList - A list of emoji to react.
          */
         function createFlip(embed, options, emojiList) {
+            console.log(options);
             message.channel.send(embed).then(async (embedMessage) => {
                 console.log(emojiList);
+                console.log(options.collectorFunc);
+                console.log("Before react");
                 for (let emoji of emojiList) {
                     await embedMessage.react(emoji);
-                    console.log("Reacted: " + emoji);
                 }
+                console.log("After react");
                 const filter = (reaction, user) =>
                     emojiList.includes(reaction.emoji.name) && !user.bot;
                 let collector = embedMessage.createReactionCollector(filter, {
@@ -76,16 +116,20 @@ module.exports = {
                     dispose: true,
                 });
                 collector.on("collect", (r) => {
+                    console.log("Collected!");
                     options.r = r;
                     options.collector = collector;
                     options.embedMessage = embedMessage;
-                    flipEmbeds(options);
+                    console.log(options);
+                    options.page = flipEmbeds(options);
                 });
                 collector.on("remove", (r) => {
+                    console.log("Removed!");
                     options.r = r;
                     options.collector = collector;
                     options.embedMessage = embedMessage;
-                    flipEmbeds(options);
+                    console.log(options);
+                    options.page = flipEmbeds(options);
                 });
             });
         }
@@ -161,7 +205,7 @@ module.exports = {
             let options = {
                 page: page,
                 result: doujin.pages,
-                createFunc: createBookEmbed(doujin.pages, page),
+                createFunc: createBookEmbed,
             };
             createFlip(embed, options, ["⬅️", "➡️"]);
         }
@@ -177,7 +221,7 @@ module.exports = {
                 let embed = createDoujinEmbed(doujin);
                 let options = {
                     result: doujin,
-                    collectorFunc: generateContent(doujin),
+                    collectorFunc: generateContent,
                 };
                 createFlip(embed, options, ["▶️"]);
             });
@@ -190,7 +234,7 @@ module.exports = {
                     let embed = createDoujinEmbed(doujin);
                     let options = {
                         result: doujin,
-                        collectorFunc: generateContent(doujin),
+                        collectorFunc: generateContent,
                     };
                     createFlip(embed, options, ["▶️"]);
                 } else {
@@ -205,8 +249,8 @@ module.exports = {
                 let options = {
                     page: page,
                     result: result,
-                    createFunc: createSearchEmbed(result, page),
-                    collectorFunc: generateDoujin(embed, page),
+                    createFunc: createSearchEmbed,
+                    collectorFunc: generateDoujin,
                 };
                 createFlip(embed, options, ["⬅️", "➡️", "▶️"]);
             }
