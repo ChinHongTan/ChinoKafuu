@@ -36,18 +36,27 @@ module.exports = {
         /**
          * Edit the embed based on user reaction
          * @param {object} r - Reaction from user 
+         * @param {number} page - Which video to display
+         * @param {object} item - Youtube video search result
+         * @param {object} embedMessage - Discord embed message to be edited
+         * @param {object} collector - Discord collector object
+         * @return {number} Page
          */
-        function flipEmbed(r) {
+        function flipEmbed(r, page, item, embedMessage, collector) {
             switch (r.emoji.name) {
                 case "⬅️":
                     page -= 1;
-                    if (page < 0) page = item.length - 1;
+                    if (page < 0) {
+                        page = item.length - 1;
+                    }
                     let editedEmbed = createEmbed(item[page], page);
                     embedMessage.edit(editedEmbed);
                     break;
                 case "➡️":
                     page += 1;
-                    if (page + 1 > item.length) page = 0;
+                    if (page + 1 > item.length) {
+                        page = 0;
+                    }
                     editedEmbed = createEmbed(item[page], page);
                     embedMessage.edit(editedEmbed);
                     break;
@@ -63,6 +72,7 @@ module.exports = {
                     embedMessage.delete();
                     break;
             }
+            return page;
         }
 
         /**
@@ -102,10 +112,10 @@ module.exports = {
                     dispose: true,
                 });
                 collector.on("collect", (r) => {
-                    flipEmbed(r);
+                    flipEmbed(r, page, item, embedMessage, collector);
                 });
                 collector.on("remove", (r) => {
-                    flipEmbed(r);
+                    flipEmbed(r, page, item, embedMessage, collector);
                 });
             });
         }
