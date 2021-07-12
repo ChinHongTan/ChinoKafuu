@@ -24,6 +24,7 @@
     "discord.js": "^12.5.3",
     "ffmpeg-static": "^4.4.0",
     "file-type": "^16.5.0",
+    "fuzzysort": "^1.1.4",
     "http": "0.0.1-security",
     "https": "^1.0.0",
     "mongodb": "^3.6.10",
