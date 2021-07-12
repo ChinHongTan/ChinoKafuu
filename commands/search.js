@@ -4,11 +4,18 @@ module.exports = {
     description: "Search for a keyword on YouTube.",
     execute(message) {
         let play = require("./play");
-        const prefix = process.env.PREFIX || require("../config/config.json").prefix;
+        const prefix =
+            process.env.PREFIX || require("../config/config.json").prefix;
 
         const ytsr = require("ytsr");
         const Discord = require("discord.js");
 
+        /**
+         * Creates a discord embed message
+         * @param {object} item - Youtube video information
+         * @param {number} page - Total number of videos
+         * @returns {object} - Discord embed
+         */
         function createEmbed(item, page) {
             let embed = new Discord.MessageEmbed()
                 .setURL(item.url)
@@ -26,35 +33,42 @@ module.exports = {
             return embed;
         }
 
+        /**
+         * Edit the embed based on user reaction
+         * @param {object} r - Reaction from user 
+         */
         function flipEmbed(r) {
-            switch(r.emoji.name) {
+            switch (r.emoji.name) {
                 case "⬅️":
                     page -= 1;
                     if (page < 0) page = item.length - 1;
                     let editedEmbed = createEmbed(item[page], page);
                     embedMessage.edit(editedEmbed);
-                  break;
+                    break;
                 case "➡️":
                     page += 1;
                     if (page + 1 > item.length) page = 0;
                     editedEmbed = createEmbed(item[page], page);
                     embedMessage.edit(editedEmbed);
-                  break;
+                    break;
                 case "▶️":
                     collector.stop();
-                    message.content = `${
-                        prefix
-                    }play ${item[page].url}`;
+                    // plays the song
+                    message.content = `${prefix}play ${item[page].url}`;
                     const args = message.content
                         .slice(prefix.length)
                         .trim()
                         .split(/ +/);
                     play.execute(message, args);
                     embedMessage.delete();
-                  break;
+                    break;
             }
         }
 
+        /**
+         * Search for youtube videos based on keyword
+         * @param {string} message - keyword to be searched for
+         */
         async function search(message) {
             let keyword = message.content.substr(
                 message.content.indexOf(" ") + 1
@@ -74,6 +88,7 @@ module.exports = {
             }
             var embed = createEmbed(item, page);
 
+            // creates an editable embed message
             message.channel.send(embed).then((embedMessage) => {
                 embedMessage
                     .react("⬅️")

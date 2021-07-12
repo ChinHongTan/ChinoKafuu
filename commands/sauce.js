@@ -4,11 +4,18 @@ module.exports = {
     cooldown: 5,
     execute(message, args) {
         const Discord = require("discord.js");
-        const sagiri_token = process.env.SAGIRI || require("../config/config.json").sagiri_token;
+        const sagiri_token =
+            process.env.SAGIRI || require("../config/config.json").sagiri_token;
         const sagiri = require("sagiri");
         let mySauce = sagiri(sagiri_token);
         const { searchByUrl } = require("ascii2d");
 
+        /**
+         * Generates a discord embed
+         * @param {object} response - Response object from sauceNao API call
+         * @param {number} page - Which picture from the response to be displayed.
+         * @returns {object} Discord embed.
+         */
         function createEmbed(response, page) {
             let sourceURL = response[page].url;
             let info = "";
@@ -31,6 +38,12 @@ module.exports = {
             return embed;
         }
 
+        /**
+         * Generates a discord embed
+         * @param {object} response - Response object from ascii2d API call
+         * @param {number} page - Which picture from the response to be displayed.
+         * @returns {object} Discord embed.
+         */
         function createEmbed2(response, page) {
             let sourceURL = response[page].source.url;
             let title = response[page].source.title;
@@ -52,6 +65,15 @@ module.exports = {
             return embed;
         }
 
+        /**
+         * Actions after a user had reacted
+         * @param {object} r - Reaction from the user
+         * @param {number} page - Which picture in the response to display
+         * @param {object} response - The response object from the API call
+         * @param {object} embedMessage - Message to be edited
+         * @param {function} embedFunc - Function to create embedMessage
+         * @returns {number} - Page
+         */
         function reactHandler(r, page, response, embedMessage, embedFunc) {
             let editedEmbed;
             switch (r.emoji.name) {
@@ -71,6 +93,42 @@ module.exports = {
             return page;
         }
 
+        /**
+         * Updates an embed
+         * @param {number} page - Which picture in the response to display.
+         * @param {object} response - The response object from the API call.
+         * @param {object} embedMessage - Discord embed message object
+         * @param {object} collector - Discord collector object
+         * @param {function} func - Function to create embedMessage
+         */
+        function updateEmbed(page, response, embedMessage, collector, func) {
+            collector.on("collect", (r) => {
+                page = reactHandler(
+                    r,
+                    page,
+                    response,
+                    embedMessage,
+                    func
+                );
+            });
+            collector.on("remove", (r) => {
+                page = reactHandler(
+                    r,
+                    page,
+                    response,
+                    embedMessage,
+                    func
+                );
+            });
+        }
+
+        /**
+         * Function to send embed message
+         * @param {object} embed - Discord embed object
+         * @param {object} response - Response object from the API call
+         * @param {number} page - Which picture from the response to be displayed.
+         * @param {number} mode - Which API to use (whether sauceNao or ascii2d)
+         */
         function sendEmbed(embed, response, page = 0, mode) {
             message.channel.send(embed).then((embedMessage) => {
                 embedMessage.react("⬅️").then(embedMessage.react("➡️"));
@@ -82,48 +140,18 @@ module.exports = {
                 });
                 switch (mode) {
                     case 1:
-                        collector.on("collect", (r) => {
-                            page = reactHandler(
-                                r,
-                                page,
-                                response,
-                                embedMessage,
-                                createEmbed
-                            );
-                        });
-                        collector.on("remove", (r) => {
-                            page = reactHandler(
-                                r,
-                                page,
-                                response,
-                                embedMessage,
-                                createEmbed
-                            );
-                        });
+                        updateEmbed(page, response, embedMessage, collector, createEmbed);
                         break;
                     case 2:
-                        collector.on("collect", (r) => {
-                            page = reactHandler(
-                                r,
-                                page,
-                                response,
-                                embedMessage,
-                                createEmbed2
-                            );
-                        });
-                        collector.on("remove", (r) => {
-                            page = reactHandler2(
-                                r,
-                                page,
-                                response,
-                                embedMessage,
-                                createEmbed2
-                            );
-                        });
+                        updateEmbed(page, response, embedMessage, collector, createEmbed2);
                 }
             });
         }
 
+        /**
+         * Search for an image from sauceNao or ascii2d
+         * @param {string} searchImage - url of the target image to search for.
+         */
         function searchForImage(searchImage) {
             let page = 0;
             let mode = 1;
@@ -156,6 +184,7 @@ module.exports = {
         var searchImage = "";
 
         if (args.length < 1) {
+            // no arguments were provided, fetch image from the channel instead
             message.channel.messages.fetch({ limit: 25 }).then((messages) => {
                 for (const msg of messages.values()) {
                     if (msg.attachments.size > 0) {

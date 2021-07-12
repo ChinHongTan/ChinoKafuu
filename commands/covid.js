@@ -8,6 +8,11 @@ module.exports = {
             baseUrl: "https://disease.sh",
         });
 
+        /**
+         * Create an Discord embed message
+         * @param {object} result - The result from the API.
+         * @returns {object} Discord embed
+         */
         function createEmbed(result) {
             const date = new Date(result.updated);
             const embed = new Discord.MessageEmbed()
@@ -74,6 +79,14 @@ module.exports = {
             return embed;
         }
 
+        /**
+         * Function to update embed message after a user had reacted
+         * @param {object} r - Reaction from the user
+         * @param {number} page - Which result to be displayed
+         * @param {object} result - The result from the API.
+         * @param {object} embedMessage - Discord embed message.
+         * @returns 
+         */
         function updateEmbed(r, page, result, embedMessage) {
             let editedEmbed;
             switch (r.emoji.name) {
@@ -93,6 +106,10 @@ module.exports = {
             return page;
         }
 
+        /**
+         * Creates and sends a reactable message
+         * @param {object} result - The result from the API.
+         */
         function createEmbedFlip(result) {
             let page = 0;
             let embed = createEmbed(result[page]);
@@ -114,6 +131,7 @@ module.exports = {
         }
 
         if (args.length < 1) {
+            // no arguments were provided
             message.channel.send("Please provide a valid argument!");
             return message.channel.send(
                 "eg: `c!covid all` or `c!covid countries`"

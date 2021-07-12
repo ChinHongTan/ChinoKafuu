@@ -8,6 +8,7 @@ module.exports = {
         const Discord = require("discord.js");
         const fuzzysort = require("fuzzysort");
         if (args.length < 1) {
+            // display author's avatar
             const embed = new Discord.MessageEmbed()
                 .setTitle("__Your avatar__")
                 .setColor("RANDOM")
@@ -21,6 +22,7 @@ module.exports = {
             return message.channel.send(embed);
         }
         if (message.mentions.users.size) {
+            // display all user's avatars mentioned by the author
             const avatarList = message.mentions.users.map((user) => {
                 const embed = new Discord.MessageEmbed()
                     .setTitle(`__${user.username}'s avatar__`)
@@ -35,15 +37,16 @@ module.exports = {
                 return embed;
             });
 
-            // send the entire array of strings as a message
-            // by default, discord.js will `.join()` the array with `\n`
+            // send the entire array of embed to the channel
             avatarList.forEach((embed) => {
                 message.channel.send(embed);
             });
         }
+        // check if an id is provided
         let user = message.guild.members.cache.find(
             (member) => member.user.id == args[0]
         );
+        // if id exists
         if (user) {
             const embed = new Discord.MessageEmbed()
                 .setTitle(`__${user.displayName}'s avatar__`)
@@ -58,7 +61,9 @@ module.exports = {
             return message.channel.send(embed);
         }
 
+        // perform a fuzzy search based on the keyword given
         let keyword = message.content.substr(message.content.indexOf(" ") + 1);
+        // an array with guild member's information
         let arr = message.guild.members.cache.map((member) => {
             let memberInfo = {};
             memberInfo.nickname = member.nickname;
@@ -67,6 +72,7 @@ module.exports = {
             memberInfo.discriminator = member.user.discriminator;
             return memberInfo;
         });
+        // fuzzy search from nickname, username, tag and discriminator
         let result = fuzzysort.go(keyword, arr, {
             keys: ["nickname", "username", "tag", "discriminator"],
             limit: 1,
