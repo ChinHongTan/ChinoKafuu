@@ -17,7 +17,6 @@ module.exports = {
          * @returns {object} Discord embed
          */
         function createEmbed(item, page, length) {
-            console.log(item);
             let embed = new Discord.MessageEmbed()
                 .setURL(item.url)
                 .setTitle(item.title)

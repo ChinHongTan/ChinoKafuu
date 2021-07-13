@@ -69,7 +69,7 @@ module.exports = {
                         inline: true,
                     }
                 )
-                .setThumbnail(result.countryInfo.flag)
+                .setThumbnail(result.countryInfo?.flag)
                 .setFooter(
                     `Requested by: ${
                         message.author.tag
@@ -143,8 +143,9 @@ module.exports = {
             api.all({ allowNull: false }).then((result) => {
                 result.country = "Global";
                 let embed = createEmbed(result);
-                return message.channel.send(embed);
+                message.channel.send(embed);
             });
+            return;
         }
 
         if (args[0] === "countries") {
@@ -166,9 +167,10 @@ module.exports = {
                 );
             } else {
                 // get a list of data of a single specific countries
+                let embed;
                 api.countries({ country: args, allowNull: false }).then(
                     (result) => {
-                        let embed = createEmbed(result);
+                        embed = createEmbed(result);
                         return message.channel.send(embed);
                     }
                 );
