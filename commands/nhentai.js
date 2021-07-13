@@ -55,7 +55,7 @@ module.exports = {
                     break;
                 case "▶️":
                     collector.stop();
-                    collectorFunc(result);
+                    collectorFunc(result, page);
                     embedMessage.delete();
                     break;
             }
@@ -76,15 +76,10 @@ module.exports = {
          * @param {array} emojiList - A list of emoji to react.
          */
         function createFlip(embed, options, emojiList) {
-            console.log(options);
             message.channel.send(embed).then(async (embedMessage) => {
-                console.log(emojiList);
-                console.log(options.collectorFunc);
-                console.log("Before react");
                 for (let emoji of emojiList) {
                     await embedMessage.react(emoji);
                 }
-                console.log("After react");
                 const filter = (reaction, user) =>
                     emojiList.includes(reaction.emoji.name) && !user.bot;
                 let collector = embedMessage.createReactionCollector(filter, {
@@ -92,19 +87,15 @@ module.exports = {
                     dispose: true,
                 });
                 collector.on("collect", (r) => {
-                    console.log("Collected!");
                     options.r = r;
                     options.collector = collector;
                     options.embedMessage = embedMessage;
-                    console.log(options);
                     options.page = flipEmbeds(options);
                 });
                 collector.on("remove", (r) => {
-                    console.log("Removed!");
                     options.r = r;
                     options.collector = collector;
                     options.embedMessage = embedMessage;
-                    console.log(options);
                     options.page = flipEmbeds(options);
                 });
             });
