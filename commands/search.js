@@ -16,7 +16,8 @@ module.exports = {
          * @param {number} page - Total number of videos
          * @returns {object} Discord embed
          */
-        function createEmbed(item, page) {
+        function createEmbed(item, page, length) {
+            console.log(item);
             let embed = new Discord.MessageEmbed()
                 .setURL(item.url)
                 .setTitle(item.title)
@@ -27,7 +28,7 @@ module.exports = {
                 .addField("Duration", item.duration)
                 .addField("Uploaded at", item.uploadedAt)
                 .setFooter(
-                    `${item.author.name}\nPage${page + 1}/${item.length}`,
+                    `${item.author.name}\nPage${page + 1}/${length}`,
                     item.author.bestAvatar.url
                 );
             return embed;
@@ -43,13 +44,14 @@ module.exports = {
          * @return {number} Page
          */
         function flipEmbed(r, page, item, embedMessage, collector) {
+            let editedEmbed;
             switch (r.emoji.name) {
                 case "⬅️":
                     page -= 1;
                     if (page < 0) {
                         page = item.length - 1;
                     }
-                    let editedEmbed = createEmbed(item[page], page);
+                    editedEmbed = createEmbed(item[page], page, item.length);
                     embedMessage.edit(editedEmbed);
                     break;
                 case "➡️":
@@ -57,7 +59,7 @@ module.exports = {
                     if (page + 1 > item.length) {
                         page = 0;
                     }
-                    editedEmbed = createEmbed(item[page], page);
+                    editedEmbed = createEmbed(item[page], page, item.length);
                     embedMessage.edit(editedEmbed);
                     break;
                 case "▶️":
@@ -96,7 +98,7 @@ module.exports = {
             if (item.length < 1) {
                 message.channel.send(`No video was found for ${keyword}!`);
             }
-            var embed = createEmbed(item, page);
+            let embed = createEmbed(item[page], page, item.length);
 
             // creates an editable embed message
             message.channel.send(embed).then((embedMessage) => {
@@ -112,10 +114,10 @@ module.exports = {
                     dispose: true,
                 });
                 collector.on("collect", (r) => {
-                    flipEmbed(r, page, item, embedMessage, collector);
+                    page = flipEmbed(r, page, item, embedMessage, collector);
                 });
                 collector.on("remove", (r) => {
-                    flipEmbed(r, page, item, embedMessage, collector);
+                    page = flipEmbed(r, page, item, embedMessage, collector);
                 });
             });
         }
