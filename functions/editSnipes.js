@@ -13,7 +13,7 @@ module.exports = {
         }
 
         var editSnipe = new Object();
-        let editSnipes = editSnipesWithGuild.get(oldMessage.guild.id) ??= [];
+        let editSnipes = editSnipesWithGuild.get(oldMessage.guild.id) ?? [];
 
         editSnipe.author = newMessage.author.tag;
         editSnipe.authorAvatar = newMessage.author.displayAvatarURL({
