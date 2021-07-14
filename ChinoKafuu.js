@@ -96,7 +96,12 @@ client.on("message", async (message) => {
             (cmd) => cmd.aliases && cmd.aliases.includes(commandName)
         );
 
-    if (!command) return;
+    if (!command) {
+        let keys = Array.from(client.commands.keys());
+        let recommendation = keys.find((cmd) => functions.getEditDistance(commandName, cmd) <= 2);
+        message.channel.send(`\`${prefix}${commandName}\` is not a valid command! Do youo mean: \`${prefix}${recommendation}\`?`)
+        return;
+    }
 
     if (command.guildOnly && message.channel.type === "dm") {
         return message.reply("I can't execute that command inside DMs!");
