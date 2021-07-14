@@ -98,8 +98,12 @@ client.on("message", async (message) => {
 
     if (!command) {
         let keys = Array.from(client.commands.keys());
-        let recommendation = keys.find((cmd) => functions.getEditDistance(commandName, cmd) <= 2);
-        message.channel.send(`\`${prefix}${commandName}\` is not a valid command! Do youo mean: \`${prefix}${recommendation}\`?`)
+        let recommendation = keys.find(
+            (cmd) => functions.getEditDistance(commandName, cmd) <= 2
+        );
+        message.channel.send(
+            `\`${prefix}${commandName}\` is not a valid command! Do youo mean: \`${prefix}${recommendation}\`?`
+        );
         return;
     }
 
