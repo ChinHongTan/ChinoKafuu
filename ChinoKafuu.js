@@ -103,7 +103,7 @@ client.on("message", async (message) => {
             distances.set(cmd, functions.getEditDistance(commandName, cmd));
         }
         let recommendation = new Map([...distances].filter(([k, v]) => v <= 2).sort((a, b) => a[1] - b[1]));
-        if (recommendation) {
+        if (recommendation.size > 1) {
             message.channel.send(
                 `\`${prefix}${commandName}\` is not a valid command! Do you mean: `
             );
