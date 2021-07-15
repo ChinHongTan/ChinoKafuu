@@ -98,12 +98,22 @@ client.on("message", async (message) => {
 
     if (!command) {
         let keys = Array.from(client.commands.keys());
-        let recommendation = keys.find(
-            (cmd) => functions.getEditDistance(commandName, cmd) <= 2
-        );
-        message.channel.send(
-            `\`${prefix}${commandName}\` is not a valid command! Do youo mean: \`${prefix}${recommendation}\`?`
-        );
+        let distances = new Map();
+        for (cmd of keys) {
+            distances.set(cmd, functions.getEditDistance(commandName, cmd));
+        }
+        let recommendation = new Map([...distances].filter(([k, v]) => v <= 2).sort((a, b) => a[1] - b[1]));
+        if (recommendation) {
+            message.channel.send(
+                `\`${prefix}${commandName}\` is not a valid command! Do youo mean: `
+            );
+            recommendation.forEach((similarity, cmd) => {
+                message.channel.send(`\`${prefix}${cmd}\`\n`);
+            });
+        } else {
+            message.channel.send(`\`${prefix}${commandName}\` is not a valid command!`)
+        }
+
         return;
     }
 
