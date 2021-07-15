@@ -77,6 +77,7 @@ module.exports = {
             if (!song) {
                 serverQueue.voiceChannel.leave();
                 queue.delete(guild.id);
+                return;
             }
 
             const dispatcher = serverQueue.connection
