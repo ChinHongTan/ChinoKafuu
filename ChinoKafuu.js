@@ -105,7 +105,7 @@ client.on("message", async (message) => {
         let recommendation = new Map([...distances].filter(([k, v]) => v <= 2).sort((a, b) => a[1] - b[1]));
         if (recommendation) {
             message.channel.send(
-                `\`${prefix}${commandName}\` is not a valid command! Do youo mean: `
+                `\`${prefix}${commandName}\` is not a valid command! Do you mean: `
             );
             recommendation.forEach((similarity, cmd) => {
                 message.channel.send(`\`${prefix}${cmd}\`\n`);
