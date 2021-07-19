@@ -2,6 +2,9 @@ const ytdl = require("ytdl-core");
 const { PassThrough } = require("stream");
 const ffmpeg = require("fluent-ffmpeg");
 const { Util, MessageEmbed } = require("discord.js");
+const queueData = require("../data/queueData");
+let queue = queueData.queue;
+let serverQueue = queue.get(message.guild.id);
 module.exports = {
     waitImport: async function(name, length, message) {
         return new Promise((resolve, reject) => {
@@ -142,7 +145,7 @@ module.exports = {
             .setFooter("音樂系統", message.client.user.displayAvatarURL());
         serverQueue.textChannel.send(embed);
     },
-    handleVideo: async function(video, voiceChannel, playlist = false, serverQueue, source) {
+    handleVideo: async function(video, voiceChannel, playlist = false, serverQueue, source, message) {
         let song;
         switch (source) {
             case "ytlist":
