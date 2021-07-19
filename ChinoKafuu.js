@@ -9,6 +9,7 @@ const {
 } = require("./config/config.json");
 const process = require("process");
 const spotify = require('./functions/spotify');
+const Bilibili = require('./functions/bilibili')
 
 //initialization
 const client = new Discord.Client();
@@ -16,6 +17,7 @@ let cooldowns = new Discord.Collection();
 client.commands = new Discord.Collection();
 client.queue = new Map();
 client.spotify = new spotify(SpotifyClientID,SpotifyClientSecret);
+client.bilibili = new Bilibili();
 let functions = {}
 
 //Database

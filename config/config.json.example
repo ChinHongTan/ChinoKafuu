@@ -1,11 +1,11 @@
 {
-    "prefix": "c!",
-    "token": "discord-bot-token-here",
-    "sagiri_token": "saucenao-api-token-here",
-    "host": "database-host-here",
-    "database": "database-here",
-    "password": "database-password-here",
-    "username": "database-username-here"
+    "prefix": "",
+    "token": "bot token here",
+    "sagiri_token": "sagiri token here",
+    "host": "",
+    "database": "",
+    "password": "",
+    "username": "",
     "SpotifyClientID": "",
     "SpotifyClientSecret": "",
     "SCID" : ""

@@ -4,4 +4,4 @@ other bots
 index.js
 config/config.json
 *.json
-config/config.json
+test.js

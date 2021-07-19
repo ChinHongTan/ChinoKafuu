@@ -151,6 +151,18 @@ module.exports = {
                     })
                 await handleVideo(data, voiceChannel, true, serverQueue, 'sc')
             }
+        }
+        if (url.includes('www.bilibili.com')) {
+            let id = await client.bilibili.getid(url);
+            url = new URL(url);
+            let p = url.searchParams.get('p') || 1;
+            let data = await client.bilibili.getinfo(id);
+            let durl = await client.bilibili.getlink(data.bvid, data.pages[p - 1].cid);
+            if (data.pages[p - 1].part) {
+                data.title = data.pages[p - 1].part
+            }
+            data.durl = durl.durl[0].url
+            handleVideo(data, voiceChannel, false, serverQueue, 'bilibili');
         } else {
             let keyword = message.content.substr(message.content.indexOf(" ") + 1);
             message.channel.send(`Searching ${keyword}...`);
@@ -207,6 +219,18 @@ module.exports = {
                         source: 'sc'
                     }
                     break;
+                case 'bilibili':
+                    song = {
+                        id: videos.bvid,
+                        title: Util.escapeMarkdown(videos.title),
+                        url: 'https://www.bilibili.com/video/' + videos.bvid,
+                        requseter: message.member.id,
+                        duration: Math.floor(videos.duration / 60) + ':' + (videos.duration - (Math.floor(videos.duration / 60) * 60)),
+                        thumb: videos.pic,
+                        durl: videos.durl,
+                        source: 'bilibili'
+                    }
+                    break;
                 default:
                     break;
             }
@@ -255,6 +279,9 @@ module.exports = {
                     break;
                 case 'sc':
                     proc = new ffmpeg(await scdl.download(song.url, scID))
+                    break;
+                case 'bilibili':
+                    proc = new ffmpeg(await client.bilibili.bdown(song.durl))
                     break;
                 default:
                     proc = new ffmpeg(ytdl(song.url))
