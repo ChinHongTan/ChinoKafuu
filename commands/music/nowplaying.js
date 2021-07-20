@@ -7,6 +7,8 @@ module.exports = {
         const queueData = require("../../data/queueData");
         let queue = queueData.queue;
         let serverQueue = queue.get(message.guild.id);
+        let dispatcher = serverQueue.connection.dispatcher;
+        // let dispatcher = serverQueue.dispatcher;
         const Discord = require("discord.js");
         const progressbar = require('string-progressbar');
 
@@ -33,9 +35,9 @@ module.exports = {
 
             let embed = new Discord.MessageEmbed()
                 .setColor("#ff0000")
-                .setTitle("Song Queue")
+                .setTitle("**Now playing ♪**")
                 .setDescription(
-                    `**Now playing ♪**\n[${song.title}](${song.url})`
+                    `[${song.title}](${song.url})\n\`[${format(dispatcher.streamTime / 1000)}/${format(song.duration)}]\`\n${progressbar.splitBar(song.duration, dispatcher.streamTime / 1000, size = 10)[0]}`
                 )
                 .setFooter(`Requested by: <@!${song.requseter}>`);
             return message.channel.send(embed);
