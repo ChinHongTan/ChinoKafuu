@@ -2,11 +2,79 @@ const ytdl = require("ytdl-core");
 const { PassThrough } = require("stream");
 const ffmpeg = require("fluent-ffmpeg");
 const { Util, MessageEmbed } = require("discord.js");
+const scdl = require("soundcloud-downloader").default;
 const queueData = require("../data/queueData");
 let queue = queueData.queue;
-let serverQueue = queue.get(message.guild.id);
+async function play(guild, song, message) {
+    let serverQueue = queue.get(message.guild.id);
+    let stream = new PassThrough({
+        highWaterMark: 12,
+    });
+    let proc;
+    if (!song) {
+        serverQueue.voiceChannel.leave();
+        queue.delete(guild.id);
+        return;
+    }
+    switch (song.source) {
+        case "yt":
+            proc = new ffmpeg(
+                ytdl(song.url, {
+                    quality: "highestaudio",
+                })
+            );
+            break;
+        case "sc":
+            proc = new ffmpeg(await scdl.download(song.url, scID));
+            break;
+        default:
+            proc = new ffmpeg(ytdl(song.url));
+            break;
+    }
+
+    proc.addOptions(["-ac", "2", "-f", "opus", "-ar", "48000"]);
+    proc.on("error", function (err) {
+        if (err === "Output stream closed") {
+            return;
+        }
+        console.log("an error happened: " + err.message);
+    });
+    proc.writeToStream(stream, {
+        end: true,
+    });
+    const dispatcher = serverQueue.connection
+        .play(stream, {
+            type: "ogg/opus",
+        })
+        .on("finish", (reason) => {
+            if (reason === "Stream is not generating quickly enough.") {
+                console.log("Stream is not generating quickly enough.");
+            }
+            console.log(reason);
+            if (!serverQueue.loop) {
+                serverQueue.songs.shift();
+            }
+            stream.destroy();
+            play(guild, serverQueue.songs[0], message);
+        })
+        .on("error", (error) => {
+            message.channel.send("An error happened!");
+            console.log(error);
+        });
+    dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
+    var embed = new MessageEmbed()
+        .setThumbnail(song.thumb)
+        .setAuthor("開始撥放", message.author.displayAvatarURL())
+        .setColor("BLUE")
+        .setTitle(song.title)
+        .setURL(song.url)
+        .setTimestamp(Date.now())
+        .addField("播放者", `<@!${serverQueue.songs[0].requseter}>`)
+        .setFooter("音樂系統", message.client.user.displayAvatarURL());
+    serverQueue.textChannel.send(embed);
+};
 module.exports = {
-    waitImport: async function(name, length, message) {
+    waitimport: async function (name, length, message) {
         return new Promise((resolve, reject) => {
             let embed = new MessageEmbed()
                 .setAuthor("清單", message.author.displayAvatarURL())
@@ -14,15 +82,12 @@ module.exports = {
                 .setTitle("您要加入這個清單嗎")
                 .setDescription(`清單: ${name}\n長度:${length}`)
                 .setTimestamp(Date.now())
-                .setFooter(
-                    "音樂系統",
-                    message.client.user.displayAvatarURL()
-                );
+                .setFooter("音樂系統", message.client.user.displayAvatarURL());
             message.channel.send(embed).then(async (m) => {
                 await m.react("📥");
                 await m.react("❌");
                 let filter = (reaction, user) => {
-                    if (user.id == message.author.id) {
+                    if (user.id === message.author.id) {
                         if (reaction.emoji.name === "📥") {
                             return true;
                         }
@@ -39,7 +104,7 @@ module.exports = {
                         if (!collected.first()) {
                             return;
                         }
-                        if (collected.first().emoji.name == "📥") {
+                        if (collected.first().emoji.name === "📥") {
                             let embed = new MessageEmbed()
                                 .setAuthor(
                                     "清單",
@@ -56,7 +121,7 @@ module.exports = {
                             m.edit(embed);
                             return resolve(true);
                         }
-                        if (collected.first().emoji.name == "❌") {
+                        if (collected.first().emoji.name === "❌") {
                             let embed = new MessageEmbed()
                                 .setAuthor(
                                     "清單",
@@ -81,71 +146,14 @@ module.exports = {
             });
         });
     },
-    play: async function(guild, song) {
-        let stream = new PassThrough({
-            highWaterMark: 12,
-        });
-        let proc;
-        if (!song) {
-            serverQueue.voiceChannel.leave();
-            queue.delete(guild.id);
-            return;
-        }
-        switch (song.source) {
-            case "yt":
-                proc = new ffmpeg(
-                    ytdl(song.url, {
-                        quality: "highestaudio",
-                    })
-                );
-                break;
-            case "sc":
-                proc = new ffmpeg(await scdl.download(song.url, scID));
-                break;
-            default:
-                proc = new ffmpeg(ytdl(song.url));
-                break;
-        }
-    
-        proc.addOptions(["-ac", "2", "-f", "opus", "-ar", "48000"]);
-        proc.on("error", function (err) {
-            if (err == "Output stream closed") return;
-            console.log("an error happened: " + err.message);
-        });
-        proc.writeToStream(stream, {
-            end: true,
-        });
-        const dispatcher = serverQueue.connection
-            .play(stream, {
-                type: "ogg/opus",
-            })
-            .on("finish", (reason) => {
-                if (reason === "Stream is not generating quickly enough.")
-                    console.log("Stream is not generating quickly enough.");
-                console.log(reason);
-                if (!serverQueue.loop) {
-                    serverQueue.songs.shift();
-                }
-                stream.destroy();
-                play(guild, serverQueue.songs[0], serverQueue);
-            })
-            .on("error", (error) => {
-                message.channel.send("An error happened!");
-                console.log(error);
-            });
-        dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
-        var embed = new MessageEmbed()
-            .setThumbnail(song.thumb)
-            .setAuthor("開始撥放", message.author.displayAvatarURL())
-            .setColor("BLUE")
-            .setTitle(song.title)
-            .setURL(song.url)
-            .setTimestamp(Date.now())
-            .addField("播放者", `<@!${serverQueue.songs[0].requseter}>`)
-            .setFooter("音樂系統", message.client.user.displayAvatarURL());
-        serverQueue.textChannel.send(embed);
-    },
-    handleVideo: async function(video, voiceChannel, playlist = false, serverQueue, source, message) {
+    handleVideo: async function (
+        videos,
+        voiceChannel,
+        playlist = false,
+        serverQueue,
+        source,
+        message
+    ) {
         let song;
         switch (source) {
             case "ytlist":
@@ -212,11 +220,9 @@ module.exports = {
                 serverQueue.songs.push(song);
                 var connection = await voiceChannel.join();
                 serverQueue.connection = connection;
-                play(message.guild, serverQueue.songs[0], serverQueue);
+                play(message.guild, serverQueue.songs[0], message);
             } catch (error) {
-                console.error(
-                    `I could not join the voice channel: ${error}`
-                );
+                console.error(`I could not join the voice channel: ${error}`);
                 serverQueue.songs.length = 0;
                 return message.channel.send(
                     `I could not join the voice channel: ${error}`
@@ -227,20 +233,14 @@ module.exports = {
             if (playlist) return;
             var embed = new MessageEmbed()
                 .setThumbnail(song.thumb)
-                .setAuthor(
-                    "已加入播放佇列",
-                    message.author.displayAvatarURL()
-                )
+                .setAuthor("已加入播放佇列", message.author.displayAvatarURL())
                 .setColor("BLUE")
                 .setTitle(song.title)
                 .setURL(song.url)
                 .setTimestamp(Date.now())
                 .addField("播放者", `<@!${serverQueue.songs[0].requseter}>`)
-                .setFooter(
-                    "音樂系統",
-                    message.client.user.displayAvatarURL()
-                );
+                .setFooter("音樂系統", message.client.user.displayAvatarURL());
             return message.channel.send(embed);
         }
-    }
-}
+    },
+};

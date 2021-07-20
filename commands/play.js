@@ -3,9 +3,9 @@ module.exports = {
     guildOnly: true,
     aliases: ["p"],
     description: "Play a song based on a given url or a keyword",
-    async execute(message, args) {     
+    async execute(message, args) {
         const ytsr = require("youtube-sr").default;
-        const ytpl = require("ytpl"); 
+        const ytpl = require("ytpl");
         const {
             scID,
             SpotifyClientID,
@@ -14,6 +14,10 @@ module.exports = {
         const scdl = require("soundcloud-downloader").default;
         const Spotify = require("../functions/spotify");
         const spotify = new Spotify(SpotifyClientID, SpotifyClientSecret);
+        const {
+            waitimport,
+            handleVideo,
+        } = require("../functions/musicFunctions");
         const ytrx = new RegExp(
             "(?:youtube\\.com.*(?:\\?|&)(?:v|list)=|youtube\\.com.*embed\\/|youtube\\.com.*v\\/|youtu\\.be\\/)((?!videoseries)[a-zA-Z0-9_-]*)"
         );
@@ -69,7 +73,8 @@ module.exports = {
                 }
                 let result = await waitimport(
                     playlist.title,
-                    playlist.estimatedItemCount
+                    playlist.estimatedItemCount,
+                    message
                 );
                 if (result) {
                     playlist.items.forEach((video) => {
@@ -78,7 +83,8 @@ module.exports = {
                             voiceChannel,
                             true,
                             serverQueue,
-                            "ytlist"
+                            "ytlist",
+                            message
                         );
                     });
                 }
@@ -90,7 +96,8 @@ module.exports = {
                     voiceChannel,
                     false,
                     serverQueue,
-                    "yt"
+                    "yt",
+                    message
                 );
             }
         }
@@ -116,7 +123,8 @@ module.exports = {
                         voiceChannel,
                         false,
                         serverQueue,
-                        "yt"
+                        "yt",
+                        message
                     );
                 } else if (url.includes("album")) {
                     result = await spotify.getAlbum(Id);
@@ -143,7 +151,8 @@ module.exports = {
                             voiceChannel,
                             true,
                             serverQueue,
-                            "yt"
+                            "yt",
+                            message
                         );
                         m.edit(
                             `✅ Album: **${videos[0].title}** importing **${i}**`
@@ -158,7 +167,7 @@ module.exports = {
                     let title = result.name;
                     let lenght = result.tracks.total;
 
-                    let wait = await waitimport(title, lenght);
+                    let wait = await waitimport(title, lenght, message);
                     if (wait === false) {
                         let videos = await ytsr.search(
                             result.tracks.items[0].track.artists[0].name +
@@ -173,7 +182,8 @@ module.exports = {
                             voiceChannel,
                             false,
                             serverQueue,
-                            "yt"
+                            "yt",
+                            message
                         );
                     }
 
@@ -195,7 +205,8 @@ module.exports = {
                                 voiceChannel,
                                 true,
                                 serverQueue,
-                                "yt"
+                                "yt",
+                                message
                             );
                             m.edit(
                                 `✅ PlayList: **${videos[0].title}** importing **${i}**`
@@ -225,7 +236,11 @@ module.exports = {
                         "🆘 I could not obtain any search results."
                     );
                 });
-                let wait = await waitimport(data.title, data.tracks.length);
+                let wait = await waitimport(
+                    data.title,
+                    data.tracks.length,
+                    message
+                );
                 if (wait) {
                     var m = await message.channel.send(
                         `✅ Playlist: **${data.title}** importing`
@@ -236,7 +251,8 @@ module.exports = {
                             voiceChannel,
                             true,
                             serverQueue,
-                            "sclist"
+                            "sclist",
+                            message
                         );
                         m.edit(
                             `✅ Playlist: **${data.tracks[i].title}** importing **${i}**`
@@ -254,15 +270,31 @@ module.exports = {
                         "🆘 I could not obtain any search results."
                     );
                 });
-                await handleVideo(data, voiceChannel, true, serverQueue, "sc");
+                await handleVideo(
+                    data,
+                    voiceChannel,
+                    true,
+                    serverQueue,
+                    "sc",
+                    message
+                );
             }
         } else {
-            let keyword = message.content.substr(message.content.indexOf(" ") + 1);
+            let keyword = message.content.substr(
+                message.content.indexOf(" ") + 1
+            );
             message.channel.send(`Searching ${keyword}...`);
             const videos = await ytsr.search(keyword, {
-                limit: 1
-            })
-            handleVideo(videos, voiceChannel, false, serverQueue, 'yt');
+                limit: 1,
+            });
+            handleVideo(
+                videos,
+                voiceChannel,
+                false,
+                serverQueue,
+                "yt",
+                message
+            );
         }
     },
 };
