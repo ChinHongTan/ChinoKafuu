@@ -9,13 +9,13 @@ module.exports = {
 
         function stop(message, serverQueue) {
             if (!message.member.voice.channel) {
-                message.channel.send(
+                return message.channel.send(
                     "You have to be in a voice channel to stop the music!"
                 );
             }
 
             if (!serverQueue) {
-                message.channel.send("There is no song that I could stop!");
+                return message.channel.send("There is no song that I could stop!");
             }
 
             serverQueue.songs = [];

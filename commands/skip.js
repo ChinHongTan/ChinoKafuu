@@ -10,12 +10,12 @@ module.exports = {
 
         function skip(message, serverQueue) {
             if (!message.member.voice.channel) {
-                message.channel.send(
+                return message.channel.send(
                     "You have to be in a voice channel to skip the music!"
                 );
             }
             if (!serverQueue) {
-                message.channel.send("There is no song that I could skip!");
+                return message.channel.send("There is no song that I could skip!");
             }
             serverQueue.connection.dispatcher.end();
         }
