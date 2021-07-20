@@ -8,7 +8,6 @@ module.exports = {
         let queue = queueData.queue;
         let serverQueue = queue.get(message.guild.id);
         let dispatcher = serverQueue.connection.dispatcher;
-        // let dispatcher = serverQueue.dispatcher;
         const Discord = require("discord.js");
         const progressbar = require('string-progressbar');
 
