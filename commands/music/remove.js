@@ -4,7 +4,7 @@ module.exports = {
     aliases: ["r"],
     description: "Removes a song from the queue",
     execute(message, args) {
-        const queueData = require("../data/queueData");
+        const queueData = require("../../data/queueData");
         let queue = queueData.queue;
         let serverQueue = queue.get(message.guild.id);
 

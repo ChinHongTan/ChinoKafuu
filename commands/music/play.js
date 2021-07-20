@@ -6,16 +6,16 @@ module.exports = {
     async execute(message, args) {
         const ytsr = require("youtube-sr").default;
         const ytpl = require("ytpl");
-        const scID = process.env.SCID || require("../config/config.json").scID;
-        const SpotifyClientID = process.env.SPOTIFY_CLIENT_ID || require("../config/config.json").SpotifyClientID;
-        const SpotifyClientSecret = process.env.SPOTIFY_CLIENT_SECRET || require("../config/config.json").SpotifyClientSecret;
+        const scID = process.env.SCID || require("../../config/config.json").scID;
+        const SpotifyClientID = process.env.SPOTIFY_CLIENT_ID || require("../../config/config.json").SpotifyClientID;
+        const SpotifyClientSecret = process.env.SPOTIFY_CLIENT_SECRET || require("../../config/config.json").SpotifyClientSecret;
         const scdl = require("soundcloud-downloader").default;
-        const Spotify = require("../functions/spotify");
+        const Spotify = require("../../functions/spotify");
         const spotify = new Spotify(SpotifyClientID, SpotifyClientSecret);
         const {
             waitimport,
             handleVideo,
-        } = require("../functions/musicFunctions");
+        } = require("../../functions/musicFunctions");
         const ytrx = new RegExp(
             "(?:youtube\\.com.*(?:\\?|&)(?:v|list)=|youtube\\.com.*embed\\/|youtube\\.com.*v\\/|youtu\\.be\\/)((?!videoseries)[a-zA-Z0-9_-]*)"
         );
@@ -24,7 +24,7 @@ module.exports = {
         );
         const sprxtrack = new RegExp("(http[s]?://)?(open.spotify.com)/");
 
-        const queueData = require("../data/queueData");
+        const queueData = require("../../data/queueData");
         let queue = queueData.queue;
         let serverQueue = queue.get(message.guild.id);
         let url = args[0];

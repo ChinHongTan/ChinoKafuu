@@ -5,7 +5,7 @@ module.exports = {
     execute(message) {
         let play = require("./play");
         const prefix =
-            process.env.PREFIX || require("../config/config.json").prefix;
+            process.env.PREFIX || require("../../config/config.json").prefix;
 
         const ytsr = require("ytsr");
         const Discord = require("discord.js");

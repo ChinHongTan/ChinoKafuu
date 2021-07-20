@@ -4,7 +4,7 @@ module.exports = {
     aliases: ["s"],
     description: "Skips a song.",
     execute(message) {
-        const queueData = require("../data/queueData");
+        const queueData = require("../../data/queueData");
         let queue = queueData.queue;
         let serverQueue = queue.get(message.guild.id);
 

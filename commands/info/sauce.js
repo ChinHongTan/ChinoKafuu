@@ -5,7 +5,7 @@ module.exports = {
     execute(message, args) {
         const Discord = require("discord.js");
         const sagiri_token =
-            process.env.SAGIRI || require("../config/config.json").sagiri_token;
+            process.env.SAGIRI || require("../../config/config.json").sagiri_token;
         const sagiri = require("sagiri");
         let mySauce = sagiri(sagiri_token);
         const { searchByUrl } = require("ascii2d");

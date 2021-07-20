@@ -4,7 +4,7 @@ module.exports = {
     aliases: ["q"],
     description: "Check the current song queue.",
     execute(message) {
-        const queueData = require("../data/queueData");
+        const queueData = require("../../data/queueData");
         let queue = queueData.queue;
         let serverQueue = queue.get(message.guild.id);
         const Discord = require("discord.js");

@@ -5,7 +5,7 @@ module.exports = {
     usage: "[command name]",
     cooldown: 5,
     execute(message, args) {
-        const prefix = process.env.PREFIX || require("../config/config.json");
+        const prefix = process.env.PREFIX || require("../../config/config.json");
         const data = [];
         const { commands } = message.client;
 
