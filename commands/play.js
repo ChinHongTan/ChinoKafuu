@@ -6,11 +6,9 @@ module.exports = {
     async execute(message, args) {
         const ytsr = require("youtube-sr").default;
         const ytpl = require("ytpl");
-        const {
-            scID,
-            SpotifyClientID,
-            SpotifyClientSecret,
-        } = require("../config/config.json");
+        const scID = process.env.SCID || require("../config/config.json").scID;
+        const SpotifyClientID = process.env.SPOTIFY_CLIENT_ID || require("../config/config.json").SpotifyClientID;
+        const SpotifyClientSecret = process.env.SPOTIFY_CLIENT_SECRET || require("../config/config.json").SpotifyClientSecret;
         const scdl = require("soundcloud-downloader").default;
         const Spotify = require("../functions/spotify");
         const spotify = new Spotify(SpotifyClientID, SpotifyClientSecret);
