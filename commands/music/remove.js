@@ -17,7 +17,7 @@ module.exports = {
                     queuenum > 0
                 ) {
                     message.channel.send(
-                        `Removed ${serverQueue.songs[queuenum].title}!`
+                        `Removed ${serverQueue.songs[queuenum - 1].title}!`
                     );
                     serverQueue.songs.splice(queuenum, 1);
                 } else {

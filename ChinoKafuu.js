@@ -11,19 +11,17 @@ const client = new Discord.Client();
 client.commands = new Discord.Collection();
 let functions = {};
 
-const commandFiles = fs
-    .readdirSync("./commands")
-    .filter((file) => file.endsWith(".js"));
+const commandFolders = fs.readdirSync('./commands');
 
-for (const file of commandFiles) {
-    const command = require(`./commands/${file}`);
-
-    // set a new item in the Collection
-    // with the key as the command name and the value as the exported module
-    client.commands.set(command.name, command);
+for (const folder of commandFolders) {
+	const commandFiles = fs.readdirSync(`./commands/${folder}`).filter(file => file.endsWith('.js'));
+	for (const file of commandFiles) {
+		const command = require(`./commands/${folder}/${file}`);
+		client.commands.set(command.name, command);
+	}
 }
 
-const cooldowns = new Discord.Collection();
+client.cooldowns = new Discord.Collection();
 
 const functionFiles = fs
     .readdirSync("./functions")
@@ -103,7 +101,7 @@ client.on("message", async (message) => {
             distances.set(cmd, functions.getEditDistance(commandName, cmd));
         }
         let recommendation = new Map([...distances].filter(([k, v]) => v <= 2).sort((a, b) => a[1] - b[1]));
-        if (recommendation.size > 1) {
+        if (recommendation.size > 2) {
             message.channel.send(
                 `\`${prefix}${commandName}\` is not a valid command! Do you mean: `
             );
@@ -117,9 +115,28 @@ client.on("message", async (message) => {
         return;
     }
 
+    if (command.permissions) {
+		const authorPerms = message.channel.permissionsFor(message.author);
+		if (!authorPerms || !authorPerms.has(command.permissions)) {
+			return message.reply('You can not do this!');
+		}
+	}
+
+    if (command.args && !args.length) {
+		let reply = `You didn't provide any arguments, ${message.author}!`;
+
+		if (command.usage) {
+			reply += `\nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``;
+		}
+
+		return message.channel.send(reply);
+	}
+
     if (command.guildOnly && message.channel.type === "dm") {
         return message.reply("I can't execute that command inside DMs!");
     }
+
+    const { cooldowns } = client;
 
     if (!cooldowns.has(command.name)) {
         cooldowns.set(command.name, new Discord.Collection());

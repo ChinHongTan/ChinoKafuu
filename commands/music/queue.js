@@ -29,12 +29,13 @@ module.exports = {
 
         if (serverQueue) {
             var songQueue = serverQueue.songs.slice(1);
+            console.log(songQueue);
             var printQueue = "";
             songQueue.forEach((item, index) => {
                 var songNo = index + 1;
                 var songTitle = item.title;
                 var songURL = item.url;
-                var songLength = item.length;
+                var songLength = item.duration;
                 var queueString = `${songNo}.[${songTitle}](${songURL}) | ${format(
                     songLength
                 )}\n\n`;

@@ -77,6 +77,17 @@ async function play(guild, song, message) {
         .setFooter("音樂系統", message.client.user.displayAvatarURL());
     serverQueue.textChannel.send(embed);
 };
+function hmsToSecondsOnly(str) {
+    var p = str.split(':'),
+        s = 0, m = 1;
+
+    while (p.length > 0) {
+        s += m * parseInt(p.pop(), 10);
+        m *= 60;
+    }
+
+    return s;
+}
 module.exports = {
     waitimport: async function (name, length, message) {
         return new Promise((resolve, reject) => {
@@ -161,42 +172,40 @@ module.exports = {
         let song;
         switch (source) {
             case "ytlist":
+                console.log(videos.title);
+                console.log(videos.duration);
                 song = {
                     id: videos.id,
                     title: Util.escapeMarkdown(videos.title),
                     url: `https://www.youtube.com/watch?v=${videos.id}`,
                     requseter: message.member.id,
-                    duration: videos.duration,
+                    duration: hmsToSecondsOnly(videos.duration),
                     thumb: videos.thumbnails[0].url,
                     source: "yt",
                 };
                 break;
             case "yt":
+                console.log(videos[0].duration);
+                console.log(videos[0].duration);
                 song = {
                     id: videos[0].id,
                     title: Util.escapeMarkdown(videos[0].title),
                     url: videos[0].url,
                     requseter: message.member.id,
-                    duration:
-                        Math.floor(videos[0].duration / 60) +
-                        ":" +
-                        (videos[0].duration -
-                            Math.floor(videos[0].duration / 60) * 60),
+                    duration: videos[0].duration / 1000,
                     thumb: videos[0].thumbnail.url,
                     source: "yt",
                 };
                 break;
             case "sc":
+                console.log(videos.title);
+                console.log(videos.duration);
                 song = {
                     id: videos.id,
                     title: Util.escapeMarkdown(videos.title),
                     url: videos.permalink_url,
                     requseter: message.member.id,
-                    duration:
-                        Math.floor(videos.duration / 60) +
-                        ":" +
-                        (videos.duration -
-                            Math.floor(videos.duration / 60) * 60),
+                    duration: videos.duration / 1000,
                     thumb: videos.artwork_url,
                     source: "sc",
                 };
@@ -227,7 +236,7 @@ module.exports = {
                 .setTitle(song.title)
                 .setURL(song.url)
                 .setTimestamp(Date.now())
-                .addField("播放者", `<@!${serverQueue.songs[0].requseter}>`)
+                .addField("播放者", `<@!${song.requseter}>`)
                 .setFooter("音樂系統", message.client.user.displayAvatarURL());
             return message.channel.send(embed);
         }
