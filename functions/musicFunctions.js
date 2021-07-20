@@ -1,6 +1,8 @@
 const ytdl = require("ytdl-core");
 const { PassThrough } = require("stream");
+const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 const ffmpeg = require("fluent-ffmpeg");
+ffmpeg.setFfmpegPath(ffmpegPath);
 const { Util, MessageEmbed } = require("discord.js");
 const scdl = require("soundcloud-downloader").default;
 const queueData = require("../data/queueData");
