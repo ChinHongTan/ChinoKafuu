@@ -39,6 +39,7 @@ async function play(guild, song, message) {
             return;
         }
         console.log("an error happened: " + err.message);
+        console.log(err);
     });
     proc.writeToStream(stream, {
         end: true,
