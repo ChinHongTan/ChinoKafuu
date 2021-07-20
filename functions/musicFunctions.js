@@ -4,6 +4,7 @@ const ffmpeg = require("fluent-ffmpeg");
 const { Util, MessageEmbed } = require("discord.js");
 const scdl = require("soundcloud-downloader").default;
 const queueData = require("../data/queueData");
+const scID = process.env.SCID || require("../config/config.json").scID;
 let queue = queueData.queue;
 async function play(guild, song, message) {
     let serverQueue = queue.get(message.guild.id);
