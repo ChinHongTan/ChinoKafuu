@@ -198,21 +198,6 @@ module.exports = {
                     source: "sc",
                 };
                 break;
-            case "sclist":
-                song = {
-                    id: videos.id,
-                    title: Util.escapeMarkdown(videos.title),
-                    url: videos.permalink_url,
-                    requseter: message.member.id,
-                    duration:
-                        Math.floor(videos.duration / 60) +
-                        ":" +
-                        (videos.duration -
-                            Math.floor(videos.duration / 60) * 60),
-                    thumb: videos.artwork_url,
-                    source: "sc",
-                };
-                break;
             default:
                 break;
         }

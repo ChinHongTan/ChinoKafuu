@@ -249,7 +249,7 @@ module.exports = {
                             voiceChannel,
                             true,
                             serverQueue,
-                            "sclist",
+                            "sc",
                             message
                         );
                         m.edit(
