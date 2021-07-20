@@ -172,8 +172,6 @@ module.exports = {
         let song;
         switch (source) {
             case "ytlist":
-                console.log(videos.title);
-                console.log(videos.duration);
                 song = {
                     id: videos.id,
                     title: Util.escapeMarkdown(videos.title),
@@ -185,8 +183,6 @@ module.exports = {
                 };
                 break;
             case "yt":
-                console.log(videos[0].duration);
-                console.log(videos[0].duration);
                 song = {
                     id: videos[0].id,
                     title: Util.escapeMarkdown(videos[0].title),
@@ -198,8 +194,6 @@ module.exports = {
                 };
                 break;
             case "sc":
-                console.log(videos.title);
-                console.log(videos.duration);
                 song = {
                     id: videos.id,
                     title: Util.escapeMarkdown(videos.title),
