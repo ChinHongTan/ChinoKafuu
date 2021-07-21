@@ -36,9 +36,11 @@ module.exports = {
                 .setColor("#ff0000")
                 .setTitle("**Now playing ♪**")
                 .setDescription(
-                    `[${song.title}](${song.url})\n\`[${format(dispatcher.streamTime / 1000)}/${format(song.duration)}]\`\n${progressbar.splitBar(song.duration, dispatcher.streamTime / 1000, size = 10)[0]}`
+                    `[${song.title}](${song.url})\n\`[${format(dispatcher.streamTime / 1000)}/${format(song.duration)}]\`\n${progressbar.splitBar(song.duration, dispatcher.streamTime / 1000, size = 15)[0]}`
                 )
-                .setFooter(`Requested by: <@!${song.requseter}>`);
+                .setThumbnail(song.thumb)
+                .addField("Requested by:", `<@!${song.requseter}>`)
+                .setFooter("音樂系統", message.client.user.displayAvatarURL());
             return message.channel.send(embed);
         } else {
             return message.channel.send("There is no song in the queue!");
