@@ -15,6 +15,7 @@ const {
     MessageEmbed,
 } = require('discord.js');
 
+
 const ytrx = new RegExp('(?:youtube\\.com.*(?:\\?|&)(?:v|list)=|youtube\\.com.*embed\\/|youtube\\.com.*v\\/|youtu\\.be\\/)((?!videoseries)[a-zA-Z0-9_-]*)');
 const scrxt = new RegExp('^(?<track>https:\/\/soundcloud.com\/(?:(?!sets|stats|groups|upload|you|mobile|stream|messages|discover|notifications|terms-of-use|people|pages|jobs|settings|logout|charts|imprint|popular)(?:[a-z0-9\-_]{1,25}))\/(?:(?:(?!sets|playlist|stats|settings|logout|notifications|you|messages)(?:[a-z0-9\-_]{1,100}))(?:\/s\-[a-zA-Z0-9\-_]{1,10})?))(?:[a-z0-9\-\?=\/]*)$')
 const sprxtrack = new RegExp('(http[s]?:\/\/)?(open.spotify.com)\/');
@@ -25,8 +26,13 @@ module.exports = {
     aliases: ['p'],
     description: 'Play a song based on a given url or a keyword',
     async execute(client, message, args) {
+
+        if (!message.member.voice.channel) return message.channel.send("You need to be in a voice channel to play music!");
+
         const voiceChannel = message.member.voice.channel;
         const permissions = voiceChannel.permissionsFor(message.client.user);
+        if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) return message.channel.send("I need the permissions to join and speak in your voice channel!");
+        if (!args[0]) return message.channel.send("不要留白拉幹");
         let serverQueue = client.queue.get(message.guild.id);
         let url = args[0];
 
@@ -45,9 +51,6 @@ module.exports = {
             serverQueue = client.queue.get(message.guild.id);
         }
 
-        if (!message.member.voice.channel) return message.channel.send("You need to be in a voice channel to play music!");
-        if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) return message.channel.send("I need the permissions to join and speak in your voice channel!");
-        if (!args[0]) return message.channel.send("不要留白拉幹");
 
         if (url.match(ytrx)) {
             if (ytsr.validate(url, 'PLAYLIST_ID')) {
@@ -166,10 +169,41 @@ module.exports = {
         } else {
             let keyword = message.content.substr(message.content.indexOf(" ") + 1);
             message.channel.send(`Searching ${keyword}...`);
-            const videos = await ytsr.search(keyword, {
-                limit: 1
+            const videos = await ytsr.search(keyword)
+            let menu = new client.disbut.MessageMenu()
+                .setID(message.guild.id)
+                .setMinValues(1)
+                .setMaxValues(1)
+                .setPlaceholder('Chooose a song')
+            for (let i in videos) {
+                let title = videos[i].title
+                let channel = videos[i].channel.name
+                let list = new client.disbut.MessageMenuOption()
+                    .setLabel(channel.length > 20 ? channel.slice(0, 20) + '...' : channel)
+                    .setValue(i)
+                    .setDescription(`${title.length > 35 ? title.slice(0,35) + '...' : title } - ${Math.floor((videos[i].duration / 1000) / 60) + ':' + ((videos[i].duration / 1000) - (Math.floor((videos[i].duration / 1000) / 60) * 60))}`);
+                menu.addOption(list);
+            }
+
+
+            message.channel.send('請選擇歌曲', menu).then(msg => {
+                let col = msg.createMenuCollector(b => b.clicker.user.id == message.author.id && b.guild.id == message.guild.id, {
+                    time: 10000
+                });
+                col.on('collect',async(menu) => {
+                        await menu.reply.defer();
+                        handleVideo([videos[menu.values[0]]], voiceChannel, false, serverQueue, 'yt');
+                        await menu.reply.delete()
+                        return;
+                })
+                col.on('end', menu => {
+                    if(!menu.first()){
+                        msg.delete()
+                        msg.channel.send("Timeout")
+                    }
+                })
             })
-            handleVideo(videos, voiceChannel, false, serverQueue, 'yt');
+
         }
 
         async function handleVideo(videos, voiceChannel, playlist = false, serverQueue, source) {
@@ -192,7 +226,7 @@ module.exports = {
                         title: Util.escapeMarkdown(videos[0].title),
                         url: videos[0].url,
                         requseter: message.member.id,
-                        duration: Math.floor(videos[0].duration / 60) + ':' + (videos[0].duration - (Math.floor(videos[0].duration / 60) * 60)),
+                        duration: Math.floor((videos[0].duration / 1000) / 60) + ':' + ((videos[0].duration / 1000) - (Math.floor((videos[0].duration / 1000) / 60) * 60)),
                         thumb: videos[0].thumbnail.url,
                         source: 'yt'
                     }
@@ -297,7 +331,8 @@ module.exports = {
                 end: true
             });
             const dispatcher = serverQueue.connection.play(stream, {
-                    type: 'ogg/opus'
+                    type: 'ogg/opus',
+                    bitrate: 'auto'
                 })
                 .on('finish', reason => {
                     if (reason === 'Stream is not generating quickly enough.') console.log('Stream is not generating quickly enough.');
@@ -312,7 +347,7 @@ module.exports = {
                     message.channel.send('An error happened!')
                     console.log(error)
                 })
-            dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
+            dispatcher.setVolumeDecibels(1);            ;
             var embed = new MessageEmbed()
                 .setThumbnail(song.thumb)
                 .setAuthor("開始撥放", message.author.displayAvatarURL())

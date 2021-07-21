@@ -9,7 +9,7 @@ const {
 } = require("./config/config.json");
 const process = require("process");
 const spotify = require('./functions/spotify');
-const Bilibili = require('./functions/bilibili')
+const Bilibili = require('./functions/bilibili');
 
 //initialization
 const client = new Discord.Client();
@@ -18,6 +18,8 @@ client.commands = new Discord.Collection();
 client.queue = new Map();
 client.spotify = new spotify(SpotifyClientID,SpotifyClientSecret);
 client.bilibili = new Bilibili();
+client.disbut = require('discord-buttons');
+client.disbut(client);
 let functions = {}
 
 //Database
