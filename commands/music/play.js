@@ -12,6 +12,8 @@ module.exports = {
         const scdl = require("soundcloud-downloader").default;
         const Spotify = require("../../functions/spotify");
         const spotify = new Spotify(SpotifyClientID, SpotifyClientSecret);
+        const disbut = require("discord-buttons");
+
         const {
             waitimport,
             handleVideo,
@@ -282,17 +284,40 @@ module.exports = {
                 message.content.indexOf(" ") + 1
             );
             message.channel.send(`Searching ${keyword}...`);
-            const videos = await ytsr.search(keyword, {
-                limit: 1,
-            });
-            handleVideo(
-                videos,
-                voiceChannel,
-                false,
-                serverQueue,
-                "yt",
-                message
-            );
+            const videos = await ytsr.search(keyword)
+            let menu = new disbut.MessageMenu()
+                .setID(message.guild.id)
+                .setMinValues(1)
+                .setMaxValues(1)
+                .setPlaceholder('Chooose a song')
+            for (let i in videos) {
+                let title = videos[i].title
+                let channel = videos[i].channel.name
+                let list = new disbut.MessageMenuOption()
+                    .setLabel(channel.length > 20 ? channel.slice(0, 20) + '...' : channel)
+                    .setValue(i)
+                    .setDescription(`${title.length > 35 ? title.slice(0,35) + '...' : title } - ${Math.floor((videos[i].duration / 1000) / 60) + ':' + ((videos[i].duration / 1000) - (Math.floor((videos[i].duration / 1000) / 60) * 60))}`);
+                menu.addOption(list);
+            }
+
+
+            message.channel.send('請選擇歌曲', menu).then(msg => {
+                let col = msg.createMenuCollector(b => b.clicker.user.id == message.author.id && b.guild.id == message.guild.id, {
+                    time: 10000
+                });
+                col.on('collect',async(menu) => {
+                        await menu.reply.defer();
+                        handleVideo([videos[menu.values[0]]], voiceChannel, false, serverQueue, 'yt', message);
+                        await menu.reply.delete()
+                        return;
+                })
+                col.on('end', menu => {
+                    if(!menu.first()){
+                        msg.delete()
+                        msg.channel.send("Timeout")
+                    }
+                })
+            })
         }
     },
 };

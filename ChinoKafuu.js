@@ -7,6 +7,7 @@ const currency = new Discord.Collection();
 const { Users } = require("./data/dbObjects");
 
 const client = new Discord.Client();
+require('discord-buttons')(client);
 
 client.commands = new Discord.Collection();
 let functions = {};
