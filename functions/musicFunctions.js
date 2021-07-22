@@ -36,6 +36,7 @@ async function play(guild, song, message) {
     }
 
     proc.addOptions(["-ac", "2", "-f", "opus", "-ar", "48000"]);
+    // proc.withAudioFilter("bass=g=5");
     proc.on("error", function (err) {
         if (err === "Output stream closed") {
             return;
