@@ -77,9 +77,9 @@ This bot runs on Node.js
 -   [ ] Improved help command
 -   [x] Tidy up codes
 -   [ ] Add some explaination into code
--   [ ] Group different files into folders
--   [ ] Music command youtube playlist support
--   [ ] Play songs from Spotify & SoundCloud
+-   [x] Group different files into folders
+-   [x] Music command youtube playlist support
+-   [x] Play songs from Spotify & SoundCloud
 -   [ ] Save backup data in JSONstorage
 -   [ ] Queries Google and Wolfram Alpha for results
 -   [ ] Change emoji reactions to buttons
