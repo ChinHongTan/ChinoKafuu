@@ -11,7 +11,7 @@ let queue = queueData.queue;
 async function play(guild, song, message) {
     let serverQueue = queue.get(message.guild.id);
     let stream = new PassThrough({
-        highWaterMark: 12,
+        highWaterMark: 50,
     });
     let proc;
     if (!song) {

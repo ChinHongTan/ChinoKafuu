@@ -37,6 +37,7 @@
     "novelcovid": "^3.0.2",
     "opusscript": "0.0.7",
     "pg": "^8.6.0",
+    "pixiv-app-api": "^1.2.1",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
     "require": "^2.4.20",
