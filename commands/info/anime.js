@@ -5,6 +5,8 @@ module.exports = {
     execute(message, args) {
         const fetch = require("node-fetch");
         const Discord = require("discord.js");
+        const DynamicEmbed = require("../../functions/dynamicEmbed");
+        let dynamicEmbed = new DynamicEmbed();
 
         function isValidHttpUrl(string) {
             let url;
@@ -31,7 +33,7 @@ module.exports = {
                 .setTitle(nativeTitle)
                 .setDescription(`Similarity: ${similarity * 100}%`)
                 .setColor("#008000")
-                .setImage(response.thumbnail)
+                .setImage(response.image)
                 .addFields(
                     { name: "**Source URL**", value: sourceURL },
                     { name: "Native Title", value: nativeTitle },
@@ -40,58 +42,8 @@ module.exports = {
                     { name: "Episode", value: episode },
                     { name: "NSFW", value: nsfw }
                 )
-                .setFooter(`page ${response.page + 1}/${response.length}`);
-            return [embed, sourceURL];
-        }
-
-        function reactHandler(r, page, response, embedMessage, msg) {
-            if (r.emoji.name === "⬅️") {
-                page -= 1;
-                if (page < 0) page = response.length - 1;
-                response[page].page = page;
-                let [editedEmbed, video] = createEmbed(response[page]);
-                embedMessage.edit(editedEmbed);
-                msg.edit(video);
-            } else if (r.emoji.name === "➡️") {
-                page += 1;
-                if (page + 1 > response.length) page = 0;
-                let [editedEmbed, video] = createEmbed(response[page]);
-                embedMessage.edit(editedEmbed);
-                msg.edit(video);
-            }
-            return page;
-        }
-
-        function sendEmbed(embed, response, video, page = 0) {
-            message.channel.send(embed).then((embedMessage) => {
-                message.channel.send(video).then((msg) => {
-                    msg.react("⬅️").then(msg.react("➡️"));
-                    const filter = (reaction, user) =>
-                        ["⬅️", "➡️"].includes(reaction.emoji.name) && !user.bot;
-                    const collector = msg.createReactionCollector(filter, {
-                        idle: 60000,
-                        dispose: true,
-                    });
-                    collector.on("collect", (r) => {
-                        page = reactHandler(
-                            r,
-                            page,
-                            response,
-                            embedMessage,
-                            msg
-                        );
-                    });
-                    collector.on("remove", (r) => {
-                        page = reactHandler(
-                            r,
-                            page,
-                            response,
-                            embedMessage,
-                            msg
-                        );
-                    });
-                });
-            });
+                .setFooter(`page ${response.page + 1}/${response.total}`);
+            return embed;
         }
 
         if (args.length > 0) {
@@ -101,10 +53,8 @@ module.exports = {
                         args[0]
                     )}`
                 ).then((e) =>
-                    e.json().then((response) => {
-                        let result = response.result;
-                        let [embed, video] = createEmbed(result);
-                        sendEmbed(embed, result, video);
+                    e.json().then((response) => {   
+                        dynamicEmbed.createEmbedFlip(message, response.result, ["⬅️", "➡️"], createEmbed);
                     })
                 );
                 return;
@@ -128,9 +78,7 @@ module.exports = {
                     )}`
                 ).then((e) =>
                     e.json().then((response) => {
-                        let result = response.result;
-                        let [embed, video] = createEmbed(result);
-                        sendEmbed(embed, result, video);
+                        dynamicEmbed.createEmbedFlip(message, response.result, ["⬅️", "➡️"], createEmbed);
                     })
                 );
                 return;

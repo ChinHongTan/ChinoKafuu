@@ -9,6 +9,8 @@ module.exports = {
         const sagiri = require("sagiri");
         let mySauce = sagiri(sagiri_token);
         const { searchByUrl } = require("ascii2d");
+        const DynamicEmbed = require("../../functions/dynamicEmbed");
+        let dynamicEmbed = new DynamicEmbed();
 
         /**
          * Generates a discord embed
@@ -34,14 +36,13 @@ module.exports = {
                     { name: "**Source URL**", value: sourceURL },
                     { name: "Additional info", value: info }
                 )
-                .setFooter(`page ${response.page + 1}/${response.length}`);
+                .setFooter(`page ${response.page + 1}/${response.total}`);
             return embed;
         }
 
         /**
          * Generates a discord embed
          * @param {object} response - Response object from ascii2d API call
-         * @param {number} page - Which picture from the response to be displayed.
          * @returns {object} Discord embed.
          */
         function createEmbed2(response) {
@@ -61,93 +62,24 @@ module.exports = {
                     { name: "Title", value: title },
                     { name: "Author", author }
                 )
-                .setFooter(`page ${response.page + 1}/${response.length}`);
+                .setFooter(`page ${response.page + 1}/${response.total}`);
             return embed;
         }
 
         /**
-         * Actions after a user had reacted
-         * @param {object} r - Reaction from the user
-         * @param {number} page - Which picture in the response to display
-         * @param {object} response - The response object from the API call
-         * @param {object} embedMessage - Message to be edited
-         * @param {function} embedFunc - Function to create embedMessage
-         * @returns {number} Page
-         */
-        function reactHandler(r, page, response, embedMessage, embedFunc) {
-            let editedEmbed;
-            switch (r.emoji.name) {
-                case "⬅️":
-                    page -= 1;
-                    if (page < 0) page = response.length - 1;
-                    response[page].page = page;
-                    editedEmbed = embedFunc(response[page]);
-                    embedMessage.edit(editedEmbed);
-                    break;
-                case "➡️":
-                    page += 1;
-                    if (page + 1 > response.length) page = 0;
-                    response[page].page = page;
-                    editedEmbed = embedFunc(response);
-                    embedMessage.edit(editedEmbed);
-                    break;
-            }
-            return page;
-        }
-
-        /**
-         * Updates an embed
-         * @param {number} page - Which picture in the response to display.
-         * @param {object} response - The response object from the API call.
-         * @param {object} embedMessage - Discord embed message object
-         * @param {object} collector - Discord collector object
-         * @param {function} func - Function to create embedMessage
-         */
-        function updateEmbed(page, response, embedMessage, collector, func) {
-            collector.on("collect", (r) => {
-                page = reactHandler(
-                    r,
-                    page,
-                    response,
-                    embedMessage,
-                    func
-                );
-            });
-            collector.on("remove", (r) => {
-                page = reactHandler(
-                    r,
-                    page,
-                    response,
-                    embedMessage,
-                    func
-                );
-            });
-        }
-
-        /**
          * Function to send embed message
-         * @param {object} embed - Discord embed object
          * @param {object} response - Response object from the API call
-         * @param {number} page - Which picture from the response to be displayed.
          * @param {number} mode - Which API to use (whether sauceNao or ascii2d)
          */
-        function sendEmbed(embed, response, page = 0, mode) {
-            message.channel.send(embed).then((embedMessage) => {
-                embedMessage.react("⬅️").then(embedMessage.react("➡️"));
-                const filter = (reaction, user) =>
-                    ["⬅️", "➡️"].includes(reaction.emoji.name) && !user.bot;
-                const collector = embedMessage.createReactionCollector(filter, {
-                    idle: 60000,
-                    dispose: true,
-                });
-                switch (mode) {
-                    case 1:
-                        updateEmbed(page, response, embedMessage, collector, createEmbed);
-                        break;
-                    case 2:
-                        updateEmbed(page, response, embedMessage, collector, createEmbed2);
-                }
-            });
+        function sendEmbed(response, mode) {
+            switch (mode) {
+                case 1:
+                    dynamicEmbed.createEmbedFlip(message, response, ["⬅️", "➡️"], createEmbed);
+                    break;
+                case 2:
+                    dynamicEmbed.createEmbedFlip(message, response, ["⬅️", "➡️"], createEmbed2);
+                    break;
+            }
         }
 
         /**
@@ -155,7 +87,6 @@ module.exports = {
          * @param {string} searchImage - url of the target image to search for.
          */
         function searchForImage(searchImage) {
-            let page = 0;
             let mode = 1;
             mySauce(searchImage, { results: 10 })
                 .then((result) => {
@@ -169,15 +100,11 @@ module.exports = {
                             let response2 = result2.items.filter(
                                 (r2) => r2.source !== 0
                             );
-                            response2[page].page = page;
-                            let embed = createEmbed2(response2[page]);
                             mode = 2;
-                            sendEmbed(embed, response2, page, mode);
+                            sendEmbed(response2, mode);
                         });
                     } else {
-                        response[page].page = page;
-                        let embed = createEmbed(response);
-                        sendEmbed(embed, response, page, mode);
+                        sendEmbed(response, mode);
                     }
                 })
                 .catch((error) => {

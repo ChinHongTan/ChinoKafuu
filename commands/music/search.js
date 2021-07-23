@@ -9,6 +9,8 @@ module.exports = {
 
         const ytsr = require("ytsr");
         const Discord = require("discord.js");
+        const DynamicEmbed = require("../../functions/dynamicEmbed");
+        let dynamicEmbed = new DynamicEmbed();
 
         /**
          * Creates a discord embed message
@@ -27,53 +29,19 @@ module.exports = {
                 .addField("Duration", item.duration)
                 .addField("Uploaded at", item.uploadedAt)
                 .setFooter(
-                    `${item.author.name}\nPage${item.page + 1}/${item.length}`,
+                    `${item.author.name}\nPage${item.page + 1}/${item.total}`,
                     item.author.bestAvatar.url
                 );
             return embed;
         }
 
-        /**
-         * Edit the embed based on user reaction
-         * @param {object} r - Reaction from user 
-         * @param {number} page - Which video to display
-         * @param {object} item - Youtube video search result
-         * @param {object} embedMessage - Discord embed message to be edited
-         * @param {object} collector - Discord collector object
-         * @return {number} Page
-         */
-        function flipEmbed(r, page, item, embedMessage, collector) {
-            let editedEmbed;
-            switch (r.emoji.name) {
-                case "⬅️":
-                    page -= 1;
-                    if (page < 0) {
-                        page = item.length - 1;
-                    }
-                    editedEmbed = createEmbed(item[page], page, item.length);
-                    embedMessage.edit(editedEmbed);
-                    break;
-                case "➡️":
-                    page += 1;
-                    if (page + 1 > item.length) {
-                        page = 0;
-                    }
-                    editedEmbed = createEmbed(item[page], page, item.length);
-                    embedMessage.edit(editedEmbed);
-                    break;
-                case "▶️":
-                    collector.stop();
-                    // plays the song
-                    message.content = `${prefix}play ${item[page].url}`;
-                    const args = message.content
-                        .slice(prefix.length)
-                        .trim()
-                        .split(/ +/);
-                    play.execute(message, args);
-                    embedMessage.delete();
-                    break;
-            }
-            return page;
+        function collectorFunc() {
+            message.content = `${prefix}play ${item[page].url}`;
+            const args = message.content
+                .slice(prefix.length)
+                .trim()
+                .split(/ +/);
+            play.execute(message, args);
         }
 
         /**
@@ -93,34 +61,10 @@ module.exports = {
                 limit: 10,
             });
             let item = searchResults.items;
-            let page = 0;
             if (item.length < 1) {
                 message.channel.send(`No video was found for ${keyword}!`);
             }
-            item[page].page = page;
-            item[page].length = item.length;
-            let embed = createEmbed(item[page]);
-
-            // creates an editable embed message
-            message.channel.send(embed).then((embedMessage) => {
-                embedMessage
-                    .react("⬅️")
-                    .then(embedMessage.react("➡️"))
-                    .then(embedMessage.react("▶️"));
-                const filter = (reaction, user) =>
-                    ["⬅️", "➡️", "▶️"].includes(reaction.emoji.name) &&
-                    !user.bot;
-                const collector = embedMessage.createReactionCollector(filter, {
-                    idle: 12000,
-                    dispose: true,
-                });
-                collector.on("collect", (r) => {
-                    page = flipEmbed(r, page, item, embedMessage, collector);
-                });
-                collector.on("remove", (r) => {
-                    page = flipEmbed(r, page, item, embedMessage, collector);
-                });
-            });
+            dynamicEmbed.createEmbedFlip(message, item, ["⬅️", "➡️", "▶️"], createEmbed, collectorFunc);
         }
         search(message);
     },

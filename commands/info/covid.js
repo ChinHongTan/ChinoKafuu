@@ -7,6 +7,8 @@ module.exports = {
         api.settings({
             baseUrl: "https://disease.sh",
         });
+        const DynamicEmbed = require("../../functions/dynamicEmbed");
+        let dynamicEmbed = new DynamicEmbed();
 
         /**
          * Create an Discord embed message
@@ -79,57 +81,6 @@ module.exports = {
             return embed;
         }
 
-        /**
-         * Function to update embed message after a user had reacted
-         * @param {object} r - Reaction from the user
-         * @param {number} page - Which result to be displayed
-         * @param {object} result - The result from the API.
-         * @param {object} embedMessage - Discord embed message.
-         * @returns {number} Page
-         */
-        function updateEmbed(r, page, result, embedMessage) {
-            let editedEmbed;
-            switch (r.emoji.name) {
-                case "⬅️":
-                    page -= 1;
-                    if (page < 0) page = result.length - 1;
-                    editedEmbed = createEmbed(result[page]);
-                    embedMessage.edit(editedEmbed);
-                    break;
-                case "➡️":
-                    page += 1;
-                    if (page + 1 > result.length) page = 0;
-                    editedEmbed = createEmbed(result[page]);
-                    embedMessage.edit(editedEmbed);
-                    break;
-            }
-            return page;
-        }
-
-        /**
-         * Creates and sends a reactable message
-         * @param {object} result - The result from the API.
-         */
-        function createEmbedFlip(result) {
-            let page = 0;
-            let embed = createEmbed(result[page]);
-            message.channel.send(embed).then((embedMessage) => {
-                embedMessage.react("⬅️").then(embedMessage.react("➡️"));
-                const filter = (reaction, user) =>
-                    ["⬅️", "➡️"].includes(reaction.emoji.name) && !user.bot;
-                const collector = embedMessage.createReactionCollector(filter, {
-                    idle: 60000,
-                    dispose: true,
-                });
-                collector.on("collect", (r) => {
-                    page = updateEmbed(r, page, result, embedMessage);
-                });
-                collector.on("remove", (r) => {
-                    page = updateEmbed(r, page, result, embedMessage);
-                });
-            });
-        }
-
         if (args.length < 1) {
             // no arguments were provided
             message.channel.send("Please provide a valid argument!");
@@ -153,7 +104,7 @@ module.exports = {
                 // get a list of data of all countries sorted by cases
                 api.countries({ sort: "cases", allowNull: false }).then(
                     (result) => {
-                        createEmbedFlip(result);
+                        dynamicEmbed.createEmbedFlip(message, result, ["⬅️", "➡️"], createEmbed);
                     }
                 );
             }
@@ -162,7 +113,7 @@ module.exports = {
                 // get a list of data of multiple specific countries
                 api.countries({ country: args, allowNull: false }).then(
                     (result) => {
-                        createEmbedFlip(result);
+                        dynamicEmbed.createEmbedFlip(message, result, ["⬅️", "➡️"], createEmbed);
                     }
                 );
             } else {
