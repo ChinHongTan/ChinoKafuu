@@ -1,8 +1,8 @@
 const ytdl = require("ytdl-core");
 const { PassThrough } = require("stream");
-const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
-const ffmpeg = require("fluent-ffmpeg");
-ffmpeg.setFfmpegPath(ffmpegPath);
+const ffmpegPath = require("@ffmpeg-installer/ffmpeg").path;
+const Ffmpeg = require("fluent-ffmpeg");
+Ffmpeg.setFfmpegPath(ffmpegPath);
 const { Util, MessageEmbed } = require("discord.js");
 const scdl = require("soundcloud-downloader").default;
 const queueData = require("../data/queueData");
@@ -21,17 +21,17 @@ async function play(guild, song, message) {
     }
     switch (song.source) {
         case "yt":
-            proc = new ffmpeg(
+            proc = new Ffmpeg(
                 ytdl(song.url, {
                     quality: "highestaudio",
                 })
             );
             break;
         case "sc":
-            proc = new ffmpeg(await scdl.download(song.url, scID));
+            proc = new Ffmpeg(await scdl.download(song.url, scID));
             break;
         default:
-            proc = new ffmpeg(ytdl(song.url));
+            proc = new Ffmpeg(ytdl(song.url));
             break;
     }
 
@@ -77,9 +77,9 @@ async function play(guild, song, message) {
         .addField("播放者", `<@!${serverQueue.songs[0].requseter}>`)
         .setFooter("音樂系統", message.client.user.displayAvatarURL());
     serverQueue.textChannel.send(embed);
-};
+}
 function hmsToSecondsOnly(str) {
-    var p = str.split(':'),
+    var p = str.split(":"),
         s = 0, m = 1;
 
     while (p.length > 0) {
@@ -90,7 +90,7 @@ function hmsToSecondsOnly(str) {
     return s;
 }
 module.exports = {
-    waitimport: async function (name, length, message) {
+    async waitimport(name, length, message) {
         return new Promise((resolve, reject) => {
             let embed = new MessageEmbed()
                 .setAuthor("清單", message.author.displayAvatarURL())
@@ -162,7 +162,7 @@ module.exports = {
             });
         });
     },
-    handleVideo: async function (
+    async handleVideo(
         videos,
         voiceChannel,
         playlist = false,
@@ -236,7 +236,7 @@ module.exports = {
             return message.channel.send(embed);
         }
     },
-    format: function(duration) {
+    format(duration) {
         // Hours, minutes and seconds
         var hrs = ~~(duration / 3600);
         var mins = ~~((duration % 3600) / 60);
