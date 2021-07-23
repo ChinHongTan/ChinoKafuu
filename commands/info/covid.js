@@ -93,7 +93,7 @@ module.exports = {
                 case "⬅️":
                     page -= 1;
                     if (page < 0) page = result.length - 1;
-                    editedEmbed = createEmbed(result[page], page);
+                    editedEmbed = createEmbed(result[page]);
                     embedMessage.edit(editedEmbed);
                     break;
                 case "➡️":

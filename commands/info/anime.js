@@ -18,20 +18,20 @@ module.exports = {
             return url.protocol === "http:" || url.protocol === "https:";
         }
 
-        function createEmbed(response, page = 0) {
-            let sourceURL = response[page].video;
-            let info = response[page].anilist;
+        function createEmbed(response) {
+            let sourceURL = response.video;
+            let info = response.anilist;
             let nativeTitle = info.title.native;
             let romajiTitle = info.title.romaji;
             let englishTitle = info.title.english;
             let nsfw = info.isAdult;
-            let episode = response[page].episode;
-            let similarity = response[page].similarity;
+            let episode = response.episode;
+            let similarity = response.similarity;
             let embed = new Discord.MessageEmbed()
                 .setTitle(nativeTitle)
                 .setDescription(`Similarity: ${similarity * 100}%`)
                 .setColor("#008000")
-                .setImage(response[page].thumbnail)
+                .setImage(response.thumbnail)
                 .addFields(
                     { name: "**Source URL**", value: sourceURL },
                     { name: "Native Title", value: nativeTitle },
@@ -40,7 +40,7 @@ module.exports = {
                     { name: "Episode", value: episode },
                     { name: "NSFW", value: nsfw }
                 )
-                .setFooter(`page ${page + 1}/${response.length}`);
+                .setFooter(`page ${response.page + 1}/${response.length}`);
             return [embed, sourceURL];
         }
 
@@ -48,13 +48,14 @@ module.exports = {
             if (r.emoji.name === "⬅️") {
                 page -= 1;
                 if (page < 0) page = response.length - 1;
-                let [editedEmbed, video] = createEmbed(response, page);
+                response[page].page = page;
+                let [editedEmbed, video] = createEmbed(response[page]);
                 embedMessage.edit(editedEmbed);
                 msg.edit(video);
             } else if (r.emoji.name === "➡️") {
                 page += 1;
                 if (page + 1 > response.length) page = 0;
-                let [editedEmbed, video] = createEmbed(response, page);
+                let [editedEmbed, video] = createEmbed(response[page]);
                 embedMessage.edit(editedEmbed);
                 msg.edit(video);
             }

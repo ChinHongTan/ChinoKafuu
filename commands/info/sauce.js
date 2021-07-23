@@ -16,25 +16,25 @@ module.exports = {
          * @param {number} page - Which picture from the response to be displayed.
          * @returns {object} Discord embed.
          */
-        function createEmbed(response, page) {
-            let sourceURL = response[page].url;
+        function createEmbed(response) {
+            let sourceURL = response.url;
             let info = "";
             for (const [key, value] of Object.entries(
-                response[page].raw.data
+                response.raw.data
             )) {
                 if (key === "ext_urls") continue;
                 info += `\`${key} : ${value}\`\n`;
             }
             let embed = new Discord.MessageEmbed()
-                .setTitle(response[page].site)
-                .setDescription(`Similarity: ${response[page].similarity}%`)
+                .setTitle(response.site)
+                .setDescription(`Similarity: ${response.similarity}%`)
                 .setColor("#008000")
-                .setImage(response[page].thumbnail)
+                .setImage(response.thumbnail)
                 .addFields(
                     { name: "**Source URL**", value: sourceURL },
                     { name: "Additional info", value: info }
                 )
-                .setFooter(`page ${page + 1}/${response.length}`);
+                .setFooter(`page ${response.page + 1}/${response.length}`);
             return embed;
         }
 
@@ -44,24 +44,24 @@ module.exports = {
          * @param {number} page - Which picture from the response to be displayed.
          * @returns {object} Discord embed.
          */
-        function createEmbed2(response, page) {
-            let sourceURL = response[page].source.url;
-            let title = response[page].source.title;
+        function createEmbed2(response) {
+            let sourceURL = response.source.url;
+            let title = response.source.title;
             let author = "No info found!";
-            if (response[page].source.author) {
-                let authorinfo = response[page].source.author;
+            if (response.source.author) {
+                let authorinfo = response.source.author;
                 author = `Name: ${authorinfo.name}\nLink: ${authorinfo.url}`;
             }
             let embed = new Discord.MessageEmbed()
-                .setTitle(response[page].source.type)
+                .setTitle(response.source.type)
                 .setColor("#008000")
-                .setImage(response[page].thumbnailUrl)
+                .setImage(response.thumbnailUrl)
                 .addFields(
                     { name: "**Source URL**", value: sourceURL },
                     { name: "Title", value: title },
                     { name: "Author", author }
                 )
-                .setFooter(`page ${page + 1}/${response.length}`);
+                .setFooter(`page ${response.page + 1}/${response.length}`);
             return embed;
         }
 
@@ -80,13 +80,15 @@ module.exports = {
                 case "⬅️":
                     page -= 1;
                     if (page < 0) page = response.length - 1;
-                    editedEmbed = embedFunc(response, page);
+                    response[page].page = page;
+                    editedEmbed = embedFunc(response[page]);
                     embedMessage.edit(editedEmbed);
                     break;
                 case "➡️":
                     page += 1;
                     if (page + 1 > response.length) page = 0;
-                    editedEmbed = embedFunc(response, page);
+                    response[page].page = page;
+                    editedEmbed = embedFunc(response);
                     embedMessage.edit(editedEmbed);
                     break;
             }
@@ -167,12 +169,14 @@ module.exports = {
                             let response2 = result2.items.filter(
                                 (r2) => r2.source !== 0
                             );
-                            let embed = createEmbed2(response2, page);
+                            response2[page].page = page;
+                            let embed = createEmbed2(response2[page]);
                             mode = 2;
                             sendEmbed(embed, response2, page, mode);
                         });
                     } else {
-                        let embed = createEmbed(response, page);
+                        response[page].page = page;
+                        let embed = createEmbed(response);
                         sendEmbed(embed, response, page, mode);
                     }
                 })

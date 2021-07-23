@@ -136,14 +136,14 @@ module.exports = {
          * @param {number} page - The position of displayed doujin in the array.
          * @returns {object} Discord embed.
          */
-        function createSearchEmbed(result, page) {
+        function createSearchEmbed(result) {
             let embed = new Discord.MessageEmbed()
-                .setTitle(result.results[page].title)
+                .setTitle(result.title)
                 .setDescription(
-                    `Book Id: ${result.results[page].id}\nLanguage: ${result.results[page].language}`
+                    `Book Id: ${result.id}\nLanguage: ${result.language}`
                 )
                 .setColor("#ff0000")
-                .setImage(result.results[page].thumbnail.s)
+                .setImage(result.thumbnail.s)
                 .setFooter("⬅️: Back, ➡️: Forward, ▶️: Read the book");
             return embed;
         }
@@ -154,9 +154,9 @@ module.exports = {
          * @param {number} page - The page number of the doujin being displayed.
          * @returns {object} Discord embed.
          */
-        function createBookEmbed(pages, page) {
+        function createBookEmbed(pages) {
             let embed = new Discord.MessageEmbed()
-                .setImage(pages[page])
+                .setImage(pages)
                 .setFooter("⬅️: Back, ➡️: Forward");
             return embed;
         }
@@ -168,7 +168,7 @@ module.exports = {
          * @param {number} [page = 0] - The page number of the doujin being displayed.
          */
         function generateContent(doujin, page = 0) {
-            let embed = createBookEmbed(doujin.pages, page);
+            let embed = createBookEmbed(doujin.pages[page]);
             let options = {
                 page: page,
                 result: doujin.pages,
@@ -214,7 +214,7 @@ module.exports = {
                     message.content.substr(message.content.indexOf(" "))
                 );
                 let page = 0;
-                let embed = createSearchEmbed(result, page);
+                let embed = createSearchEmbed(result.results[page]);
                 let options = {
                     page: page,
                     result: result,

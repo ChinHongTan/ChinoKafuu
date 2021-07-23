@@ -16,7 +16,7 @@ module.exports = {
          * @param {number} page - Total number of videos
          * @returns {object} Discord embed
          */
-        function createEmbed(item, page, length) {
+        function createEmbed(item) {
             let embed = new Discord.MessageEmbed()
                 .setURL(item.url)
                 .setTitle(item.title)
@@ -27,7 +27,7 @@ module.exports = {
                 .addField("Duration", item.duration)
                 .addField("Uploaded at", item.uploadedAt)
                 .setFooter(
-                    `${item.author.name}\nPage${page + 1}/${length}`,
+                    `${item.author.name}\nPage${item.page + 1}/${item.length}`,
                     item.author.bestAvatar.url
                 );
             return embed;
@@ -97,7 +97,9 @@ module.exports = {
             if (item.length < 1) {
                 message.channel.send(`No video was found for ${keyword}!`);
             }
-            let embed = createEmbed(item[page], page, item.length);
+            item[page].page = page;
+            item[page].length = item.length;
+            let embed = createEmbed(item[page]);
 
             // creates an editable embed message
             message.channel.send(embed).then((embedMessage) => {
