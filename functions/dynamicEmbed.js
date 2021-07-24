@@ -20,6 +20,9 @@ function updateEmbed(r, page, itemList, embedMessage, createEmbed, collector, co
             itemList[page].total = itemList.length;
             editedEmbed = createEmbed(itemList[page]);
             embedMessage.edit(editedEmbed);
+            if (collectorParams && collectorParams.length > 1) {
+                collectorParams[1] = page;
+            }
             break;
         case "➡️":
             page += 1;
@@ -28,6 +31,9 @@ function updateEmbed(r, page, itemList, embedMessage, createEmbed, collector, co
             itemList[page].total = itemList.length;
             editedEmbed = createEmbed(itemList[page]);
             embedMessage.edit(editedEmbed);
+            if (collectorParams && collectorParams.length > 1) {
+                collectorParams[1] = page;
+            }
             break;
         case "▶️":
             collector.stop();
@@ -45,8 +51,10 @@ class DynamicEmbed {
     */
     createEmbedFlip(message, itemList, emojiList, createEmbed, collectorFunc, collectorParams) {
         let page = 0;
-        itemList[page].page = page;
-        itemList[page].total = itemList.length;
+        if (typeof itemList[page] === "object") {
+            itemList[page].page = page;
+            itemList[page].total = itemList.length;
+        }
         let embed = createEmbed(itemList[page]);
         message.channel.send(embed).then(async (embedMessage) => {
             for (let emoji of emojiList) {

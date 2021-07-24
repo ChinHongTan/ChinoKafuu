@@ -77,7 +77,7 @@ module.exports = {
          * @param {number} [page = 0] - The page number of the doujin being displayed.
          */
         function generateContent(doujin) {
-            dynamicEmbed.createEmbedFlip(message, doujin, ["⬅️", "➡️"], createBookEmbed);
+            dynamicEmbed.createEmbedFlip(message, doujin.pages, ["⬅️", "➡️"], createBookEmbed);
         }
 
         /**
@@ -88,7 +88,7 @@ module.exports = {
          */
         function generateDoujin(result, page) {
             nhentai.getDoujin(result.results[page].id).then((doujin) => {
-                dynamicEmbed.createEmbedFlip(message, doujin, ["▶️"], createDoujinEmbed, generateContent, [doujin]);
+                dynamicEmbed.createEmbedFlip(message, [doujin], ["▶️"], createDoujinEmbed, generateContent, [doujin]);
             });
         }
 
@@ -97,7 +97,7 @@ module.exports = {
             if (Number(args[0])) {
                 if (nhentai.exists(args[0])) {
                     const doujin = await nhentai.getDoujin(args[0]);
-                    dynamicEmbed.createEmbedFlip(message, doujin, ["▶️"], createDoujinEmbed, generateContent, [doujin]);
+                    dynamicEmbed.createEmbedFlip(message, [doujin], ["▶️"], createDoujinEmbed, generateContent, [doujin]);
                 } else {
                     return message.channel.send("The book ID doesn't exist!");
                 }
@@ -107,7 +107,7 @@ module.exports = {
                     message.content.substr(message.content.indexOf(" "))
                 );
                 let page = 0;
-                dynamicEmbed.createEmbedFlip(message, result, ["⬅️", "➡️", "▶️"], createSearchEmbed, generateDoujin, [result, page])
+                dynamicEmbed.createEmbedFlip(message, result.results, ["⬅️", "➡️", "▶️"], createSearchEmbed, generateDoujin, [result, page])
             }
         })();
     },
