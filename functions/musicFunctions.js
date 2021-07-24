@@ -57,7 +57,8 @@ async function play(guild, song, message) {
             }
             console.log(reason);
             if (!serverQueue.loop) {
-                serverQueue.songs.shift();
+                let playedSong = serverQueue.songs.shift();
+                serverQueue.songHistory.push(playedSong);
             }
             stream.destroy();
             play(guild, serverQueue.songs[0], message);
