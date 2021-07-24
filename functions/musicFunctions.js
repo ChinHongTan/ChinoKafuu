@@ -236,6 +236,9 @@ module.exports = {
             return message.channel.send(embed);
         }
     },
+    async play(guild, song, message) {
+        play(guild, song, message);
+    },
     format(duration) {
         // Hours, minutes and seconds
         var hrs = ~~(duration / 3600);
