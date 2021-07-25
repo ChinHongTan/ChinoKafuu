@@ -18,26 +18,25 @@ module.exports = {
         let songHistory = serverQueue.songHistory;
         let songs = serverQueue.songs;
         let songHistoryUrls = songHistory.map((song) => song.url);
+        let songUrls = songs.map((song) => song.url);
         let lastSong = songs[songs.length - 1];
         const { handleVideo } = require("../../functions/musicFunctions");
 
         function avoidRepeatedSongs(result) {
-            let found = false;
-            let url;
-            while (!found) {
-                let randInt = Math.floor(Math.random() * 5);
-                url = result[randInt];
-                if (songHistoryUrls.includes(url)) {
-                    result.splice(randInt, 1);
+            let url, index = 0;
+            for (let i = 0; i < result.length; i++) {
+                url = result[index];
+                if (songHistoryUrls.includes(url) || songUrls.includes(url)) {
+                    result.splice(index, 1);
                 } else {
-                    found = true;
+                    break;
                 }
             }
             return url;
         }
 
         message.channel.send("Searching for related tracks...");
-        let data, url, result;
+        let data, url, result, videos;
         
         switch (lastSong.source) {
             case "sc":
@@ -65,7 +64,7 @@ module.exports = {
                 data = await ytdl.getInfo(lastSong.url);
                 result = data.related_videos.map((song) => `https://www.youtube.com/watch?v=${song.id}`);
                 url = avoidRepeatedSongs(result);
-                let videos = await ytsr.getVideo(url);
+                videos = await ytsr.getVideo(url);
                 await handleVideo(
                     [videos],
                     voiceChannel,
@@ -79,7 +78,7 @@ module.exports = {
                 data = await ytdl.getInfo(lastSong.url);
                 result = data.related_videos.map((song) => `https://www.youtube.com/watch?v=${song.id}`);
                 url = avoidRepeatedSongs(result);
-                let videos = await ytsr.getVideo(url);
+                videos = await ytsr.getVideo(url);
                 await handleVideo(
                     [videos],
                     voiceChannel,
