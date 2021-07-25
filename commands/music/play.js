@@ -327,7 +327,7 @@ module.exports = {
                         b.clicker.user.id == message.author.id &&
                         b.guild.id == message.guild.id,
                     {
-                        time: 10000,
+                        time: 100000,
                     }
                 );
                 col.on("collect", async (menu) => {
