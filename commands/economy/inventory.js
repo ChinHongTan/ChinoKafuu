@@ -4,7 +4,7 @@ module.exports = {
     aliases: ["inv"],
     description: "Show your inventory.",
     execute(message, args) {
-        const { Users } = require("../data/dbObjects");
+        const { Users } = require("../../data/dbObjects");
         const Discord = require("discord.js");
         let currency = new Discord.Collection();
         (async () => {
