@@ -23,11 +23,11 @@ module.exports = {
         const { handleVideo } = require("../../functions/musicFunctions");
 
         function avoidRepeatedSongs(result) {
-            let url, index = 0;
+            let url;
             for (let i = 0; i < result.length; i++) {
-                url = result[index];
+                url = result[i];
                 if (songHistoryUrls.includes(url) || songUrls.includes(url)) {
-                    result.splice(index, 1);
+                    result.splice(i, 1);
                 } else {
                     break;
                 }
@@ -62,17 +62,51 @@ module.exports = {
                 break;
             case "yt":
                 data = await ytdl.getInfo(lastSong.url);
-                result = data.related_videos.map((song) => `https://www.youtube.com/watch?v=${song.id}`);
-                url = avoidRepeatedSongs(result);
-                videos = await ytsr.getVideo(url);
-                await handleVideo(
-                    [videos],
-                    voiceChannel,
-                    false,
-                    serverQueue,
-                    "yt",
-                    message
+                let relatedVids = data.related_videos;
+                let relatedVidsInfo = [], mark = 0, searchUrl, response;
+                await Promise.all(
+                    relatedVids.map(async (vid) => {
+                        searchUrl = `https://www.youtube.com/watch?v=${vid.id}`;
+                        response = await ytdl.getBasicInfo(searchUrl);
+                        relatedVidsInfo.push(response.videoDetails);
+                    })
                 );
+                relatedVidsInfo.forEach((item) => {
+                    if (item.media.category === "Music") mark += 1;
+                    if (item.category === "Music") mark += 2;
+                    item.mark = mark;
+                });
+                
+                relatedVidsInfo.sort((a, b) => b.mark - a.mark);
+
+                let authorId = data.videoDetails.author.id;
+                let bestTrack = relatedVidsInfo.filter((vid) => vid.author.id === authorId && vid.mark > 0);
+                if (bestTrack.length > 0) {
+                    urlList = bestTrack.map((song) => song.video_url);
+                    url = avoidRepeatedSongs(urlList);
+                    videos = await ytsr.getVideo(url);
+                    await handleVideo(
+                        [videos],
+                        voiceChannel,
+                        false,
+                        serverQueue,
+                        "yt",
+                        message
+                    );
+                } else {
+                    urlList = relatedVidsInfo.map((song) => song.video_url);
+                    url = avoidRepeatedSongs(urlList);
+                    videos = await ytsr.getVideo(url);
+                    await handleVideo(
+                        [videos],
+                        voiceChannel,
+                        false,
+                        serverQueue,
+                        "yt",
+                        message
+                    );
+                }
+                
                 break;
             default:
                 data = await ytdl.getInfo(lastSong.url);
