@@ -74,9 +74,11 @@ module.exports = {
         function sendEmbed(response, mode) {
             switch (mode) {
                 case 1:
+                    // saucenao
                     dynamicEmbed.createEmbedFlip(message, response, ["⬅️", "➡️"], createEmbed);
                     break;
                 case 2:
+                    // ascii2d
                     dynamicEmbed.createEmbedFlip(message, response, ["⬅️", "➡️"], createEmbed2);
                     break;
             }
@@ -88,12 +90,14 @@ module.exports = {
          */
         function searchForImage(searchImage) {
             let mode = 1;
+            // start with saucenao
             mySauce(searchImage, { results: 10 })
                 .then((result) => {
                     let response = result.filter((r) => r.similarity > 80);
                     console.log("request sucessful");
 
                     if (response.length < 1) {
+                        // search with ascii2d
                         searchByUrl(searchImage, "bovw").then((result2) => {
                             if (!result2 || result2.length < 1)
                                 return message.channel.send("No result!");
