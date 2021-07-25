@@ -25,7 +25,7 @@ module.exports = {
             let found = false;
             let url;
             while (!found) {
-                let randInt = Math.floor(Math.randon() * 5);
+                let randInt = Math.floor(Math.random() * 5);
                 url = result[randInt];
                 if (songHistoryUrls.includes(url)) {
                     result.splice(randInt, 1);
@@ -63,9 +63,21 @@ module.exports = {
                 break;
             case "yt":
                 data = await ytdl.getInfo(lastSong.url);
-                console.log(data);
-                result = data.related_tracks.map((song) => `https://www.youtube.com/watch?v=${song.id}`);
-                console.log(result)
+                result = data.related_videos.map((song) => `https://www.youtube.com/watch?v=${song.id}`);
+                url = avoidRepeatedSongs(result);
+                let videos = await ytsr.getVideo(url);
+                await handleVideo(
+                    [videos],
+                    voiceChannel,
+                    false,
+                    serverQueue,
+                    "yt",
+                    message
+                );
+                break;
+            default:
+                data = await ytdl.getInfo(lastSong.url);
+                result = data.related_videos.map((song) => `https://www.youtube.com/watch?v=${song.id}`);
                 url = avoidRepeatedSongs(result);
                 let videos = await ytsr.getVideo(url);
                 await handleVideo(
