@@ -14,7 +14,6 @@ module.exports = {
         }, {});
 
         for (let [name, id] of Object.entries(emojiObj)) {
-            console.log(name);
             if (name.startsWith("a:")) {
                 message.guild.emojis
                     .create(

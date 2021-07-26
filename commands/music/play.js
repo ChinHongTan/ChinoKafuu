@@ -247,8 +247,9 @@ module.exports = {
                     data.tracks.length,
                     message
                 );
+                let m;
                 if (wait) {
-                    let m = await message.channel.send(
+                    m = await message.channel.send(
                         `✅ Playlist: **${data.title}** importing`
                     );
                     for (let i in data.tracks) {
