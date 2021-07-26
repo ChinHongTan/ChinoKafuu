@@ -2,11 +2,8 @@ module.exports = {
     name: "game",
     cooldown: 3,
     description: "A little Connect 4 game!",
-    execute(message, args) {
-        const Canvas = require("canvas");
+    async execute(message) {
         const Discord = require("discord.js");
-        const newLocal = "imgbb-uploader";
-        const imgbbUploader = require(newLocal);
 
         // a class of a single square on the board
         class Square {
@@ -16,23 +13,23 @@ module.exports = {
                 this.occupied = occupied;
                 this.coordinate = coordinate;
             }
-            // calculate where to draw the coloured discs
-            pixel(width, height) {
+            // calculate where to draw the piece
+            pixel() {
                 let array = this.coordinate.split("");
-                x = ((array[0] - 0.5) * width) / 7;
-                y = ((array[1] - 0.5) * height) / 6;
+                x = array[0];
+                y = array[1];
                 return [x, y];
             }
             // whether this square had been occupied
             get isOccupied() {
                 return this.occupied;
             }
-            set isOccupied(round) {
-                this.occupied = round;
+            set isOccupied(name) {
+                this.occupied = name;
             }
         }
 
-        //a function to place new coloured discs
+        //a function to place new piece
         function place(column, round, squares) {
             let placed = false;
             let coordinate = "";
@@ -44,7 +41,7 @@ module.exports = {
                 } else {
                     // say this is Blue’s turn
                     // round refers to Blue's turn
-                    square.isOccupied = round;
+                    square.isOccupied = round.name;
                     placed = true;
                     break;
                 }
@@ -66,7 +63,7 @@ module.exports = {
             let win = false;
             let spaces = [];
             for (let [coordinate, square] of Object.entries(s)) {
-                if (square.isOccupied == r) {
+                if (square.isOccupied == r.name) {
                     spaces.push(coordinate);
                 }
             }
@@ -83,53 +80,32 @@ module.exports = {
             return win;
         }
 
-        async function draw(squares, coordinate, round) {
-            return new Promise((resolve, reject) => {
-                [x, y] = squares[coordinate].pixel(700, 600);
-                context.beginPath();
-                context.arc(x, y, 40, 0, 2 * Math.PI);
-                context.fillStyle = round;
-                context.fill();
-                getImageUrl(canvas.toBuffer(), coordinate).then((url) => {
-                    resolve(url);
-                });
-            });
+        function draw(squares, coordinate, round, board) {
+            [x, y] = squares[coordinate].pixel();
+            board[+y - 1][+x - 1] = round.emoji;
+            return board;
         }
 
-        function createEmbed(round, url) {
+        function createEmbed(round, board) {
+            let boardStr = stringify(board);
             let embed = new Discord.MessageEmbed()
                 .setTitle("**CONNECT FOUR**")
-                .setDescription(`It's now ${round}'s turn!`)
+                .setDescription(`It's now ${round.name}'s turn!\n${boardStr}`)
                 .setColor("#ff0000")
-                .setImage(url);
             return embed;
         }
 
-        async function getImageUrl(buffer, coordinate) {
-            return new Promise((resolve, reject) => {
-                let url = "";
-                const options = {
-                    apiKey: "dd9b7c075a7603838dcc33e0e9ed1475", // MANDATORY
-
-                    name: `connect-four-board${coordinate}.png`, // OPTIONAL: pass a custom filename to imgBB API
-
-                    base64string: buffer.toString("base64"),
-                };
-                imgbbUploader(options)
-                    .then((response) => {
-                        url = response.url;
-                        resolve(url);
-                    })
-                    .catch((error) => console.error(error));
-            });
+        function drawBoard(sizeX, sizeY) {
+            let board = [];
+            for (let y = 0; y < sizeY; y++) {
+                let column = [];
+                for (let x = 0; x < sizeX; x++) {
+                    column.push("⚪");
+                }
+                board.push(column);
+            }
+            return board;
         }
-
-        const canvas = Canvas.createCanvas(700, 600);
-        const context = canvas.getContext("2d");
-
-        //draws a 700 x 600 blue rectangle
-        context.fillStyle = "blue";
-        context.fillRect(0, 0, canvas.width, canvas.height);
 
         let combos = [];
         let x = ["1", "2", "3", "4", "5", "6", "7"];
@@ -142,13 +118,9 @@ module.exports = {
         let squares = {};
         combos.forEach((coordinate) => {
             var square = new Square("white", coordinate);
-            [corX, corY] = square.pixel(700, 600);
             squares[coordinate] = square;
-            context.beginPath();
-            context.arc(corX, corY, 40, 0, 2 * Math.PI);
-            context.fillStyle = "white";
-            context.fill();
         });
+        let board = drawBoard(7, 6);
 
         const reactCol = {
             "1️⃣": 1,
@@ -159,60 +131,69 @@ module.exports = {
             "6️⃣": 6,
             "7️⃣": 7,
         };
+        const emojiList = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣"];
 
-        let round = "red";
+        let round = {
+            "name": "red",
+            "emoji": "🔴"
+        };
         let coordinate = "00";
         let win = false;
 
-        getImageUrl(canvas.toBuffer(), coordinate).then((url) => {
-            embed = createEmbed(round, url);
-            message.channel.send(embed).then((embedMessage) => {
-                embedMessage
-                    .react("1️⃣")
-                    .then(embedMessage.react("2️⃣"))
-                    .then(embedMessage.react("3️⃣"))
-                    .then(embedMessage.react("4️⃣"))
-                    .then(embedMessage.react("5️⃣"))
-                    .then(embedMessage.react("6️⃣"))
-                    .then(embedMessage.react("7️⃣"));
-                const filter = (reaction, user) =>
-                    ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣"].includes(
-                        reaction.emoji.name
-                    ) && !user.bot;
-                const collector = embedMessage.createReactionCollector(filter, {
-                    idle: 600000,
-                    dispose: true,
-                });
-                collector.on("collect", (r) => {
-                    doMove(r);
-                });
-                collector.on("remove", (r) => {
-                    doMove(r);
-                });
-            });
+        embed = createEmbed(round, board);
+        let embedMessage = await message.channel.send(embed);
+        for (emoji of emojiList) {
+            await embedMessage.react(emoji);
+        }
+        const filter = (reaction, user) =>
+            emojiList.includes(reaction.emoji.name) && !user.bot;
+        const collector = embedMessage.createReactionCollector(filter, {
+            idle: 600000,
+            dispose: true,
+        });
+        collector.on("collect", (r) => {
+            round = doMove(r, embedMessage, round);
+        });
+        collector.on("remove", (r) => {
+            round = doMove(r, embedMessage, round);
         });
         
-        function doMove(r) {
+        function doMove(r, embedMessage, round) {
             [win, coordinate] = place(
                 reactCol[r.emoji.name],
                 round,
                 squares
             );
-            draw(squares, coordinate, round).then((url) => {
-                let editedEmbed = createEmbed(round, url);
-                embedMessage.edit(editedEmbed);
-            });
+            board = draw(squares, coordinate, round, board);
             if (win) {
                 collector.stop();
                 return message.channel.send(
-                    `${round} had won the game!`
+                    `${round.name} had won the game!`
                 );
             }
-            if (round == "red") {
-                round = "yellow";
+            if (round.name === "red") {
+                round.name = "yellow";
+                round.emoji = "🟡";
             } else {
-                round = "red";
+                round.name = "red";
+                round.emoji = "🔴"
             }
+            let editedEmbed = createEmbed(round, board);
+            embedMessage.edit(editedEmbed);
+            return round;
+        }
+
+        function stringify(board) {
+            var result = "";
+            for (let i = 0; i < 6; i++) {
+                var sub = "";
+                for (let j = 0; j < 7; j++) {
+                    sub += board[i][j];
+                }
+                result += sub + "\n";
+            }
+    
+            return result;
         }
     },
 };
