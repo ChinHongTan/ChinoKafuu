@@ -8,9 +8,10 @@ module.exports = {
 
         let rawData = fs.readFileSync("./data/snipes.json");
         let snipeWithGuild = new Map(JSON.parse(rawData));
+        let snipes;
 
         if (snipeWithGuild.has(message.guild.id)) {
-            var snipes = snipeWithGuild.get(message.guild.id);
+            snipes = snipeWithGuild.get(message.guild.id);
         } else {
             return message.channel.send("There's nothing to snipe!");
         }

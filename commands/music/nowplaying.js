@@ -19,7 +19,7 @@ module.exports = {
                 .setColor("#ff0000")
                 .setTitle("**Now playing ♪**")
                 .setDescription(
-                    `[${song.title}](${song.url})\n\`[${format(dispatcher.streamTime / 1000)}/${format(song.duration)}]\`\n${progressbar.splitBar(song.duration, dispatcher.streamTime / 1000, size = 15)[0]}`
+                    `[${song.title}](${song.url})\n\`[${format(dispatcher.streamTime / 1000)}/${format(song.duration)}]\`\n${progressbar.splitBar(song.duration, dispatcher.streamTime / 1000, 15)[0]}`
                 )
                 .setThumbnail(song.thumb)
                 .addField("Requested by:", `<@!${song.requseter}>`)

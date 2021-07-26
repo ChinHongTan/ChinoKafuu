@@ -44,7 +44,7 @@ module.exports = {
         }
         // check if an id is provided
         let user = message.guild.members.cache.find(
-            (member) => member.user.id == args[0]
+            (member) => member.user.id === args[0]
         );
         // if id exists
         if (user) {
@@ -83,7 +83,7 @@ module.exports = {
             );
         }
         let member = message.guild.members.cache.find(
-            (member) => member.user.tag == result[0].obj.tag
+            (member) => member.user.tag === result[0].obj.tag
         );
 
         const embed = new Discord.MessageEmbed()

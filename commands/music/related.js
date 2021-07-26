@@ -35,24 +35,62 @@ module.exports = {
             return url;
         }
 
+        function playRelatedTrack(relatedVideos) {
+            let urlList = relatedVideos.map((song) => song.video_url);
+            let url = avoidRepeatedSongs(urlList);
+            let videos = await ytsr.getVideo(url);
+            await handleVideo(
+                [videos],
+                voiceChannel,
+                false,
+                serverQueue,
+                "yt",
+                message
+            );
+        }
+
+        async function getRelatedTrackInfo(relatedVideos) {
+            let relatedVidsInfo = [];
+            await Promise.all(
+                relatedVideos.map(async (vid) => {
+                    let searchUrl = `https://www.youtube.com/watch?v=${vid.id}`;
+                    let response = await ytdl.getBasicInfo(searchUrl);
+                    relatedVidsInfo.push(response.videoDetails);
+                })
+            );
+            return relatedVidsInfo;
+        }
+
+        function sortRelatedTracks(relatedVidsInfo) {
+            let mark = 0;
+            relatedVidsInfo.forEach((item) => {
+                if (item.media.category === "Music") {mark += 1;}
+                if (item.category === "Music") {mark += 2;}
+                item.mark = mark;
+            });
+            
+            relatedVidsInfo.sort((a, b) => b.mark - a.mark);
+            return relatedVidsInfo;
+        }
+
         message.channel.send("Searching for related tracks...");
-        let data, url, result, videos;
+        let data, url, result, relatedVideos, urlList, relatedVidsInfo = []
+        let videos, authorId, bestTrack;
         
         switch (lastSong.source) {
             case "sc":
-                let r = await scdl.getInfo(lastSong.url);
-                let id = r.id;
-                let s = await scdl.related(id, 5, 0);
-                result = s.collection.map((song) => song.permalink_url);
-                url = avoidRepeatedSongs(result);
-                data = await scdl.getInfo(url).catch((err) => {
+                data = await scdl.getInfo(lastSong.url);
+                relatedVideos = await scdl.related(data.id, 5, 0);
+                urlList = videos.collection.map((song) => song.permalink_url);
+                url = avoidRepeatedSongs(urlList);
+                result = await scdl.getInfo(url).catch((err) => {
                     console.log(err);
                     throw message.channel.send(
                         "🆘 I could not obtain any search results."
                     );
                 });
                 await handleVideo(
-                    data,
+                    result,
                     voiceChannel,
                     false,
                     serverQueue,
@@ -62,65 +100,18 @@ module.exports = {
                 break;
             case "yt":
                 data = await ytdl.getInfo(lastSong.url);
-                let relatedVids = data.related_videos;
-                let relatedVidsInfo = [], mark = 0, searchUrl, response;
-                await Promise.all(
-                    relatedVids.map(async (vid) => {
-                        searchUrl = `https://www.youtube.com/watch?v=${vid.id}`;
-                        response = await ytdl.getBasicInfo(searchUrl);
-                        relatedVidsInfo.push(response.videoDetails);
-                    })
-                );
-                relatedVidsInfo.forEach((item) => {
-                    if (item.media.category === "Music") mark += 1;
-                    if (item.category === "Music") mark += 2;
-                    item.mark = mark;
-                });
-                
-                relatedVidsInfo.sort((a, b) => b.mark - a.mark);
+                relatedVideos = data.related_videos;
+                relatedVidsInfo = await getRelatedTrackInfo(relatedVideos);
+                sortRelatedTracks(relatedVidsInfo);
 
-                let authorId = data.videoDetails.author.id;
-                let bestTrack = relatedVidsInfo.filter((vid) => vid.author.id === authorId && vid.mark > 0);
+                authorId = data.videoDetails.author.id;
+                bestTrack = relatedVidsInfo.filter((vid) => vid.author.id === authorId && vid.mark > 0);
                 if (bestTrack.length > 0) {
-                    urlList = bestTrack.map((song) => song.video_url);
-                    url = avoidRepeatedSongs(urlList);
-                    videos = await ytsr.getVideo(url);
-                    await handleVideo(
-                        [videos],
-                        voiceChannel,
-                        false,
-                        serverQueue,
-                        "yt",
-                        message
-                    );
+                    playRelatedTrack(bestTrack);
                 } else {
-                    urlList = relatedVidsInfo.map((song) => song.video_url);
-                    url = avoidRepeatedSongs(urlList);
-                    videos = await ytsr.getVideo(url);
-                    await handleVideo(
-                        [videos],
-                        voiceChannel,
-                        false,
-                        serverQueue,
-                        "yt",
-                        message
-                    );
+                    playRelatedTrack(relatedVidsInfo);
                 }
                 
-                break;
-            default:
-                data = await ytdl.getInfo(lastSong.url);
-                result = data.related_videos.map((song) => `https://www.youtube.com/watch?v=${song.id}`);
-                url = avoidRepeatedSongs(result);
-                videos = await ytsr.getVideo(url);
-                await handleVideo(
-                    [videos],
-                    voiceChannel,
-                    false,
-                    serverQueue,
-                    "yt",
-                    message
-                );
                 break;
         }
     },

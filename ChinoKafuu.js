@@ -98,7 +98,7 @@ client.on("message", async (message) => {
     if (!command) {
         let keys = Array.from(client.commands.keys());
         let distances = new Map();
-        for (cmd of keys) {
+        for (let cmd of keys) {
             distances.set(cmd, functions.getEditDistance(commandName, cmd));
         }
         let recommendation = new Map([...distances].filter(([k, v]) => v <= 2).sort((a, b) => a[1] - b[1]));

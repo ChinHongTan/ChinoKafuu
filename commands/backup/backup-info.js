@@ -4,7 +4,8 @@ module.exports = {
     aliases: ["bi"],
     description: "Load a backup info.",
     execute(message, args) {
-        backup = require("discord-backup");
+        const backup = require("discord-backup");
+        const Discord = require("discord.js");
         let backupID = args[0];
         if (!backupID) {
             return message.channel.send(

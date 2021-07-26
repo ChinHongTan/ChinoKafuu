@@ -9,7 +9,7 @@ module.exports = {
         const imageFiles = fs
             .readdirSync("./images")
             .filter((file) => file.endsWith(".json"));
-        let pictures = new Object();
+        let pictures = {};
 
         for (const filename of imageFiles) {
             let rawdata = fs.readFileSync(`./images/${filename}`);

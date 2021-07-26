@@ -36,7 +36,7 @@ module.exports = {
             for (var i = 6; i > 0; i--) {
                 coordinate = (column * 10 + i).toString();
                 let square = squares[coordinate];
-                if (square.isOccupied != "white") {
+                if (square.isOccupied !== "white") {
                     // pass
                 } else {
                     // say this is Blue’s turn
@@ -63,7 +63,7 @@ module.exports = {
             let win = false;
             let spaces = [];
             for (let [coordinate, square] of Object.entries(s)) {
-                if (square.isOccupied == r.name) {
+                if (square.isOccupied === r.name) {
                     spaces.push(coordinate);
                 }
             }
@@ -140,9 +140,9 @@ module.exports = {
         let coordinate = "00";
         let win = false;
 
-        embed = createEmbed(round, board);
+        let embed = createEmbed(round, board);
         let embedMessage = await message.channel.send(embed);
-        for (emoji of emojiList) {
+        for (let emoji of emojiList) {
             await embedMessage.react(emoji);
         }
         const filter = (reaction, user) =>

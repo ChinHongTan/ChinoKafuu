@@ -11,7 +11,7 @@ module.exports = {
         const Discord = require("discord.js");
         const DynamicEmbed = require("../../functions/dynamicEmbed");
         let dynamicEmbed = new DynamicEmbed();
-        const array_chunks = (array, chunk_size) => Array(Math.ceil(array.length / chunk_size)).fill().map((_, index) => index * chunk_size).map(begin => array.slice(begin, begin + chunk_size));
+        const array_chunks = (array, chunkSize) => Array(Math.ceil(array.length / chunkSize)).fill().map((_, index) => index * chunkSize).map(begin => array.slice(begin, begin + chunkSize));
 
         /**
          * Create an Discord embed message

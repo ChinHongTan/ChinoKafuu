@@ -248,7 +248,7 @@ module.exports = {
                     message
                 );
                 if (wait) {
-                    var m = await message.channel.send(
+                    let m = await message.channel.send(
                         `✅ Playlist: **${data.title}** importing`
                     );
                     for (let i in data.tracks) {
@@ -324,8 +324,8 @@ module.exports = {
             message.channel.send("請選擇歌曲", menu).then((msg) => {
                 let col = msg.createMenuCollector(
                     (b) =>
-                        b.clicker.user.id == message.author.id &&
-                        b.guild.id == message.guild.id,
+                        b.clicker.user.id === message.author.id &&
+                        b.guild.id === message.guild.id,
                     {
                         time: 100000,
                     }

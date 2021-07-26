@@ -92,8 +92,7 @@ module.exports = {
                         inline: false,
                     }
                 )
-                .setTimestamp()
-                .setFooter(`Last updated: ${timestamp}`);
+                .setTimestamp();
             return embed;
         }
         if (!message.mentions.members.size) {

@@ -4,10 +4,10 @@ module.exports = {
     cooldown: 5,
     execute(message, args) {
         const Discord = require("discord.js");
-        const sagiri_token =
+        const sagiriToken =
             process.env.SAGIRI || require("../../config/config.json").sagiri_token;
         const sagiri = require("sagiri");
-        let mySauce = sagiri(sagiri_token);
+        let mySauce = sagiri(sagiriToken);
         const { searchByUrl } = require("ascii2d");
         const DynamicEmbed = require("../../functions/dynamicEmbed");
         let dynamicEmbed = new DynamicEmbed();

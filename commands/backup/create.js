@@ -5,8 +5,8 @@ module.exports = {
     guildOnly: true,
     description: "Create a server backup",
     execute(message, args) {
-        backup = require("discord-backup");
-        const prefix = "c!";
+        const backup = require("discord-backup");
+        const prefix = process.env.PREFIX || require("../../config/config.json").prefix;
         let max;
         if (args.length < 1) {
             max = 10;

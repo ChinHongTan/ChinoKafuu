@@ -2,11 +2,11 @@ var axios = require("axios");
 var btoa = require("btoa");
 
 class spotify {
-    constructor(client_id, client_secret) {
-        this.client_id = client_id;
-        this.client_secret = client_secret;
+    constructor(clientId, clientSecret) {
+        this.clientId = clientId;
+        this.clientSecret = clientSecret;
         this.token = "";
-        this.header = btoa(client_id + ":" + client_secret);
+        this.header = btoa(clientId + ":" + clientSecret);
         this.api_base = "https://api.spotify.com/v1/";
     }
     async gettoken() {
@@ -34,7 +34,7 @@ class spotify {
                 Authorization: "Bearer " + token,
             },
         });
-        if (a.status != 200) {
+        if (a.status !== 200) {
             throw `Issue making request to ${url} status ${a.status} error ${a}`;
         }
         return a.data;
@@ -60,7 +60,7 @@ class spotify {
             }
         }
         var token = await this.gettoken();
-        if (this.token == undefined) {
+        if (this.token === undefined) {
             throw console.error(
                 "Requested a token from Spotify, did not end up getting one"
             );

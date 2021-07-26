@@ -19,7 +19,7 @@ module.exports = {
             );
         }
         try {
-            var rawdata = fs.readFileSync("./my-backups/" + backupID + ".json");
+            let rawdata = fs.readFileSync("./my-backups/" + backupID + ".json");
         } catch (err) {
             return message.channel.send(
                 ":x: | No backup found for `" + backupID + "`!"
@@ -68,6 +68,7 @@ module.exports = {
                         }
                     )
                     .catch((err) => {
+                        console.error(err);
                         // if the author of the commands does not confirm the backup loading
                         return message.channel.send(
                             ":x: | Time's up! Cancelled backup loading!"
@@ -88,6 +89,7 @@ module.exports = {
                         backup.remove(backupID);
                     })
                     .catch((err) => {
+                        console.error(err);
                         // If an error occurred
                         return message.author.send(
                             ":x: | Sorry, an error occurred... Please check that I have administrator permissions!"

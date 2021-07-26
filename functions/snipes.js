@@ -8,7 +8,7 @@ module.exports = {
         if (message.author.bot) {return;}
         if (!message.guild) {return;}
 
-        let snipe = new Object();
+        let snipe = {};
         let content = message.content;
         if (!content) {
             content = "None";
