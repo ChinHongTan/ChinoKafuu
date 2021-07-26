@@ -167,7 +167,7 @@ module.exports = {
             board = draw(squares, coordinate, round, board);
             if (win) {
                 collector.stop();
-                return message.channel.send(
+                message.channel.send(
                     `${round.name} had won the game!`
                 );
             }
