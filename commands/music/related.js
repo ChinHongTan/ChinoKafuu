@@ -35,7 +35,7 @@ module.exports = {
             return url;
         }
 
-        function playRelatedTrack(relatedVideos) {
+        async function playRelatedTrack(relatedVideos) {
             let urlList = relatedVideos.map((song) => song.video_url);
             let url = avoidRepeatedSongs(urlList);
             let videos = await ytsr.getVideo(url);
