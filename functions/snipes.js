@@ -21,7 +21,7 @@ module.exports = {
         });
         snipe.content = message.content;
         snipe.timestamp = message.createdAt.toUTCString([8]);
-        snipe.attachments = (message.attachments) ? message.attachments.first().proxyURL : "";
+        snipe.attachments = message.attachments.first()?.proxyURL;
 
         snipes.unshift(snipe);
         if (snipes.length > 10) {
