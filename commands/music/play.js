@@ -296,7 +296,7 @@ module.exports = {
                 .setID(message.guild.id)
                 .setMinValues(1)
                 .setMaxValues(1)
-                .setPlaceholder("Chooose a song");
+                .setPlaceholder("Choose a song");
             for (let i in videos) {
                 let title = videos[i].title;
                 let channel = videos[i].channel.name;
@@ -322,34 +322,33 @@ module.exports = {
                 menu.addOption(list);
             }
 
-            message.channel.send("請選擇歌曲", menu).then((msg) => {
-                let col = msg.createMenuCollector(
-                    (b) =>
-                        b.clicker.user.id === message.author.id &&
-                        b.guild.id === message.guild.id,
-                    {
-                        time: 100000,
-                    }
+            let msg = await message.channel.send("請選擇歌曲", menu)
+            let col = msg.createMenuCollector(
+                (b) =>
+                    b.clicker.user.id === message.author.id &&
+                    b.guild.id === message.guild.id,
+                {
+                    time: 100000,
+                }
+            );
+            col.on("collect", async (menu) => {
+                await menu.reply.defer();
+                handleVideo(
+                    [videos[menu.values[0]]],
+                    voiceChannel,
+                    false,
+                    serverQueue,
+                    "yt",
+                    message
                 );
-                col.on("collect", async (menu) => {
-                    await menu.reply.defer();
-                    handleVideo(
-                        [videos[menu.values[0]]],
-                        voiceChannel,
-                        false,
-                        serverQueue,
-                        "yt",
-                        message
-                    );
-                    await menu.reply.delete();
-                    return;
-                });
-                col.on("end", (menu) => {
-                    if (!menu.first()) {
-                        msg.delete();
-                        msg.channel.send("Timeout");
-                    }
-                });
+                await menu.reply.delete();
+                return;
+            });
+            col.on("end", (menu) => {
+                if (!menu.first()) {
+                    msg.delete();
+                    msg.channel.send("Timeout");
+                }
             });
         }
     },
