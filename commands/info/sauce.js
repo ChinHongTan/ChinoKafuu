@@ -2,7 +2,7 @@ module.exports = {
     name: "sauce",
     description: "Search SauceNao for an image source.",
     cooldown: 5,
-    execute(message, args) {
+    async execute(message, args) {
         const Discord = require("discord.js");
         const sagiriToken =
             process.env.SAGIRI || require("../../config/config.json").sagiri_token;
@@ -88,54 +88,46 @@ module.exports = {
          * Search for an image from sauceNao or ascii2d
          * @param {string} searchImage - url of the target image to search for.
          */
-        function searchForImage(searchImage) {
+        async function searchForImage(searchImage) {
             let mode = 1;
             // start with saucenao
-            mySauce(searchImage, { results: 10 })
-                .then((result) => {
-                    let response = result.filter((r) => r.similarity > 80);
-                    console.log("request sucessful");
+            let result = await mySauce(searchImage, { results: 10 });
+            let response = result.filter((r) => r.similarity > 80);
 
-                    if (response.length < 1) {
-                        // search with ascii2d
-                        searchByUrl(searchImage, "bovw").then((result2) => {
-                            if (!result2 || result2.length < 1)
-                                return message.channel.send("No result!");
-                            let response2 = result2.items.filter(
-                                (r2) => r2.source !== 0
-                            );
-                            mode = 2;
-                            sendEmbed(response2, mode);
-                        });
-                    } else {
-                        sendEmbed(response, mode);
-                    }
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
+            if (response.length > 0) {
+                return sendEmbed(response, mode);
+            }
+            // search with ascii2d
+            let result2 = await searchByUrl(searchImage, "bovw");
+            if (!result2 || result2.length < 1) {
+                return message.channel.send("No result!");
+            }
+            let response2 = result2.items.filter(
+                (r2) => r2.source !== 0
+            );
+            mode = 2;
+            sendEmbed(response2, mode);
         }
 
         var searchImage = "";
 
-        if (args.length < 1) {
-            // no arguments were provided, fetch image from the channel instead
-            message.channel.messages.fetch({ limit: 25 }).then((messages) => {
-                for (const msg of messages.values()) {
-                    if (msg.attachments.size > 0) {
-                        searchImage = msg.attachments.first().proxyURL;
-                        break;
-                    }
-                }
-                if (!searchImage)
-                    return message.channel.send(
-                        "You have to upload an image before using this command!"
-                    );
-                searchForImage(searchImage);
-            });
-        } else {
+        if (args.length > 0) {
             searchImage = args[0];
-            searchForImage(searchImage);
+            return searchForImage(searchImage);
         }
+        // no arguments were provided, fetch image from the channel instead
+        let messages = await message.channel.messages.fetch({ limit: 25 });
+        for (const msg of messages.values()) {
+            if (msg.attachments.size > 0) {
+                searchImage = msg.attachments.first().proxyURL;
+                break;
+            }
+        }
+        if (!searchImage) {
+            return message.channel.send(
+                "You have to upload an image before using this command!"
+            );
+        }
+        searchForImage(searchImage);
     },
 };

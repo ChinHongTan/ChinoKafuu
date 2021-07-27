@@ -2,7 +2,6 @@ module.exports = {
     name: "storeSnipes",
     func: function (message) {
         const fs = require("fs");
-        const Discord = require("discord.js");
         let data = fs.readFileSync("./data/snipes.json");
         let snipeWithGuild = new Map(JSON.parse(data));
         if (message.author.bot) {return;}
@@ -13,12 +12,7 @@ module.exports = {
         if (!content) {
             content = "None";
         }
-        let snipes;
-        if (snipeWithGuild.has(message.guild.id)) {
-            snipes = snipeWithGuild.get(message.guild.id);
-        } else {
-            snipes = [];
-        }
+        let snipes = (snipeWithGuild.has(message.guild.id)) ? snipeWithGuild.get(message.guild.id) : [];
 
         snipe.author = message.author.tag;
         snipe.authorAvatar = message.author.displayAvatarURL({
@@ -27,57 +21,18 @@ module.exports = {
         });
         snipe.content = message.content;
         snipe.timestamp = message.createdAt.toUTCString([8]);
+        snipe.attachments = (message.attachments) ? message.attachments.first().proxyURL : "";
 
-        if (
-            message.attachments.size > 0 &&
-            message.guild.id === "764839074228994069"
-        ) {
-            const channel =
-                message.client.channels.cache.get("764846009221251122");
-            var urlArray = [];
-            message.attachments.each((attachment) => {
-                urlArray.push(attachment.proxyURL);
-            });
-            snipe.attachments = urlArray;
-            urlArray.forEach((url) => {
-                let embed = new Discord.MessageEmbed()
-                    .setColor("#ffff00")
-                    .setTitle("**__Message Delete__**")
-                    .addFields(
-                        {
-                            name: "**User**",
-                            value: `${message.author.tag}`,
-                            inline: true,
-                        },
-                        {
-                            name: "**Channel**",
-                            value: `${message.channel}`,
-                            inline: true,
-                        },
-                        { name: "**Content**", value: `${content}` }
-                    )
-                    .setImage(url);
-                channel.send(embed);
-            });
-            snipes.unshift(snipe);
-            if (snipes.length > 10) snipes.pop();
-            snipeWithGuild.set(message.guild.id, snipes);
-            let data = JSON.stringify(
-                Array.from(snipeWithGuild.entries()),
-                null,
-                2
-            );
-            fs.writeFileSync("./data/snipes.json", data);
-        } else {
-            snipes.unshift(snipe);
-            if (snipes.length > 10) snipes.pop();
-            snipeWithGuild.set(message.guild.id, snipes);
-            let data = JSON.stringify(
-                Array.from(snipeWithGuild.entries()),
-                null,
-                2
-            );
-            fs.writeFileSync("./data/snipes.json", data);
+        snipes.unshift(snipe);
+        if (snipes.length > 10) {
+            snipes.pop();
         }
+        snipeWithGuild.set(message.guild.id, snipes);
+        data = JSON.stringify(
+            Array.from(snipeWithGuild.entries()),
+            null,
+            2
+        );
+        fs.writeFileSync("./data/snipes.json", data);
     },
 };

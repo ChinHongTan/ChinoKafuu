@@ -2,7 +2,7 @@ module.exports = {
     name: "anime",
     guildOnly: true,
     description: "Search for anime details or search anime with frames.",
-    execute(message, args) {
+    async execute(message, args) {
         const fetch = require("node-fetch");
         const Discord = require("discord.js");
         const DynamicEmbed = require("../../functions/dynamicEmbed");
@@ -48,41 +48,30 @@ module.exports = {
 
         if (args.length > 0) {
             if (isValidHttpUrl(args[0])) {
-                fetch(
-                    `https://api.trace.moe/search?cutBorders&anilistInfo&url=${encodeURIComponent(
-                        args[0]
-                    )}`
-                ).then((e) =>
-                    e.json().then((response) => {   
-                        dynamicEmbed.createEmbedFlip(message, response.result, ["⬅️", "➡️"], createEmbed);
-                    })
-                );
+                let e = await fetch(`https://api.trace.moe/search?cutBorders&anilistInfo&url=${encodeURIComponent(args[0])}`);
+                e.json().then((response) => {   
+                    dynamicEmbed.createEmbedFlip(message, response.result, ["⬅️", "➡️"], createEmbed);
+                })
                 return;
             }
-        } else {
-            let searchImage = "";
-            message.channel.messages.fetch({ limit: 25 }).then((messages) => {
-                for (const msg of messages.values()) {
-                    if (msg.attachments.size > 0) {
-                        searchImage = msg.attachments.first().proxyURL;
-                        break;
-                    }
-                }
-                if (!searchImage)
-                    return message.channel.send(
-                        "You have to upload an image before using this command!"
-                    );
-                fetch(
-                    `https://api.trace.moe/search?cutBorders&anilistInfo&url=${encodeURIComponent(
-                        searchImage
-                    )}`
-                ).then((e) =>
-                    e.json().then((response) => {
-                        dynamicEmbed.createEmbedFlip(message, response.result, ["⬅️", "➡️"], createEmbed);
-                    })
-                );
-                return;
-            });
+            return message.channel.send("Please enter a valid http url!");
         }
+        let searchImage = "";
+        let messages = await message.channel.messages.fetch({ limit: 25 });
+        for (const msg of messages.values()) {
+            if (msg.attachments.size > 0) {
+                searchImage = msg.attachments.first().proxyURL;
+                break;
+            }
+        }
+        if (!searchImage)
+            return message.channel.send(
+                "You have to upload an image before using this command!"
+            );
+        let e = await fetch(`https://api.trace.moe/search?cutBorders&anilistInfo&url=${encodeURIComponent(searchImage)}`);
+        e.json().then((response) => {
+            dynamicEmbed.createEmbedFlip(message, response.result, ["⬅️", "➡️"], createEmbed);
+        });
+        return;
     },
 };

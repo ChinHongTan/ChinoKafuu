@@ -1,7 +1,7 @@
 module.exports = {
     name: "covid",
     description: "Latest global/country covid status!",
-    execute(message, args) {
+    async execute(message, args) {
         const Discord = require("discord.js");
         const api = require("novelcovid");
         api.settings({
@@ -85,47 +85,31 @@ module.exports = {
             // no arguments were provided
             message.channel.send("Please provide a valid argument!");
             return message.channel.send(
-                "eg: `c!covid all` or `c!covid countries`"
+                "eg: `c!covid global` or `c!covid countries`"
             );
         }
 
-        if (args[0] === "all") {
+        if (args[0] === "global") {
             // get global covid data
-            api.all({ allowNull: false }).then((result) => {
-                result.country = "Global";
-                let embed = createEmbed(result);
-                message.channel.send(embed);
-            });
-            return;
+            let result = await api.all({ allowNull: false });
+            result.country = "Global";
+            let embed = createEmbed(result);
+            return message.channel.send(embed);
         }
 
         if (args[0] === "countries") {
-            if (args.length === 1) {
-                // get a list of data of all countries sorted by cases
-                api.countries({ sort: "cases", allowNull: false }).then(
-                    (result) => {
-                        dynamicEmbed.createEmbedFlip(message, result, ["⬅️", "➡️"], createEmbed);
-                    }
-                );
-            }
-        } else {
-            if (args.length > 1) {
-                // get a list of data of multiple specific countries
-                api.countries({ country: args, allowNull: false }).then(
-                    (result) => {
-                        dynamicEmbed.createEmbedFlip(message, result, ["⬅️", "➡️"], createEmbed);
-                    }
-                );
-            } else {
-                // get a list of data of a single specific countries
-                let embed;
-                api.countries({ country: args, allowNull: false }).then(
-                    (result) => {
-                        embed = createEmbed(result);
-                        return message.channel.send(embed);
-                    }
-                );
-            }
+            // get a list of data of all countries sorted by cases
+            let result = await api.countries({ sort: "cases", allowNull: false });
+            return dynamicEmbed.createEmbedFlip(message, result, ["⬅️", "➡️"], createEmbed);
         }
+        if (args.length > 1) {
+            // get a list of data of multiple specific countries
+            let result = await api.countries({ country: args, allowNull: false });
+            return dynamicEmbed.createEmbedFlip(message, result, ["⬅️", "➡️"], createEmbed);
+        }
+        // get a list of data of a single specific countries
+        let result = await api.countries({ country: args, allowNull: false });
+        let embed = createEmbed(result);
+        return message.channel.send(embed);
     },
 };

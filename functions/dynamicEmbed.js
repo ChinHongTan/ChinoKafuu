@@ -49,29 +49,28 @@ class DynamicEmbed {
     * Creates and sends a reactable message
     * @param {object} result - The result from the API.
     */
-    createEmbedFlip(message, itemList, emojiList, createEmbed, collectorFunc, collectorParams) {
+    async createEmbedFlip(message, itemList, emojiList, createEmbed, collectorFunc, collectorParams) {
         let page = 0;
         if (typeof itemList[page] === "object") {
             itemList[page].page = page;
             itemList[page].total = itemList.length;
         }
         let embed = createEmbed(itemList[page]);
-        message.channel.send(embed).then(async (embedMessage) => {
-            for (let emoji of emojiList) {
-                await embedMessage.react(emoji);
-            }
-            const filter = (reaction, user) =>
-                emojiList.includes(reaction.emoji.name) && !user.bot;
-            const collector = embedMessage.createReactionCollector(filter, {
-                idle: 600000,
-                dispose: true,
-            });
-            collector.on("collect", (r) => {
-                page = updateEmbed(r, page, itemList, embedMessage, createEmbed, collector, collectorFunc, collectorParams);
-            });
-            collector.on("remove", (r) => {
-                page = updateEmbed(r, page, itemList, embedMessage, createEmbed, collector, collectorFunc, collectorParams);
-            });
+        let embedMessage = await message.channel.send(embed);
+        for (let emoji of emojiList) {
+            await embedMessage.react(emoji);
+        }
+        const filter = (reaction, user) =>
+            emojiList.includes(reaction.emoji.name) && !user.bot;
+        const collector = embedMessage.createReactionCollector(filter, {
+            idle: 600000,
+            dispose: true,
+        });
+        collector.on("collect", (r) => {
+            page = updateEmbed(r, page, itemList, embedMessage, createEmbed, collector, collectorFunc, collectorParams);
+        });
+        collector.on("remove", (r) => {
+            page = updateEmbed(r, page, itemList, embedMessage, createEmbed, collector, collectorFunc, collectorParams);
         });
     }
 }
