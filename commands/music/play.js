@@ -49,7 +49,7 @@ module.exports = {
             serverQueue = queue.get(message.guild.id);
         }
 
-        function processYoutubeLink(url) {
+        async function processYoutubeLink(url) {
             if (!ytsr.validate(url, "PLAYLIST_ID")) {
                 let videos = await ytsr.getVideo(args[0]);
                 return handleVideo([videos], voiceChannel, false, serverQueue, "yt", message);
@@ -65,7 +65,7 @@ module.exports = {
             return;
         }
 
-        function processSpotifyLink(url) {
+        async function processSpotifyLink(url) {
             url = "spotify:" + url.replace(sprxtrack, "").replace("/", ":").replace("?.*", "");
             let part = url.split(":");
             let Id = part[part.length - 1];
@@ -132,7 +132,7 @@ module.exports = {
             }
         }
 
-        function processSoundcloudLink(url) {
+        async function processSoundcloudLink(url) {
             if (scdl.isPlaylistURL(url)) {
                 let data = await scdl.getSetInfo(url, scID).catch((err) => {
                     console.log(err);

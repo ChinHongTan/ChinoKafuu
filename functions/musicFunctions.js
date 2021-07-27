@@ -85,7 +85,7 @@ function hmsToSecondsOnly(str) {
 }
 module.exports = {
     async waitimport(name, length, message) {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             let embed = new MessageEmbed()
                 .setAuthor("清單", message.author.displayAvatarURL())
                 .setColor("BLUE")
@@ -107,7 +107,7 @@ module.exports = {
                 case undefined:
                     return;
                 case "📥":
-                    let embed = new MessageEmbed()
+                    embed = new MessageEmbed()
                         .setAuthor("清單", message.author.displayAvatarURL())
                         .setColor("BLUE")
                         .setTitle("您加入了清單")
@@ -117,7 +117,7 @@ module.exports = {
                     m.edit(embed);
                     return resolve(true);
                 case "❌":
-                    let embed = new MessageEmbed()
+                    embed = new MessageEmbed()
                         .setAuthor("清單", message.author.displayAvatarURL())
                         .setColor("BLUE")
                         .setTitle("您取消了加入清單")
