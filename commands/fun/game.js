@@ -5,6 +5,19 @@ module.exports = {
     async execute(message) {
         const Discord = require("discord.js");
 
+        let coordinates = setCoordinates(7, 6);
+        let squares = {};
+
+        const reactCol = {
+            "1️⃣": 1,
+            "2️⃣": 2,
+            "3️⃣": 3,
+            "4️⃣": 4,
+            "5️⃣": 5,
+            "6️⃣": 6,
+            "7️⃣": 7,
+        };
+
         // a class of a single square on the board
         class Square {
             // occupied can be blue, red or null (not occupied)
@@ -28,6 +41,11 @@ module.exports = {
                 this.occupied = name;
             }
         }
+
+        coordinates.forEach((coordinate) => {
+            var square = new Square("white", coordinate);
+            squares[coordinate] = square;
+        });
 
         function draw(squares, coordinate, round, board) {
             let [x, y] = squares[coordinate].pixel();
@@ -55,31 +73,6 @@ module.exports = {
                 .setDescription(`It's now ${round.name}'s turn!\n${boardStr}`)
                 .setColor("#ff0000");
             return embed;
-        }
-        
-        function doMove(r, embedMessage, round) {
-            let [win, coordinate] = place(
-                reactCol[r.emoji.name],
-                round,
-                squares
-            );
-            let board = draw(squares, coordinate, round, board);
-            if (win) {
-                collector.stop();
-                message.channel.send(
-                    `${round.name} had won the game!`
-                );
-            }
-            if (round.name === "red") {
-                round.name = "yellow";
-                round.emoji = "🟡";
-            } else {
-                round.name = "red";
-                round.emoji = "🔴";
-            }
-            let editedEmbed = createEmbed(round, board);
-            embedMessage.edit(editedEmbed);
-            return round;
         }
 
         function checkWin(d, r, s) {
@@ -133,6 +126,31 @@ module.exports = {
                 return [false, coordinate];
             }
         }
+        
+        function doMove(r, embedMessage, round, collector) {
+            let [win, coordinate] = place(
+                reactCol[r.emoji.name],
+                round,
+                squares
+            );
+            let board = draw(squares, coordinate, round, board);
+            if (win) {
+                collector.stop();
+                message.channel.send(
+                    `${round.name} had won the game!`
+                );
+            }
+            if (round.name === "red") {
+                round.name = "yellow";
+                round.emoji = "🟡";
+            } else {
+                round.name = "red";
+                round.emoji = "🔴";
+            }
+            let editedEmbed = createEmbed(round, board);
+            embedMessage.edit(editedEmbed);
+            return round;
+        }
 
         function drawBoard(sizeX, sizeY) {
             let board = [];
@@ -158,23 +176,8 @@ module.exports = {
             return coordinates;
         }
 
-        let coordinates = setCoordinates(7, 6);
-        let squares = {};
-        coordinates.forEach((coordinate) => {
-            var square = new Square("white", coordinate);
-            squares[coordinate] = square;
-        });
         let board = drawBoard(7, 6);
 
-        const reactCol = {
-            "1️⃣": 1,
-            "2️⃣": 2,
-            "3️⃣": 3,
-            "4️⃣": 4,
-            "5️⃣": 5,
-            "6️⃣": 6,
-            "7️⃣": 7,
-        };
         const emojiList = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣"];
 
         let round = {
@@ -194,10 +197,10 @@ module.exports = {
             dispose: true,
         });
         collector.on("collect", (r) => {
-            round = doMove(r, embedMessage, round);
+            round = doMove(r, embedMessage, round, collector);
         });
         collector.on("remove", (r) => {
-            round = doMove(r, embedMessage, round);
+            round = doMove(r, embedMessage, round, collector);
         });
     },
 };

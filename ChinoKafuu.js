@@ -7,15 +7,15 @@ const currency = new Discord.Collection();
 const { Users } = require("./data/dbObjects");
 
 const client = new Discord.Client();
-require('discord-buttons')(client);
+require("discord-buttons")(client);
 
 client.commands = new Discord.Collection();
 let functions = {};
 
-const commandFolders = fs.readdirSync('./commands');
+const commandFolders = fs.readdirSync("./commands");
 
 for (const folder of commandFolders) {
-	const commandFiles = fs.readdirSync(`./commands/${folder}`).filter(file => file.endsWith('.js'));
+	const commandFiles = fs.readdirSync(`./commands/${folder}`).filter(file => file.endsWith(".js"));
 	for (const file of commandFiles) {
 		const command = require(`./commands/${folder}/${file}`);
 		client.commands.set(command.name, command);
@@ -82,9 +82,9 @@ client.on("guildMemberAdd", async (member) => {
 });
 
 client.on("message", async (message) => {
-    if (message.author.bot) return;
+    if (message.author.bot) {return;}
     currency.add(message.author.id, 1);
-    if (!message.content.startsWith(prefix)) return;
+    if (!message.content.startsWith(prefix)) {return;}
 
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();
@@ -110,7 +110,7 @@ client.on("message", async (message) => {
                 message.channel.send(`\`${prefix}${cmd}\`\n`);
             });
         } else {
-            message.channel.send(`\`${prefix}${commandName}\` is not a valid command!`)
+            message.channel.send(`\`${prefix}${commandName}\` is not a valid command!`);
         }
 
         return;
@@ -119,7 +119,7 @@ client.on("message", async (message) => {
     if (command.permissions) {
 		const authorPerms = message.channel.permissionsFor(message.author);
 		if (!authorPerms || !authorPerms.has(command.permissions)) {
-			return message.reply('You can not do this!');
+			return message.reply("You can not do this!");
 		}
 	}
 
