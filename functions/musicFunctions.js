@@ -8,6 +8,7 @@ const scdl = require("soundcloud-downloader").default;
 const queueData = require("../data/queueData");
 const scID = process.env.SCID || require("../config/config.json").scID;
 let queue = queueData.queue;
+
 async function play(guild, song, message) {
     let serverQueue = queue.get(message.guild.id);
     let stream = new PassThrough({
@@ -21,11 +22,7 @@ async function play(guild, song, message) {
     }
     switch (song.source) {
         case "yt":
-            proc = new Ffmpeg(
-                ytdl(song.url, {
-                    quality: "highestaudio",
-                })
-            );
+            proc = new Ffmpeg(ytdl(song.url, {quality: "highestaudio"}));
             break;
         case "sc":
             proc = new Ffmpeg(await scdl.download(song.url, scID));
@@ -44,13 +41,9 @@ async function play(guild, song, message) {
         console.log("an error happened: " + err.message);
         console.log(err);
     });
-    proc.writeToStream(stream, {
-        end: true,
-    });
+    proc.writeToStream(stream, {end: true});
     const dispatcher = serverQueue.connection
-        .play(stream, {
-            type: "ogg/opus",
-        })
+        .play(stream, {type: "ogg/opus"})
         .on("finish", (reason) => {
             if (reason === "Stream is not generating quickly enough.") {
                 console.log("Stream is not generating quickly enough.");
@@ -100,77 +93,43 @@ module.exports = {
                 .setDescription(`清單: ${name}\n長度:${length}`)
                 .setTimestamp(Date.now())
                 .setFooter("音樂系統", message.client.user.displayAvatarURL());
-            message.channel.send(embed).then(async (m) => {
-                await m.react("📥");
-                await m.react("❌");
-                let filter = (reaction, user) => {
-                    if (user.id === message.author.id) {
-                        if (reaction.emoji.name === "📥") {
-                            return true;
-                        }
-                        if (reaction.emoji.name === "❌") {
-                            return true;
-                        }
-                    }
-                };
-                m.awaitReactions(filter, {
-                    maxEmojis: 1,
-                    time: 10000,
-                })
-                    .then((collected) => {
-                        if (!collected.first()) {
-                            return;
-                        }
-                        if (collected.first().emoji.name === "📥") {
-                            let embed = new MessageEmbed()
-                                .setAuthor(
-                                    "清單",
-                                    message.author.displayAvatarURL()
-                                )
-                                .setColor("BLUE")
-                                .setTitle("您加入了清單")
-                                .setDescription(`清單: ${name}`)
-                                .setTimestamp(Date.now())
-                                .setFooter(
-                                    "音樂系統",
-                                    message.client.user.displayAvatarURL()
-                                );
-                            m.edit(embed);
-                            return resolve(true);
-                        }
-                        if (collected.first().emoji.name === "❌") {
-                            let embed = new MessageEmbed()
-                                .setAuthor(
-                                    "清單",
-                                    message.author.displayAvatarURL()
-                                )
-                                .setColor("BLUE")
-                                .setTitle("您取消了加入清單")
-                                .setDescription(`清單: ${name}`)
-                                .setTimestamp(Date.now())
-                                .setFooter(
-                                    "音樂系統",
-                                    message.client.user.displayAvatarURL()
-                                );
-                            m.edit(embed);
-                            return reject(false);
-                        }
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                        reject(false);
-                    });
+            let m = await message.channel.send(embed);
+            await m.react("📥");
+            await m.react("❌");
+            const filter = (reaction, user) => {
+                ["📥", "❌"].includes(reaction.emoji.name) && user.id === message.author.id
+            }
+            let collected = await m.awaitReactions(filter, {
+                maxEmojis: 1,
+                time: 10000,
             });
+            switch (collected.first()?.emoji?.name) {
+                case undefined:
+                    return;
+                case "📥":
+                    let embed = new MessageEmbed()
+                        .setAuthor("清單", message.author.displayAvatarURL())
+                        .setColor("BLUE")
+                        .setTitle("您加入了清單")
+                        .setDescription(`清單: ${name}`)
+                        .setTimestamp(Date.now())
+                        .setFooter("音樂系統", message.client.user.displayAvatarURL());
+                    m.edit(embed);
+                    return resolve(true);
+                case "❌":
+                    let embed = new MessageEmbed()
+                        .setAuthor("清單", message.author.displayAvatarURL())
+                        .setColor("BLUE")
+                        .setTitle("您取消了加入清單")
+                        .setDescription(`清單: ${name}`)
+                        .setTimestamp(Date.now())
+                        .setFooter("音樂系統", message.client.user.displayAvatarURL());
+                    m.edit(embed);
+                    return reject(false);
+            }
         });
     },
-    async handleVideo(
-        videos,
-        voiceChannel,
-        playlist = false,
-        serverQueue,
-        source,
-        message
-    ) {
+    async handleVideo(videos, voiceChannel, playlist = false, serverQueue, source, message) {
         let song;
         switch (source) {
             case "ytlist":
@@ -218,24 +177,22 @@ module.exports = {
             } catch (error) {
                 console.error(`I could not join the voice channel: ${error}`);
                 serverQueue.songs.length = 0;
-                return message.channel.send(
-                    `I could not join the voice channel: ${error}`
-                );
+                return message.channel.send(`I could not join the voice channel: ${error}`);
             }
-        } else {
-            serverQueue.songs.push(song);
-            if (playlist) return;
-            var embed = new MessageEmbed()
-                .setThumbnail(song.thumb)
-                .setAuthor("已加入播放佇列", message.author.displayAvatarURL())
-                .setColor("BLUE")
-                .setTitle(song.title)
-                .setURL(song.url)
-                .setTimestamp(Date.now())
-                .addField("播放者", `<@!${song.requseter}>`)
-                .setFooter("音樂系統", message.client.user.displayAvatarURL());
-            return message.channel.send(embed);
+            return;
         }
+        serverQueue.songs.push(song);
+        if (playlist) {return;}
+        var embed = new MessageEmbed()
+            .setThumbnail(song.thumb)
+            .setAuthor("已加入播放佇列", message.author.displayAvatarURL())
+            .setColor("BLUE")
+            .setTitle(song.title)
+            .setURL(song.url)
+            .setTimestamp(Date.now())
+            .addField("播放者", `<@!${song.requseter}>`)
+            .setFooter("音樂系統", message.client.user.displayAvatarURL());
+        return message.channel.send(embed);
     },
     async play(guild, song, message) {
         play(guild, song, message);
