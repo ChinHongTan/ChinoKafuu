@@ -13,9 +13,7 @@ module.exports = {
                     if (activity.type === "CUSTOM_STATUS") {
                         activityDescription += `__Custom Status__\n<:${activity.emoji.name}:${activity.emoji.id}> ${activity.state}\n`;
                     } else {
-                        activityDescription += `__${activity.type}__\n${
-                            activity.name
-                        }\n${activity.details ? activity.details : ""}`;
+                        activityDescription += `__${activity.type}__\n${activity.name}\n${activity.details ? activity.details : ""}`;
                     }
                 }
             } else {
@@ -45,17 +43,12 @@ module.exports = {
                     { name: "ID", value: author.id, inline: true },
                     {
                         name: "Avatar URL",
-                        value: `[Click here](${author.user.displayAvatarURL({
-                            format: "png",
-                            dynamic: true,
-                        })})`,
+                        value: `[Click here](${author.user.displayAvatarURL({format: "png", dynamic: true})})`,
                         inline: true,
                     },
                     {
                         name: "Created At",
-                        value: author.user.createdAt.toLocaleDateString(
-                            "zh-TW"
-                        ),
+                        value: author.user.createdAt.toLocaleDateString("zh-TW"),
                         inline: true,
                     },
                     {
@@ -65,9 +58,7 @@ module.exports = {
                     },
                     {
                         name: "Activity",
-                        value: activityDescription
-                            ? activityDescription
-                            : "None",
+                        value: activityDescription ? activityDescription : "None",
                         inline: true,
                     },
                     {
@@ -77,18 +68,12 @@ module.exports = {
                     },
                     {
                         name: "Device",
-                        value: author.presence.clientStatus
-                            ? Object.keys(author.presence.clientStatus).join(
-                                  ", "
-                              )
-                            : "None",
+                        value: author.presence.clientStatus ? Object.keys(author.presence.clientStatus).join(", ") : "None",
                         inline: true,
                     },
                     {
                         name: `Roles(${author.roles.cache.size})`,
-                        value: author.roles.cache
-                            .map((roles) => `${roles}`)
-                            .join(", "),
+                        value: author.roles.cache.map((roles) => `${roles}`).join(", "),
                         inline: false,
                     }
                 )

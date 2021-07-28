@@ -7,11 +7,7 @@ module.exports = {
         const backup = require("discord-backup");
         const Discord = require("discord.js");
         let backupID = args[0];
-        if (!backupID) {
-            return message.channel.send(
-                ":x: | You must specify a valid backup ID!"
-            );
-        }
+        if (!backupID) return message.channel.send(":x: | You must specify a valid backup ID!");
         // Fetch the backup
         backup
             .fetch(backupID)

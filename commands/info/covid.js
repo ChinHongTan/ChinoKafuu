@@ -73,9 +73,7 @@ module.exports = {
                 )
                 .setThumbnail(result.countryInfo?.flag)
                 .setFooter(
-                    `Requested by: ${
-                        message.author.tag
-                    }\nData updated: ${date.toUTCString()}`,
+                    `Requested by: ${message.author.tag}\nData updated: ${date.toUTCString()}`,
                     message.author.avatarURL()
                 );
             return embed;
@@ -84,11 +82,8 @@ module.exports = {
         if (args.length < 1) {
             // no arguments were provided
             message.channel.send("Please provide a valid argument!");
-            return message.channel.send(
-                "eg: `c!covid global` or `c!covid countries`"
-            );
+            return message.channel.send("eg: `c!covid global` or `c!covid countries`");
         }
-
         if (args[0] === "global") {
             // get global covid data
             let result = await api.all({ allowNull: false });
@@ -96,7 +91,6 @@ module.exports = {
             let embed = createEmbed(result);
             return message.channel.send(embed);
         }
-
         if (args[0] === "countries") {
             // get a list of data of all countries sorted by cases
             let result = await api.countries({ sort: "cases", allowNull: false });

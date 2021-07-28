@@ -20,15 +20,10 @@ module.exports = {
                     .setFooter(editsnipes[0].timestamp);
                 return message.channel.send(embed);
             } else {
-                if (Number(args[0]) > 10) {
-                    return message.channel.send("You can't snipe beyond 10!");
-                }
+                if (Number(args[0]) > 10) return message.channel.send("You can't snipe beyond 10!");
                 let embed = new Discord.MessageEmbed()
                     .setColor("RANDOM")
-                    .setAuthor(
-                        editsnipes[Number(args[0]) - 1].author,
-                        editsnipes[Number(args[0]) - 1].authorAvatar
-                    )
+                    .setAuthor(editsnipes[Number(args[0]) - 1].author, editsnipes[Number(args[0]) - 1].authorAvatar)
                     .setDescription(editsnipes[Number(args[0]) - 1].content)
                     .setFooter(editsnipes[Number(args[0]) - 1].timestamp);
                 return message.channel.send(embed);

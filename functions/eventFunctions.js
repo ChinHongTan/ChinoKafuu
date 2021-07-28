@@ -3,14 +3,12 @@ module.exports = {
         const fs = require("fs");
         let data = fs.readFileSync("./data/snipes.json");
         let snipeWithGuild = new Map(JSON.parse(data));
-        if (message.author.bot) {return;}
-        if (!message.guild) {return;}
+        if (message.author.bot) return;
+        if (!message.guild) return;
 
         let snipe = {};
         let content = message.content;
-        if (!content) {
-            content = "None";
-        }
+        if (!content) content = "None";
         let snipes = (snipeWithGuild.has(message.guild.id)) ? snipeWithGuild.get(message.guild.id) : [];
 
         snipe.author = message.author.tag;
@@ -23,15 +21,9 @@ module.exports = {
         snipe.attachments = message.attachments.first()?.proxyURL;
 
         snipes.unshift(snipe);
-        if (snipes.length > 10) {
-            snipes.pop();
-        }
+        if (snipes.length > 10) snipes.pop();
         snipeWithGuild.set(message.guild.id, snipes);
-        data = JSON.stringify(
-            Array.from(snipeWithGuild.entries()),
-            null,
-            2
-        );
+        data = JSON.stringify(Array.from(snipeWithGuild.entries()), null, 2);
         fs.writeFileSync("./data/snipes.json", data);
     },
     storeEditSnipes(oldMessage, newMessage) {
@@ -39,12 +31,8 @@ module.exports = {
         let rawData = fs.readFileSync("./data/editSnipes.json");
         let editSnipesWithGuild = new Map(JSON.parse(rawData));
 
-        if (oldMessage.author.bot) {
-            return;
-        }
-        if (!oldMessage.guild) {
-            return;
-        }
+        if (oldMessage.author.bot) return;
+        if (!oldMessage.guild) return;
 
         var editSnipe = {};
         let editSnipes = editSnipesWithGuild.get(oldMessage.guild.id) ?? [];
@@ -59,33 +47,23 @@ module.exports = {
             editSnipe.timestamp = newMessage.editedAt.toUTCString([8]);
             editSnipes.unshift(editSnipe);
         }
-        if (editSnipes.length > 10) {
-            editSnipes.pop();
-        }
+        if (editSnipes.length > 10) editSnipes.pop();
         editSnipesWithGuild.set(oldMessage.guild.id, editSnipes);
-        let data = JSON.stringify(
-            Array.from(editSnipesWithGuild.entries()),
-            null,
-            2
-        );
+        let data = JSON.stringify(Array.from(editSnipesWithGuild.entries()), null, 2);
         fs.writeFileSync("./data/editSnipes.json", data);
     },
-    dynamic(oldState, newState) {
+    async dynamic(oldState, newState) {
         if (newState.member.user.bot) return;
-        let mainChannel = oldState.guild.channels.cache.find(
-            (channel) => channel.id === "860456123953840128"
-        );
+        let mainChannel = oldState.guild.channels.cache.find((channel) => channel.id === "860456123953840128");
         if (mainChannel) {
             let channels = mainChannel.parent.children;
             channels.each((channel) => {
                 if (channel.id === "860456123953840128") return;
-                if (channel.members.size < 1) {
-                    channel.delete();
-                }
+                if (channel.members.size < 1) channel.delete();
             });
         }
         if (newState.channelID === "860456123953840128") {
-            newState.guild.channels
+            let voiceChannel = await newState.guild.channels
                 .create(`${newState.member.displayName}的頻道`, {
                     type: "voice",
                     bitrate: 256000,
@@ -94,9 +72,7 @@ module.exports = {
                         (channel) => channel.id === "860456123953840128"
                     ).parent,
                 })
-                .then((voiceChannel) => {
-                    newState.member.voice.setChannel(voiceChannel);
-                });
+            newState.member.voice.setChannel(voiceChannel);
         }
     },
     async sendWelcomeMessage(member) {
@@ -114,9 +90,7 @@ module.exports = {
             return context.font;
         };
 
-        const channel = member.guild.channels.cache.find(
-            (ch) => ch.name === "閒聊-chat"
-        );
+        const channel = member.guild.channels.cache.find((ch) => ch.name === "閒聊-chat");
         if (!channel) return;
 
         const canvas = Canvas.createCanvas(700, 250);
@@ -130,42 +104,25 @@ module.exports = {
 
         context.font = "28px sans-serif";
         context.fillStyle = "#ffffff";
-        context.fillText(
-            "Welcome to the server,",
-            canvas.width / 2.5,
-            canvas.height / 3.5
-        );
+        context.fillText("Welcome to the server,", canvas.width / 2.5, canvas.height / 3.5);
 
         context.font = applyText(canvas, `${member.displayName}!`);
         context.fillStyle = "#ffffff";
-        context.fillText(
-            `${member.displayName}!`,
-            canvas.width / 2.5,
-            canvas.height / 1.8
-        );
+        context.fillText(`${member.displayName}!`, canvas.width / 2.5, canvas.height / 1.8);
 
         context.font = applyText(canvas, `${member.displayName}!`);
         context.fillStyle = "#ffffff";
-        context.fillText(
-            `bruuuuuuuuuuuuuuuuuh`,
-            canvas.width / 2.5,
-            canvas.height / 0.8
-        );
+        context.fillText(`bruuuuuuuuuuuuuuuuuh`, canvas.width / 2.5, canvas.height / 0.8);
 
         context.beginPath();
         context.arc(125, 125, 100, 0, Math.PI * 2, true);
         context.closePath();
         context.clip();
 
-        const avatar = await Canvas.loadImage(
-            member.user.displayAvatarURL({ format: "jpg" })
-        );
+        const avatar = await Canvas.loadImage(member.user.displayAvatarURL({ format: "jpg" }));
         context.drawImage(avatar, 25, 25, 200, 200);
 
-        const attachment = new Discord.MessageAttachment(
-            canvas.toBuffer(),
-            "welcome-image.png"
-        );
+        const attachment = new Discord.MessageAttachment(canvas.toBuffer(), "welcome-image.png");
 
         channel.send(`Welcome to the server, ${member}!`, attachment);
     },

@@ -96,9 +96,7 @@ module.exports = {
             let m = await message.channel.send(embed);
             await m.react("📥");
             await m.react("❌");
-            const filter = (reaction, user) => {
-                ["📥", "❌"].includes(reaction.emoji.name) && user.id === message.author.id
-            }
+            const filter = (reaction, user) => ["📥", "❌"].includes(reaction.emoji.name) && user.id === message.author.id
             let collected = await m.awaitReactions(filter, {
                 maxEmojis: 1,
                 time: 10000,
@@ -182,7 +180,7 @@ module.exports = {
             return;
         }
         serverQueue.songs.push(song);
-        if (playlist) {return;}
+        if (playlist) return;
         var embed = new MessageEmbed()
             .setThumbnail(song.thumb)
             .setAuthor("已加入播放佇列", message.author.displayAvatarURL())

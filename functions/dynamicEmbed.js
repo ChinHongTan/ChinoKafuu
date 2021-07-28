@@ -60,8 +60,7 @@ class DynamicEmbed {
         for (let emoji of emojiList) {
             await embedMessage.react(emoji);
         }
-        const filter = (reaction, user) =>
-            emojiList.includes(reaction.emoji.name) && !user.bot;
+        const filter = (reaction, user) => emojiList.includes(reaction.emoji.name) && !user.bot;
         const collector = embedMessage.createReactionCollector(filter, {
             idle: 600000,
             dispose: true,

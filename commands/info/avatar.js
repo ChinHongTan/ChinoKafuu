@@ -12,8 +12,7 @@ module.exports = {
             const embed = new Discord.MessageEmbed()
                 .setTitle("__Your avatar__")
                 .setColor("RANDOM")
-                .setImage(
-                    `${message.author.displayAvatarURL({
+                .setImage(`${message.author.displayAvatarURL({
                         format: "png",
                         dynamic: true,
                         size: 2048,
@@ -27,8 +26,7 @@ module.exports = {
                 const embed = new Discord.MessageEmbed()
                     .setTitle(`__${user.username}'s avatar__`)
                     .setColor("RANDOM")
-                    .setImage(
-                        `${user.displayAvatarURL({
+                    .setImage(`${user.displayAvatarURL({
                             format: "png",
                             dynamic: true,
                             size: 2048,
@@ -43,9 +41,7 @@ module.exports = {
             });
         }
         // check if an id is provided
-        let user = message.guild.members.cache.find(
-            (member) => member.user.id === args[0]
-        );
+        let user = message.guild.members.cache.find((member) => member.user.id === args[0]);
         // if id exists
         if (user) {
             const embed = new Discord.MessageEmbed()
@@ -78,19 +74,14 @@ module.exports = {
             limit: 1,
         });
         if (!result[0]) {
-            return message.channel.send(
-                `Can't find a member matching \`${keyword}\`!`
-            );
+            return message.channel.send(`Can't find a member matching \`${keyword}\`!`);
         }
-        let member = message.guild.members.cache.find(
-            (member) => member.user.tag === result[0].obj.tag
-        );
+        let member = message.guild.members.cache.find((member) => member.user.tag === result[0].obj.tag);
 
         const embed = new Discord.MessageEmbed()
             .setTitle(`__${member.displayName}'s avatar__`)
             .setColor(member.displayHexColor)
-            .setImage(
-                `${member.user.displayAvatarURL({
+            .setImage(`${member.user.displayAvatarURL({
                     format: "png",
                     dynamic: true,
                     size: 2048,

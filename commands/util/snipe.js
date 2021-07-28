@@ -17,17 +17,13 @@ module.exports = {
         }
         let arg = args[0] ?? 1;
 
-        if (Number(arg) > 10)
-            return message.channel.send("You can't snipe beyond 10!");
+        if (Number(arg) > 10) return message.channel.send("You can't snipe beyond 10!");
 
         let image = snipes[Number(arg) - 1].attachments;
 
         let embed = new Discord.MessageEmbed()
             .setColor("RANDOM")
-            .setAuthor(
-                snipes[Number(arg) - 1].author,
-                snipes[Number(arg) - 1].authorAvatar
-            )
+            .setAuthor(snipes[Number(arg) - 1].author, snipes[Number(arg) - 1].authorAvatar)
             .setDescription(snipes[Number(arg) - 1].content)
             .setFooter(snipes[Number(arg) - 1].timestamp)
             .setImage(image);

@@ -39,14 +39,7 @@ module.exports = {
             let urlList = relatedVideos.map((song) => song.video_url);
             let url = avoidRepeatedSongs(urlList);
             let videos = await ytsr.getVideo(url);
-            await handleVideo(
-                [videos],
-                voiceChannel,
-                false,
-                serverQueue,
-                "yt",
-                message
-            );
+            await handleVideo([videos], voiceChannel, false, serverQueue, "yt", message);
         }
 
         async function getRelatedTrackInfo(relatedVideos) {
@@ -64,8 +57,8 @@ module.exports = {
         function sortRelatedTracks(relatedVidsInfo) {
             let mark = 0;
             relatedVidsInfo.forEach((item) => {
-                if (item.media.category === "Music") {mark += 1;}
-                if (item.category === "Music") {mark += 2;}
+                if (item.media.category === "Music") mark += 1;
+                if (item.category === "Music") mark += 2;
                 item.mark = mark;
             });
             
@@ -85,18 +78,9 @@ module.exports = {
                 url = avoidRepeatedSongs(urlList);
                 result = await scdl.getInfo(url).catch((err) => {
                     console.log(err);
-                    throw message.channel.send(
-                        "🆘 I could not obtain any search results."
-                    );
+                    throw message.channel.send("🆘 I could not obtain any search results.");
                 });
-                await handleVideo(
-                    result,
-                    voiceChannel,
-                    false,
-                    serverQueue,
-                    "sc",
-                    message
-                );
+                await handleVideo(result, voiceChannel, false, serverQueue, "sc", message);
                 break;
             case "yt":
                 data = await ytdl.getInfo(lastSong.url);
@@ -111,7 +95,6 @@ module.exports = {
                 } else {
                     playRelatedTrack(relatedVidsInfo);
                 }
-                
                 break;
         }
     },

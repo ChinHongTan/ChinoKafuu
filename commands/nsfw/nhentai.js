@@ -2,7 +2,7 @@ module.exports = {
     name: "nhentai",
     cooldown: 10,
     description: "Search for a doujin on nhentai.",
-    execute(message, args) {
+    async execute(message, args) {
         const nhentai = require("nhentai-js");
         const Discord = require("discord.js");
         const NanaApi = require("nana-api");
@@ -48,9 +48,7 @@ module.exports = {
         function createSearchEmbed(result) {
             let embed = new Discord.MessageEmbed()
                 .setTitle(result.title)
-                .setDescription(
-                    `Book Id: ${result.id}\nLanguage: ${result.language}`
-                )
+                .setDescription(`Book Id: ${result.id}\nLanguage: ${result.language}`)
                 .setColor("#ff0000")
                 .setImage(result.thumbnail.s)
                 .setFooter("⬅️: Back, ➡️: Forward, ▶️: Read the book");
@@ -92,23 +90,19 @@ module.exports = {
             });
         }
 
-        (async () => {
-            // if an id is provided
-            if (Number(args[0])) {
-                if (nhentai.exists(args[0])) {
-                    const doujin = await nhentai.getDoujin(args[0]);
-                    dynamicEmbed.createEmbedFlip(message, [doujin], ["▶️"], createDoujinEmbed, generateContent, [doujin]);
-                } else {
-                    return message.channel.send("The book ID doesn't exist!");
-                }
+        // if an id is provided
+        if (Number(args[0])) {
+            if (nhentai.exists(args[0])) {
+                const doujin = await nhentai.getDoujin(args[0]);
+                dynamicEmbed.createEmbedFlip(message, [doujin], ["▶️"], createDoujinEmbed, generateContent, [doujin]);
             } else {
-                // search the keyword given
-                const result = await nana.search(
-                    message.content.substr(message.content.indexOf(" "))
-                );
-                let page = 0;
-                dynamicEmbed.createEmbedFlip(message, result.results, ["⬅️", "➡️", "▶️"], createSearchEmbed, generateDoujin, [result, page])
+                return message.channel.send("The book ID doesn't exist!");
             }
-        })();
+        } else {
+            // search the keyword given
+            const result = await nana.search(message.content.substr(message.content.indexOf(" ")));
+            let page = 0;
+            dynamicEmbed.createEmbedFlip(message, result.results, ["⬅️", "➡️", "▶️"], createSearchEmbed, generateDoujin, [result, page])
+        }
     },
 };

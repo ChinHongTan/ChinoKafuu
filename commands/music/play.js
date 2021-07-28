@@ -55,12 +55,10 @@ module.exports = {
                 return handleVideo([videos], voiceChannel, false, serverQueue, "yt", message);
             }
             const playlist = await ytpl(url, {limit: Infinity});
-            if (!playlist) {return;}
+            if (!playlist) return;
             let result = await waitimport(playlist.title, playlist.estimatedItemCount, message);
             if (result) {
-                playlist.items.forEach((video) => {
-                    handleVideo(video, voiceChannel, true, serverQueue, "ytlist", message);
-                });
+                playlist.items.forEach((video) => handleVideo(video, voiceChannel, true, serverQueue, "ytlist", message));
             }
             return;
         }
@@ -159,21 +157,11 @@ module.exports = {
             return;
         }
 
-        if (!args[0]) {
-            return message.channel.send("不要留白拉幹");
-        }
+        if (!args[0]) return message.channel.send("不要留白拉幹");
+        if (url.match(ytrx)) processYoutubeLink(url);
+        if (url.includes("open.spotify.com")) processSpotifyLink(url);
+        if (url.includes("soundcloud.com")) processSoundcloudLink(url);
 
-        if (url.match(ytrx)) {
-            processYoutubeLink(url);
-        }
-
-        if (url.includes("open.spotify.com")) {
-            processSpotifyLink(url);
-        }
-
-        if (url.includes("soundcloud.com")) {
-            processSoundcloudLink(url);
-        }
         let keyword = message.content.substr(message.content.indexOf(" ") + 1);
         message.channel.send(`Searching ${keyword}...`);
         const videos = await ytsr.search(keyword);

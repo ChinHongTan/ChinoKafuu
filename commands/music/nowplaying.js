@@ -18,9 +18,7 @@ module.exports = {
             let embed = new Discord.MessageEmbed()
                 .setColor("#ff0000")
                 .setTitle("**Now playing ♪**")
-                .setDescription(
-                    `[${song.title}](${song.url})\n\`[${format(dispatcher.streamTime / 1000)}/${format(song.duration)}]\`\n${progressbar.splitBar(song.duration, dispatcher.streamTime / 1000, 15)[0]}`
-                )
+                .setDescription(`[${song.title}](${song.url})\n\`[${format(dispatcher.streamTime / 1000)}/${format(song.duration)}]\`\n${progressbar.splitBar(song.duration, dispatcher.streamTime / 1000, 15)[0]}`)
                 .setThumbnail(song.thumb)
                 .addField("Requested by:", `<@!${song.requseter}>`)
                 .setFooter("音樂系統", message.client.user.displayAvatarURL());

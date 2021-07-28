@@ -8,9 +8,7 @@ module.exports = {
                 name: message.author.username,
                 avatar: message.author.avatarURL(),
             })
-            .then((hook) => {
-                hook.send(args.join(" "));
-            });
+            .then((hook) => hook.send(args.join(" ")));
         message.delete();
     },
 };

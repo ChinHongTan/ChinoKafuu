@@ -25,17 +25,13 @@ module.exports = {
                 var songTitle = item.title;
                 var songURL = item.url;
                 var songLength = item.duration;
-                var queueString = `${songNo}.[${songTitle}](${songURL}) | ${format(
-                    songLength
-                )}\n\n`;
+                var queueString = `${songNo}.[${songTitle}](${songURL}) | ${format(songLength)}\n\n`;
                 printQueue += queueString;
             });
             let embed = new Discord.MessageEmbed()
                 .setColor("#ff0000")
                 .setTitle("Song Queue")
-                .setDescription(
-                    `**Now playing**\n[${serverQueue.songs[0].title}](${serverQueue.songs[0].url})\n\n**Queued Songs**\n${printQueue}${serverQueue.songs.length - 1} songs in queue`
-                );
+                .setDescription(`**Now playing**\n[${serverQueue.songs[0].title}](${serverQueue.songs[0].url})\n\n**Queued Songs**\n${printQueue}${serverQueue.songs.length - 1} songs in queue`);
             return embed;
         }
 

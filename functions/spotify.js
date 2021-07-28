@@ -10,19 +10,16 @@ class spotify {
         this.api_base = "https://api.spotify.com/v1/";
     }
     async gettoken() {
-        await axios({
+        let data = await axios({
             method: "post",
             url: "https://accounts.spotify.com/api/token",
             data: "grant_type=client_credentials",
             headers: {
                 Authorization: "Basic " + this.header,
             },
-        }).then((data) => {
-            data.data["expires_at"] =
-                Math.round(Date.now() / 1000) +
-                parseInt(data.data["expires_in"]);
-            this.token = data.data;
         });
+        data.data["expires_at"] = Math.round(Date.now() / 1000) + parseInt(data.data["expires_in"]);
+        this.token = data.data;
         return this.token["access_token"];
     }
     async _make_spotify_req(url) {
@@ -34,9 +31,7 @@ class spotify {
                 Authorization: "Bearer " + token,
             },
         });
-        if (a.status !== 200) {
-            throw `Issue making request to ${url} status ${a.status} error ${a}`;
-        }
+        if (a.status !== 200) throw `Issue making request to ${url} status ${a.status} error ${a}`;
         return a.data;
     }
     async gettrack(id) {
@@ -46,9 +41,7 @@ class spotify {
         return await this._make_spotify_req(this.api_base + `albums/${id}`);
     }
     async getplaylisttrack(id) {
-        return await this._make_spotify_req(
-            this.api_base + `playlists/${id}/tracks`
-        );
+        return await this._make_spotify_req(this.api_base + `playlists/${id}/tracks`);
     }
     async getplaylist(id) {
         return await this._make_spotify_req(this.api_base + `playlists/${id}`);
@@ -61,9 +54,7 @@ class spotify {
         }
         var token = await this.gettoken();
         if (this.token === undefined) {
-            throw console.error(
-                "Requested a token from Spotify, did not end up getting one"
-            );
+            throw console.error("Requested a token from Spotify, did not end up getting one");
         }
         return token;
     }

@@ -63,9 +63,7 @@ module.exports = {
             }
         }
         if (!searchImage) {
-            return message.channel.send(
-                "You have to upload an image before using this command!"
-            );
+            return message.channel.send("You have to upload an image before using this command!");
         }
         let e = await fetch(`https://api.trace.moe/search?cutBorders&anilistInfo&url=${encodeURIComponent(searchImage)}`);
         let response = await e.json();

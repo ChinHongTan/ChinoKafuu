@@ -5,13 +5,9 @@ module.exports = {
 
         let rawData = fs.readFileSync("../data/countingData.json");
         let countingData = JSON.parse(rawData);
-        if (!Number(message.content)) {
-            return;
-        }
+        if (!Number(message.content)) return;
         if (countingData.counter === "0" || !countingData.counter) {
-            if (message.content !== "1") {
-                return;
-            }
+            if (message.content !== "1") return;
             countingData.author = message.author.tag;
             countingData.counter = message.content;
             let data = JSON.stringify(countingData, null, 2);

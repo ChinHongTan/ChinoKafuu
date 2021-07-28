@@ -4,8 +4,7 @@ module.exports = {
     cooldown: 5,
     async execute(message, args) {
         const Discord = require("discord.js");
-        const sagiriToken =
-            process.env.SAGIRI || require("../../config/config.json").sagiri_token;
+        const sagiriToken = process.env.SAGIRI || require("../../config/config.json").sagiri_token;
         const sagiri = require("sagiri");
         let mySauce = sagiri(sagiriToken);
         const { searchByUrl } = require("ascii2d");
@@ -124,9 +123,7 @@ module.exports = {
             }
         }
         if (!searchImage) {
-            return message.channel.send(
-                "You have to upload an image before using this command!"
-            );
+            return message.channel.send("You have to upload an image before using this command!");
         }
         searchForImage(searchImage);
     },

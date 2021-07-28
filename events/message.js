@@ -15,9 +15,7 @@ module.exports = {
     
         const command =
             client.commands.get(commandName) ||
-            client.commands.find(
-                (cmd) => cmd.aliases && cmd.aliases.includes(commandName)
-            );
+            client.commands.find((cmd) => cmd.aliases && cmd.aliases.includes(commandName));
     
         if (!command) {
             let keys = Array.from(client.commands.keys());
@@ -27,9 +25,7 @@ module.exports = {
             }
             let recommendation = new Map([...distances].filter(([k, v]) => v <= 2).sort((a, b) => a[1] - b[1]));
             if (recommendation.size > 0) {
-                message.channel.send(
-                    `\`${prefix}${commandName}\` is not a valid command! Do you mean: `
-                );
+                message.channel.send(`\`${prefix}${commandName}\` is not a valid command! Do you mean: `);
                 recommendation.forEach((_similarity, cmd) => {
                     message.channel.send(`\`${prefix}${cmd}\`\n`);
                 });
@@ -77,13 +73,7 @@ module.exports = {
     
             if (now < expirationTime) {
                 const timeLeft = (expirationTime - now) / 1000;
-                return message.reply(
-                    `please wait ${timeLeft.toFixed(
-                        1
-                    )} more second(s) before reusing the \`${
-                        command.name
-                    }\` command.`
-                );
+                return message.reply(`please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${command.name}\` command.`);
             }
     
             timestamps.set(message.author.id, now);

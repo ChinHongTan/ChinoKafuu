@@ -11,14 +11,8 @@ module.exports = {
         if (serverQueue) {
             args.forEach((number) => {
                 let queuenum = Number(number);
-                if (
-                    Number.isInteger(queuenum) &&
-                    queuenum <= serverQueue.songs.length &&
-                    queuenum > 0
-                ) {
-                    message.channel.send(
-                        `Removed ${serverQueue.songs[queuenum].title}!`
-                    );
+                if (Number.isInteger(queuenum) && queuenum <= serverQueue.songs.length && queuenum > 0) {
+                    message.channel.send(`Removed ${serverQueue.songs[queuenum].title}!`);
                     serverQueue.songs.splice(queuenum, 1);
                 } else {
                     message.channel.send("You have to enter a valid integer!");
