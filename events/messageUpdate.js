@@ -1,4 +1,4 @@
-const { storeEditSnipes } = require("../functions/eventFunctions")
+const { storeEditSnipes } = require("../functions/eventFunctions");
 
 module.exports = {
 	name: "messageUpdate",

@@ -1,4 +1,4 @@
-const { dynamic } = require("../functions/eventFunctions")
+const { dynamic } = require("../functions/eventFunctions");
 
 module.exports = {
 	name: "voiceUpdate",

@@ -1,7 +1,7 @@
 const { Users } = require("../data/dbObjects");
 
 module.exports = {
-	name: 'ready',
+	name: "ready",
 	once: true,
 	async execute(client) {
         const { currency } = client;

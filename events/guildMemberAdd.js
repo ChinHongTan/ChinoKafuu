@@ -1,4 +1,4 @@
-const { sendWelcomeMessage } = require("../functions/eventFunctions")
+const { sendWelcomeMessage } = require("../functions/eventFunctions");
 
 module.exports = {
 	name: "voiceUpdate",
