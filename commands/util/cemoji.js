@@ -2,7 +2,7 @@ module.exports = {
     name: "cemoji",
     cooldown: 3,
     description: "Copy emoji!",
-    execute(message) {
+    async execute(message) {
         const emojiName = message.content.match(/(?<=:.*:).+?(?=>)/g);
         const emojiID = message.content.match(/(?<=<).+?(?=:\d)/g);
         if (!emojiID || !emojiName) return message.channel.send("Please specify an emoji to add!");
