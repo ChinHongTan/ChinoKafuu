@@ -4,10 +4,13 @@ module.exports = {
     aliases: ["inv"],
     description: "Show your inventory.",
     async execute(message) {
+
         const { Users } = require("../../data/dbObjects");
-        const { currency } = message.client;
-        const storedBalances = await Users.findAll();
-        storedBalances.forEach((b) => currency.set(b.user_id, b));
+
+        //const { currency } = message.client;
+        //const storedBalances = await Users.findAll();
+        //storedBalances.forEach((b) => currency.set(b.user_id, b));
+
         const target = message.mentions.users.first() || message.author;
         const user = await Users.findOne({ where: { user_id: target.id } });
         const items = await user.getItems();
