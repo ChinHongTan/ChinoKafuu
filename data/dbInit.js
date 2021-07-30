@@ -1,7 +1,6 @@
 const Sequelize = require("sequelize");
-let database, host, password, username;
 try {
-    [host, database, password, username] = require("../config/config.json");
+    var {host, database, password, username} = require("../config/config.json");
 } catch (err) {
     // pass
 }
@@ -26,8 +25,8 @@ const CurrencyShop = require("../models/CurrencyShop")(
     sequelize,
     Sequelize.DataTypes
 );
-require("./models/Users")(sequelize, Sequelize.DataTypes);
-require("./models/UserItems")(sequelize, Sequelize.DataTypes);
+require("../models/Users")(sequelize, Sequelize.DataTypes);
+require("../models/UserItems")(sequelize, Sequelize.DataTypes);
 
 const force = process.argv.includes("--force") || process.argv.includes("-f");
 
