@@ -18,6 +18,7 @@ module.exports = {
         const user = await Users.findOne({
             where: { user_id: message.author.id },
         });
+        if (!user) return message.channel.send(`You don't have enough money to buy ${item.name} which costs ${item.cost}!`);
         currency.add(message.author.id, -item.cost);
         await user.addItem(item);
 
