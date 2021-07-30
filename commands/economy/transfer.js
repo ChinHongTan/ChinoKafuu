@@ -4,10 +4,7 @@ module.exports = {
     aliases: ["pay"],
     description: "Send the url of an avatar.",
     async execute(message, args) {
-        const { Users } = require("../../data/dbObjects");
         const { currency } = message.client;
-        const storedBalances = await Users.findAll();
-        storedBalances.forEach((b) => currency.set(b.user_id, b));
 
         const currentAmount = currency.getBalance(message.author.id);
         const transferAmount = args[0];

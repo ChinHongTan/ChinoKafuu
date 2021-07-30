@@ -7,8 +7,6 @@ module.exports = {
         const { Users, CurrencyShop } = require("../../data/dbObjects");
 
         const { currency } = message.client;
-        const storedBalances = await Users.findAll();
-        storedBalances.forEach((b) => currency.set(b.user_id, b));
         const item = await CurrencyShop.findOne({
             where: { name: { [Op.like]: args[0] } },
         });
