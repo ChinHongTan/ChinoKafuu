@@ -25,7 +25,7 @@ var FuzzySort = /** @class */ (function () {
             limit: limit
         });
         if (!result[0])
-            return undefined;
+            return;
         var member = this.message.guild.members.cache.find(function (m) { return m.user.tag === result[0].obj["tag"]; });
         return member;
     };

@@ -32,12 +32,12 @@ class FuzzySort {
         }
     }
     search(keyword: string, options: Options = {}) {
-        let { keys = ["nickname", "username", "tag", "discriminator"], limit = 1 } = options
+        let { keys = ["nickname", "username", "tag", "discriminator"], limit = 1 } = options;
         let result = fuzzysort.go(keyword, this.array, {
-            keys: keys,
-            limit: limit,
+            keys,
+            limit,
         });
-        if (!result[0]) return undefined;
+        if (!result[0]) return;
         let member = this.message.guild.members.cache.find((m) => m.user.tag === result[0].obj["tag"]);
         return member;
     }
