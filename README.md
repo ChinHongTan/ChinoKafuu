@@ -6,6 +6,8 @@
   <br>
 </h1>
 
+**The bot is now being translated into TypeScript! As I am new to TypeScript, you can expect me to upload very slowly in the following couple weeks. Bug fixing rate will also be affected, sorry for the inconvenience!**
+
 A nice little discord bot I make to learn JavaScript and how bots works XD
 
 The bot is not quite done yet but I will keep on updating!
