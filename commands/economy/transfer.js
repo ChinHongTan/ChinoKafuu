@@ -9,10 +9,21 @@ module.exports = {
         const currentAmount = currency.getBalance(message.author.id);
         const transferAmount = args[0];
         const transferTarget = message.mentions.users.first();
+        const keyword = message.content.substr(message.content.indexOf(" ") + 1);
+        let arr = message.guild.members.cache.map((member) => {
+            let memberInfo = {};
+            memberInfo.nickname = member.nickname;
+            memberInfo.username = member.user.username;
+            memberInfo.tag = member.user.tag;
+            memberInfo.discriminator = member.user.discriminator;
+            return memberInfo;
+        });
+        
 
         if (!transferAmount || isNaN(transferAmount)) {
             return message.channel.send(`Sorry ${message.author}, that's an invalid amount.`);
         }
+        if (!transferTarget) return message.channel.send('Please specify a person to transfer your money!')
         if (transferAmount > currentAmount) {
             return message.channel.send(`Sorry ${message.author}, you only have ${currentAmount}.`);
         }

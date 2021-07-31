@@ -1,12 +1,13 @@
 module.exports = {
     name: "avatar",
     cooldown: 10,
-    aliases: ["icon", "pfp"],
+    aliases: ["icon", "pfp", "av"],
     guildOnly: true,
     description: "Send the url of an avatar.",
     execute(message, args) {
         const Discord = require("discord.js");
-        const fuzzysort = require("fuzzysort");
+        const FuzzySort = require("../../functions/fuzzysort.js");
+        const fuzzysort = new FuzzySort(message);
         if (args.length < 1) {
             // display author's avatar
             const embed = new Discord.MessageEmbed()
@@ -59,24 +60,10 @@ module.exports = {
 
         // perform a fuzzy search based on the keyword given
         let keyword = message.content.substr(message.content.indexOf(" ") + 1);
-        // an array with guild member's information
-        let arr = message.guild.members.cache.map((member) => {
-            let memberInfo = {};
-            memberInfo.nickname = member.nickname;
-            memberInfo.username = member.user.username;
-            memberInfo.tag = member.user.tag;
-            memberInfo.discriminator = member.user.discriminator;
-            return memberInfo;
-        });
-        // fuzzy search from nickname, username, tag and discriminator
-        let result = fuzzysort.go(keyword, arr, {
-            keys: ["nickname", "username", "tag", "discriminator"],
-            limit: 1,
-        });
-        if (!result[0]) {
+        let member = fuzzysort.search(keyword);
+        if (!member) {
             return message.channel.send(`Can't find a member matching \`${keyword}\`!`);
         }
-        let member = message.guild.members.cache.find((member) => member.user.tag === result[0].obj.tag);
 
         const embed = new Discord.MessageEmbed()
             .setTitle(`__${member.displayName}'s avatar__`)
