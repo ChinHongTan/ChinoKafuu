@@ -19,15 +19,10 @@ module.exports = {
          * @returns {object} Discord embed
          */
          function createEmbed(smallChunk) {
-            let printQueue = "";
-            smallChunk.forEach((item) => {
-                var songNo = item.index;
-                var songTitle = item.title;
-                var songURL = item.url;
-                var songLength = item.duration;
-                var queueString = `${songNo}.[${songTitle}](${songURL}) | ${format(songLength)}\n\n`;
-                printQueue += queueString;
-            });
+             let arr = smallChunk.map((item) => {
+                 return `${item.index}.[${item.title}](${item.url}) | ${format(item.duration)}`
+             });
+            let printQueue = arr.join("\n\n");
             let embed = new Discord.MessageEmbed()
                 .setColor("#ff0000")
                 .setTitle("Song Queue")

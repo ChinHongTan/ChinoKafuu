@@ -20,9 +20,7 @@ module.exports = {
         function createEmbed(response) {
             let sourceURL = response.url;
             let info = "";
-            for (const [key, value] of Object.entries(
-                response.raw.data
-            )) {
+            for (const [key, value] of Object.entries(response.raw.data)) {
                 if (key === "ext_urls") continue;
                 info += `\`${key} : ${value}\`\n`;
             }
