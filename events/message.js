@@ -4,6 +4,7 @@ module.exports = {
         const { currency } = client;
         const { getEditDistance } = require("../functions/eventFunctions");
         const prefix = process.env.PREFIX || require("../config/config.json").prefix;
+        const owner_id = process.env.OWNNERID || require("../config/config.json").owner_id;
         const Discord = require("discord.js");
 
         if (message.author.bot && !message.author.id === "761766088337391626") return;
@@ -34,6 +35,10 @@ module.exports = {
             }
     
             return;
+        }
+
+        if (command.ownerOnly) {
+            if (message.author.id !== owner_id) return message.channel.send("This command is only available for the bot owner!");
         }
     
         if (command.permissions) {
