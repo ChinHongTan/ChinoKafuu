@@ -57,7 +57,6 @@ class DynamicEmbed {
             itemList["page"] = page;
             itemList["total"] = itemList.length
         }
-        console.log(itemList);
         let embed = createEmbed(itemList[page]);
         let embedMessage = await message.channel.send(embed);
         for (let emoji of emojiList) {

@@ -101,7 +101,6 @@ var DynamicEmbed = /** @class */ (function () {
                             itemList["page"] = page;
                             itemList["total"] = itemList.length;
                         }
-                        console.log(itemList);
                         embed = createEmbed(itemList[page]);
                         return [4 /*yield*/, message.channel.send(embed)];
                     case 1:
