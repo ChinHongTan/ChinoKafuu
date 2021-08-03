@@ -172,9 +172,7 @@ module.exports = {
             .setPlaceholder("Choose a song");
         for (let i in videos) {
             let title = videos[i].title;
-            console.log(`${title.length > 35 ? title.slice(0, 35) + "..." : title} - ${videos[i].durationFormatted}`);
             let channel = videos[i].channel.name;
-            console.log(channel.length > 20 ? channel.slice(0, 20) + "..." : channel);
             let list = new disbut.MessageMenuOption()
                 .setLabel(channel.length > 20 ? channel.slice(0, 20) + "..." : channel)
                 .setValue(i)
