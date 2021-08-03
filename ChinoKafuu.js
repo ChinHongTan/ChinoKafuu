@@ -14,8 +14,10 @@ const dbName = 'projectSekai';
     await mongoClient.connect();
     console.log('Connected successfully to server');
     const db = mongoClient.db(dbName);
-    const collection = db.collection('documents');
-    client.collection = collection;
+    const snipeCollection = db.collection('snipes');
+    client.snipeCollection = snipeCollection;
+    const editSnipeCollection = db.collection('editsnipes');
+    client.editSnipeCollection = editSnipeCollection;
 })();
 
 const { Users } = require("./data/dbObjects");

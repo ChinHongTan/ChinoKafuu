@@ -3,15 +3,14 @@ module.exports = {
     aliases: ["esnipe"],
     guildOnly: true,
     description: "Snipe an edited message.",
-    execute(message, args) {
-        const fs = require("fs");
+    async execute(message, args) {
         const Discord = require("discord.js");
+        const collection = message.client.editSnipeCollection;
 
-        let rawData = fs.readFileSync("./data/editSnipes.json");
-        let editSnipesWithGuild = new Map(JSON.parse(rawData));
+        let editSnipesWithGuild = await collection.findOne({ id: message.guild.id });
 
-        if (editSnipesWithGuild.has(message.guild.id)) {
-            let editsnipes = editSnipesWithGuild.get(message.guild.id);
+        if (editSnipesWithGuild) {
+            let editsnipes = editSnipesWithGuild.editSnipe;
             if (args.length < 1) {
                 let embed = new Discord.MessageEmbed()
                     .setColor("RANDOM")
@@ -21,11 +20,13 @@ module.exports = {
                 return message.channel.send(embed);
             } else {
                 if (Number(args[0]) > 10) return message.channel.send("You can't snipe beyond 10!");
+                let msg = editsnipes?.[Number(args[0]) - 1];
+                if (!msg) return message.channel.send("Not a valid snipe!");
                 let embed = new Discord.MessageEmbed()
                     .setColor("RANDOM")
-                    .setAuthor(editsnipes[Number(args[0]) - 1].author, editsnipes[Number(args[0]) - 1].authorAvatar)
-                    .setDescription(editsnipes[Number(args[0]) - 1].content)
-                    .setFooter(editsnipes[Number(args[0]) - 1].timestamp);
+                    .setAuthor(msg.author, msg.authorAvatar)
+                    .setDescription(msg.content)
+                    .setFooter(msg.timestamp);
                 return message.channel.send(embed);
             }
         } else {

@@ -4,7 +4,7 @@ module.exports = {
     description: "Snipe a message.",
     async execute(message, args) {
         const Discord = require("discord.js");
-        const collection = message.client.collection;
+        const collection = message.client.snipeCollection;
 
         let snipeWithGuild = await collection.findOne({ id: message.guild.id });
         let snipes;

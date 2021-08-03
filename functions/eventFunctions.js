@@ -1,9 +1,8 @@
 module.exports = {
     async storeSnipes(message) {
-        const collection = message.client.collection;
+        const collection = message.client.snipeCollection;
         let rawData = await collection.findOne({ id: message.guild.id });
         let snipeWithGuild = rawData ?? { id: message.guild.id };
-        console.log(snipeWithGuild);
         if (message.author.bot) return;
         if (!message.guild) return;
 
@@ -21,37 +20,38 @@ module.exports = {
         snipes.unshift(snipe);
         if (snipes.length > 10) snipes.pop();
         snipeWithGuild.snipes = snipes;
-        console.log(snipeWithGuild);
         const query = { id: message.guild.id };
         const options = { upsert: true };
         const replacement = snipeWithGuild;
         collection.replaceOne(query, replacement, options);
     },
-    storeEditSnipes(oldMessage, newMessage) {
-        const fs = require("fs");
-        let rawData = fs.readFileSync("./data/editSnipes.json");
-        let editSnipesWithGuild = new Map(JSON.parse(rawData));
+    async storeEditSnipes(oldMessage, newMessage) {
+        const collection = oldMessage.client.editSnipeCollection;
+        let rawData = await collection.findOne({ id: oldMessage.guild.id });
+        let editSnipeWithGuild = rawData ?? { id: oldMessage.guild.id };
 
         if (oldMessage.author.bot) return;
         if (!oldMessage.guild) return;
 
         var editSnipe = {};
-        let editSnipes = editSnipesWithGuild.get(oldMessage.guild.id) ?? [];
+        let editSnipes = editSnipeWithGuild?.editSnipe ?? [];
 
         editSnipe.author = newMessage.author.tag;
         editSnipe.authorAvatar = newMessage.author.displayAvatarURL({
             format: "png",
             dynamic: true,
         });
-        editSnipe.content = oldMessage.content;
+        editSnipe.content = oldMessage.content ?? "None";
         if (newMessage.editedAt) {
             editSnipe.timestamp = newMessage.editedAt.toUTCString([8]);
             editSnipes.unshift(editSnipe);
         }
         if (editSnipes.length > 10) editSnipes.pop();
-        editSnipesWithGuild.set(oldMessage.guild.id, editSnipes);
-        let data = JSON.stringify(Array.from(editSnipesWithGuild.entries()), null, 2);
-        fs.writeFileSync("./data/editSnipes.json", data);
+        editSnipeWithGuild.editSnipe = editSnipes;
+        const query = { id: oldMessage.guild.id };
+        const options = { upsert: true };
+        const replacement = editSnipeWithGuild;
+        collection.replaceOne(query, replacement, options);
     },
     async dynamic(oldState, newState) {
         if (newState.member.user.bot) return;
