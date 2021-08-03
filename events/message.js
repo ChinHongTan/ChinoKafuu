@@ -4,7 +4,7 @@ module.exports = {
         const { currency } = client;
         const { getEditDistance } = require("../functions/eventFunctions");
         const prefix = process.env.PREFIX || require("../config/config.json").prefix;
-        const owner_id = process.env.OWNNERID || require("../config/config.json").owner_id;
+        const owner_id = process.env.OWNERID || require("../config/config.json").owner_id;
         const Discord = require("discord.js");
 
         if (message.author.bot && !message.author.id === "761766088337391626") return;
