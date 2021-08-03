@@ -14,7 +14,7 @@ module.exports = {
         const spotify = new Spotify(SpotifyClientID, SpotifyClientSecret);
         const disbut = require("discord-buttons");
 
-        const {waitimport, handleVideo, format} = require("../../functions/musicFunctions");
+        const {waitimport, handleVideo} = require("../../functions/musicFunctions");
         const ytrx = new RegExp("(?:youtube\\.com.*(?:\\?|&)(?:v|list)=|youtube\\.com.*embed\\/|youtube\\.com.*v\\/|youtu\\.be\\/)((?!videoseries)[a-zA-Z0-9_-]*)");
         const scrxt = new RegExp("^(?<track>https://soundcloud.com/(?:(?!sets|stats|groups|upload|you|mobile|stream|messages|discover|notifications|terms-of-use|people|pages|jobs|settings|logout|charts|imprint|popular)(?:[a-z0-9-_]{1,25}))/(?:(?:(?!sets|playlist|stats|settings|logout|notifications|you|messages)(?:[a-z0-9-_]{1,100}))(?:/s-[a-zA-Z0-9-_]{1,10})?))(?:[a-z0-9-?=/]*)$");
         const sprxtrack = new RegExp("(http[s]?://)?(open.spotify.com)/");
@@ -172,11 +172,13 @@ module.exports = {
             .setPlaceholder("Choose a song");
         for (let i in videos) {
             let title = videos[i].title;
+            console.log(`${title.length > 35 ? title.slice(0, 35) + "..." : title} - ${videos[i].durationFormatted}`);
             let channel = videos[i].channel.name;
+            console.log(channel.length > 20 ? channel.slice(0, 20) + "..." : channel);
             let list = new disbut.MessageMenuOption()
                 .setLabel(channel.length > 20 ? channel.slice(0, 20) + "..." : channel)
                 .setValue(i)
-                .setDescription(`${title.length > 35 ? title.slice(0, 35) + "..." : title} - ${format(videos[i].duration)}`);
+                .setDescription(`${title.length > 35 ? title.slice(0, 30) + "..." : title} - ${videos[i].durationFormatted}`);
             menu.addOption(list);
         }
 
