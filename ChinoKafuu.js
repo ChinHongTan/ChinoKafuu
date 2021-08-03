@@ -2,6 +2,22 @@ const fs = require("fs");
 const Discord = require("discord.js");
 const token = process.env.TOKEN || require("./config/config.json").token;
 
+const { MongoClient } = require('mongodb');
+const mongodb = process.env.MONGODB_URI || require('./config/config.json').mongodb;
+const mongoClient = new MongoClient(mongodb);
+
+// Database Name
+const dbName = 'projectSekai';
+
+// Use connect method to connect to the server
+(async () => {
+    await mongoClient.connect();
+    console.log('Connected successfully to server');
+    const db = mongoClient.db(dbName);
+    const collection = db.collection('documents');
+    client.collection = collection;
+})();
+
 const { Users } = require("./data/dbObjects");
 
 const client = new Discord.Client();

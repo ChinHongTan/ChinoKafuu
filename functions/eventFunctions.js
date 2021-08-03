@@ -1,30 +1,31 @@
 module.exports = {
-    storeSnipes(message) {
-        const fs = require("fs");
-        let data = fs.readFileSync("./data/snipes.json");
-        let snipeWithGuild = new Map(JSON.parse(data));
+    async storeSnipes(message) {
+        const collection = message.client.collection;
+        let rawData = await collection.findOne({ id: message.guild.id });
+        let snipeWithGuild = rawData ?? { id: message.guild.id };
+        console.log(snipeWithGuild);
         if (message.author.bot) return;
         if (!message.guild) return;
 
         let snipe = {};
-        let content = message.content;
-        if (!content) content = "None";
-        let snipes = (snipeWithGuild.has(message.guild.id)) ? snipeWithGuild.get(message.guild.id) : [];
-
+        let snipes = snipeWithGuild?.snipes ?? [];
         snipe.author = message.author.tag;
         snipe.authorAvatar = message.author.displayAvatarURL({
             format: "png",
             dynamic: true,
         });
-        snipe.content = message.content;
+        snipe.content = message.content ?? "None";
         snipe.timestamp = message.createdAt.toUTCString([8]);
         snipe.attachments = message.attachments.first()?.proxyURL;
 
         snipes.unshift(snipe);
         if (snipes.length > 10) snipes.pop();
-        snipeWithGuild.set(message.guild.id, snipes);
-        data = JSON.stringify(Array.from(snipeWithGuild.entries()), null, 2);
-        fs.writeFileSync("./data/snipes.json", data);
+        snipeWithGuild.snipes = snipes;
+        console.log(snipeWithGuild);
+        const query = { id: message.guild.id };
+        const options = { upsert: true };
+        const replacement = snipeWithGuild;
+        collection.replaceOne(query, replacement, options);
     },
     storeEditSnipes(oldMessage, newMessage) {
         const fs = require("fs");

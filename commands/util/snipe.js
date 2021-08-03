@@ -2,30 +2,31 @@ module.exports = {
     name: "snipe",
     guildOnly: true,
     description: "Snipe a message.",
-    execute(message, args) {
-        const fs = require("fs");
+    async execute(message, args) {
         const Discord = require("discord.js");
+        const collection = message.client.collection;
 
-        let rawData = fs.readFileSync("./data/snipes.json");
-        let snipeWithGuild = new Map(JSON.parse(rawData));
+        let snipeWithGuild = await collection.findOne({ id: message.guild.id });
         let snipes;
 
-        if (snipeWithGuild.has(message.guild.id)) {
-            snipes = snipeWithGuild.get(message.guild.id);
+        if (snipeWithGuild) {
+            snipes = snipeWithGuild.snipes;
         } else {
             return message.channel.send("There's nothing to snipe!");
         }
         let arg = args[0] ?? 1;
 
         if (Number(arg) > 10) return message.channel.send("You can't snipe beyond 10!");
+        let msg = snipes?.[Number(arg) - 1];
+        if (!msg) return message.channel.send("Not a valid snipe!");
 
-        let image = snipes[Number(arg) - 1].attachments;
+        let image = msg.attachments;
 
         let embed = new Discord.MessageEmbed()
             .setColor("RANDOM")
-            .setAuthor(snipes[Number(arg) - 1].author, snipes[Number(arg) - 1].authorAvatar)
-            .setDescription(snipes[Number(arg) - 1].content)
-            .setFooter(snipes[Number(arg) - 1].timestamp)
+            .setAuthor(msg.author, msg.authorAvatar)
+            .setDescription(msg.content)
+            .setFooter(msg.timestamp)
             .setImage(image);
         return message.channel.send(embed);
     },

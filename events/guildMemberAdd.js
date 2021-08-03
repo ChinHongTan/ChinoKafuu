@@ -1,7 +1,7 @@
 const { sendWelcomeMessage } = require("../functions/eventFunctions");
 
 module.exports = {
-	name: "voiceUpdate",
+	name: "guildMEmberAdd",
 	async execute(member) {
         sendWelcomeMessage(member);
 	},
