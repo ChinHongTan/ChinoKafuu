@@ -11,5 +11,6 @@ module.exports = {
             let invite = await client.discordTogether.createTogetherCode(message.member.voice.channelID, "youtube");
             return message.channel.send(`${invite.code}`);
         }
+        message.channel.send("You have to join a voice channel before using this command!");
     },
 };

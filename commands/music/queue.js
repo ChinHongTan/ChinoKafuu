@@ -26,7 +26,7 @@ module.exports = {
             let embed = new Discord.MessageEmbed()
                 .setColor("#ff0000")
                 .setTitle("Song Queue")
-                .setDescription(`**Now playing**\n[${serverQueue.songs[0].title}](${serverQueue.songs[0].url})\n\n**Queued Songs**\n${printQueue}${serverQueue.songs.length - 1} songs in queue`);
+                .setDescription(`**Now playing**\n[${serverQueue.songs[0].title}](${serverQueue.songs[0].url})\n\n**Queued Songs**\n${printQueue}\n${serverQueue.songs.length - 1} songs in queue`);
             return embed;
         }
 

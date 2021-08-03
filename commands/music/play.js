@@ -158,9 +158,9 @@ module.exports = {
         }
 
         if (!args[0]) return message.channel.send("不要留白拉幹");
-        if (url.match(ytrx)) processYoutubeLink(url);
-        if (url.includes("open.spotify.com")) processSpotifyLink(url);
-        if (url.includes("soundcloud.com")) processSoundcloudLink(url);
+        if (url.match(ytrx)) return processYoutubeLink(url);
+        if (url.includes("open.spotify.com")) return processSpotifyLink(url);
+        if (url.includes("soundcloud.com")) return processSoundcloudLink(url);
 
         let keyword = message.content.substr(message.content.indexOf(" ") + 1);
         message.channel.send(`Searching ${keyword}...`);
