@@ -24,7 +24,7 @@
     "ascii2d": "^3.0.1",
     "btoa": "^1.2.1",
     "canvas": "^2.8.0",
-    "discord-backup": "^2.5.0",
+    "discord-backup": "^3.0.0",
     "discord-buttons": "^4.0.0",
     "discord-together": "^1.1.53",
     "discord.js": "^12.5.3",
