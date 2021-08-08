@@ -1,8 +1,8 @@
 module.exports = {
     name: "sauce",
-    description: "Search SauceNao for an image source.",
+    description: {"en_US" : "Search SauceNao for an image source.", "zh_CN" : "在SauceNao上搜索图源"},
     cooldown: 5,
-    async execute(message, args) {
+    async execute(message, args, language) {
         const Discord = require("discord.js");
         const sagiriToken = process.env.SAGIRI || require("../../config/config.json").sagiri_token;
         const sagiri = require("sagiri");
@@ -26,12 +26,12 @@ module.exports = {
             }
             let embed = new Discord.MessageEmbed()
                 .setTitle(response.site)
-                .setDescription(`Similarity: ${response.similarity}%`)
+                .setDescription(language.similarity.replace("${response.similarity}", response.similarity))
                 .setColor("#008000")
                 .setImage(response.thumbnail)
                 .addFields(
-                    { name: "**Source URL**", value: sourceURL },
-                    { name: "Additional info", value: info }
+                    { name: language.sourceURL, value: sourceURL },
+                    { name: languag.additionalInfo, value: info }
                 )
                 .setFooter(`page ${response.page + 1}/${response.total}`);
             return embed;
@@ -45,19 +45,19 @@ module.exports = {
         function createEmbed2(response) {
             let sourceURL = response.source.url;
             let title = response.source.title;
-            let author = "No info found!";
+            let author = language.noAuthor;
             if (response.source.author) {
                 let authorinfo = response.source.author;
-                author = `Name: ${authorinfo.name}\nLink: ${authorinfo.url}`;
+                author = language.sauceAuthor.replace("${authorinfo.name}", authorinfo.name).replace("${authorinfo.url}", authorinfo.url);
             }
             let embed = new Discord.MessageEmbed()
                 .setTitle(response.source.type)
                 .setColor("#008000")
                 .setImage(response.thumbnailUrl)
                 .addFields(
-                    { name: "**Source URL**", value: sourceURL },
-                    { name: "Title", value: title },
-                    { name: "Author", author }
+                    { name: language.sourceURL, value: sourceURL },
+                    { name: language.title, value: title },
+                    { name: language.author, author }
                 )
                 .setFooter(`page ${response.page + 1}/${response.total}`);
             return embed;
@@ -97,7 +97,7 @@ module.exports = {
             // search with ascii2d
             let result2 = await searchByUrl(searchImage, "bovw");
             if (!result2 || result2.length < 1) {
-                return message.channel.send("No result!");
+                return message.channel.send(language.noResult);
             }
             let response2 = result2.items.filter(
                 (r2) => r2.source !== 0
@@ -121,7 +121,7 @@ module.exports = {
             }
         }
         if (!searchImage) {
-            return message.channel.send("You have to upload an image before using this command!");
+            return message.channel.send(language.noImage);
         }
         searchForImage(searchImage);
     },

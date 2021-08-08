@@ -18,6 +18,8 @@ const dbName = 'projectSekai';
     client.snipeCollection = snipeCollection;
     const editSnipeCollection = db.collection('editsnipes');
     client.editSnipeCollection = editSnipeCollection;
+    const guildOptions = db.collection('guildoptions');
+    client.guildOptions = guildOptions;
 })();
 
 const { Users } = require("./data/dbObjects");
@@ -26,8 +28,12 @@ const client = new Discord.Client();
 client.currency = new Discord.Collection();
 require("discord-buttons")(client);
 const { currency } = client;
+const en_US = require("./language/en_US.json");
+const zh_CN = require("./language/zh_CN.json");
+const zh_TW = require("./language/zh_TW.json");
 
 client.commands = new Discord.Collection();
+client.language = { "en_US" : en_US, "zh_CN" : zh_CN, "zh_TW" : zh_TW };
 
 const commandFolders = fs.readdirSync("./commands");
 

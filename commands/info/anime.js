@@ -1,8 +1,8 @@
 module.exports = {
     name: "anime",
     guildOnly: true,
-    description: "Search for anime details or search anime with frames.",
-    async execute(message, args) {
+    description: {"en_US" : "Search for anime details or search anime with frames.", "zh_CN" : "根据动漫截图查找动漫/查询动漫相关信息"},
+    async execute(message, args, language) {
         const fetch = require("node-fetch");
         const Discord = require("discord.js");
         const DynamicEmbed = require("../../functions/dynamicEmbed");
@@ -31,16 +31,16 @@ module.exports = {
             let similarity = response.similarity;
             let embed = new Discord.MessageEmbed()
                 .setTitle(nativeTitle)
-                .setDescription(`Similarity: ${similarity * 100}%`)
+                .setDescription(language.similarity.replace("${similarity * 100}", similarity * 100))
                 .setColor("#008000")
                 .setImage(response.image)
                 .addFields(
-                    { name: "**Source URL**", value: sourceURL },
-                    { name: "Native Title", value: nativeTitle },
-                    { name: "Romaji Title", value: romajiTitle },
-                    { name: "englishTitle", value: englishTitle },
-                    { name: "Episode", value: episode },
-                    { name: "NSFW", value: nsfw }
+                    { name: language.sourceURL, value: sourceURL },
+                    { name: language.nativeTitle, value: nativeTitle },
+                    { name: language.romajiTitle, value: romajiTitle },
+                    { name: language.englishTitle, value: englishTitle },
+                    { name: language.episode, value: episode },
+                    { name: language.NSFW, value: nsfw }
                 )
                 .setFooter(`page ${response.page + 1}/${response.total}`);
             return embed;
@@ -48,7 +48,7 @@ module.exports = {
 
         if (args.length > 0) {
             if (!isValidHttpUrl(args[0])) {
-                return message.channel.send("Please enter a valid http url!");
+                return message.channel.send(language.invalidURL);
             }
             let e = await fetch(`https://api.trace.moe/search?cutBorders&anilistInfo&url=${encodeURIComponent(args[0])}`);
             let response = await e.json();
@@ -63,7 +63,7 @@ module.exports = {
             }
         }
         if (!searchImage) {
-            return message.channel.send("You have to upload an image before using this command!");
+            return message.channel.send(language.noImage);
         }
         let e = await fetch(`https://api.trace.moe/search?cutBorders&anilistInfo&url=${encodeURIComponent(searchImage)}`);
         let response = await e.json();

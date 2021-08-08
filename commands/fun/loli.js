@@ -1,8 +1,8 @@
 module.exports = {
     name: "loli",
     cooldown: 3,
-    description: "get a picture of a loli",
-    execute(message) {
+    description: {"en_US" : "get a picture of a loli", "zh_CN" : "萝莉图"},
+    execute(message, _args, language) {
         const fs = require("fs");
         const Discord = require("discord.js");
 
@@ -14,7 +14,6 @@ module.exports = {
         for (const filename of imageFiles) {
             let rawdata = fs.readFileSync(`./images/${filename}`);
             let imagefile = JSON.parse(rawdata);
-
             pictures[filename] = imagefile;
         }
 
@@ -29,10 +28,8 @@ module.exports = {
         let imageInfo = images.attachments[random];
         let embed = new Discord.MessageEmbed()
             .setColor("#2d9af8")
-            .setTitle("蘿莉圖！")
-            .setDescription(
-                `來源商：${images.author}\n[圖片鏈接](${messageurl})`
-            )
+            .setTitle(language.loliPic)
+            .setDescription(language.loliProvider.replace("${images.author}", images.author).replace("${messageurl}", messageurl))
             .setImage(imageInfo.url)
             .setFooter(
                 "蘿莉控的FBI避難所",

@@ -1,8 +1,8 @@
 module.exports = {
     name: "youtube",
     cooldown: 3,
-    description: "Watch youtube together!",
-    async execute(message) {
+    description: {"en_US" : "Watch youtube together!", "zh_CN" : "一起看YouTube!"},
+    async execute(message, _args, language) {
         const client = message.client;
         const { DiscordTogether } = require("discord-together");
 
@@ -11,6 +11,6 @@ module.exports = {
             let invite = await client.discordTogether.createTogetherCode(message.member.voice.channelID, "youtube");
             return message.channel.send(`${invite.code}`);
         }
-        message.channel.send("You have to join a voice channel before using this command!");
+        message.channel.send(language.notInVC);
     },
 };

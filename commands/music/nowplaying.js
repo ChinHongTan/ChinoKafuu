@@ -2,8 +2,8 @@ module.exports = {
     name: "nowplaying",
     guildOnly: true,
     aliases: ["np"],
-    description: "Sees the song currently being played.",
-    execute(message) {
+    description: {"en_US" : "Sees the song currently being played.", "zh_CN" : "查看目前正在播放的歌曲"},
+    execute(message, _args, language) {
         const queueData = require("../../data/queueData");
         let queue = queueData.queue;
         let serverQueue = queue.get(message.guild.id);
@@ -17,14 +17,14 @@ module.exports = {
 
             let embed = new Discord.MessageEmbed()
                 .setColor("#ff0000")
-                .setTitle("**Now playing ♪**")
+                .setTitle(language.npTitle)
                 .setDescription(`[${song.title}](${song.url})\n\`[${format(dispatcher.streamTime / 1000)}/${format(song.duration)}]\`\n${progressbar.splitBar(song.duration, dispatcher.streamTime / 1000, 15)[0]}`)
                 .setThumbnail(song.thumb)
-                .addField("Requested by:", `<@!${song.requseter}>`)
-                .setFooter("音樂系統", message.client.user.displayAvatarURL());
+                .addField(language.requester, `<@!${song.requseter}>`)
+                .setFooter(language.musicFooter, message.client.user.displayAvatarURL());
             return message.channel.send(embed);
         } else {
-            return message.channel.send("There is no song in the queue!");
+            return message.channel.send(language.noSong);
         }
     },
 };

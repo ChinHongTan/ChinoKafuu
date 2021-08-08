@@ -1,6 +1,6 @@
 module.exports = {
     name: "eval",
-    description: "Evaluate codes!",
+    description: {"en_US" : "Evaluate codes!", "zh_CN" : "执行代码!"},
     guildOnly: true,
     ownerOnly: true,
     cooldowm: 5,

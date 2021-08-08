@@ -2,8 +2,8 @@ module.exports = {
     name: "play",
     guildOnly: true,
     aliases: ["p"],
-    description: "Play a song based on a given url or a keyword",
-    async execute(message, args) {
+    description: {"en_US" : "Play a song based on a given url or a keyword", "zh_CN" : "根据关键字或网址播放歌曲"},
+    async execute(message, args, language) {
         const ytsr = require("youtube-sr").default;
         const ytpl = require("ytpl");
         const scID = process.env.SCID || require("../../config/config.json").scID;
@@ -26,11 +26,11 @@ module.exports = {
 
         const voiceChannel = message.member.voice.channel;
         if (!voiceChannel) {
-            return message.channel.send("You need to be in a voice channel to play music!");
+            return message.channel.send(language.notInVC);
         }
         const permissions = voiceChannel.permissionsFor(message.client.user);
         if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) {
-            return message.channel.send("I need the permissions to join and speak in your voice channel!");
+            return message.channel.send(language.cantJoinVC);
         }
 
         if (!serverQueue) {
@@ -81,7 +81,7 @@ module.exports = {
             if (url.includes("album")) {
                 result = await spotify.getAlbum(Id);
                 let title = result.name;
-                let m = await message.channel.send(`✅ Album: **${title}** importing`);
+                let m = await message.channel.send(language.importAlbum1.replace("${title}", title));
                 for (const i in result.tracks.items) {
                     console.log(result.artists[0].name + " " + result.tracks.items[i].name);
                     let videos = await ytsr.search(
@@ -89,9 +89,9 @@ module.exports = {
                         { limit: 1 }
                     );
                     await handleVideo(videos, voiceChannel, true, serverQueue, "yt", message);
-                    m.edit(`✅ Album: **${videos[0].title}** importing **${i}**`);
+                    m.edit(language.importAlbum2.replace("${videos[0].title}", videos[0].title).replace("${i}", i));
                 }
-                return m.edit(`✅ Album: **${title}** has been added to the queue!`);
+                return m.edit(language.importAlbumDone.replace("${title}", title));
             }
 
             if (url.includes("playlist")) {
@@ -109,7 +109,7 @@ module.exports = {
                     return await handleVideo(videos, voiceChannel, false, serverQueue, "yt", message);
                 }
 
-                let m = await message.channel.send(`✅ Playlist: **${title}** importing`);
+                let m = await message.channel.send(language.importPlaylist1.replace("${title}", title));
                 while (true) {
                     for (const i in result.tracks.items) {
                         let videos = await ytsr.search(
@@ -117,7 +117,7 @@ module.exports = {
                             { limit: 1 }
                         );
                         await handleVideo(videos, voiceChannel, true, serverQueue, "yt", message);
-                        m.edit(`✅ PlayList: **${videos[0].title}** importing **${i}**`);
+                        m.edit(language.importPlaylist2.replace("${videos[0].title}", videos[0].title).replace("${i}", i));
                     }
                     if (!result.tracks.next) {
                         break;
@@ -126,7 +126,7 @@ module.exports = {
                         continue;
                     }
                 }
-                return m.edit(`✅ Playlist: **${title}** has been added to the queue!`);
+                return m.edit(language.importPlaylistDone.replace("${title}", title));
             }
         }
 
@@ -134,42 +134,42 @@ module.exports = {
             if (scdl.isPlaylistURL(url)) {
                 let data = await scdl.getSetInfo(url, scID).catch((err) => {
                     console.log(err);
-                    return message.channel.send("🆘 I could not obtain any search results.");
+                    return message.channel.send(language.noResult);
                 });
                 let wait = await waitimport(data.title, data.tracks.length, message);
                 let m;
                 if (wait) {
-                    m = await message.channel.send(`✅ Playlist: **${data.title}** importing`);
+                    m = await message.channel.send(language.importPlaylist1.replace("${data.title}", data.title));
                     for (let i in data.tracks) {
                         await handleVideo(data.tracks[i], voiceChannel, true, serverQueue, "sc", message);
-                        m.edit(`✅ Playlist: **${data.tracks[i].title}** importing **${i}**`);
+                        m.edit(language.importPlaylist2.replace("${data.tracks[i].title}", data.tracks[i].title).replace("${i}", i));
                     }
                 }
-                return m.edit(`✅ Album: **${data.title}** has been added to the queue!`);
+                return m.edit(language.importPlaylistDone.replace("${data.title}", data.title));
             }
             if (url.match(scrxt)) {
                 let data = await scdl.getInfo(url, scID).catch((err) => {
                     console.log(err);
-                    throw message.channel.send("🆘 I could not obtain any search results.");
+                    throw message.channel.send(language.noResult);
                 });
                 await handleVideo(data, voiceChannel, true, serverQueue, "sc", message);
             }
             return;
         }
 
-        if (!args[0]) return message.channel.send("不要留白拉幹");
+        if (!args[0]) return message.channel.send(language.noArgs);
         if (url.match(ytrx)) return processYoutubeLink(url);
         if (url.includes("open.spotify.com")) return processSpotifyLink(url);
         if (url.includes("soundcloud.com")) return processSoundcloudLink(url);
 
         let keyword = message.content.substr(message.content.indexOf(" ") + 1);
-        message.channel.send(`Searching ${keyword}...`);
+        message.channel.send(language.searching.replace("${keyword}", keyword));
         const videos = await ytsr.search(keyword);
         let menu = new disbut.MessageMenu()
             .setID(message.guild.id)
             .setMinValues(1)
             .setMaxValues(1)
-            .setPlaceholder("Choose a song");
+            .setPlaceholder(language.choose);
         for (let i in videos) {
             let title = videos[i].title;
             let channel = videos[i].channel.name;
@@ -180,7 +180,7 @@ module.exports = {
             menu.addOption(list);
         }
 
-        let msg = await message.channel.send("請選擇歌曲", menu);
+        let msg = await message.channel.send(language.choose, menu);
         let col = msg.createMenuCollector((b) => b.clicker.user.id === message.author.id && b.guild.id === message.guild.id,
             { time: 100000 }
         );
@@ -193,7 +193,7 @@ module.exports = {
         col.on("end", (menu) => {
             if (!menu.first()) {
                 msg.delete();
-                msg.channel.send("Timeout");
+                msg.channel.send(language.timeout);
             }
         });
     },

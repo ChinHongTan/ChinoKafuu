@@ -2,8 +2,8 @@ module.exports = {
     name: "user-info",
     aliases: ["user", "ui"],
     guildOnly: true,
-    description: "User's information ",
-    execute(message) {
+    description: {"en_US" : "User's information", "zh_CN" : "用户资料"},
+    execute(message, _args, language) {
         const Discord = require("discord.js");
 
         function getUserInfo(author) {
@@ -11,13 +11,13 @@ module.exports = {
             if (author.presence.activities) {
                 for (const activity of author.presence.activities) {
                     if (activity.type === "CUSTOM_STATUS") {
-                        activityDescription += `__Custom Status__\n<:${activity.emoji.name}:${activity.emoji.id}> ${activity.state}\n`;
+                        activityDescription += language.customStatus.replace("${activity.emoji.name}", activity.emoji.name).replace("${activity.emoji.id}", activity.emoji.id).replace("${activity.state}", activity.state);
                     } else {
-                        activityDescription += `__${activity.type}__\n${activity.name}\n${activity.details ? activity.details : ""}`;
+                        activityDescription += language.gameStatus.replace("activity.type", activity.type).replace("${activity.name}", activity.name).replace("${activity.details ? activity.details : ''}", activity.details ? activity.details : '');
                     }
                 }
             } else {
-                activityDescription = "User is not playing.";
+                activityDescription = language.notPlaying;
             }
             const embed = new Discord.MessageEmbed()
                 .setColor("#0099ff")
@@ -34,45 +34,45 @@ module.exports = {
                     })
                 )
                 .addFields(
-                    { name: "Tag", value: author.user.tag, inline: true },
+                    { name: language.tag, value: author.user.tag, inline: true },
                     {
-                        name: "Nickname",
+                        name: language.nickname,
                         value: author.displayName,
                         inline: true,
                     },
-                    { name: "ID", value: author.id, inline: true },
+                    { name: language.id, value: author.id, inline: true },
                     {
-                        name: "Avatar URL",
+                        name: language.avatarurl,
                         value: `[Click here](${author.user.displayAvatarURL({format: "png", dynamic: true})})`,
                         inline: true,
                     },
                     {
-                        name: "Created At",
+                        name: language.createdAt,
                         value: author.user.createdAt.toLocaleDateString("zh-TW"),
                         inline: true,
                     },
                     {
-                        name: "Joined At",
+                        name: language.joinedAt,
                         value: author.joinedAt.toLocaleDateString("zh-TW"),
                         inline: true,
                     },
                     {
-                        name: "Activity",
+                        name: language.activity,
                         value: activityDescription ? activityDescription : "None",
                         inline: true,
                     },
                     {
-                        name: "Status",
+                        name: language.status,
                         value: author.presence.status,
                         inline: true,
                     },
                     {
-                        name: "Device",
+                        name: language.device,
                         value: author.presence.clientStatus ? Object.keys(author.presence.clientStatus).join(", ") : "None",
                         inline: true,
                     },
                     {
-                        name: `Roles(${author.roles.cache.size})`,
+                        name: language.roles.replace("${author.roles.cache.size}", author.roles.cache.size),
                         value: author.roles.cache.map((roles) => `${roles}`).join(", "),
                         inline: false,
                     }

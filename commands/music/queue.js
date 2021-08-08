@@ -2,8 +2,8 @@ module.exports = {
     name: "queue",
     guildOnly: true,
     aliases: ["q"],
-    description: "Check the current song queue.",
-    execute(message) {
+    description: {"en_US" : "Check the current song queue.", "zh_CN" : "查询目前的播放清单"},
+    execute(message, _args, language) {
         const queueData = require("../../data/queueData");
         let queue = queueData.queue;
         let serverQueue = queue.get(message.guild.id);
@@ -25,8 +25,8 @@ module.exports = {
             let printQueue = arr.join("\n\n");
             let embed = new Discord.MessageEmbed()
                 .setColor("#ff0000")
-                .setTitle("Song Queue")
-                .setDescription(`**Now playing**\n[${serverQueue.songs[0].title}](${serverQueue.songs[0].url})\n\n**Queued Songs**\n${printQueue}\n${serverQueue.songs.length - 1} songs in queue`);
+                .setTitle(language.queueTitle)
+                .setDescription(language.queueBody.replace("${serverQueue.songs[0].title}", serverQueue.songs[0].title).replace("${serverQueue.songs[0].url}", serverQueue.songs[0].url).replace("${printQueue}", printQueue).replace("${serverQueue.songs.length - 1}", serverQueue.songs.length - 1));
             return embed;
         }
 
@@ -44,7 +44,7 @@ module.exports = {
                 return message.channel.send(embed);
             }
         } else {
-            return message.channel.send("There is no song in the queue!");
+            return message.channel.send(language.noSong);
         }
     },
 };

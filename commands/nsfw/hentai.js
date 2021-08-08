@@ -1,13 +1,13 @@
 module.exports = {
     name: "hentai",
     cooldown: 3,
-    description: "get a 18r picture",
-    execute(message) {
+    description: {"en_US" : "get a 18r picture", "zh_CN" : "色图"},
+    execute(message, _args, language) {
         const fs = require("fs");
         const Discord = require("discord.js");
 
         if (!message.channel.nsfw) {
-            return message.channel.send("This is not a nsfw channel!");
+            return message.channel.send(language.notNSFW);
         }
 
         const imageFiles = fs
@@ -34,9 +34,7 @@ module.exports = {
         let embed = new Discord.MessageEmbed()
             .setColor("#2d9af8")
             .setTitle("死变态！")
-            .setDescription(
-                `來源商：${images.author}\n[圖片鏈接](${messageurl})`
-            )
+            .setDescription(language.loliProvider.replace("${images.author}", images.author).replace("${messageurl}", messageurl))
             .setImage(imageInfo.url)
             .setFooter(
                 "蘿莉控的FBI避難所",

@@ -2,12 +2,12 @@ module.exports = {
     name: "backup-info",
     cooldown: 10,
     aliases: ["bi"],
-    description: "Load a backup info.",
-    execute(message, args) {
+    description: {"en_US" : "Load a backup info.", "zh_CN" : "查询备份信息"},
+    execute(message, args, language) {
         const backup = require("discord-backup");
         const Discord = require("discord.js");
         let backupID = args[0];
-        if (!backupID) return message.channel.send(":x: | You must specify a valid backup ID!");
+        if (!backupID) return message.channel.send(language.invalidBackupID);
         // Fetch the backup
         backup
             .fetch(backupID)
@@ -20,24 +20,22 @@ module.exports = {
                     dd[1] ? dd : "0" + dd[0]
                 }`;
                 let embed = new Discord.MessageEmbed()
-                    .setAuthor("Backup Informations")
+                    .setAuthor(language.backupInformations)
                     // Display the backup ID
-                    .addField("Backup ID", backupInfos.id, false)
+                    .addField(language.backupID, backupInfos.id, false)
                     // Displays the server from which this backup comes
-                    .addField("Server ID", backupInfos.data.guildID, false)
+                    .addField(language.serverID, backupInfos.data.guildID, false)
                     // Display the size (in mb) of the backup
-                    .addField("Size", `${backupInfos.size} kb`, false)
+                    .addField(language.size, `${backupInfos.size} kb`, false)
                     // Display when the backup was created
-                    .addField("Created at", formatedDate, false)
+                    .addField(language.backupCreatedAt, formatedDate, false)
                     .setColor("#FF0000");
                 message.channel.send(embed);
             })
             .catch((err) => {
                 // if the backup wasn't found
                 console.log(err);
-                return message.channel.send(
-                    ":x: | No backup found for `" + backupID + "`!"
-                );
+                return message.channel.send(language.noBackupFound.replace("${backupID}", backupID));
             });
     },
 };

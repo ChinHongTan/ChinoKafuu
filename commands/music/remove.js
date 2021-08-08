@@ -2,8 +2,8 @@ module.exports = {
     name: "remove",
     guildOnly: true,
     aliases: ["r"],
-    description: "Removes a song from the queue",
-    execute(message, args) {
+    description: {"en_US" : "Removes a song from the queue", "zh_CN" : "从清单中移除歌曲"},
+    execute(message, args, language) {
         const queueData = require("../../data/queueData");
         let queue = queueData.queue;
         let serverQueue = queue.get(message.guild.id);
@@ -12,10 +12,10 @@ module.exports = {
             args.forEach((number) => {
                 let queuenum = Number(number);
                 if (Number.isInteger(queuenum) && queuenum <= serverQueue.songs.length && queuenum > 0) {
-                    message.channel.send(`Removed ${serverQueue.songs[queuenum].title}!`);
+                    message.channel.send(language.removed.replace("${serverQueue.songs[queuenum].title}", serverQueue.songs[queuenum].title));
                     serverQueue.songs.splice(queuenum, 1);
                 } else {
-                    message.channel.send("You have to enter a valid integer!");
+                    message.channel.send(language.invalidInt);
                 }
             });
         }

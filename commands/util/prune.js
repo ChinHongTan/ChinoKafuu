@@ -2,19 +2,19 @@ module.exports = {
     name: "prune",
     aliases: ["cut", "delete", "del"],
     guildOnly: true,
-    description: "Delete messages.",
-    execute(message, args) {
+    description: {"en_US" : "Delete messages.", "zh_CN" : "删除讯息"},
+    execute(message, args, language) {
         const amount = parseInt(args[0]) + 1;
 
         if (isNaN(amount)) {
-            return message.reply("that doesn't seem to be a valid number.");
+            return message.reply(language.invalidNum);
         } else if (amount <= 2 || amount > 100) {
-            return message.reply("you need to input a number between 1 and 99.");
+            return message.reply(language.notInRange);
         }
 
         message.channel.bulkDelete(amount, true).catch((err) => {
             console.error(err);
-            message.channel.send("there was an error trying to prune messages in this channel!");
+            message.channel.send(language.pruneError);
         });
     },
 };

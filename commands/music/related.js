@@ -2,8 +2,8 @@ module.exports = {
     name: "related",
     guildOnly: true,
     aliases: ["re"],
-    description: "Related song",
-    async execute(message) {
+    description: {"en_US" : "Related song", "zh_CN" : "相关歌曲"},
+    async execute(message, _args, language) {
         // const scID = process.env.SCID || require("../../config/config.json").scID;
         const scdl = require("soundcloud-downloader").default;
         const ytdl = require("ytdl-core");
@@ -12,7 +12,7 @@ module.exports = {
         let queue = queueData.queue;
         let serverQueue = queue.get(message.guild.id);
         if (!serverQueue) {
-            return message.channel.send("I'm not playing any songs right now!");
+            return message.channel.send(language.notPlayingMusic);
         }
         let voiceChannel = serverQueue.voiceChannel;
         let songHistory = serverQueue.songHistory;
@@ -66,7 +66,7 @@ module.exports = {
             return relatedVidsInfo;
         }
 
-        message.channel.send("Searching for related tracks...");
+        message.channel.send(language.relatedSearch);
         let data, url, result, relatedVideos, urlList, relatedVidsInfo = []
         let videos, authorId, bestTrack;
         
@@ -78,7 +78,7 @@ module.exports = {
                 url = avoidRepeatedSongs(urlList);
                 result = await scdl.getInfo(url).catch((err) => {
                     console.log(err);
-                    throw message.channel.send("🆘 I could not obtain any search results.");
+                    throw message.channel.send(language.noResult);
                 });
                 await handleVideo(result, voiceChannel, false, serverQueue, "sc", message);
                 break;

@@ -2,8 +2,8 @@ module.exports = {
     name: "editsnipe",
     aliases: ["esnipe"],
     guildOnly: true,
-    description: "Snipe an edited message.",
-    async execute(message, args) {
+    description: {"en_US" : "Snipe an edited message.", "zh_CN" : "狙击已编辑的讯息"},
+    async execute(message, args, language) {
         const Discord = require("discord.js");
         const collection = message.client.editSnipeCollection;
 
@@ -19,9 +19,9 @@ module.exports = {
                     .setFooter(editsnipes[0].timestamp);
                 return message.channel.send(embed);
             } else {
-                if (Number(args[0]) > 10) return message.channel.send("You can't snipe beyond 10!");
+                if (Number(args[0]) > 10) return message.channel.send(language.exceed10);
                 let msg = editsnipes?.[Number(args[0]) - 1];
-                if (!msg) return message.channel.send("Not a valid snipe!");
+                if (!msg) return message.channel.send(language.invalidSnipe);
                 let embed = new Discord.MessageEmbed()
                     .setColor("RANDOM")
                     .setAuthor(msg.author, msg.authorAvatar)
@@ -30,7 +30,7 @@ module.exports = {
                 return message.channel.send(embed);
             }
         } else {
-            return message.channel.send("There's nothing to snipe!");
+            return message.channel.send(language.noSnipe);
         }
     },
 };

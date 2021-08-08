@@ -6,6 +6,13 @@ module.exports = {
         const prefix = process.env.PREFIX || require("../config/config.json").prefix;
         const owner_id = process.env.OWNERID || require("../config/config.json").owner_id;
         const Discord = require("discord.js");
+        const collection = message.client.guildOptions;
+        let rawData = await collection.findOne({ id: message?.guild?.id });
+        let guildOption = rawData ?? {
+            id: message?.guild?.id,
+            options: { language: "en_US" }
+        };
+        let language = client.language[guildOption.options.language];
 
         if (message.author.bot && !message.author.id === "761766088337391626") return;
         currency.add(message.author.id, 1);
@@ -86,7 +93,7 @@ module.exports = {
         }
     
         try {
-            await command.execute(message, args);
+            await command.execute(message, args, language);
         } catch (error) {
             console.error(error);
             message.reply("There was an error trying to execute that command!");

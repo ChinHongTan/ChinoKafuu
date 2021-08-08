@@ -3,15 +3,15 @@ module.exports = {
     cooldown: 10,
     aliases: ["icon", "pfp", "av"],
     guildOnly: true,
-    description: "Send the url of an avatar.",
-    execute(message, args) {
+    description: {"en_US" : "Send the url of an avatar.", "zh_CN" : "发送用户头像"},
+    execute(message, args, language) {
         const Discord = require("discord.js");
         const FuzzySort = require("../../functions/fuzzysort.js");
         const fuzzysort = new FuzzySort(message);
         if (args.length < 1) {
             // display author's avatar
             const embed = new Discord.MessageEmbed()
-                .setTitle("__Your avatar__")
+                .setTitle(language.yourAvatar)
                 .setColor("RANDOM")
                 .setImage(`${message.author.displayAvatarURL({
                         format: "png",
@@ -25,7 +25,7 @@ module.exports = {
             // display all user's avatars mentioned by the author
             const avatarList = message.mentions.users.map((user) => {
                 const embed = new Discord.MessageEmbed()
-                    .setTitle(`__${user.username}'s avatar__`)
+                    .setTitle(language.userAvatar.replace("${user.username}", user.username))
                     .setColor("RANDOM")
                     .setImage(`${user.displayAvatarURL({
                             format: "png",
@@ -46,7 +46,7 @@ module.exports = {
         // if id exists
         if (user) {
             const embed = new Discord.MessageEmbed()
-                .setTitle(`__${user.displayName}'s avatar__`)
+                .setTitle(language.memberAvatar.replace("${user.displayName}", user.displayName))
                 .setColor(user.displayHexColor)
                 .setImage(
                     `${user.user.displayAvatarURL({
@@ -62,11 +62,11 @@ module.exports = {
         let keyword = message.content.substr(message.content.indexOf(" ") + 1);
         let member = fuzzysort.search(keyword);
         if (!member) {
-            return message.channel.send(`Can't find a member matching \`${keyword}\`!`);
+            return message.channel.send(language.noMember.replace("${keyword}", keyword));
         }
 
         const embed = new Discord.MessageEmbed()
-            .setTitle(`__${member.displayName}'s avatar__`)
+            .setTitle(language.memberAvatar.replace("${user.displayName}", user.displayName))
             .setColor(member.displayHexColor)
             .setImage(`${member.user.displayAvatarURL({
                     format: "png",

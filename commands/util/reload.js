@@ -2,7 +2,7 @@ const fs = require("fs");
 
 module.exports = {
     name: "reload",
-    description: "Reloads a command",
+    description: {"en_US" : "Reloads a command", "zh_CN" : "重新加载指令"},
     args: true,
     execute(message, args) {
         if (!args.length) return message.channel.send(`You didn't pass any command to reload, ${message.author}!`);

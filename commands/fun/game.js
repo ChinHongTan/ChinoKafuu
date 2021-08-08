@@ -1,8 +1,8 @@
 module.exports = {
     name: "game",
     cooldown: 3,
-    description: "A little Connect 4 game!",
-    async execute(message) {
+    description: {"en_US" : "A little Connect 4 game!", "zh_CN" : "四子棋小游戏！"},
+    async execute(message, _args, language) {
         const Discord = require("discord.js");
 
         let coordinates = setCoordinates(7, 6);
@@ -70,7 +70,7 @@ module.exports = {
             let boardStr = stringify(board);
             let embed = new Discord.MessageEmbed()
                 .setTitle("**CONNECT FOUR**")
-                .setDescription(`It's now ${round.name}'s turn!\n${boardStr}`)
+                .setDescription(language.board.replace("${round.name}", round.name).replace("${boardStr}", boardStr))
                 .setColor("#ff0000");
             return embed;
         }
@@ -113,9 +113,9 @@ module.exports = {
                     break;
                 }
             }
-            //if a new disc can’t be placed in this column
+            //if a new piece can’t be placed in this column
             if (!placed) {
-                return message.channel.send("You can’t place the disc here!");
+                return message.channel.send(language.invalidMove);
             } else {
                 let directions = [11, 1, 9, 10, -11, -1, -9, -10];
                 for (let direction of directions) {
@@ -136,9 +136,7 @@ module.exports = {
             let board = draw(squares, coordinate, round, board);
             if (win) {
                 collector.stop();
-                message.channel.send(
-                    `${round.name} had won the game!`
-                );
+                message.channel.send(language.win.replace("${round.name}", round.name));
             }
             if (round.name === "red") {
                 round.name = "yellow";

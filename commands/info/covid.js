@@ -1,7 +1,7 @@
 module.exports = {
     name: "covid",
-    description: "Latest global/country covid status!",
-    async execute(message, args) {
+    description: {"en_US": "Latest global/country covid status!", "zh_CN" : "最新的全球/国家的新冠肺炎状态!"},
+    async execute(message, args, language) {
         const Discord = require("discord.js");
         const api = require("novelcovid");
         api.settings({
@@ -19,61 +19,61 @@ module.exports = {
             const date = new Date(result.updated);
             const embed = new Discord.MessageEmbed()
                 .setColor("RANDOM")
-                .setTitle(`**${result.country} COVID-19 data**`)
+                .setTitle(language.covidTitle.replace("${result.country}", result.country))
                 .setAuthor(
                     "ChinoKafuu",
                     "https://cdn.discordapp.com/avatars/781328218753859635/af716f0a9958679bdb17edfc0add53a6.png?size=256"
                 )
                 .addFields(
                     {
-                        name: "Total cases",
+                        name: language.totalCases,
                         value: result.cases.toLocaleString(),
                         inline: true,
                     },
                     {
-                        name: "Confirmed today",
+                        name: language.confirmedToday,
                         value: result.todayCases.toLocaleString(),
                         inline: true,
                     },
                     {
-                        name: "Total deaths",
+                        name: language.totalDeaths,
                         value: result.deaths.toLocaleString(),
                         inline: true,
                     },
                     {
-                        name: "Deaths today",
+                        name: language.deathsToday,
                         value: result.todayDeaths.toLocaleString(),
                         inline: true,
                     },
                     {
-                        name: "Total recovered",
+                        name: language.totalRecovered,
                         value: result.recovered.toLocaleString(),
                         inline: true,
                     },
                     {
-                        name: "Recovered today",
+                        name: language.recoveredToday,
                         value: result.todayRecovered.toLocaleString(),
                         inline: true,
                     },
                     {
-                        name: "Active cases",
+                        name: language.activeCases,
                         value: result.active.toLocaleString(),
                         inline: true,
                     },
                     {
-                        name: "Critical cases",
+                        name: language.criticalCases,
                         value: result.critical.toLocaleString(),
                         inline: true,
                     },
                     {
-                        name: "Population",
+                        name: language.population,
                         value: result.population.toLocaleString(),
                         inline: true,
                     }
                 )
                 .setThumbnail(result.countryInfo?.flag)
                 .setFooter(
-                    `Requested by: ${message.author.tag}\nData updated: ${date.toUTCString()}`,
+                    language.covidFooter.replace("${message.author.tag}", message.author.tag).replace("${date.toUTCString()}", date.toUTCString),
                     message.author.avatarURL()
                 );
             return embed;
@@ -81,8 +81,8 @@ module.exports = {
 
         if (args.length < 1) {
             // no arguments were provided
-            message.channel.send("Please provide a valid argument!");
-            return message.channel.send("eg: `c!covid global` or `c!covid countries`");
+            message.channel.send(language.invalidArgument);
+            return message.channel.send(language.covidExample);
         }
         if (args[0] === "global") {
             // get global covid data

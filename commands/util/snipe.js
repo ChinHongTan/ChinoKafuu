@@ -1,7 +1,7 @@
 module.exports = {
     name: "snipe",
     guildOnly: true,
-    description: "Snipe a message.",
+    description: {"en_US" : "Snipe a message.", "zh_CN" : "狙击一条讯息"},
     async execute(message, args) {
         const Discord = require("discord.js");
         const collection = message.client.snipeCollection;
@@ -12,13 +12,13 @@ module.exports = {
         if (snipeWithGuild) {
             snipes = snipeWithGuild.snipes;
         } else {
-            return message.channel.send("There's nothing to snipe!");
+            return message.channel.send(language.noSnipe);
         }
         let arg = args[0] ?? 1;
 
-        if (Number(arg) > 10) return message.channel.send("You can't snipe beyond 10!");
+        if (Number(arg) > 10) return message.channel.send(language.exceed10);
         let msg = snipes?.[Number(arg) - 1];
-        if (!msg) return message.channel.send("Not a valid snipe!");
+        if (!msg) return message.channel.send(language.invalidSnipe);
 
         let image = msg.attachments;
 
