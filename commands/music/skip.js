@@ -13,7 +13,7 @@ module.exports = {
                 return message.channel.send(language.notInVC);
             }
             if (!serverQueue) {
-                return message.channel.send(laguage.cantSkip);
+                return message.channel.send(language.cantSkip);
             }
             serverQueue.connection.dispatcher.end();
         }

@@ -31,7 +31,7 @@ module.exports = {
                 .setImage(response.thumbnail)
                 .addFields(
                     { name: language.sourceURL, value: sourceURL },
-                    { name: languag.additionalInfo, value: info }
+                    { name: language.additionalInfo, value: info }
                 )
                 .setFooter(`page ${response.page + 1}/${response.total}`);
             return embed;
