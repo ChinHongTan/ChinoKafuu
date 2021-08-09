@@ -66,7 +66,7 @@ module.exports = {
         }
 
         const embed = new Discord.MessageEmbed()
-            .setTitle(language.memberAvatar.replace("${user.displayName}", user.displayName))
+            .setTitle(language.memberAvatar.replace("${user.displayName}", member.displayName))
             .setColor(member.displayHexColor)
             .setImage(`${member.user.displayAvatarURL({
                     format: "png",

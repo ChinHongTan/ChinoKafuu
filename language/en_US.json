@@ -87,6 +87,7 @@
     "cmdUsage":"**Usage:** ${prefix}${command.name} ${command.usage}",
     "cmdCooldown":"**Cooldown:** ${command.cooldown || 3} second(s)",
     "sauce":"Search SauceNao for an image source.",
+    "searchingSauce":"Searching for image...",
     "additionalInfo":"Additional info",
     "noAuthor":"No info found!",
     "sauceAuthor":"Name: ${authorinfo.name}\nLink: ${authorinfo.url}",

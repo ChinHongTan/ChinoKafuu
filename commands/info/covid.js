@@ -73,7 +73,7 @@ module.exports = {
                 )
                 .setThumbnail(result.countryInfo?.flag)
                 .setFooter(
-                    language.covidFooter.replace("${message.author.tag}", message.author.tag).replace("${date.toUTCString()}", date.toUTCString),
+                    language.covidFooter.replace("${message.author.tag}", message.author.tag).replace("${date.toUTCString()}", date.toUTCString()),
                     message.author.avatarURL()
                 );
             return embed;

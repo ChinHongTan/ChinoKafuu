@@ -32,8 +32,8 @@ module.exports = {
                 .addFields(
                     { name: language.sourceURL, value: sourceURL },
                     { name: language.additionalInfo, value: info }
-                )
-                .setFooter(`page ${response.page + 1}/${response.total}`);
+                );
+                //.setFooter(`page ${response.page + 1}/${response.total}`);
             return embed;
         }
 
@@ -43,23 +43,19 @@ module.exports = {
          * @returns {object} Discord embed.
          */
         function createEmbed2(response) {
-            let sourceURL = response.source.url;
-            let title = response.source.title;
-            let author = language.noAuthor;
-            if (response.source.author) {
-                let authorinfo = response.source.author;
-                author = language.sauceAuthor.replace("${authorinfo.name}", authorinfo.name).replace("${authorinfo.url}", authorinfo.url);
-            }
+            let sourceURL = response?.source?.url ?? "None";
+            let title = response?.source?.title ?? "None";
+            let author = response?.source?.author ? language.sauceAuthor.replace("${authorinfo.name}", response?.source?.author.name).replace("${authorinfo.url}", response?.source?.author.url) : language.noAuthor;
             let embed = new Discord.MessageEmbed()
-                .setTitle(response.source.type)
+                .setTitle(response?.source?.type ?? "None")
                 .setColor("#008000")
                 .setImage(response.thumbnailUrl)
                 .addFields(
                     { name: language.sourceURL, value: sourceURL },
                     { name: language.title, value: title },
-                    { name: language.author, author }
-                )
-                .setFooter(`page ${response.page + 1}/${response.total}`);
+                    { name: language.author, value: author }
+                );
+                //.setFooter(`page ${response.page + 1}/${response.total}`);
             return embed;
         }
 
@@ -99,9 +95,7 @@ module.exports = {
             if (!result2 || result2.length < 1) {
                 return message.channel.send(language.noResult);
             }
-            let response2 = result2.items.filter(
-                (r2) => r2.source !== 0
-            );
+            let response2 = result2.items.filter((r2) => r2.source !== 0);
             mode = 2;
             sendEmbed(response2, mode);
         }
@@ -123,6 +117,7 @@ module.exports = {
         if (!searchImage) {
             return message.channel.send(language.noImage);
         }
+        message.channel.send(language.searchingSauce);
         searchForImage(searchImage);
     },
 };

@@ -87,6 +87,7 @@
     "cmdUsage":"**用法:** ${prefix}${command.name} ${command.usage}",
     "cmdCooldown":"**冷却:** ${command.cooldown || 3} 秒",
     "sauce":"在SauceNao上搜索图源",
+    "searchingSauce":"正在搜索图片...",
     "additionalInfo":"额外信息",
     "noAuthor":"找不到作者信息！",
     "sauceAuthor":"名字: ${authorinfo.name}\n链接: ${authorinfo.url}",
