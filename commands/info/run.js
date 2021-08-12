@@ -7,15 +7,17 @@ module.exports = {
         const default_langs = require("../../data/default_langs.json");
         const tio = require("tio.js");
         const hastebin = require('better-hastebin');
+        let languages = await tio.languages();
+        console.log(languages);
 
         let codeLanguage = args.shift();
         let code = message.content.substring(prefix.length + 3 + codeLanguage.length + 1).trim().replace(/^\`+|\`+$/g, '');
         let lang = codeLanguage.replace(/^\`+|\`+$/g, '');
-        if (!lang) return message.channel.send("Missing argument: Language");
+        if (!lang) return message.channel.send("Invalid usage! Invalid language/code.");
         if (/(^ $|^[0-9A-z]*$)/g.test(code.split('\n')[0])) {
             code = code.slice(code.split('\n')[0].length + 1)
         }
-        if (!code) return message.channel.send("Missing argument: Code");
+        if (!code) return message.channel.send("Invalid usage! Invalid language/code.");
         const quickmap = {
             'asm': 'assembly',
             'c#': 'cs',
@@ -38,7 +40,8 @@ module.exports = {
             message.channel.send("Your output was too long, but I couldn't make an online bin out of it");
             return message.channel.send(`Output was too long (more than 2000 characters or 40 lines) so I put it here: ${link}`)
         }
-        if (response.output.length > 1) {
+        console.log(response.output.length);
+        if (response.output.length < 1) {
             return message.channel.send("No output!");
         }
         message.channel.send(response.output, {code: true});
