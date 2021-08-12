@@ -3,7 +3,7 @@ module.exports = {
     description: {"en_US" : "Evaluate codes!", "zh_CN" : "执行代码!"},
     guildOnly: true,
     ownerOnly: true,
-    cooldowm: 5,
+    cooldown: 5,
     execute(message, args) {
         const clean = text => {
             if (typeof(text) === "string")
