@@ -76,6 +76,7 @@
     "covidExample":"例如: `c!covid global` 或 `c!covid countries`",
     "eval":"执行代码!",
     "help":"列出我所有的指令/指令详情",
+    "helpTitle":"指令列表",
     "helpPrompt":"这是我所有的指令:",
     "helpPrompt2":"\n你可以发送 \\`${prefix || process.env.PREFIX}help [command name]\\` 来查询指令详情!",
     "helpSend":"我已经把我的指令列表私讯给你了！",

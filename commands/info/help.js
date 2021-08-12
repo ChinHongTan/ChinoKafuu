@@ -8,14 +8,24 @@ module.exports = {
         const prefix = process.env.PREFIX || require("../../config/config.json").prefix;
         const data = [];
         const { commands } = message.client;
+        const Discord = require("discord.js");
 
         if (!args.length) {
+            let embed = new Discord.MessageEmbed()
+                .setTitle(language.helpTitle)
+                .setDescription(language.helpPrompt + '\n' + language.helpPrompt2.replace("${prefix || process.env.PREFIX}", prefix || process.env.PREFIX))
+                .setColor("BLUE")
+                .setThumbnail(message.client.user.displayAvatarURL());
+            commands.forEach((command) => {
+                embed.addField(command.name, language[command.name] || command.description, true)
+            })
+
             data.push(language.helpPrompt);
             data.push(commands.map((command) => command.name).join(", "));
             data.push(language.helpPrompt2.replace("${prefix || process.env.PREFIX}", prefix || process.env.PREFIX));
 
             return message.author
-                .send(data, { split: true })
+                .send({ split: true , embed: embed})
                 .then(() => {
                     if (message.channel.type === "dm") return;
                     message.reply(language.helpSend);

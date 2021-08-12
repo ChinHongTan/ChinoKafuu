@@ -76,6 +76,7 @@
     "covidExample":"eg: `c!covid global` or `c!covid countries`",
     "eval":"Evaluate codes!",
     "help":"List all of my commands or info about a specific command.",
+    "helpTitle":"List of commands",
     "helpPrompt":"Here's a list of all my commands:",
     "helpPrompt2":"\nYou can send \\`${prefix || process.env.PREFIX}help [command name]\\` to get info on a specific command!",
     "helpSend":"I've sent you a DM with all my commands!",
