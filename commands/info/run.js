@@ -34,6 +34,7 @@ module.exports = {
         }
         if (lang in quickmap) lang = quickmap[lang];
         if (lang in default_langs) lang = default_langs[lang];
+        if (!languages.includes(lang)) return message.channel.send(":x: | Language not supported!");
         let response = await tio(code, lang, 20000);
         if (response.output.length > 1994 || (response.output.match(/,/g) || []).length > 40) {
             let link = await hastebin(response.output);
