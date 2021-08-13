@@ -6,23 +6,18 @@ module.exports = {
     cooldown: 5,
     execute(message, args, language) {
         const prefix = process.env.PREFIX || require("../../config/config.json").prefix;
-        const data = [];
         const { commands } = message.client;
         const Discord = require("discord.js");
 
         if (!args.length) {
             let embed = new Discord.MessageEmbed()
                 .setTitle(language.helpTitle)
-                .setDescription(language.helpPrompt + '\n' + language.helpPrompt2.replace("${prefix || process.env.PREFIX}", prefix || process.env.PREFIX))
+                .setDescription(language.helpPrompt + '\n' + language.helpPrompt2.replace("${prefix}", prefix))
                 .setColor("BLUE")
                 .setThumbnail(message.client.user.displayAvatarURL());
             commands.forEach((command) => {
                 embed.addField(command.name, language[command.name] || command.description, true)
             })
-
-            data.push(language.helpPrompt);
-            data.push(commands.map((command) => command.name).join(", "));
-            data.push(language.helpPrompt2.replace("${prefix || process.env.PREFIX}", prefix || process.env.PREFIX));
 
             return message.author
                 .send({ split: true , embed: embed})
@@ -40,15 +35,16 @@ module.exports = {
         const command = commands.get(name) || commands.find((c) => c.aliases && c.aliases.includes(name));
 
         if (!command) return message.reply(language.invalidcmd);
+        let embed = new Discord.MessageEmbed()
+            .setTitle(`**${command.name}**`)
+            .setThumbnail(message.client.user.displayAvatarURL())
+            .setColor("BLUE")
+            .addField(language.cmdName, command.name, true)
+            .addField(language.cmdAliases, command?.aliases?.join(', ') || "None", true)
+            .addField(language.cmdDescription, language[command.name])
+            .addField(language.cmdUsage, `${prefix}${command.name} ${command.usage || ""}`, true)
+            .addField(language.cmdCooldown, command.cooldown || 3, true)
 
-        data.push(language.cmdName.replace("${command.name}", command.name));
-
-        if (command.aliases) data.push(language.cmdAliases.replace("${command.aliases.join(', ')}", command.aliases.join(', ')));
-        if (command.description) data.push(language.cmdDescription.replace("${command.description}", language[command.name]));
-        if (command.usage) data.push(language.cmdUsage.replace("${prefix}", prefix).replace("${command.name}", command.name).replace("${command.usage}", command.usage));
-
-        data.push(language.cmdCooldown.replace("${command.cooldown || 3}", command.cooldown || 3));
-
-        message.channel.send(data, { split: true });
+        message.channel.send(embed, { split: true });
     },
 };
