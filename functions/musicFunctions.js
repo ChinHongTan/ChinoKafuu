@@ -35,7 +35,7 @@ async function play(guild, song, message) {
     proc.addOptions(["-ac", "2", "-f", "opus", "-ar", "48000"]);
     // proc.withAudioFilter("bass=g=5");
     proc.on("error", function (err) {
-        if (err === "Output stream closed") {
+        if (err.message === "Output stream closed") {
             return;
         }
         console.log("an error happened: " + err.message);
@@ -48,10 +48,12 @@ async function play(guild, song, message) {
             if (reason === "Stream is not generating quickly enough.") {
                 console.log("Stream is not generating quickly enough.");
             }
-            console.log(reason);
+            let playedSong = serverQueue.songs.shift();
             if (!serverQueue.loop) {
-                let playedSong = serverQueue.songs.shift();
                 serverQueue.songHistory.push(playedSong);
+            }
+            if (serverQueue.loopQueue) {
+                serverQueue.songs.push(playedSong);
             }
             stream.destroy();
             play(guild, serverQueue.songs[0], message);

@@ -7,16 +7,13 @@ module.exports = {
         let queue = queueData.queue;
         let serverQueue = queue.get(message.guild.id);
 
-        function stop(message, serverQueue) {
-            if (!message.member.voice.channel) {
-                return message.channel.send(language.notInVC);
-            }
-
-            if (!serverQueue) return message.channel.send(language.noSong);
-
-            serverQueue.songs = [];
-            serverQueue.connection.dispatcher.end();
+        if (!message.member.voice.channel) {
+            return message.channel.send(language.notInVC);
         }
-        stop(message, serverQueue);
+
+        if (!serverQueue) return message.channel.send(language.noSong);
+
+        serverQueue.songs = [];
+        serverQueue.connection.dispatcher.end();
     },
 };

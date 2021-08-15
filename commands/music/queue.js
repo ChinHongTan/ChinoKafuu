@@ -30,6 +30,9 @@ module.exports = {
             return embed;
         }
 
+        if (!message.member.voice.channel) {
+            return message.channel.send(language.notInVC);
+        }
 
         if (serverQueue) {
             var songQueue = serverQueue.songs.slice(1);

@@ -43,6 +43,7 @@ module.exports = {
                 volume: 5,
                 playing: true,
                 loop: false,
+                loopQueue: false,
                 filter: "",
             };
             queue.set(message.guild.id, queueConstruct);

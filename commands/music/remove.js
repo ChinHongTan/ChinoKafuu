@@ -7,6 +7,9 @@ module.exports = {
         const queueData = require("../../data/queueData");
         let queue = queueData.queue;
         let serverQueue = queue.get(message.guild.id);
+        if (!message.member.voice.channel) {
+            return message.channel.send(language.notInVC);
+        }
 
         if (serverQueue) {
             args.forEach((number) => {
@@ -18,6 +21,8 @@ module.exports = {
                     message.channel.send(language.invalidInt);
                 }
             });
+        } else {
+            return message.channel.send(language.noSong);
         }
     },
 };

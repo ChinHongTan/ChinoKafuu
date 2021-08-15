@@ -11,6 +11,10 @@ module.exports = {
         const { format } = require("../../functions/musicFunctions");
         const Discord = require("discord.js");
         const progressbar = require('string-progressbar');
+        
+        if (!message.member.voice.channel) {
+            return message.channel.send(language.notInVC);
+        }
 
         if (serverQueue) {
             var song = serverQueue.songs[0];
