@@ -66,6 +66,8 @@ module.exports = {
             return relatedVidsInfo;
         }
 
+        if (!lastSong) return message.channel.send(language.noSong);
+
         message.channel.send(language.relatedSearch);
         let data, url, result, relatedVideos, urlList, relatedVidsInfo = []
         let videos, authorId, bestTrack;

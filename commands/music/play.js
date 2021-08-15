@@ -83,7 +83,6 @@ module.exports = {
                 let title = result.name;
                 let m = await message.channel.send(language.importAlbum1.replace("${title}", title));
                 for (const i in result.tracks.items) {
-                    console.log(result.artists[0].name + " " + result.tracks.items[i].name);
                     let videos = await ytsr.search(
                         result.artists[0].name + " " + result.tracks.items[i].name,
                         { limit: 1 }
