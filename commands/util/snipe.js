@@ -1,7 +1,7 @@
 module.exports = {
     name: "snipe",
     guildOnly: true,
-    description: {"en_US" : "Snipe a message.", "zh_CN" : "狙击一条讯息"},
+    description: true,
     async execute(message, args, language) {
         const Discord = require("discord.js");
         const collection = message.client.snipeCollection;

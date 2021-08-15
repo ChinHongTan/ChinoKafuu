@@ -1,6 +1,6 @@
 module.exports = {
     name: "covid",
-    description: {"en_US": "Latest global/country covid status!", "zh_CN" : "最新的全球/国家的新冠肺炎状态!"},
+    description: true,
     async execute(message, args, language) {
         const Discord = require("discord.js");
         const api = require("novelcovid");

@@ -2,7 +2,7 @@ module.exports = {
     name: "related",
     guildOnly: true,
     aliases: ["re"],
-    description: {"en_US" : "Related song", "zh_CN" : "相关歌曲"},
+    description: true,
     async execute(message, _args, language) {
         // const scID = process.env.SCID || require("../../config/config.json").scID;
         const scdl = require("soundcloud-downloader").default;

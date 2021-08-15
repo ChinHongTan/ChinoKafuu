@@ -2,7 +2,7 @@ module.exports = {
     name: "skip",
     guildOnly: true,
     aliases: ["s"],
-    description: {"en_US" : "Skips a song.", "zh_CN" : "跳过歌曲"},
+    description: true,
     execute(message, _args, language) {
         const queueData = require("../../data/queueData");
         let queue = queueData.queue;

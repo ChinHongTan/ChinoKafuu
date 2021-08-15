@@ -1,7 +1,7 @@
 module.exports = {
     name: "buy",
     cooldown: 10,
-    description: {"en_US" : "Buy an item from the shop.", "zh_CN" : "从商店中买东西"},
+    description: true,
     async execute(message, args, language) {
         const { Op } = require("sequelize");
         const { Users, CurrencyShop } = require("../../data/dbObjects");

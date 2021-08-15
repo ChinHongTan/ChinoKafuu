@@ -2,7 +2,8 @@ module.exports = {
     name: "prune",
     aliases: ["cut", "delete", "del"],
     guildOnly: true,
-    description: {"en_US" : "Delete messages.", "zh_CN" : "删除讯息"},
+    permissions: "MANAGE_MESSAGES",
+    description: true,
     execute(message, args, language) {
         const amount = parseInt(args[0]) + 1;
 

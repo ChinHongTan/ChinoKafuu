@@ -3,7 +3,8 @@ module.exports = {
     cooldown: 10,
     aliases: ["backup"],
     guildOnly: true,
-    description: {"en_US" : "Create a server backup", "zh_CN" : "创建一个伺服备份"},
+    permissions: "ADMINISTRATOR",
+    description: true,
     async execute(message, args, language) {
         const backup = require("discord-backup");
         const prefix = process.env.PREFIX || require("../../config/config.json").prefix;

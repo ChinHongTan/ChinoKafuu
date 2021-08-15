@@ -2,7 +2,7 @@ module.exports = {
     name: "play",
     guildOnly: true,
     aliases: ["p"],
-    description: {"en_US" : "Play a song based on a given url or a keyword", "zh_CN" : "根据关键字或网址播放歌曲"},
+    description: true,
     async execute(message, args, language) {
         const ytsr = require("youtube-sr").default;
         const ytpl = require("ytpl");

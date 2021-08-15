@@ -1,7 +1,7 @@
 module.exports = {
     name: "connect4",
     cooldown: 3,
-    description: {"en_US" : "A little Connect 4 game!", "zh_CN" : "四子棋小游戏！"},
+    description: true,
     async execute(message, _args, language) {
         const Discord = require("discord.js");
 

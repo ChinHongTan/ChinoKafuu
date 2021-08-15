@@ -1,7 +1,7 @@
 module.exports = {
     name: "language",
     guildOnly: true,
-    description: {"en_US" : "Set the language.", "zh_CN" : "设定语言"},
+    description: true,
     async execute(message, args, language) {
         const collection = message.client.guildOptions;
 

@@ -1,7 +1,7 @@
 module.exports = {
     name: "leaderboard",
     cooldown: 10,
-    description: {"en_US" : "Show the leaderboard.", "zh_CN" : "查看金钱排行榜"},
+    description: true,
     async execute(message, _args, language) {
         const { currency } = message.client;
         return message.channel.send(

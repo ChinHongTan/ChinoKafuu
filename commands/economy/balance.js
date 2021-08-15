@@ -2,7 +2,7 @@ module.exports = {
     name: "balance",
     cooldown: 10,
     aliases: ["bal"],
-    description: {"en_US" : "Check your balance.", "zh_CN" : "查看你的余额"},
+    description: true,
     async execute(message, _args, language) {
         const { Users } = require("../../data/dbObjects");
         const { currency } = message.client;

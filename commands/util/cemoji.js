@@ -1,7 +1,7 @@
 module.exports = {
     name: "cemoji",
     cooldown: 3,
-    description: {"en_US" : "Copy emoji!", "zh_CN" : "复制表情!"},
+    description: true,
     async execute(message, _args, language) {
         const emojiID = message.content.match(/(?<=:.*:).+?(?=>)/g);
         const emojiName = message.content.match(/(?<=<).+?(?=:\d+>)/g);

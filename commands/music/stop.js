@@ -1,7 +1,7 @@
 module.exports = {
     name: "stop",
     guildOnly: true,
-    description: {"en_US" : "Stops playing songs.", "zh_CN" : "停止播放"},
+    description: true,
     execute(message, _args, language) {
         const queueData = require("../../data/queueData");
         let queue = queueData.queue;

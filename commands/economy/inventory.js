@@ -2,7 +2,7 @@ module.exports = {
     name: "inventory",
     cooldown: 10,
     aliases: ["inv"],
-    description: {"en_US" : "Show your inventory.", "zh_CN" : "查看你的物品"},
+    description: true,
     async execute(message, _args, language) {
         const { Users } = require("../../data/dbObjects");
         const target = message.mentions.users.first() || message.author;

@@ -1,7 +1,7 @@
 module.exports = {
     name: "anime",
     guildOnly: true,
-    description: {"en_US" : "Search for anime details or search anime with frames.", "zh_CN" : "根据动漫截图查找动漫/查询动漫相关信息"},
+    description: true,
     async execute(message, args, language) {
         const fetch = require("node-fetch");
         const Discord = require("discord.js");

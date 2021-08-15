@@ -2,7 +2,7 @@ module.exports = {
     name: "remove",
     guildOnly: true,
     aliases: ["r"],
-    description: {"en_US" : "Removes a song from the queue", "zh_CN" : "从清单中移除歌曲"},
+    description: true,
     execute(message, args, language) {
         const queueData = require("../../data/queueData");
         let queue = queueData.queue;

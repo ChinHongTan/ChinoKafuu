@@ -1,6 +1,6 @@
 module.exports = {
     name: "sauce",
-    description: {"en_US" : "Search SauceNao for an image source.", "zh_CN" : "在SauceNao上搜索图源"},
+    description: true,
     cooldown: 5,
     async execute(message, args, language) {
         const Discord = require("discord.js");

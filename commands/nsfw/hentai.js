@@ -1,7 +1,7 @@
 module.exports = {
     name: "hentai",
     cooldown: 3,
-    description: {"en_US" : "get a 18r picture", "zh_CN" : "色图"},
+    description: true,
     execute(message, _args, language) {
         const fs = require("fs");
         const Discord = require("discord.js");

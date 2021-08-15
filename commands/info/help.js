@@ -1,6 +1,6 @@
 module.exports = {
     name: "help",
-    description: {"en_US" : "List all of my commands or info about a specific command.", "zh_CN" : "列出我所有的指令/指令详情"},
+    description: true,
     aliases: ["commands"],
     usage: "[command name]",
     cooldown: 5,

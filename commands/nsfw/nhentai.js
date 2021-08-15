@@ -1,7 +1,7 @@
 module.exports = {
     name: "nhentai",
     cooldown: 10,
-    description: {"en_US" : "Search for a doujin on nhentai.", "zh_CN" : "在nhentai上搜寻本本"},
+    description: true,
     async execute(message, args, _language) {
         const nhentai = require("nhentai-js");
         const Discord = require("discord.js");

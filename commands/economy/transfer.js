@@ -2,7 +2,7 @@ module.exports = {
     name: "transfer",
     cooldown: 10,
     aliases: ["pay"],
-    description: {"en_US" : "Transfer money to a user", "zh_CN" : "给其他人送钱"},
+    description: true,
     async execute(message, args, language) {
         const { currency } = message.client;
 

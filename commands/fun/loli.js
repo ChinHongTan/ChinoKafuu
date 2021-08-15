@@ -1,7 +1,7 @@
 module.exports = {
     name: "loli",
     cooldown: 3,
-    description: {"en_US" : "get a picture of a loli", "zh_CN" : "萝莉图"},
+    description: true,
     execute(message, _args, language) {
         const fs = require("fs");
         const Discord = require("discord.js");

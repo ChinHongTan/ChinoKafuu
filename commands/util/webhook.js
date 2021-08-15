@@ -1,7 +1,7 @@
 module.exports = {
     name: "webhook",
     aliases: ["w"],
-    description: {"en_US" : "Create a webhook.", "zh_CN" : "把自己变成机器人说话"},
+    description: true,
     execute(message, args) {
         message.channel
             .createWebhook(message.author.username, {

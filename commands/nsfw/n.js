@@ -1,7 +1,7 @@
 module.exports = {
     name: "n",
     cooldown: 3,
-    description: {"en_US" : "Try it!", "zh_CN" : "试试看!"},
+    description: true,
     execute(message, args, language) {
         if (args.length < 1) {
             return message.channel.send(language.noNum);

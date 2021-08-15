@@ -2,7 +2,7 @@ module.exports = {
     name: "nowplaying",
     guildOnly: true,
     aliases: ["np"],
-    description: {"en_US" : "Sees the song currently being played.", "zh_CN" : "查看目前正在播放的歌曲"},
+    description: true,
     execute(message, _args, language) {
         const queueData = require("../../data/queueData");
         let queue = queueData.queue;

@@ -3,7 +3,7 @@ module.exports = {
     cooldown: 10,
     aliases: ["icon", "pfp", "av"],
     guildOnly: true,
-    description: {"en_US" : "Send the url of an avatar.", "zh_CN" : "发送用户头像"},
+    description: true,
     execute(message, args, language) {
         const Discord = require("discord.js");
         const FuzzySort = require("../../functions/fuzzysort.js");

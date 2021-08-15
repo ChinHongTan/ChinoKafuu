@@ -1,7 +1,7 @@
 module.exports = {
     name: "youtube",
     cooldown: 3,
-    description: {"en_US" : "Watch youtube together!", "zh_CN" : "一起看YouTube!"},
+    description: true,
     async execute(message, _args, language) {
         const client = message.client;
         const { DiscordTogether } = require("discord-together");

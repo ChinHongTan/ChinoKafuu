@@ -2,7 +2,7 @@ module.exports = {
     name: "user-info",
     aliases: ["user", "ui"],
     guildOnly: true,
-    description: {"en_US" : "User's information", "zh_CN" : "用户资料"},
+    description: true,
     execute(message, _args, language) {
         const Discord = require("discord.js");
 

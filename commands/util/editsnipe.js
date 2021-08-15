@@ -2,7 +2,7 @@ module.exports = {
     name: "editsnipe",
     aliases: ["esnipe"],
     guildOnly: true,
-    description: {"en_US" : "Snipe an edited message.", "zh_CN" : "狙击已编辑的讯息"},
+    description: true,
     async execute(message, args, language) {
         const Discord = require("discord.js");
         const collection = message.client.editSnipeCollection;
