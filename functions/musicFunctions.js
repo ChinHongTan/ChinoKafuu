@@ -49,12 +49,9 @@ async function play(guild, song, message) {
                 console.log("Stream is not generating quickly enough.");
             }
             let playedSong = serverQueue.songs.shift();
-            if (!serverQueue.loop) {
-                serverQueue.songHistory.push(playedSong);
-            }
-            if (serverQueue.loopQueue) {
-                serverQueue.songs.push(playedSong);
-            }
+            if (!serverQueue.loop) serverQueue.songHistory.push(playedSong);
+            if (serverQueue.loopQueue) serverQueue.songs.push(playedSong);
+            if (serverQueue.loop) serverQueue.songs.unshift(playedSong);
             stream.destroy();
             play(guild, serverQueue.songs[0], message);
         })
