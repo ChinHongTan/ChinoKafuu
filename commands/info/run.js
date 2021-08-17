@@ -7,6 +7,7 @@ module.exports = {
         const default_langs = require("../../data/default_langs.json");
         const tio = require("tio.js");
         const hastebin = require('better-hastebin');
+        let languages = await tio.languages();
 
         if (!args) return message.channel.send("Usage: c!run <language> [code](with or without codeblock)");
 
