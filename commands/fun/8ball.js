@@ -3,7 +3,6 @@ module.exports = {
     description: true,
     async execute(message, args, language) {
         if (!args.length > 0) return message.channel.send({embed: {description: "Psst. You need to ask the 8ball a question, ya'know?", color: "YELLOW"}});
-        const delay = ms => new Promise(res => setTimeout(res, ms));
         let answers = [
             {"reply1":"GREEN"},
             {"reply2":"GREEN"},
@@ -26,7 +25,6 @@ module.exports = {
             {"reply19":"RED"},
             {"reply20":"RED"},
         ]
-        await delay(Math.floor(Math.random() * 4) * 1000);
         let choice = answers[Math.floor(Math.random() * answers.length)];
         return message.channel.send({
 			embed: {
