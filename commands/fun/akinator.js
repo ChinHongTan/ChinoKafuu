@@ -31,12 +31,7 @@ module.exports = {
             */
         try {
             // error handling
-            if (!message) return console.log("Discord.js Akinator Error: Message was not Provided.\nNeed Help? Join Our Discord Server at 'https://discord.gg/P2g24jp'");
-            if (!client) return console.log("Discord.js Akinator Error: Discord Client was not Provided, and is needed in the new 2.0.0 Update you installed.\nNeed Help? Join Our Discord Server at 'https://discord.gg/P2g24jp'");
             if (!region) region = "en"
-            if (!message.id || !message.channel || !message.channel.id || !message.author) throw new Error("The Message Object provided was invalid!")
-            if (!client.user.id || !client.user) throw new Error("The Discord Client Object provided was invalid!")
-            if (!message.guild) throw new Error("This cannot be used in DMs!")
         
             // defining for easy use
             let usertag = message.author.tag
@@ -102,7 +97,6 @@ module.exports = {
 
             // repeat while the game is not finished
             while (notFinished) {
-                console.log(notFinished);
                 if (!notFinished) return;
 
                 stepsSinceLastGuess = stepsSinceLastGuess + 1
@@ -284,6 +278,7 @@ module.exports = {
             if (e == "DiscordAPIError: Unknown Message") return;
             console.log(`Discord.js Akinator Error: ${e}`)
             console.log(e);
+            message.channel.send("An error occured...Please try again!");
         }
     },
 };
