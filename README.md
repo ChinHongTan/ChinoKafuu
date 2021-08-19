@@ -58,7 +58,7 @@ Use `c!help` for detailed usage!
     -   buy -> buys an item from shop
     -   transfer [@user] -> gives money to another user
     -   inventory -> see what you've got in your bag!
--   leaderboard -> see who's the richest person
+    -   leaderboard -> see who's the richest person
 ```
 -   ### Games
 ```
@@ -71,7 +71,7 @@ As the backup files are huge, I am not storing it in database, so all the data w
 ```
     -   create [max] -> creates a server backup with max messages per channel
     -   backup-info [ID] -> checks a backup info based on its ID
--   load [ID] -> load a backup based on ID **ALL THE CHANGES MADE ARE IRREVERSIBLE**
+    -   load [ID] -> load a backup based on ID **ALL THE CHANGES MADE ARE IRREVERSIBLE**
 ```
 -   ### Utilities
 ```
@@ -86,13 +86,13 @@ As the backup files are huge, I am not storing it in database, so all the data w
     -   prune [number] -> bulk deletes [number] messages
     -   reload -> reloads a command
     -   user-info [@user] -> display user info
--   webhook [message]` -> sends a message using webhook
+    -   webhook [message]` -> sends a message using webhook
 ```
 -   ### NSFW
 ```
     -   n [ID] -> returns nhentai link based on the ID
     -   nhentai [number] -> searches nhentai and watch it in discord xD
--   hentai -> sends a hentai image
+    -   hentai -> sends a hentai image
 ```
 
 
