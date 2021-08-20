@@ -99,10 +99,10 @@ As the backup files are huge, I am not storing it in database, so all the data w
 ## ToDoList
 
 -   [x] Delete unused codes and functions
--   [ ] Make a language option
+-   [x] Make a language option
 -   [ ] Customisable commands and prefixes
 -   [ ] Add slash commands
--   [ ] Improved help command
+-   [x] Improved help command
 -   [x] Tidy up codes
 -   [x] Add some explaination into code
 -   [x] Group different files into folders
