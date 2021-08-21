@@ -23,17 +23,11 @@ module.exports = {
                 }
             });
             let lyrics = await lyricsFinder(keyword).catch((err) => console.error(err));
-            console.log("----");
-            console.log(lyrics);
             if (!lyrics) {
                 let searches = await Client.songs.search(keyword);
                 if (searches) lyrics = await searches[0].lyrics();
             }
-            console.log("----");
-            console.log(lyrics);
             if (!lyrics) lyrics = await solenolyrics.requestLyricsFor(encodeURIComponent(keyword)) ?? undefined;
-            console.log("----");
-            console.log(lyrics);
             if (!lyrics) return msg.edit({
                 embed: {
                     title: `ERROR!`,
