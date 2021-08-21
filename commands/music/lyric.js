@@ -31,7 +31,7 @@ module.exports = {
             }
             console.log("----");
             console.log(lyrics);
-            if (!lyrics) lyrics = await solenolyrics.requestLyricsFor(encodeURLComponent(keyword)) ?? undefined;
+            if (!lyrics) lyrics = await solenolyrics.requestLyricsFor(encodeURIComponent(keyword)) ?? undefined;
             console.log("----");
             console.log(lyrics);
             if (!lyrics) return msg.edit({
