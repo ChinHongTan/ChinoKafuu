@@ -10,7 +10,8 @@ module.exports = {
         const lyricsFinder = require("lyrics-finder");
         const solenolyrics= require("solenolyrics");
         const Genius = require("genius-lyrics");
-        const Client = new Genius.Client();
+        const geniusToken = process.env.GENIUS || require("../../config/config.json").genius_token;
+        const Client = new Genius.Client(geniusToken);
 
         if (!message.member.voice.channel) {
             return message.channel.send(language.notInVC);
@@ -22,12 +23,13 @@ module.exports = {
                     color: "BLUE"
                 }
             });
-            let lyrics = await lyricsFinder(keyword).catch((err) => console.error(err));
+            let lyrics;
+            lyrics = await lyricsFinder(keyword).catch((err) => console.error(err));
+            if (!lyrics) lyrics = await solenolyrics.requestLyricsFor(encodeURIComponent(keyword));
             if (!lyrics) {
                 let searches = await Client.songs.search(keyword);
-                if (searches) lyrics = await searches[0].lyrics();
+                if (searches) lyrics = await searches[0].lyrics().catch((err) => console.log(err));
             }
-            if (!lyrics) lyrics = await solenolyrics.requestLyricsFor(encodeURIComponent(keyword)) ?? undefined;
             if (!lyrics) return msg.edit({
                 embed: {
                     title: `ERROR!`,
