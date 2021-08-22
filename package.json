@@ -31,7 +31,7 @@
     "discord-backup": "^3.0.1",
     "discord-buttons": "^4.0.0",
     "discord-together": "^1.1.62",
-    "discord.js": "^12.5.3",
+    "discord.js": "^13.0.0",
     "discord.js-akinator": "^3.0.2",
     "fluent-ffmpeg": "^2.1.2",
     "fuzzysort": "^1.1.4",
