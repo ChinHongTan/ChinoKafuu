@@ -1,11 +1,6 @@
 const Sequelize = require("sequelize");
 try {
-    var {
-        host,
-        database,
-        password,
-        username,
-    } = require("../config/config.json");
+    var { host, database, password, username } = require("../config/config.json");
 } catch (err) {
     // pass
 }
@@ -27,14 +22,8 @@ const sequelize = new Sequelize({
 });
 
 const Users = require("../models/Users")(sequelize, Sequelize.DataTypes);
-const CurrencyShop = require("../models/CurrencyShop")(
-    sequelize,
-    Sequelize.DataTypes
-);
-const UserItems = require("../models/UserItems")(
-    sequelize,
-    Sequelize.DataTypes
-);
+const CurrencyShop = require("../models/CurrencyShop")(sequelize, Sequelize.DataTypes);
+const UserItems = require("../models/UserItems")(sequelize, Sequelize.DataTypes);
 
 UserItems.belongsTo(CurrencyShop, { foreignKey: "item_id", as: "item" });
 
