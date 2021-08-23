@@ -22,8 +22,6 @@ const dbName = 'projectSekai';
     client.guildOptions = guildOptions;
 })();
 
-const { Users } = require("./data/dbObjects");
-
 const client = new Discord.Client({
     intents: [
         Discord.Intents.FLAGS.GUILDS,
@@ -43,8 +41,6 @@ const client = new Discord.Client({
         Discord.Intents.FLAGS.DIRECT_MESSAGE_TYPING
     ]
 });
-client.currency = new Discord.Collection();
-const { currency } = client;
 const en_US = require("./language/en_US.json");
 const zh_CN = require("./language/zh_CN.json");
 const zh_TW = require("./language/zh_TW.json");
@@ -74,28 +70,6 @@ for (const file of eventFiles) {
 		client.on(event.name, async (...args) => await event.execute(...args, client));
 	}
 }
-
-Reflect.defineProperty(currency, "add", {
-    /* eslint-disable-next-line func-name-matching */
-    value: async function add(id, amount) {
-        const user = currency.get(id);
-        if (user) {
-            user.balance += Number(amount);
-            return user.save();
-        }
-        const newUser = await Users.create({ user_id: id, balance: amount });
-        currency.set(id, newUser);
-        return newUser;
-    },
-});
-
-Reflect.defineProperty(currency, "getBalance", {
-    /* eslint-disable-next-line func-name-matching */
-    value: function getBalance(id) {
-        const user = currency.get(id);
-        return user ? user.balance : 0;
-    },
-});
 
 /*
 client.on("message", async (message) => {
