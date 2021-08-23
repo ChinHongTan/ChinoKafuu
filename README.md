@@ -25,7 +25,7 @@ This bot runs on [`Node.js v14`](https://nodejs.org/) and is built with [`discor
 
 ## Invite link
 
-[Click me to invite the bot!](https://discord.com/api/oauth2/authorize?client_id=859653069276839967&permissions=8&scope=bot)
+[Click me to invite the bot!](https://discord.com/api/oauth2/authorize?client_id=859653069276839967&permissions=8&scope=applications.commands%20bot)
 
 ## Features
 
