@@ -7,6 +7,7 @@
 </h1>
 
 **Note: The bot is now being translated into TypeScript! As I am new to TypeScript, you can expect me to upload very slowly in the following couple weeks. Bug fixing rate will also be affected, sorry for the inconvenience!**
+    
 **Note 2: I am now migrating from discord.js v12 to v13. No new commands will be updated before I finish migrating!**
 
 A nice little discord bot I make to learn JavaScript and how bots works XD
