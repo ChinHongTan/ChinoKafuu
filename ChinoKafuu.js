@@ -22,12 +22,25 @@ const dbName = 'projectSekai';
     client.guildOptions = guildOptions;
 })();
 
-const { Users } = require("./data/dbObjects");
-
-const client = new Discord.Client();
-client.currency = new Discord.Collection();
-require("discord-buttons")(client);
-const { currency } = client;
+const client = new Discord.Client({
+    intents: [
+        Discord.Intents.FLAGS.GUILDS,
+        Discord.Intents.FLAGS.GUILD_MEMBERS,
+        Discord.Intents.FLAGS.GUILD_BANS,
+        Discord.Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS,
+        Discord.Intents.FLAGS.GUILD_INTEGRATIONS,
+        Discord.Intents.FLAGS.GUILD_WEBHOOKS,
+        Discord.Intents.FLAGS.GUILD_INVITES,
+        Discord.Intents.FLAGS.GUILD_VOICE_STATES,
+        Discord.Intents.FLAGS.GUILD_PRESENCES,
+        Discord.Intents.FLAGS.GUILD_MESSAGES,
+        Discord.Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+        Discord.Intents.FLAGS.GUILD_MESSAGE_TYPING,
+        Discord.Intents.FLAGS.DIRECT_MESSAGES,
+        Discord.Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
+        Discord.Intents.FLAGS.DIRECT_MESSAGE_TYPING
+    ]
+});
 const en_US = require("./language/en_US.json");
 const zh_CN = require("./language/zh_CN.json");
 const zh_TW = require("./language/zh_TW.json");
@@ -57,28 +70,6 @@ for (const file of eventFiles) {
 		client.on(event.name, async (...args) => await event.execute(...args, client));
 	}
 }
-
-Reflect.defineProperty(currency, "add", {
-    /* eslint-disable-next-line func-name-matching */
-    value: async function add(id, amount) {
-        const user = currency.get(id);
-        if (user) {
-            user.balance += Number(amount);
-            return user.save();
-        }
-        const newUser = await Users.create({ user_id: id, balance: amount });
-        currency.set(id, newUser);
-        return newUser;
-    },
-});
-
-Reflect.defineProperty(currency, "getBalance", {
-    /* eslint-disable-next-line func-name-matching */
-    value: function getBalance(id) {
-        const user = currency.get(id);
-        return user ? user.balance : 0;
-    },
-});
 
 /*
 client.on("message", async (message) => {

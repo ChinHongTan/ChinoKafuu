@@ -1,7 +1,6 @@
 module.exports = {
 	name: "message",
 	async execute(message, client) {
-        const { currency } = client;
         const { getEditDistance } = require("../functions/eventFunctions");
         const prefix = process.env.PREFIX || require("../config/config.json").prefix;
         const owner_id = process.env.OWNERID || require("../config/config.json").owner_id;
@@ -15,7 +14,6 @@ module.exports = {
         let language = client.language[guildOption.options.language];
 
         if (message.author.bot && !message.author.id === "761766088337391626") return;
-        currency.add(message.author.id, 1);
         if (!message.content.startsWith(prefix)) return;
     
         const args = message.content.slice(prefix.length).trim().split(/\s+/);
