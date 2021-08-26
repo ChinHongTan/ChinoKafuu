@@ -13,13 +13,28 @@ module.exports = {
         if (snipeWithGuild) {
             snipes = snipeWithGuild.snipes;
         } else {
-            return message.channel.send(language.noSnipe);
+            return message.channel.send({embeds: 
+                [{
+                    description: language.noSnipe,
+                    color: "RED"
+                }]
+            });
         }
         let arg = args[0] ?? 1;
 
-        if (Number(arg) > 10) return message.channel.send(language.exceed10);
+        if (Number(arg) > 10) return message.channel.send({embeds: 
+            [{
+                description: language.exceed10,
+                color: "RED"
+            }]
+        });
         let msg = snipes?.[Number(arg) - 1];
-        if (!msg) return message.channel.send(language.invalidSnipe);
+        if (!msg) return message.channel.send({embeds: 
+            [{
+                description: language.invalidSnipe,
+                color: "RED"
+            }]
+        });
 
         let image = msg.attachments;
 
@@ -29,7 +44,7 @@ module.exports = {
             .setDescription(msg.content)
             .setFooter(msg.timestamp)
             .setImage(image);
-        return message.channel.send(embed);
+        return message.channel.send({embeds: [embed]});
     },
     slashCommand: {
         data: new SlashCommandBuilder()
@@ -46,13 +61,28 @@ module.exports = {
             if (snipeWithGuild) {
                 snipes = snipeWithGuild.snipes;
             } else {
-                return interaction.reply(language.noSnipe);
+                return interaction.reply({embeds: 
+                    [{
+                        description: language.noSnipe,
+                        color: "RED"
+                    }]
+                });
             }
             let arg = interaction.options.getInteger('number') ?? 1;
 
-            if (Number(arg) > 10) return interaction.reply(language.exceed10);
+            if (Number(arg) > 10) return interaction.reply({embeds: 
+                [{
+                    description: language.exceed10,
+                    color: "RED"
+                }]
+            });
             let msg = snipes?.[Number(arg) - 1];
-            if (!msg) return interaction.reply(language.invalidSnipe);
+            if (!msg) return interaction.reply({embeds: 
+                [{
+                    description: language.invalidSnipe,
+                    color: "RED"
+                }]
+            });
 
             let image = msg.attachments;
 

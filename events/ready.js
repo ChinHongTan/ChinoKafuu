@@ -39,7 +39,8 @@ module.exports = {
         
                     console.log('Successfully registered application commands.');
                 } catch (error) {
-                    console.error(error);
+                    if (error.message === "DiscordAPIError[50001]: Missing Access") console.log("Missing access");
+                    else console.error(error);
                 }
             })();
         });

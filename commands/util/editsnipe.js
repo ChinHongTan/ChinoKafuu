@@ -13,17 +13,32 @@ module.exports = {
 
         if (editSnipesWithGuild) {
             let editsnipes = editSnipesWithGuild.editSnipe;
-            if (Number(arg) > 10) return message.channel.send(language.exceed10);
+            if (Number(arg) > 10) return message.channel.send({embeds: 
+                [{
+                    description: language.exceed10,
+                    color: "RED"
+                }]
+            });
             let msg = editsnipes?.[Number(arg) - 1];
-            if (!msg) return message.channel.send(language.invalidSnipe);
+            if (!msg) return message.channel.send({embeds: 
+                [{
+                    description: language.invalidSnipe,
+                    color: "RED"
+                }]
+            });
             let embed = new MessageEmbed()
                 .setColor("RANDOM")
                 .setAuthor(msg.author, msg.authorAvatar)
                 .setDescription(msg.content)
                 .setFooter(msg.timestamp);
-            return message.channel.send(embed);
+            return message.channel.send({embeds: [embed]});
         } else {
-            return message.channel.send(language.noSnipe);
+            return message.channel.send({embeds: 
+                [{
+                    description: language.noSnipe,
+                    color: "RED"
+                }]
+            });
         }
     },
     slashCommand: {
@@ -35,22 +50,37 @@ module.exports = {
             const { MessageEmbed } = require("discord.js");
             const collection = interaction.client.editSnipeCollection;
     
-            let editSnipesWithGuild = await collection.findOne({ id: message.guild.id });
+            let editSnipesWithGuild = await collection.findOne({ id: interaction.guild.id });
             let arg = interaction.options.getInteger('number') ?? 1;
     
             if (editSnipesWithGuild) {
                 let editsnipes = editSnipesWithGuild.editSnipe;
-                if (Number(arg) > 10) return interaction.reply(language.exceed10);
+                if (Number(arg) > 10) return interaction.reply({embeds: 
+                    [{
+                        description: language.exceed10,
+                        color: "RED"
+                    }]
+                });
                 let msg = editsnipes?.[Number(arg) - 1];
-                if (!msg) return interaction.reply(language.invalidSnipe);
+                if (!msg) return interaction.reply({embeds: 
+                    [{
+                        description: language.invalidSnipe,
+                        color: "RED"
+                    }]
+                });
                 let embed = new MessageEmbed()
                     .setColor("RANDOM")
                     .setAuthor(msg.author, msg.authorAvatar)
                     .setDescription(msg.content)
                     .setFooter(msg.timestamp);
-                return interaction.reply(embed);
+                return interaction.reply({embeds: [embed]});
             } else {
-                return interaction.reply(language.noSnipe);
+                return interaction.reply({embeds: 
+                    [{
+                        description: language.noSnipe,
+                        color: "RED"
+                    }]
+                });
             }
         },
     }
