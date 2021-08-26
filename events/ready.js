@@ -5,8 +5,7 @@ module.exports = {
         const { REST } = require('@discordjs/rest');
         const { Routes } = require('discord-api-types/v9');
         const fs = require('fs');
-        const { clientId, guildId, token } = require('../config/config.json');
-        const Discord = require("discord.js");
+        const { clientId, token } = require('../config/config.json');
         console.log("Ready!");
         client.user.setPresence({
             activity: { name: "c!help", type: "LISTENING" },
@@ -21,7 +20,7 @@ module.exports = {
                     let data = command.slashCommand.data;
                     if (!data.description) data.setDescription()
                     commands.push(command.slashCommand.data.toJSON())
-                };
+                }
             }
         }
         let guilds = [];
