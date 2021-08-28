@@ -1,40 +1,40 @@
 module.exports = {
-    name: "load",
+    name: 'load',
     cooldown: 10,
     guildOnly: true,
-    permissions: "ADMINISTRATOR",
+    permissions: 'ADMINISTRATOR',
     description: true,
     async execute(message, args, language) {
-        const backup = require("discord-backup");
-        const fs = require("fs");
+        const backup = require('discord-backup');
+        const fs = require('fs');
         // Check member permissions
-        if (!message.member.hasPermission("ADMINISTRATOR")) return message.channel.send(language.notAdminLoad);
-        
-        let backupID = args[0];
+        if (!message.member.hasPermission('ADMINISTRATOR')) return message.channel.send(language.notAdminLoad);
+
+        const backupID = args[0];
         if (!backupID) return message.channel.send(language.invalidBackupID);
         let rawdata;
         try {
-            rawdata = fs.readFileSync("./my-backups/" + backupID + ".json");
-        } catch (err) {
-            return message.channel.send(language.noBackupFound.replace("${backupID}", backupID));
+            rawdata = fs.readFileSync(`./my-backups/${backupID}.json`);
         }
-        var serverbackup = JSON.parse(rawdata);
-        let data = JSON.stringify(serverbackup, null, 2);
-        var filename = backupID + ".json";
-        fs.writeFileSync("./my-backups/" + filename, data);
+        catch (err) {
+            return message.channel.send(language.noBackupFound.replace('${backupID}', backupID));
+        }
+        const serverbackup = JSON.parse(rawdata);
+        const data = JSON.stringify(serverbackup, null, 2);
+        const filename = `${backupID}.json`;
+        fs.writeFileSync(`./my-backups/${filename}`, data);
         // Fetching the backup to know if it exists
         try {
-            var backupData = JSON.parse(fs.readFileSync("./my-backups/" + backupID + ".json"));
+            const backupData = JSON.parse(fs.readFileSync(`./my-backups/${backupID}.json`));
             // If the backup exists, request for confirmation
             message.channel.send(language.warningBackup);
             await message.channel
-                .awaitMessages((m) => m.author.id === message.author.id && m.content === "-confirm",
+                .awaitMessages((m) => m.author.id === message.author.id && m.content === '-confirm',
                     {
                         max: 1,
                         time: 20000,
-                        errors: ["time"],
-                    }
-                )
+                        errors: ['time'],
+                    })
                 .catch((err) => {
                     console.error(err);
                     // if the author of the commands does not confirm the backup loading
@@ -57,10 +57,11 @@ module.exports = {
                     // If an error occurred
                     return message.author.send(language.backupError);
                 });
-        } catch (err) {
+        }
+        catch (err) {
             console.log(err);
             // if the backup wasn't found
-            return message.channel.send(language.noBackupFound.replace("${backupID}", backupID));
+            return message.channel.send(language.noBackupFound.replace('${backupID}', backupID));
         }
     },
 };

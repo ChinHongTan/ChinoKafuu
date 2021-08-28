@@ -1,21 +1,21 @@
 module.exports = {
-    name: "connect4",
+    name: 'connect4',
     cooldown: 3,
     description: true,
     async execute(message, _args, language) {
-        const Discord = require("discord.js");
+        const Discord = require('discord.js');
 
-        let coordinates = setCoordinates(7, 6);
-        let squares = {};
+        const coordinates = setCoordinates(7, 6);
+        const squares = {};
 
         const reactCol = {
-            "1️⃣": 1,
-            "2️⃣": 2,
-            "3️⃣": 3,
-            "4️⃣": 4,
-            "5️⃣": 5,
-            "6️⃣": 6,
-            "7️⃣": 7,
+            '1️⃣': 1,
+            '2️⃣': 2,
+            '3️⃣': 3,
+            '4️⃣': 4,
+            '5️⃣': 5,
+            '6️⃣': 6,
+            '7️⃣': 7,
         };
 
         // a class of a single square on the board
@@ -26,68 +26,71 @@ module.exports = {
                 this.occupied = occupied;
                 this.coordinate = coordinate;
             }
+
             // calculate where to draw the piece
             pixel() {
-                let array = this.coordinate.split("");
-                let x = array[0];
-                let y = array[1];
+                const array = this.coordinate.split('');
+                const x = array[0];
+                const y = array[1];
                 return [x, y];
             }
+
             // whether this square had been occupied
             get isOccupied() {
                 return this.occupied;
             }
+
             set isOccupied(name) {
                 this.occupied = name;
             }
         }
 
         coordinates.forEach((coordinate) => {
-            var square = new Square("white", coordinate);
+            const square = new Square('white', coordinate);
             squares[coordinate] = square;
         });
 
         function draw(squares, coordinate, round, board) {
-            let [x, y] = squares[coordinate].pixel();
+            const [x, y] = squares[coordinate].pixel();
             board[+y - 1][+x - 1] = round.emoji;
             return board;
         }
 
         function stringify(board) {
-            var result = "";
+            let result = '';
             for (let i = 0; i < 6; i++) {
-                var sub = "";
+                let sub = '';
                 for (let j = 0; j < 7; j++) {
                     sub += board[i][j];
                 }
-                result += sub + "\n";
+                result += `${sub}\n`;
             }
-    
+
             return result;
         }
 
         function createEmbed(round, board) {
-            let boardStr = stringify(board);
-            let embed = new Discord.MessageEmbed()
-                .setTitle("**CONNECT FOUR**")
-                .setDescription(language.board.replace("${round.name}", round.name).replace("${boardStr}", boardStr))
-                .setColor("#ff0000");
+            const boardStr = stringify(board);
+            const embed = new Discord.MessageEmbed()
+                .setTitle('**CONNECT FOUR**')
+                .setDescription(language.board.replace('${round.name}', round.name).replace('${boardStr}', boardStr))
+                .setColor('#ff0000');
             return embed;
         }
 
         function checkWin(d, r, s) {
             let win = false;
-            let spaces = [];
-            for (let [coordinate, square] of Object.entries(s)) {
+            const spaces = [];
+            for (const [coordinate, square] of Object.entries(s)) {
                 if (square.isOccupied === r.name) {
                     spaces.push(coordinate);
                 }
             }
-            for (let c of spaces) {
+            for (const c of spaces) {
                 if (
-                    spaces.includes(String(+c + +d)) &&
-                    spaces.includes(String(+c + 2 * +d)) &&
-                    spaces.includes(String(+c + 3 * +d))
+                    spaces.includes(String(+c + +d))
+                    && spaces.includes(String(+c + 2 * +d))
+                    && spaces.includes(String(+c + 3 * +d))
                 ) {
                     win = true;
                     break;
@@ -96,16 +99,17 @@ module.exports = {
             return win;
         }
 
-        //a function to place new piece
+        // a function to place new piece
         function place(column, round, squares) {
             let placed = false;
-            let coordinate = "";
-            for (var i = 6; i > 0; i--) {
+            let coordinate = '';
+            for (let i = 6; i > 0; i--) {
                 coordinate = (column * 10 + i).toString();
-                let square = squares[coordinate];
-                if (square.isOccupied !== "white") {
+                const square = squares[coordinate];
+                if (square.isOccupied !== 'white') {
                     // pass
-                } else {
+                }
+                else {
                     // say this is Blue’s turn
                     // round refers to Blue's turn
                     square.isOccupied = round.name;
@@ -113,49 +117,49 @@ module.exports = {
                     break;
                 }
             }
-            //if a new piece can’t be placed in this column
+            // if a new piece can’t be placed in this column
             if (!placed) {
                 return message.channel.send(language.invalidMove);
-            } else {
-                let directions = [11, 1, 9, 10, -11, -1, -9, -10];
-                for (let direction of directions) {
-                    if (checkWin(direction, round, squares)) {
-                        return [true, coordinate];
-                    }
-                }
-                return [false, coordinate];
             }
+            const directions = [11, 1, 9, 10, -11, -1, -9, -10];
+            for (const direction of directions) {
+                if (checkWin(direction, round, squares)) {
+                    return [true, coordinate];
+                }
+            }
+            return [false, coordinate];
         }
-        
+
         function doMove(r, embedMessage, round, collector) {
-            let [win, coordinate] = place(
+            const [win, coordinate] = place(
                 reactCol[r.emoji.name],
                 round,
-                squares
+                squares,
             );
-            let board = draw(squares, coordinate, round, board);
+            const board = draw(squares, coordinate, round, board);
             if (win) {
                 collector.stop();
-                message.channel.send(language.win.replace("${round.name}", round.name));
+                message.channel.send(language.win.replace('${round.name}', round.name));
             }
-            if (round.name === "red") {
-                round.name = "yellow";
-                round.emoji = "🟡";
-            } else {
-                round.name = "red";
-                round.emoji = "🔴";
+            if (round.name === 'red') {
+                round.name = 'yellow';
+                round.emoji = '🟡';
             }
-            let editedEmbed = createEmbed(round, board);
+            else {
+                round.name = 'red';
+                round.emoji = '🔴';
+            }
+            const editedEmbed = createEmbed(round, board);
             embedMessage.edit(editedEmbed);
             return round;
         }
 
         function drawBoard(sizeX, sizeY) {
-            let board = [];
+            const board = [];
             for (let y = 0; y < sizeY; y++) {
-                let column = [];
+                const column = [];
                 for (let x = 0; x < sizeX; x++) {
-                    column.push("⚪");
+                    column.push('⚪');
                 }
                 board.push(column);
             }
@@ -163,9 +167,9 @@ module.exports = {
         }
 
         function setCoordinates(x, y) {
-            let coordinates = [];
-            let xList = Array.from({length: x}, (_, i) => i + 1);
-            let yList = Array.from({length: y}, (_, i) => i + 1);
+            const coordinates = [];
+            const xList = Array.from({ length: x }, (_, i) => i + 1);
+            const yList = Array.from({ length: y }, (_, i) => i + 1);
             xList.forEach((corX) => {
                 yList.forEach((corY) => {
                     coordinates.push(corX + corY);
@@ -174,30 +178,29 @@ module.exports = {
             return coordinates;
         }
 
-        let board = drawBoard(7, 6);
+        const board = drawBoard(7, 6);
 
-        const emojiList = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣"];
+        const emojiList = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣'];
 
         let round = {
-            "name": "red",
-            "emoji": "🔴"
+            name: 'red',
+            emoji: '🔴',
         };
 
-        let embed = createEmbed(round, board);
-        let embedMessage = await message.channel.send(embed);
-        for (let emoji of emojiList) {
+        const embed = createEmbed(round, board);
+        const embedMessage = await message.channel.send(embed);
+        for (const emoji of emojiList) {
             await embedMessage.react(emoji);
         }
-        const filter = (reaction, user) =>
-            emojiList.includes(reaction.emoji.name) && !user.bot;
+        const filter = (reaction, user) => emojiList.includes(reaction.emoji.name) && !user.bot;
         const collector = embedMessage.createReactionCollector(filter, {
             idle: 600000,
             dispose: true,
         });
-        collector.on("collect", (r) => {
+        collector.on('collect', (r) => {
             round = doMove(r, embedMessage, round, collector);
         });
-        collector.on("remove", (r) => {
+        collector.on('remove', (r) => {
             round = doMove(r, embedMessage, round, collector);
         });
     },

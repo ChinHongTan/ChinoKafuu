@@ -1,19 +1,19 @@
 module.exports = {
     async storeSnipes(message) {
         const collection = message.client.snipeCollection;
-        let rawData = await collection.findOne({ id: message.guild.id });
-        let snipeWithGuild = rawData ?? { id: message.guild.id };
+        const rawData = await collection.findOne({ id: message.guild.id });
+        const snipeWithGuild = rawData ?? { id: message.guild.id };
         if (message.author.bot) return;
         if (!message.guild) return;
 
-        let snipe = {};
-        let snipes = snipeWithGuild?.snipes ?? [];
+        const snipe = {};
+        const snipes = snipeWithGuild?.snipes ?? [];
         snipe.author = message.author.tag;
         snipe.authorAvatar = message.author.displayAvatarURL({
-            format: "png",
+            format: 'png',
             dynamic: true,
         });
-        snipe.content = message.content ?? "None";
+        snipe.content = message.content ?? 'None';
         snipe.timestamp = message.createdAt.toUTCString([8]);
         snipe.attachments = message.attachments.first()?.proxyURL;
 
@@ -27,21 +27,21 @@ module.exports = {
     },
     async storeEditSnipes(oldMessage, newMessage) {
         const collection = oldMessage.client.editSnipeCollection;
-        let rawData = await collection.findOne({ id: oldMessage.guild.id });
-        let editSnipeWithGuild = rawData ?? { id: oldMessage.guild.id };
+        const rawData = await collection.findOne({ id: oldMessage.guild.id });
+        const editSnipeWithGuild = rawData ?? { id: oldMessage.guild.id };
 
         if (oldMessage.author.bot) return;
         if (!oldMessage.guild) return;
 
-        var editSnipe = {};
-        let editSnipes = editSnipeWithGuild?.editSnipe ?? [];
+        const editSnipe = {};
+        const editSnipes = editSnipeWithGuild?.editSnipe ?? [];
 
         editSnipe.author = newMessage.author.tag;
         editSnipe.authorAvatar = newMessage.author.displayAvatarURL({
-            format: "png",
+            format: 'png',
             dynamic: true,
         });
-        editSnipe.content = oldMessage.content ?? "None";
+        editSnipe.content = oldMessage.content ?? 'None';
         if (newMessage.editedAt) {
             editSnipe.timestamp = newMessage.editedAt.toUTCString([8]);
             editSnipes.unshift(editSnipe);
@@ -55,33 +55,33 @@ module.exports = {
     },
     async dynamic(oldState, newState) {
         if (newState.member.user.bot) return;
-        let mainChannel = oldState.guild.channels.cache.find((channel) => channel.id === "860456123953840128");
+        const mainChannel = oldState.guild.channels.cache.find((channel) => channel.id === '860456123953840128');
         if (mainChannel) {
-            let channels = mainChannel.parent.children;
+            const channels = mainChannel.parent.children;
             channels.each((channel) => {
-                if (channel.id === "860456123953840128") return;
+                if (channel.id === '860456123953840128') return;
                 if (channel.members.size < 1) channel.delete();
             });
         }
-        if (newState.channelID === "860456123953840128") {
-            let voiceChannel = await newState.guild.channels
+        if (newState.channelID === '860456123953840128') {
+            const voiceChannel = await newState.guild.channels
                 .create(`${newState.member.displayName}的頻道`, {
-                    type: "voice",
+                    type: 'voice',
                     bitrate: 256000,
                     userLimit: 99,
                     parent: newState.guild.channels.cache.find(
-                        (channel) => channel.id === "860456123953840128"
+                        (channel) => channel.id === '860456123953840128',
                     ).parent,
-                })
+                });
             newState.member.voice.setChannel(voiceChannel);
         }
     },
     async sendWelcomeMessage(member) {
-        const Discord = require("discord.js");
-        const Canvas = require("canvas");
+        const Discord = require('discord.js');
+        const Canvas = require('canvas');
 
         const applyText = (canvas, text) => {
-            const context = canvas.getContext("2d");
+            const context = canvas.getContext('2d');
             let fontSize = 70;
 
             do {
@@ -91,39 +91,39 @@ module.exports = {
             return context.font;
         };
 
-        const channel = member.guild.channels.cache.find((ch) => ch.name === "閒聊-chat");
+        const channel = member.guild.channels.cache.find((ch) => ch.name === '閒聊-chat');
         if (!channel) return;
 
         const canvas = Canvas.createCanvas(700, 250);
-        const context = canvas.getContext("2d");
+        const context = canvas.getContext('2d');
 
-        const background = await Canvas.loadImage("../data/wallpaper.jpg");
+        const background = await Canvas.loadImage('../data/wallpaper.jpg');
         context.drawImage(background, 0, 0, canvas.width, canvas.height);
 
-        context.strokeStyle = "#74037b";
+        context.strokeStyle = '#74037b';
         context.strokeRect(0, 0, canvas.width, canvas.height);
 
-        context.font = "28px sans-serif";
-        context.fillStyle = "#ffffff";
-        context.fillText("Welcome to the server,", canvas.width / 2.5, canvas.height / 3.5);
+        context.font = '28px sans-serif';
+        context.fillStyle = '#ffffff';
+        context.fillText('Welcome to the server,', canvas.width / 2.5, canvas.height / 3.5);
 
         context.font = applyText(canvas, `${member.displayName}!`);
-        context.fillStyle = "#ffffff";
+        context.fillStyle = '#ffffff';
         context.fillText(`${member.displayName}!`, canvas.width / 2.5, canvas.height / 1.8);
 
         context.font = applyText(canvas, `${member.displayName}!`);
-        context.fillStyle = "#ffffff";
-        context.fillText(`bruuuuuuuuuuuuuuuuuh`, canvas.width / 2.5, canvas.height / 0.8);
+        context.fillStyle = '#ffffff';
+        context.fillText('bruuuuuuuuuuuuuuuuuh', canvas.width / 2.5, canvas.height / 0.8);
 
         context.beginPath();
         context.arc(125, 125, 100, 0, Math.PI * 2, true);
         context.closePath();
         context.clip();
 
-        const avatar = await Canvas.loadImage(member.user.displayAvatarURL({ format: "jpg" }));
+        const avatar = await Canvas.loadImage(member.user.displayAvatarURL({ format: 'jpg' }));
         context.drawImage(avatar, 25, 25, 200, 200);
 
-        const attachment = new Discord.MessageAttachment(canvas.toBuffer(), "welcome-image.png");
+        const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'welcome-image.png');
 
         channel.send(`Welcome to the server, ${member}!`, attachment);
     },
@@ -131,16 +131,16 @@ module.exports = {
         if (a.length === 0) return b.length;
         if (b.length === 0) return a.length;
 
-        var matrix = [];
+        const matrix = [];
 
         // increment along the first column of each row
-        var i;
+        let i;
         for (i = 0; i <= b.length; i++) {
             matrix[i] = [i];
         }
 
         // increment each column in the first row
-        var j;
+        let j;
         for (j = 0; j <= a.length; j++) {
             matrix[0][j] = j;
         }
@@ -150,18 +150,19 @@ module.exports = {
             for (j = 1; j <= a.length; j++) {
                 if (b.charAt(i - 1) === a.charAt(j - 1)) {
                     matrix[i][j] = matrix[i - 1][j - 1];
-                } else {
+                }
+                else {
                     matrix[i][j] = Math.min(
                         matrix[i - 1][j - 1] + 1, // substitution
                         Math.min(
                             matrix[i][j - 1] + 1, // insertion
-                            matrix[i - 1][j] + 1
-                        )
+                            matrix[i - 1][j] + 1,
+                        ),
                     ); // deletion
                 }
             }
         }
 
         return matrix[b.length][a.length];
-    }
-}
+    },
+};

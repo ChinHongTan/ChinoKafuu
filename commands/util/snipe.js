@@ -1,98 +1,115 @@
-const { SlashCommandBuilder } = require("@discordjs/builders");
+const { SlashCommandBuilder } = require('@discordjs/builders');
+
 module.exports = {
-    name: "snipe",
+    name: 'snipe',
     guildOnly: true,
     description: true,
     async execute(message, args, language) {
-        const { MessageEmbed } = require("discord.js");
+        const { MessageEmbed } = require('discord.js');
         const collection = message.client.snipeCollection;
 
-        let snipeWithGuild = await collection.findOne({ id: message.guild.id });
+        const snipeWithGuild = await collection.findOne({ id: message.guild.id });
         let snipes;
 
         if (snipeWithGuild) {
             snipes = snipeWithGuild.snipes;
-        } else {
-            return message.channel.send({embeds: 
+        }
+        else {
+            return message.channel.send({
+                embeds:
                 [{
                     description: language.noSnipe,
-                    color: "RED"
-                }]
+                    color: 'RED',
+                }],
             });
         }
-        let arg = args[0] ?? 1;
+        const arg = args[0] ?? 1;
 
-        if (Number(arg) > 10) return message.channel.send({embeds: 
+        if (Number(arg) > 10) {
+            return message.channel.send({
+                embeds:
             [{
                 description: language.exceed10,
-                color: "RED"
-            }]
-        });
-        let msg = snipes?.[Number(arg) - 1];
-        if (!msg) return message.channel.send({embeds: 
+                color: 'RED',
+            }],
+            });
+        }
+        const msg = snipes?.[Number(arg) - 1];
+        if (!msg) {
+            return message.channel.send({
+                embeds:
             [{
                 description: language.invalidSnipe,
-                color: "RED"
-            }]
-        });
+                color: 'RED',
+            }],
+            });
+        }
 
-        let image = msg.attachments;
+        const image = msg.attachments;
 
-        let embed = new MessageEmbed()
-            .setColor("RANDOM")
+        const embed = new MessageEmbed()
+            .setColor('RANDOM')
             .setAuthor(msg.author, msg.authorAvatar)
             .setDescription(msg.content)
             .setFooter(msg.timestamp)
             .setImage(image);
-        return message.channel.send({embeds: [embed]});
+        return message.channel.send({ embeds: [embed] });
     },
     slashCommand: {
         data: new SlashCommandBuilder()
-            .setName("snipe")
-            .setDescription("Snipe a message")
-            .addIntegerOption(option => option.setName("number").setDescription("message to snipe")),
+            .setName('snipe')
+            .setDescription('Snipe a message')
+            .addIntegerOption((option) => option.setName('number').setDescription('message to snipe')),
         async execute(interaction, language) {
-            const { MessageEmbed } = require("discord.js");
+            const { MessageEmbed } = require('discord.js');
             const collection = interaction.client.snipeCollection;
 
-            let snipeWithGuild = await collection.findOne({ id: interaction.guild.id });
+            const snipeWithGuild = await collection.findOne({ id: interaction.guild.id });
             let snipes;
 
             if (snipeWithGuild) {
                 snipes = snipeWithGuild.snipes;
-            } else {
-                return interaction.reply({embeds: 
+            }
+            else {
+                return interaction.reply({
+                    embeds:
                     [{
                         description: language.noSnipe,
-                        color: "RED"
-                    }]
+                        color: 'RED',
+                    }],
                 });
             }
-            let arg = interaction.options.getInteger('number') ?? 1;
+            const arg = interaction.options.getInteger('number') ?? 1;
 
-            if (Number(arg) > 10) return interaction.reply({embeds: 
+            if (Number(arg) > 10) {
+                return interaction.reply({
+                    embeds:
                 [{
                     description: language.exceed10,
-                    color: "RED"
-                }]
-            });
-            let msg = snipes?.[Number(arg) - 1];
-            if (!msg) return interaction.reply({embeds: 
+                    color: 'RED',
+                }],
+                });
+            }
+            const msg = snipes?.[Number(arg) - 1];
+            if (!msg) {
+                return interaction.reply({
+                    embeds:
                 [{
                     description: language.invalidSnipe,
-                    color: "RED"
-                }]
-            });
+                    color: 'RED',
+                }],
+                });
+            }
 
-            let image = msg.attachments;
+            const image = msg.attachments;
 
-            let embed = new MessageEmbed()
-                .setColor("RANDOM")
+            const embed = new MessageEmbed()
+                .setColor('RANDOM')
                 .setAuthor(msg.author, msg.authorAvatar)
                 .setDescription(msg.content)
                 .setFooter(msg.timestamp)
                 .setImage(image);
-            return interaction.reply({embeds: [embed]});
+            return interaction.reply({ embeds: [embed] });
         },
     },
 };

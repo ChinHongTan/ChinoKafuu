@@ -1,9 +1,10 @@
-const fs = require("fs");
-const Discord = require("discord.js");
-const token = process.env.TOKEN || require("./config/config.json").token;
+const fs = require('fs');
+const Discord = require('discord.js');
+const token = process.env.TOKEN || require('./config/config.json').token;
 
 const { MongoClient } = require('mongodb');
 const mongodb = process.env.MONGODB_URI || require('./config/config.json').mongodb;
+
 const mongoClient = new MongoClient(mongodb);
 
 // Database Name
@@ -38,37 +39,38 @@ const client = new Discord.Client({
         Discord.Intents.FLAGS.GUILD_MESSAGE_TYPING,
         Discord.Intents.FLAGS.DIRECT_MESSAGES,
         Discord.Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
-        Discord.Intents.FLAGS.DIRECT_MESSAGE_TYPING
-    ]
+        Discord.Intents.FLAGS.DIRECT_MESSAGE_TYPING,
+    ],
 });
-const en_US = require("./language/en_US.json");
-const zh_CN = require("./language/zh_CN.json");
-const zh_TW = require("./language/zh_TW.json");
+const en_US = require('./language/en_US.json');
+const zh_CN = require('./language/zh_CN.json');
+const zh_TW = require('./language/zh_TW.json');
 
 client.commands = new Discord.Collection();
-client.language = { "en_US" : en_US, "zh_CN" : zh_CN, "zh_TW" : zh_TW };
+client.language = { en_US, zh_CN, zh_TW };
 
-const commandFolders = fs.readdirSync("./commands");
+const commandFolders = fs.readdirSync('./commands');
 
 for (const folder of commandFolders) {
-	const commandFiles = fs.readdirSync(`./commands/${folder}`).filter(file => file.endsWith(".js"));
-	for (const file of commandFiles) {
-		const command = require(`./commands/${folder}/${file}`);
-		client.commands.set(command.name, command);
-	}
+    const commandFiles = fs.readdirSync(`./commands/${folder}`).filter((file) => file.endsWith('.js'));
+    for (const file of commandFiles) {
+        const command = require(`./commands/${folder}/${file}`);
+        client.commands.set(command.name, command);
+    }
 }
 
 client.cooldowns = new Discord.Collection();
 
-const eventFiles = fs.readdirSync("./events").filter((file) => file.endsWith(".js"));
+const eventFiles = fs.readdirSync('./events').filter((file) => file.endsWith('.js'));
 
 for (const file of eventFiles) {
-	const event = require(`./events/${file}`);
-	if (event.once) {
-		client.once(event.name, async (...args) => await event.execute(...args, client));
-	} else {
-		client.on(event.name, async (...args) => await event.execute(...args, client));
-	}
+    const event = require(`./events/${file}`);
+    if (event.once) {
+        client.once(event.name, async (...args) => await event.execute(...args, client));
+    }
+    else {
+        client.on(event.name, async (...args) => await event.execute(...args, client));
+    }
 }
 
 /*
