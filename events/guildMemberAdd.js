@@ -1,8 +1,8 @@
-const { sendWelcomeMessage } = require("../functions/eventFunctions");
+const { sendWelcomeMessage } = require('../functions/eventFunctions');
 
 module.exports = {
-	name: "guildMEmberAdd",
-	async execute(member) {
+    name: 'guildMEmberAdd',
+    async execute(member) {
         sendWelcomeMessage(member);
-	},
+    },
 };

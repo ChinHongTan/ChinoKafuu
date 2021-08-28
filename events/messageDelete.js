@@ -1,8 +1,8 @@
-const { storeSnipes } = require("../functions/eventFunctions");
+const { storeSnipes } = require('../functions/eventFunctions');
 
 module.exports = {
-	name: "messageDelete",
-	async execute(message) {
+    name: 'messageDelete',
+    async execute(message) {
         storeSnipes(message);
-	},
+    },
 };

@@ -1,6 +1,6 @@
 module.exports = {
-    name: "webhook",
-    aliases: ["w"],
+    name: 'webhook',
+    aliases: ['w'],
     description: true,
     execute(message, args) {
         message.channel
@@ -8,7 +8,7 @@ module.exports = {
                 name: message.author.username,
                 avatar: message.author.avatarURL(),
             })
-            .then((hook) => hook.send(args.join(" ")));
+            .then((hook) => hook.send(args.join(' ')));
         message.delete();
     },
 };
