@@ -1,26 +1,49 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const CommandReply = require('../../functions/commandReply.js');
+const commandReply = new CommandReply();
+/**
+ * Copy an emoji from other guilds
+ * @param {Message | CommandInteraction} command - The message or slash command that called this function
+ * @param {string} string - String containing emoji
+ * @param {object} language - Language used by the guild
+ */
+async function addEmoji(command, string, language) {
+    // id of the emoji
+    const emojiID = string.match(/(?<=:.*:).+?(?=>)/g);
+    // name of the emoji
+    const emojiName = string.match(/(?<=<).+?(?=:\d+>)/g);
+    if (!emojiID || !emojiName) return commandReply.reply(command, language.noEmoji, 'RED');
+    // combine id and name into an object
+    const emojiObj = emojiName.reduce((obj, key, index) => {
+        obj[key] = emojiID[index];
+        return obj;
+    }, {});
+
+    for (const [name, id] of Object.entries(emojiObj)) {
+        if (name.startsWith('a:')) {
+            const emoji = await command.guild.emojis.create(`https://cdn.discordapp.com/emojis/${id}.gif?v=1`, name.substring(2));
+            commandReply.reply(command, language.addSuccess.replace('${emoji.name}', emoji.name).replace('${emoji}', emoji), 'BLUE');
+        }
+        else {
+            const emoji = await command.guild.emojis.create(`https://cdn.discordapp.com/emojis/${id}.png?v=1`, name.substring(1));
+            commandReply.reply(command, language.addSuccess.replace('${emoji.name}', emoji.name).replace('${emoji}', emoji), 'BLUE');
+        }
+    }
+}
 module.exports = {
     name: 'cemoji',
     cooldown: 3,
     description: true,
     async execute(message, _args, language) {
-        const emojiID = message.content.match(/(?<=:.*:).+?(?=>)/g);
-        const emojiName = message.content.match(/(?<=<).+?(?=:\d+>)/g);
-        if (!emojiID || !emojiName) return message.channel.send(language.noEmoji);
-        const emojiObj = emojiName.reduce((obj, key, index) => {
-            obj[key] = emojiID[index];
-            return obj;
-        }, {});
-
-        for (const [name, id] of Object.entries(emojiObj)) {
-            console.log(name);
-            if (name.startsWith('a:')) {
-                const emoji = await message.guild.emojis.create(`https://cdn.discordapp.com/emojis/${id}.gif?v=1`, name.substring(2));
-                message.channel.send(language.addSuccess.replace('${emoji.name}', emoji.name).replace('${emoji}', emoji));
-            }
-            else {
-                const emoji = await message.guild.emojis.create(`https://cdn.discordapp.com/emojis/${id}.png?v=1`, name.substring(1));
-                message.channel.send(language.addSuccess.replace('${emoji.name}', emoji.name).replace('${emoji}', emoji));
-            }
-        }
+        addEmoji(message, message.content, language);
+    },
+    slashCommand: {
+        data: new SlashCommandBuilder()
+            .setName('cemoji')
+            .setDescription('Copy an emoji from other guilds')
+            .addStringOption((option) => option.setName('emoji').setDescription('Emoji').setRequired(true)),
+        async execute(interaction, language) {
+            addEmoji(interaction, interaction.options.getString('emoji'), language);
+        },
     },
 };
