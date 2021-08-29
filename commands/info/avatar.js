@@ -1,3 +1,4 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
 module.exports = {
     name: 'avatar',
     cooldown: 10,
@@ -72,5 +73,26 @@ module.exports = {
                 size: 2048,
             })}`);
         message.channel.send(embed);
+    },
+    slashCommand: {
+        data: new SlashCommandBuilder()
+            .setName('avatar')
+            .setDescription('Display a member\'s avatar')
+            .addUserOption((option) => option.setName('member').setDescription('member\'s avatar')),
+        async execute(interaction, language) {
+            const Discord = require('discord.js');
+            const user = interaction.options.getMember('member') ?? interaction.member;
+            const embed = new Discord.MessageEmbed()
+                .setTitle(language.memberAvatar.replace('${user.displayName}', user.displayName))
+                .setColor(user.displayHexColor)
+                .setImage(
+                    `${user.user.displayAvatarURL({
+                        format: 'png',
+                        dynamic: true,
+                        size: 2048,
+                    })}`,
+                );
+            return interaction.reply({ embeds: [embed] });
+        },
     },
 };
