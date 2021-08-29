@@ -6,7 +6,7 @@ class CommandReply {
     }
     // reply to a user command
     reply(command: Discord.Message | Discord.CommandInteraction, response: string, color: Discord.ColorResolvable) {
-        if (typeof(command) === typeof(Discord.Message)) {
+        if (command instanceof Discord.Message) {
             return command.channel.send({
                 embeds: [{
                     description: response,
@@ -14,7 +14,7 @@ class CommandReply {
                 }]
             })
         }
-        if (typeof(command) === typeof(Discord.CommandInteraction)) {
+        if (command instanceof Discord.CommandInteraction) {
             return command.reply({
                 embeds: [{
                     description: response,

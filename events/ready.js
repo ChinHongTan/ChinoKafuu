@@ -25,7 +25,6 @@ module.exports = {
         }
         const guilds = [];
         client.guilds.cache.each((guild) => guilds.push(guild.id));
-        console.log(guilds);
         const rest = new REST({ version: '9' }).setToken(token);
 
         guilds.forEach((id) => {
