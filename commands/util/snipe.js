@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-
+const CommandReply = require('../../functions/commandReply.js');
+const commandReply = new CommandReply();
 module.exports = {
     name: 'snipe',
     guildOnly: true,
@@ -15,35 +16,13 @@ module.exports = {
             snipes = snipeWithGuild.snipes;
         }
         else {
-            return message.channel.send({
-                embeds:
-                [{
-                    description: language.noSnipe,
-                    color: 'RED',
-                }],
-            });
+            return commandReply.reply(message, language.noSnipe, 'RED');
         }
         const arg = args[0] ?? 1;
 
-        if (Number(arg) > 10) {
-            return message.channel.send({
-                embeds:
-            [{
-                description: language.exceed10,
-                color: 'RED',
-            }],
-            });
-        }
+        if (Number(arg) > 10) return commandReply.reply(message, language.exceed10, 'RED');
         const msg = snipes?.[Number(arg) - 1];
-        if (!msg) {
-            return message.channel.send({
-                embeds:
-            [{
-                description: language.invalidSnipe,
-                color: 'RED',
-            }],
-            });
-        }
+        if (!msg) return commandReply.reply(message, language.invalidSnipe, 'RED');
 
         const image = msg.attachments;
 
@@ -71,35 +50,13 @@ module.exports = {
                 snipes = snipeWithGuild.snipes;
             }
             else {
-                return interaction.reply({
-                    embeds:
-                    [{
-                        description: language.noSnipe,
-                        color: 'RED',
-                    }],
-                });
+                return commandReply.reply(interaction, language.noSnipe, 'RED');
             }
             const arg = interaction.options.getInteger('number') ?? 1;
 
-            if (Number(arg) > 10) {
-                return interaction.reply({
-                    embeds:
-                [{
-                    description: language.exceed10,
-                    color: 'RED',
-                }],
-                });
-            }
+            if (Number(arg) > 10) return commandReply.reply(interaction, language.exceed10, 'RED');
             const msg = snipes?.[Number(arg) - 1];
-            if (!msg) {
-                return interaction.reply({
-                    embeds:
-                [{
-                    description: language.invalidSnipe,
-                    color: 'RED',
-                }],
-                });
-            }
+            if (!msg) return commandReply.reply(interaction, language.invalidSnipe, 'RED');
 
             const image = msg.attachments;
 

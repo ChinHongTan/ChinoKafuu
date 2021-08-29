@@ -31,6 +31,7 @@ class FuzzySort {
             });
         }
     }
+    // search a keyword
     search(keyword: string, options: Options = {}) {
         let { keys = ["nickname", "username", "tag", "discriminator"], limit = 1 } = options;
         let result = fuzzysort.go(keyword, this.array, {
