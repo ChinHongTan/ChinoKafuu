@@ -27,8 +27,8 @@ module.exports = {
     },
     slashCommand: {
         data: new SlashCommandBuilder()
-            .setName('pause')
-            .setDescription('Pause a song'),
+            .setName('resume')
+            .setDescription('Resume playing!'),
         async execute(interaction, language) {
             resume(interaction, language);
         },
