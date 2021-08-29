@@ -21,7 +21,7 @@ import { Message, MessageReaction, MessageEmbed, ReactionCollector, User } from 
             itemList["page"] = page;
             itemList["total"] = itemList.length
             editedEmbed = createEmbed(itemList[page]);
-            embedMessage.edit(editedEmbed);
+            embedMessage.edit({ embeds: [editedEmbed] });
             if (collectorParams && collectorParams.length > 1) {
                 collectorParams[1] = page;
             }
@@ -32,7 +32,7 @@ import { Message, MessageReaction, MessageEmbed, ReactionCollector, User } from 
             itemList["page"] = page;
             itemList["total"] = itemList.length
             editedEmbed = createEmbed(itemList[page]);
-            embedMessage.edit(editedEmbed);
+            embedMessage.edit({ embeds: [editedEmbed] });
             if (collectorParams && collectorParams.length > 1) {
                 collectorParams[1] = page;
             }
@@ -58,12 +58,13 @@ class DynamicEmbed {
             itemList["total"] = itemList.length
         }
         let embed = createEmbed(itemList[page]);
-        let embedMessage = await message.channel.send(embed);
+        let embedMessage = await message.channel.send({ embeds: [embed] });
         for (let emoji of emojiList) {
             await embedMessage.react(emoji);
         }
         const filter = (reaction: MessageReaction, user: User) => emojiList.includes(reaction.emoji.name) && !user.bot;
-        const collector = embedMessage.createReactionCollector(filter, {
+        const collector = embedMessage.createReactionCollector({
+            filter,
             idle: 600000,
             dispose: true,
         });
