@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-
+const CommandReply = require('../../functions/commandReply.js');
+const commandReply = new CommandReply();
 module.exports = {
     name: 'editsnipe',
     aliases: ['esnipe'],
@@ -14,25 +15,9 @@ module.exports = {
 
         if (editSnipesWithGuild) {
             const editsnipes = editSnipesWithGuild.editSnipe;
-            if (Number(arg) > 10) {
-                return message.channel.send({
-                    embeds:
-                [{
-                    description: language.exceed10,
-                    color: 'RED',
-                }],
-                });
-            }
+            if (Number(arg) > 10) return commandReply.reply(message, language.exceed10, 'RED');
             const msg = editsnipes?.[Number(arg) - 1];
-            if (!msg) {
-                return message.channel.send({
-                    embeds:
-                [{
-                    description: language.invalidSnipe,
-                    color: 'RED',
-                }],
-                });
-            }
+            if (!msg) return commandReply.reply(message, language.invalidSnipe, 'RED');
             const embed = new MessageEmbed()
                 .setColor('RANDOM')
                 .setAuthor(msg.author, msg.authorAvatar)
@@ -40,13 +25,7 @@ module.exports = {
                 .setFooter(msg.timestamp);
             return message.channel.send({ embeds: [embed] });
         }
-        return message.channel.send({
-            embeds:
-                [{
-                    description: language.noSnipe,
-                    color: 'RED',
-                }],
-        });
+        return commandReply.reply(message, language.noSnipe, 'RED');
     },
     slashCommand: {
         data: new SlashCommandBuilder()
@@ -62,25 +41,9 @@ module.exports = {
 
             if (editSnipesWithGuild) {
                 const editsnipes = editSnipesWithGuild.editSnipe;
-                if (Number(arg) > 10) {
-                    return interaction.reply({
-                        embeds:
-                    [{
-                        description: language.exceed10,
-                        color: 'RED',
-                    }],
-                    });
-                }
+                if (Number(arg) > 10) return commandReply.reply(interaction, language.exceed10, 'RED');
                 const msg = editsnipes?.[Number(arg) - 1];
-                if (!msg) {
-                    return interaction.reply({
-                        embeds:
-                    [{
-                        description: language.invalidSnipe,
-                        color: 'RED',
-                    }],
-                    });
-                }
+                if (!msg) return commandReply.reply(interaction, language.invalidSnipe, 'RED');
                 const embed = new MessageEmbed()
                     .setColor('RANDOM')
                     .setAuthor(msg.author, msg.authorAvatar)
@@ -88,13 +51,7 @@ module.exports = {
                     .setFooter(msg.timestamp);
                 return interaction.reply({ embeds: [embed] });
             }
-            return interaction.reply({
-                embeds:
-                    [{
-                        description: language.noSnipe,
-                        color: 'RED',
-                    }],
-            });
+            return commandReply.reply(interaction, language.noSnipe, 'RED');
         },
     },
 };
