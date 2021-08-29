@@ -54,8 +54,8 @@ module.exports = {
             }
             const arg = interaction.options.getInteger('number') ?? 1;
 
-            if (Number(arg) > 10) return commandReply.reply(interaction, language.exceed10, 'RED');
-            const msg = snipes?.[Number(arg) - 1];
+            if (arg > 10) return commandReply.reply(interaction, language.exceed10, 'RED');
+            const msg = snipes?.[arg - 1];
             if (!msg) return commandReply.reply(interaction, language.invalidSnipe, 'RED');
 
             const image = msg.attachments;
