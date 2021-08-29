@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const CommandReply = require('../../functions/commandReply.js');
 const commandReply = new CommandReply();
-function snipe(command, args, language) {
+async function snipe(command, args, language) {
     const { MessageEmbed } = require('discord.js');
     const collection = command.client.snipeCollection;
 
