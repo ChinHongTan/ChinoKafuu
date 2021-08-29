@@ -63,10 +63,10 @@ module.exports = {
                 if (channel.members.size < 1) channel.delete();
             });
         }
-        if (newState.channelID === '860456123953840128') {
+        if (newState.channelId === '860456123953840128') {
             const voiceChannel = await newState.guild.channels
                 .create(`${newState.member.displayName}的頻道`, {
-                    type: 'voice',
+                    type: 'GUILD_VOICE',
                     bitrate: 256000,
                     userLimit: 99,
                     parent: newState.guild.channels.cache.find(
