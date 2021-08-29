@@ -18,7 +18,7 @@ module.exports = {
                 const command = require(`../commands/${folder}/${file}`);
                 if (command.slashCommand) {
                     const { data } = command.slashCommand;
-                    if (!data.description) data.setDescription();
+                    if (!data.description) data.setDescription('none');
                     commands.push(command.slashCommand.data.toJSON());
                 }
             }
