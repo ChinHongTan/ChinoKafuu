@@ -23,9 +23,7 @@ module.exports = {
         stop(message, language);
     },
     slashCommand: {
-        data: new SlashCommandBuilder()
-            .setName('stop')
-            .setDescription('Stops a song'),
+        data: new SlashCommandBuilder(),
         async execute(interaction, language) {
             stop(interaction, language);
         },

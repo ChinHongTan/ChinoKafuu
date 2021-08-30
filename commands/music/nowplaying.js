@@ -37,9 +37,7 @@ module.exports = {
         nowplaying(message, language);
     },
     slashCommand: {
-        data: new SlashCommandBuilder()
-            .setName('nowplaying')
-            .setDescription('Now playing'),
+        data: new SlashCommandBuilder(),
         async execute(interaction, language) {
             nowplaying(interaction, language);
         },

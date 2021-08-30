@@ -12,7 +12,7 @@ module.exports = {
     slashCommand: {
         data: new SlashCommandBuilder()
             .setName('ping')
-            .setDescription('Ping!'),
+            .setDescription('Ping!淦'),
         async execute(interaction) {
             const sent = await interaction.reply({
                 embeds: [

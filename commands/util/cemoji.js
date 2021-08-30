@@ -39,8 +39,6 @@ module.exports = {
     },
     slashCommand: {
         data: new SlashCommandBuilder()
-            .setName('cemoji')
-            .setDescription('Copy an emoji from other guilds')
             .addStringOption((option) => option.setName('emoji').setDescription('Emoji').setRequired(true)),
         async execute(interaction, language) {
             addEmoji(interaction, interaction.options.getString('emoji'), language);

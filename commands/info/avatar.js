@@ -76,8 +76,6 @@ module.exports = {
     },
     slashCommand: {
         data: new SlashCommandBuilder()
-            .setName('avatar')
-            .setDescription('Display a member\'s avatar')
             .addUserOption((option) => option.setName('member').setDescription('member\'s avatar')),
         async execute(interaction, language) {
             const Discord = require('discord.js');

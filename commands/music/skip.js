@@ -23,9 +23,7 @@ module.exports = {
         skip(message, language);
     },
     slashCommand: {
-        data: new SlashCommandBuilder()
-            .setName('skip')
-            .setDescription('Skips a song'),
+        data: new SlashCommandBuilder(),
         async execute(interaction, language) {
             skip(interaction, language);
         },
