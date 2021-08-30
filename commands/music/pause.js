@@ -21,14 +21,12 @@ function pause(command, language) {
 module.exports = {
     name: 'pause',
     guildOnly: true,
-    description: 'Pause!',
+    description: true,
     execute(message, _args, language) {
         pause(message, language);
     },
     slashCommand: {
-        data: new SlashCommandBuilder()
-            .setName('pause')
-            .setDescription('Pause!'),
+        data: new SlashCommandBuilder(),
         async execute(interaction, language) {
             pause(interaction, language);
         },

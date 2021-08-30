@@ -20,14 +20,12 @@ function loop(command, language) {
 module.exports = {
     name: 'loop',
     guildOnly: true,
-    description: 'Loop the currently played song!',
+    description: true,
     execute(message, _args, language) {
         loop(message, language);
     },
     slashCommand: {
-        data: new SlashCommandBuilder()
-            .setName('loop')
-            .setDescription('Loop the currently played song!'),
+        data: new SlashCommandBuilder(),
         async execute(interaction, language) {
             loop(interaction, language);
         },

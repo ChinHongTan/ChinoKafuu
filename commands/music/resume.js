@@ -21,14 +21,12 @@ function resume(command, language) {
 module.exports = {
     name: 'resume',
     guildOnly: true,
-    description: 'Resume playing!',
+    description: true,
     execute(message, _args, language) {
         resume(message, language);
     },
     slashCommand: {
-        data: new SlashCommandBuilder()
-            .setName('resume')
-            .setDescription('Resume playing!'),
+        data: new SlashCommandBuilder(),
         async execute(interaction, language) {
             resume(interaction, language);
         },

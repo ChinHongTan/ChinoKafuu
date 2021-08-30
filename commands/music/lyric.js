@@ -2,7 +2,7 @@ module.exports = {
     name: 'lyric',
     guildOnly: true,
     aliases: ['ly'],
-    description: 'Loop the currently played song!',
+    description: true,
     async execute(message, args, language) {
         const queueData = require('../../data/queueData');
         const { queue } = queueData;

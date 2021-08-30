@@ -21,14 +21,12 @@ module.exports = {
     name: 'loop-queue',
     guildOnly: true,
     aliases: ['lq', 'loopqueue'],
-    description: 'Loop the currently played queue!',
+    description: true,
     execute(message, _args, language) {
         loopQueue(message, language);
     },
     slashCommand: {
-        data: new SlashCommandBuilder()
-            .setName('loop-queue')
-            .setDescription('Loop the currently played queue!'),
+        data: new SlashCommandBuilder(),
         async execute(interaction, language) {
             loopQueue(interaction, language);
         },
