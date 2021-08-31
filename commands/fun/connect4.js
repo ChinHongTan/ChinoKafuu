@@ -46,8 +46,7 @@ async function connect4(command, language) {
     }
 
     coordinates.forEach((coordinate) => {
-        const square = new Square('white', coordinate);
-        squares[coordinate] = square;
+        squares[coordinate] = new Square('white', coordinate);
     });
 
     function draw(squaresDict, coordinate, round, board) {
@@ -71,11 +70,10 @@ async function connect4(command, language) {
 
     function createEmbed(round, board) {
         const boardStr = stringify(board);
-        const embed = new Discord.MessageEmbed()
+        return new Discord.MessageEmbed()
             .setTitle('**CONNECT FOUR**')
-            .setDescription(language.board.replace('${round.name}', round.name).replace('${boardStr}', boardStr))
+            .setDescription(language.board.replace('${round.name}', round.emoji).replace('${boardStr}', boardStr))
             .setColor('#ff0000');
-        return embed;
     }
 
     function checkWin(d, r, s) {
@@ -106,6 +104,7 @@ async function connect4(command, language) {
         for (let i = 6; i > 0; i--) {
             coordinate = (column * 10 + i).toString();
             const square = squaresDict[coordinate];
+            console.log(square);
             if (square.isOccupied !== 'white') {
                 // pass
             }
@@ -131,15 +130,16 @@ async function connect4(command, language) {
     }
 
     function doMove(r, embedMessage, round, collector) {
+        console.log(squares);
         const [win, coordinate] = place(
             reactCol[r.emoji.name],
             round,
             squares,
         );
-        const board = draw(squares, coordinate, round, board);
+        board = draw(squares, coordinate, round, board);
         if (win) {
             collector.stop();
-            commandReply.reply(command, language.win.replace('${round.name}', round.name), 'GREEN');
+            commandReply.reply(command, language.win.replace('${round.name}', round.emoji), 'GREEN');
         }
         if (round.name === 'red') {
             round.name = 'yellow';
@@ -150,7 +150,7 @@ async function connect4(command, language) {
             round.emoji = '🔴';
         }
         const editedEmbed = createEmbed(round, board);
-        embedMessage.edit(editedEmbed);
+        embedMessage.edit({ embeds: [editedEmbed] });
         return round;
     }
 
@@ -168,8 +168,8 @@ async function connect4(command, language) {
 
     function setCoordinates(x, y) {
         const coordinatesList = [];
-        const xList = Array.from({ length: x }, (_, i) => i + 1);
-        const yList = Array.from({ length: y }, (_, i) => i + 1);
+        const xList = Array.from({ length: x }, (_, i) => i + 1).map(String);
+        const yList = Array.from({ length: y }, (_, i) => i + 1).map(String);
         xList.forEach((corX) => {
             yList.forEach((corY) => {
                 coordinatesList.push(corX + corY);
@@ -178,7 +178,7 @@ async function connect4(command, language) {
         return coordinatesList;
     }
 
-    const board = drawBoard(7, 6);
+    let board = drawBoard(7, 6);
 
     const emojiList = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣'];
 
@@ -193,7 +193,8 @@ async function connect4(command, language) {
         await embedMessage.react(emoji);
     }
     const filter = (reaction, user) => emojiList.includes(reaction.emoji.name) && !user.bot;
-    const collector = embedMessage.createReactionCollector(filter, {
+    const collector = embedMessage.createReactionCollector({
+        filter,
         idle: 600000,
         dispose: true,
     });
@@ -209,12 +210,12 @@ module.exports = {
     cooldown: 3,
     description: true,
     async execute(message, _args, language) {
-        connect4(message, language);
+        await connect4(message, language);
     },
     slashCommand: {
         data: new SlashCommandBuilder(),
         async execute(interaction, language) {
-            connect4(interaction, language);
+            await connect4(interaction, language);
         },
     },
 };
