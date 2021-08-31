@@ -38,7 +38,7 @@ module.exports = {
     },
     slashCommand: {
         data: new SlashCommandBuilder(),
-        async execute(interaction, language) {
+        execute(interaction, language) {
             nowplaying(interaction, language);
         },
     },
