@@ -66,7 +66,7 @@ module.exports = {
         data: new SlashCommandBuilder()
             .addStringOption((option) => option.setName('keyword').setDescription('Song title to search for lyrics')),
         async execute(interaction, args, language) {
-            await lyric(interaction, args, language);
+            await lyric(interaction, interaction.options.getString('keyword'), language);
         },
     },
 };
