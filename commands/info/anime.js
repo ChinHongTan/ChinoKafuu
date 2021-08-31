@@ -1,8 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const CommandReply = require('../../functions/commandReply.js');
-const DynamicEmbed = require("../../functions/dynamicEmbed");
 const commandReply = new CommandReply();
-function anime(command, args, language) {
+async function anime(command, args, language) {
     const fetch = require('node-fetch');
     const Discord = require('discord.js');
     const DynamicEmbed = require('../../functions/dynamicEmbed');
@@ -47,7 +46,7 @@ function anime(command, args, language) {
         return dynamicEmbed.createEmbedFlip(command, response.result, ['⬅️', '➡️'], createEmbed);
     }
     let searchImage;
-    const commands = await command.channel.messages.fetch({ limit: 25 });
+    const messages = await command.channel.messages.fetch({ limit: 25 });
     for (const msg of messages.values()) {
         if (msg.attachments.size > 0) {
             searchImage = msg.attachments.first().proxyURL;
@@ -59,7 +58,7 @@ function anime(command, args, language) {
     }
     const e = await fetch(`https://api.trace.moe/search?cutBorders&anilistInfo&url=${encodeURIComponent(searchImage)}`);
     const response = await e.json();
-    return dynamicEmbed.createEmbedFlip(message, response.result, ['⬅️', '➡️'], createEmbed);
+    return dynamicEmbed.createEmbedFlip(command, response.result, ['⬅️', '➡️'], createEmbed);
 }
 module.exports = {
     name: 'anime',
