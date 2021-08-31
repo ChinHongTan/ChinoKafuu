@@ -15,17 +15,16 @@ module.exports = {
 
         /**
          * Create an Discord embed message
-         * @param {object} result - The result from the API.
+         * @param {object} smallChunk - Song queue split by 10 songs
          * @return {object} Discord embed
          */
         function createEmbed(smallChunk) {
             const arr = smallChunk.map((item) => `${item.index}.[${item.title}](${item.url}) | ${format(item.duration)}`);
             const printQueue = arr.join('\n\n');
-            const embed = new Discord.MessageEmbed()
+            return new Discord.MessageEmbed()
                 .setColor('#ff0000')
                 .setTitle(language.queueTitle)
                 .setDescription(language.queueBody.replace('${serverQueue.songs[0].title}', serverQueue.songs[0].title).replace('${serverQueue.songs[0].url}', serverQueue.songs[0].url).replace('${printQueue}', printQueue).replace('${serverQueue.songs.length - 1}', serverQueue.songs.length - 1));
-            return embed;
         }
 
         if (!message.member.voice.channel) {

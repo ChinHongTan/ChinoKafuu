@@ -21,7 +21,7 @@ module.exports = {
             else {
                 activityDescription = language.notPlaying;
             }
-            const embed = new Discord.MessageEmbed()
+            return new Discord.MessageEmbed()
                 .setColor('#0099ff')
                 .setTitle('User Info')
                 .setAuthor(
@@ -80,7 +80,6 @@ module.exports = {
                     },
                 )
                 .setTimestamp();
-            return embed;
         }
         if (!message.mentions.members.size) {
             const embed = getUserInfo(message.member);
@@ -88,8 +87,7 @@ module.exports = {
         }
 
         const userInfoList = message.mentions.members.map((user) => {
-            const embed = getUserInfo(user);
-            return embed;
+            return getUserInfo(user);
         });
         message.channel.send(userInfoList);
     },
