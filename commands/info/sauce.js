@@ -14,7 +14,6 @@ module.exports = {
         /**
          * Generates a discord embed
          * @param {object} response - Response object from sauceNao API call
-         * @param {number} page - Which picture from the response to be displayed.
          * @return {object} Discord embed.
          */
         function createEmbed(response) {
@@ -24,7 +23,8 @@ module.exports = {
                 if (key === 'ext_urls') continue;
                 info += `\`${key} : ${value}\`\n`;
             }
-            const embed = new Discord.MessageEmbed()
+            // .setFooter(`page ${response.page + 1}/${response.total}`);
+            return new Discord.MessageEmbed()
                 .setTitle(response.site)
                 .setDescription(language.similarity.replace('${response.similarity}', response.similarity))
                 .setColor('#008000')
@@ -33,8 +33,6 @@ module.exports = {
                     { name: language.sourceURL, value: sourceURL },
                     { name: language.additionalInfo, value: info },
                 );
-            // .setFooter(`page ${response.page + 1}/${response.total}`);
-            return embed;
         }
 
         /**
@@ -46,7 +44,8 @@ module.exports = {
             const sourceURL = response?.source?.url ?? 'None';
             const title = response?.source?.title ?? 'None';
             const author = response?.source?.author ? language.sauceAuthor.replace('${authorinfo.name}', response?.source?.author.name).replace('${authorinfo.url}', response?.source?.author.url) : language.noAuthor;
-            const embed = new Discord.MessageEmbed()
+            // .setFooter(`page ${response.page + 1}/${response.total}`);
+            return new Discord.MessageEmbed()
                 .setTitle(response?.source?.type ?? 'None')
                 .setColor('#008000')
                 .setImage(response.thumbnailUrl)
@@ -55,8 +54,6 @@ module.exports = {
                     { name: language.title, value: title },
                     { name: language.author, value: author },
                 );
-            // .setFooter(`page ${response.page + 1}/${response.total}`);
-            return embed;
         }
 
         /**

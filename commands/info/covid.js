@@ -17,7 +17,7 @@ module.exports = {
          */
         function createEmbed(result) {
             const date = new Date(result.updated);
-            const embed = new Discord.MessageEmbed()
+            return new Discord.MessageEmbed()
                 .setColor('RANDOM')
                 .setTitle(language.covidTitle.replace('${result.country}', result.country))
                 .setAuthor(
@@ -76,7 +76,6 @@ module.exports = {
                     language.covidFooter.replace('${message.author.tag}', message.author.tag).replace('${date.toUTCString()}', date.toUTCString()),
                     message.author.avatarURL(),
                 );
-            return embed;
         }
 
         if (args.length < 1) {

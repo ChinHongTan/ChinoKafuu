@@ -24,7 +24,7 @@ module.exports = {
         if (message.mentions.users.size) {
             // display all user's avatars mentioned by the author
             const avatarList = message.mentions.users.map((user) => {
-                const embed = new Discord.MessageEmbed()
+                return new Discord.MessageEmbed()
                     .setTitle(language.userAvatar.replace('${user.username}', user.username))
                     .setColor('RANDOM')
                     .setImage(`${user.displayAvatarURL({
@@ -32,7 +32,6 @@ module.exports = {
                         dynamic: true,
                         size: 2048,
                     })}`);
-                return embed;
             });
 
             // send the entire array of embed to the channel

@@ -12,8 +12,8 @@ module.exports = {
         if (!args) return message.channel.send('Usage: c!run <language> [code](with or without codeblock)');
 
         const codeLanguage = args.shift();
-        let code = message.content.substring(prefix.length + 3 + codeLanguage.length + 1).trim().replace(/^\`+|\`+$/g, '');
-        let lang = codeLanguage.replace(/^\`+|\`+$/g, '');
+        let code = message.content.substring(prefix.length + 3 + codeLanguage.length + 1).trim().replace(/^`+|`+$/g, '');
+        let lang = codeLanguage.replace(/^`+|`+$/g, '');
         if (!lang) return message.channel.send('Invalid usage! Invalid language/code.');
         if (/(^ $|^[0-9A-z]*$)/g.test(code.split('\n')[0])) {
             code = code.slice(code.split('\n')[0].length + 1);

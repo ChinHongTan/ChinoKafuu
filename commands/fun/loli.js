@@ -12,8 +12,7 @@ function loli(command, language) {
 
     for (const filename of imageFiles) {
         const rawdata = fs.readFileSync(`./images/${filename}`);
-        const imagefile = JSON.parse(rawdata);
-        pictures[filename] = imagefile;
+        pictures[filename] = JSON.parse(rawdata);
     }
 
     const target = ['蘿莉圖.json'];
