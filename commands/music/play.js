@@ -1,3 +1,6 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const CommandReply = require('../../functions/commandReply.js');
+const commandReply = new CommandReply();
 module.exports = {
     name: 'play',
     guildOnly: true,
@@ -12,7 +15,7 @@ module.exports = {
         const scdl = require('soundcloud-downloader').default;
         const Spotify = require('../../functions/spotify');
         const spotify = new Spotify(SpotifyClientID, SpotifyClientSecret);
-        const disbut = require('discord-buttons');
+        const { MessageActionRow, MessageSelectMenu } = require('discord.js');
 
         const { waitimport, handleVideo } = require('../../functions/musicFunctions');
         const ytrx = new RegExp('(?:youtube\\.com.*(?:\\?|&)(?:v|list)=|youtube\\.com.*embed\\/|youtube\\.com.*v\\/|youtu\\.be\\/)((?!videoseries)[a-zA-Z0-9_-]*)');
@@ -44,18 +47,20 @@ module.exports = {
                 playing: true,
                 loop: false,
                 loopQueue: false,
+                player: undefined,
+                resource: undefined,
                 filter: '',
             };
             queue.set(message.guild.id, queueConstruct);
             serverQueue = queue.get(message.guild.id);
         }
 
-        async function processYoutubeLink(url) {
-            if (!ytsr.validate(url, 'PLAYLIST_ID')) {
+        async function processYoutubeLink(link) {
+            if (!ytsr.validate(link, 'PLAYLIST_ID')) {
                 const videos = await ytsr.getVideo(args[0]);
                 return handleVideo([videos], voiceChannel, false, serverQueue, 'yt', message);
             }
-            const playlist = await ytpl(url, { limit: Infinity });
+            const playlist = await ytpl(link, { limit: Infinity });
             if (!playlist) return;
             const result = await waitimport(playlist.title, playlist.estimatedItemCount, message);
             if (result) {
@@ -63,13 +68,13 @@ module.exports = {
             }
         }
 
-        async function processSpotifyLink(url) {
-            url = `spotify:${url.replace(sprxtrack, '').replace('/', ':').replace('?.*', '')}`;
-            const part = url.split(':');
+        async function processSpotifyLink(link) {
+            link = `spotify:${link.replace(sprxtrack, '').replace('/', ':').replace('?.*', '')}`;
+            const part = link.split(':');
             const Id = part[part.length - 1];
             let result;
 
-            if (url.includes('track')) {
+            if (link.includes('track')) {
                 result = await spotify.gettrack(Id);
                 const videos = await ytsr.search(
                     `${result.artists[0].name} ${result.name}`,
@@ -78,7 +83,7 @@ module.exports = {
                 return await handleVideo(videos, voiceChannel, false, serverQueue, 'yt', message);
             }
 
-            if (url.includes('album')) {
+            if (link.includes('album')) {
                 result = await spotify.getAlbum(Id);
                 const title = result.name;
                 const m = await message.channel.send(language.importAlbum1.replace('${title}', title));
@@ -93,7 +98,7 @@ module.exports = {
                 return m.edit(language.importAlbumDone.replace('${title}', title));
             }
 
-            if (url.includes('playlist')) {
+            if (link.includes('playlist')) {
                 result = await spotify.getplaylist(Id);
 
                 const title = result.name;
@@ -123,16 +128,15 @@ module.exports = {
                     }
                     else {
                         result = await spotify._make_spotify_req(result.tracks.next);
-                        continue;
                     }
                 }
                 return m.edit(language.importPlaylistDone.replace('${title}', title));
             }
         }
 
-        async function processSoundcloudLink(url) {
-            if (scdl.isPlaylistURL(url)) {
-                const data = await scdl.getSetInfo(url, scID).catch((err) => {
+        async function processSoundcloudLink(link) {
+            if (scdl.isPlaylistURL(link)) {
+                const data = await scdl.getSetInfo(link, scID).catch((err) => {
                     console.log(err);
                     return message.channel.send(language.noResult);
                 });
@@ -147,8 +151,8 @@ module.exports = {
                 }
                 return m.edit(language.importPlaylistDone.replace('${data.title}', data.title));
             }
-            if (url.match(scrxt)) {
-                const data = await scdl.getInfo(url, scID).catch((err) => {
+            if (link.match(scrxt)) {
+                const data = await scdl.getInfo(link, scID).catch((err) => {
                     console.log(err);
                     throw message.channel.send(language.noResult);
                 });
@@ -164,30 +168,40 @@ module.exports = {
         const keyword = message.content.substr(message.content.indexOf(' ') + 1);
         message.channel.send(language.searching.replace('${keyword}', keyword));
         const videos = await ytsr.search(keyword);
-        const menu = new disbut.MessageMenu()
-            .setID(message.guild.id)
-            .setMinValues(1)
-            .setMaxValues(1)
-            .setPlaceholder(language.choose);
-        for (const i in videos) {
-            const { title } = videos[i];
-            const channel = videos[i].channel.name;
-            const list = new disbut.MessageMenuOption()
-                .setLabel(channel.length > 20 ? `${channel.slice(0, 20)}...` : channel)
-                .setValue(i)
-                .setDescription(`${title.length > 35 ? `${title.slice(0, 30)}...` : title} - ${videos[i].durationFormatted}`);
-            menu.addOption(list);
-        }
+        const options = videos.map((video) => ({
+            label: video.channel.name.length > 20 ? `${video.channel.name.slice(0, 20)}...` : video.channel.name,
+            description: `${video.title.length > 35 ? `${video.title.slice(0, 30)}...` : video.title} - ${video.durationFormatted}`,
+            value: (videos.indexOf(video) + 1).toString(),
+        }));
+        console.log(options);
+        /*
+        const row = new MessageActionRow()
+            .addComponents([
+                new MessageSelectMenu()
+                    .setCustomId('select')
+                    .setPlaceholder(language.choose)
+                    .addOptions(options),
+            ]);
+         */
 
-        const msg = await message.channel.send(language.choose, menu);
-        const col = msg.createMenuCollector((b) => b.clicker.user.id === message.author.id && b.guild.id === message.guild.id,
-            { time: 100000 });
-        col.on('collect', async (menu) => {
-            await menu.reply.defer();
-            handleVideo([videos[menu.values[0]]], voiceChannel, false, serverQueue, 'yt', message);
-            await menu.reply.delete();
+        const row = new MessageActionRow()
+            .addComponents(
+                new MessageSelectMenu()
+                    .setCustomId('select')
+                    .setPlaceholder('Nothing selected')
+                    .addOptions(options),
+            );
+        const msg = await message.channel.send({ content: language.choose, components: [row] });
+        const filter = (interaction) => {
+            interaction.deferReply();
+            return interaction.customId === 'select' && interaction.user.id === message.author.id;
+        };
+        const collector = msg.createMessageComponentCollector({ filter, time: 100000 });
+        collector.on('collect', async (menu) => {
+            await handleVideo([videos[menu.values[0]]], voiceChannel, false, serverQueue, 'yt', message);
+            await menu.deleteReply();
         });
-        col.on('end', (menu) => {
+        collector.on('end', (menu) => {
             if (!menu.first()) {
                 msg.delete();
                 msg.channel.send(language.timeout);

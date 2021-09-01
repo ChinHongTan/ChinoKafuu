@@ -12,7 +12,7 @@ function skip(command, language) {
     if (!serverQueue) {
         return commandReply.reply(command, language.cantSkip, 'RED');
     }
-    serverQueue.connection.dispatcher.end();
+    serverQueue.player.end();
 }
 module.exports = {
     name: 'skip',

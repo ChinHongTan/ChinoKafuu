@@ -12,7 +12,7 @@ function resume(command, language) {
 
     if (serverQueue) {
         if (serverQueue.playing) return commandReply.reply(command, 'I am already playing!', 'RED');
-        serverQueue.connection.dispatcher.resume();
+        serverQueue.player.unpause();
         serverQueue.playing = true;
         return commandReply.reply(command, 'Resumed!', 'GREEN');
     }

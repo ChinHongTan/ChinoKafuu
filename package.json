@@ -21,6 +21,7 @@
   "license": "ISC",
   "dependencies": {
     "@discordjs/builders": "^0.6.0",
+    "@discordjs/opus": "^0.5.3",
     "@discordjs/rest": "^0.1.0-canary.0",
     "@discordjs/voice": "^0.6.0",
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
@@ -39,6 +40,8 @@
     "fuzzysort": "^1.1.4",
     "genius-lyrics": "^4.2.9",
     "googlethis": "^1.1.6",
+    "libsodium": "^0.7.9",
+    "libsodium-wrappers": "^0.7.9",
     "lyrics-finder": "^21.7.0",
     "mongodb": "^4.1.0",
     "nana-api": "^1.1.4",

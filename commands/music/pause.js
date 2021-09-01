@@ -12,7 +12,7 @@ function pause(command, language) {
 
     if (serverQueue) {
         if (!serverQueue.playing) return commandReply.reply(command, 'I am not playing!', 'RED');
-        serverQueue.connection.dispatcher.pause(true);
+        serverQueue.player.pause(true);
         serverQueue.playing = false;
         return commandReply.reply(command, 'Paused!', 'BLUE');
     }

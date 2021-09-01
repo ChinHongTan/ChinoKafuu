@@ -3,11 +3,22 @@ const { PassThrough } = require('stream');
 const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 const Ffmpeg = require('fluent-ffmpeg');
 
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const CommandReply = require('./commandReply.js');
+const commandReply = new CommandReply();
+
 Ffmpeg.setFfmpegPath(ffmpegPath);
 const { Util, MessageEmbed } = require('discord.js');
 const scdl = require('soundcloud-downloader').default;
 const queueData = require('../data/queueData');
 const scID = process.env.SCID || require('../config/config.json').scID;
+const {
+    AudioPlayerStatus,
+    StreamType,
+    createAudioPlayer,
+    createAudioResource,
+    joinVoiceChannel,
+} = require('@discordjs/voice');
 
 const { queue } = queueData;
 
@@ -18,7 +29,8 @@ async function play(guild, song, message) {
     });
     let proc;
     if (!song) {
-        serverQueue.voiceChannel.leave();
+        serverQueue.player.stop(true);
+        serverQueue.connection.destroy();
         queue.delete(guild.id);
         return;
     }
@@ -44,12 +56,16 @@ async function play(guild, song, message) {
         console.log(err);
     });
     proc.writeToStream(stream, { end: true });
-    const dispatcher = serverQueue.connection
-        .play(stream, { type: 'ogg/opus' })
-        .on('finish', (reason) => {
-            if (reason === 'Stream is not generating quickly enough.') {
-                console.log('Stream is not generating quickly enough.');
-            }
+    const resource = createAudioResource(stream, {
+        inputType: StreamType.Arbitrary,
+        inlineVolume: true,
+    });
+    const player = createAudioPlayer();
+    player.play(resource);
+    serverQueue.player = player;
+    serverQueue.connection.subscribe(player);
+    player
+        .on(AudioPlayerStatus.Idle, () => {
             const playedSong = serverQueue.songs.shift();
             if (!serverQueue.loop) serverQueue.songHistory.push(playedSong);
             if (serverQueue.loopQueue) serverQueue.songs.push(playedSong);
@@ -57,11 +73,11 @@ async function play(guild, song, message) {
             stream.destroy();
             play(guild, serverQueue.songs[0], message);
         })
-        .on('error', (error) => {
+        .on('error', (error => {
             message.channel.send('An error happened!');
             console.log(error);
-        });
-    dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
+        }));
+    resource.volume.setVolume(serverQueue.volume / 5);
     const embed = new MessageEmbed()
         .setThumbnail(song.thumb)
         .setAuthor('開始撥放', message.author.displayAvatarURL())
@@ -71,7 +87,7 @@ async function play(guild, song, message) {
         .setTimestamp(Date.now())
         .addField('播放者', `<@!${serverQueue.songs[0].requseter}>`)
         .setFooter('音樂系統', message.client.user.displayAvatarURL());
-    serverQueue.textChannel.send(embed);
+    serverQueue.textChannel.send({ embeds: [embed] });
 }
 function hmsToSecondsOnly(str) {
     const p = str.split(':');
@@ -94,7 +110,7 @@ module.exports = {
                 .setDescription(`清單: ${name}\n長度:${length}`)
                 .setTimestamp(Date.now())
                 .setFooter('音樂系統', message.client.user.displayAvatarURL());
-            const m = await message.channel.send(embed);
+            const m = await commandReply.reply(message, embed);
             await m.react('📥');
             await m.react('❌');
             const filter = (reaction, user) => ['📥', '❌'].includes(reaction.emoji.name) && user.id === message.author.id;
@@ -170,12 +186,15 @@ module.exports = {
         if (!serverQueue.songs[0]) {
             try {
                 serverQueue.songs.push(song);
-                const connection = await voiceChannel.join();
-                serverQueue.connection = connection;
-                play(message.guild, serverQueue.songs[0], message);
+                serverQueue.connection = await joinVoiceChannel({
+                    channelId: voiceChannel.id,
+                    guildId: voiceChannel.guildId,
+                    adapterCreator: voiceChannel.guild.voiceAdapterCreator,
+                });
+                await play(message.guild, serverQueue.songs[0], message);
             }
             catch (error) {
-                console.error(`I could not join the voice channel: ${error}`);
+                console.error(error);
                 serverQueue.songs.length = 0;
                 return message.channel.send(`I could not join the voice channel: ${error}`);
             }
@@ -192,10 +211,10 @@ module.exports = {
             .setTimestamp(Date.now())
             .addField('播放者', `<@!${song.requseter}>`)
             .setFooter('音樂系統', message.client.user.displayAvatarURL());
-        return message.channel.send(embed);
+        return commandReply.reply(message, embed);
     },
     async play(guild, song, message) {
-        play(guild, song, message);
+        await play(guild, song, message);
     },
     format(duration) {
         // Hours, minutes and seconds
