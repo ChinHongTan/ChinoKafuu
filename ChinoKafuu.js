@@ -3,9 +3,7 @@ const Discord = require('discord.js');
 const token = process.env.TOKEN || require('./config/config.json').token;
 
 const { MongoClient } = require('mongodb');
-const mongodb = process.env.MONGODB_URI || require('./config/config.json').mongodb;
-
-const mongoClient = new MongoClient(mongodb);
+const mongoClient = new MongoClient(process.env.MONGODB_URI || require('./config/config.json').mongodb);
 
 // Database Name
 const dbName = 'projectSekai';
