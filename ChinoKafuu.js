@@ -5,18 +5,12 @@ const token = process.env.TOKEN || require('./config/config.json').token;
 const { MongoClient } = require('mongodb');
 const mongoClient = new MongoClient(process.env.MONGODB_URI || require('./config/config.json').mongodb);
 
+const en_US = require('./language/en_US.json');
+const zh_CN = require('./language/zh_CN.json');
+const zh_TW = require('./language/zh_TW.json');
+
 // Database Name
 const dbName = 'projectSekai';
-
-// Use connect method to connect to the server
-(async () => {
-    await mongoClient.connect();
-    console.log('Connected successfully to server');
-    const db = mongoClient.db(dbName);
-    client.snipeCollection = db.collection('snipes');
-    client.editSnipeCollection = db.collection('editsnipes');
-    client.guildOptions = db.collection('guildoptions');
-})();
 
 const client = new Discord.Client({
     intents: [
@@ -37,9 +31,6 @@ const client = new Discord.Client({
         Discord.Intents.FLAGS.DIRECT_MESSAGE_TYPING,
     ],
 });
-const en_US = require('./language/en_US.json');
-const zh_CN = require('./language/zh_CN.json');
-const zh_TW = require('./language/zh_TW.json');
 
 client.commands = new Discord.Collection();
 client.language = { en_US, zh_CN, zh_TW };
@@ -68,16 +59,13 @@ for (const file of eventFiles) {
     }
 }
 
-/*
-client.on("message", async (message) => {
-    if (message.author.bot) return;
-    if (message.channel.id === "803270261604352040") {
-        functions.count(message);
-    }
-
-    if (!message.content.startsWith(prefix)) return;
-    },
-);
-*/
-
-client.login(token);
+// Use connect method to connect to the server
+(async () => {
+    await mongoClient.connect();
+    console.log('Connected successfully to server');
+    const db = mongoClient.db(dbName);
+    client.snipeCollection = db.collection('snipes');
+    client.editSnipeCollection = db.collection('editsnipes');
+    client.guildOptions = db.collection('guildoptions');
+    await client.login(token);
+})();
