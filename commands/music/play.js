@@ -173,16 +173,6 @@ module.exports = {
             description: `${video.title.length > 35 ? `${video.title.slice(0, 30)}...` : video.title} - ${video.durationFormatted}`,
             value: (videos.indexOf(video) + 1).toString(),
         }));
-        console.log(options);
-        /*
-        const row = new MessageActionRow()
-            .addComponents([
-                new MessageSelectMenu()
-                    .setCustomId('select')
-                    .setPlaceholder(language.choose)
-                    .addOptions(options),
-            ]);
-         */
 
         const row = new MessageActionRow()
             .addComponents(

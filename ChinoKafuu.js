@@ -15,12 +15,9 @@ const dbName = 'projectSekai';
     await mongoClient.connect();
     console.log('Connected successfully to server');
     const db = mongoClient.db(dbName);
-    const snipeCollection = db.collection('snipes');
-    client.snipeCollection = snipeCollection;
-    const editSnipeCollection = db.collection('editsnipes');
-    client.editSnipeCollection = editSnipeCollection;
-    const guildOptions = db.collection('guildoptions');
-    client.guildOptions = guildOptions;
+    client.snipeCollection = db.collection('snipes');
+    client.editSnipeCollection = db.collection('editsnipes');
+    client.guildOptions = db.collection('guildoptions');
 })();
 
 const client = new Discord.Client({
