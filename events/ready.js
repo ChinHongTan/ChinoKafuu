@@ -50,8 +50,5 @@ module.exports = {
                 console.error(error);
             }
         }
-        const { generateDependencyReport } = require('@discordjs/voice');
-
-        console.log(generateDependencyReport());
     },
 };
