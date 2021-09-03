@@ -80,7 +80,7 @@ async function play(guild, song, message) {
     resource.volume.setVolume(serverQueue.volume / 5);
     const embed = new MessageEmbed()
         .setThumbnail(song.thumb)
-        .setAuthor('開始撥放', message.author.displayAvatarURL())
+        .setAuthor('開始撥放', message.member.user.displayAvatarURL())
         .setColor('BLUE')
         .setTitle(song.title)
         .setURL(song.url)
@@ -104,7 +104,7 @@ module.exports = {
     async waitimport(name, length, message) {
         return new Promise(async (resolve, reject) => {
             let embed = new MessageEmbed()
-                .setAuthor('清單', message.author.displayAvatarURL())
+                .setAuthor('清單', message.member.user.displayAvatarURL())
                 .setColor('BLUE')
                 .setTitle('您要加入這個清單嗎')
                 .setDescription(`清單: ${name}\n長度:${length}`)
@@ -113,7 +113,7 @@ module.exports = {
             const m = await commandReply.reply(message, embed);
             await m.react('📥');
             await m.react('❌');
-            const filter = (reaction, user) => ['📥', '❌'].includes(reaction.emoji.name) && user.id === message.author.id;
+            const filter = (reaction, user) => ['📥', '❌'].includes(reaction.emoji.name) && user.id === message.member.user.id;
             const collected = await m.awaitReactions(filter, {
                 maxEmojis: 1,
                 time: 10000,
@@ -121,9 +121,9 @@ module.exports = {
             switch (collected.first()?.emoji?.name) {
             case undefined:
                 return;
-            case '📥':
+                case '📥':
                 embed = new MessageEmbed()
-                    .setAuthor('清單', message.author.displayAvatarURL())
+                    .setAuthor('清單', message.member.user.displayAvatarURL())
                     .setColor('BLUE')
                     .setTitle('您加入了清單')
                     .setDescription(`清單: ${name}`)
@@ -131,9 +131,9 @@ module.exports = {
                     .setFooter('音樂系統', message.client.user.displayAvatarURL());
                 m.edit(embed);
                 return resolve(true);
-            case '❌':
+                case '❌':
                 embed = new MessageEmbed()
-                    .setAuthor('清單', message.author.displayAvatarURL())
+                    .setAuthor('清單', message.member.user.displayAvatarURL())
                     .setColor('BLUE')
                     .setTitle('您取消了加入清單')
                     .setDescription(`清單: ${name}`)
@@ -204,7 +204,7 @@ module.exports = {
         if (playlist) return;
         const embed = new MessageEmbed()
             .setThumbnail(song.thumb)
-            .setAuthor('已加入播放佇列', message.author.displayAvatarURL())
+            .setAuthor('已加入播放佇列', message.member.user.displayAvatarURL())
             .setColor('BLUE')
             .setTitle(song.title)
             .setURL(song.url)
