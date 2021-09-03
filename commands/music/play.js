@@ -21,7 +21,6 @@ async function play(command, args, language) {
     const { queue } = queueData;
     let serverQueue = queue.get(command.guild.id);
     const url = args[0];
-    console.log(url);
 
     const voiceChannel = command.member.voice.channel;
     if (!voiceChannel) {
@@ -162,11 +161,7 @@ async function play(command, args, language) {
     if (url.includes('soundcloud.com')) return processSoundcloudLink(url);
 
     const keyword = command instanceof Message ? command.content.substr(command.content.indexOf(' ') + 1) : args;
-    console.log(keyword);
-    console.log(language.searching.replace('${keyword}', keyword));
-    console.log(command);
     await commandReply.reply(command, language.searching.replace('${keyword}', keyword), 'YELLOW');
-    console.log('Done!');
     const videos = await ytsr.search(keyword);
     const options = videos.map((video) => ({
         label: video.channel.name.length > 20 ? `${video.channel.name.slice(0, 20)}...` : video.channel.name,
