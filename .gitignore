@@ -1,6 +1,4 @@
 node_modules
-opus-master
-index.js
 config.json
 functions/commandReply.js
 functions/fuzzysort.js
