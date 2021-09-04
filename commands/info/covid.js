@@ -13,7 +13,7 @@ module.exports = {
         /**
          * Create an Discord embed message
          * @param {object} result - The result from the API.
-         * @return {object} Discord embed
+         * @return {Discord.MessageEmbed} Discord embed
          */
         function createEmbed(result) {
             const date = new Date(result.updated);
