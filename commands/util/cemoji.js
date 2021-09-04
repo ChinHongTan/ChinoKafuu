@@ -1,6 +1,8 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const CommandReply = require('../../functions/commandReply.js');
 const commandReply = new CommandReply();
+// eslint-disable-next-line no-unused-vars
+const { Message, CommandInteraction } = require('discord.js');
 /**
  * Copy an emoji from other guilds
  * @param {Message | CommandInteraction} command - The message or slash command that called this function
@@ -22,11 +24,11 @@ async function addEmoji(command, string, language) {
     for (const [name, id] of Object.entries(emojiObj)) {
         if (name.startsWith('a:')) {
             const emoji = await command.guild.emojis.create(`https://cdn.discordapp.com/emojis/${id}.gif?v=1`, name.substring(2));
-            commandReply.reply(command, language.addSuccess.replace('${emoji.name}', emoji.name).replace('${emoji}', emoji), 'BLUE');
+            await commandReply.reply(command, language.addSuccess.replace('${emoji.name}', emoji.name).replace('${emoji}', emoji), 'BLUE');
         }
         else {
             const emoji = await command.guild.emojis.create(`https://cdn.discordapp.com/emojis/${id}.png?v=1`, name.substring(1));
-            commandReply.reply(command, language.addSuccess.replace('${emoji.name}', emoji.name).replace('${emoji}', emoji), 'BLUE');
+            await commandReply.reply(command, language.addSuccess.replace('${emoji.name}', emoji.name).replace('${emoji}', emoji), 'BLUE');
         }
     }
 }
@@ -35,13 +37,13 @@ module.exports = {
     cooldown: 3,
     description: true,
     async execute(message, _args, language) {
-        addEmoji(message, message.content, language);
+        await addEmoji(message, message.content, language);
     },
     slashCommand: {
         data: new SlashCommandBuilder()
             .addStringOption((option) => option.setName('emoji').setDescription('Emoji').setRequired(true)),
         async execute(interaction, language) {
-            addEmoji(interaction, interaction.options.getString('emoji'), language);
+            await addEmoji(interaction, interaction.options.getString('emoji'), language);
         },
     },
 };

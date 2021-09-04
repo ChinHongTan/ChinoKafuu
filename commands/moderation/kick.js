@@ -1,10 +1,10 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const CommandReply = require('../../functions/commandReply.js');
-const Discord = require('discord.js');
+const { CommandInteraction }= require('discord.js');
 const commandReply = new CommandReply();
 
 async function kick(command, args = []) {
-    const taggedUser = command instanceof Discord.CommandInteraction ? args[0] : command.mentions.members.first();
+    const taggedUser = command instanceof CommandInteraction ? args[0] : command.mentions.members.first();
     if (!taggedUser) return commandReply.reply(command, ':warning: | You need to tag a user in order to kick them!', 'YELLOW');
     if (taggedUser.id === command.author.id) return commandReply.reply(command, ':x: | You Cannot Kick Yourself!', 'RED');
     if (!taggedUser.kickable) return command.channel.send('Cannot Kick This User!');
