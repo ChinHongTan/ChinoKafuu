@@ -94,10 +94,10 @@ module.exports = {
             authorId = data.videoDetails.author.id;
             bestTrack = relatedVidsInfo.filter((vid) => vid.author.id === authorId && vid.mark > 0);
             if (bestTrack.length > 0) {
-                playRelatedTrack(bestTrack);
+                await playRelatedTrack(bestTrack);
             }
             else {
-                playRelatedTrack(relatedVidsInfo);
+                await playRelatedTrack(relatedVidsInfo);
             }
             break;
         }

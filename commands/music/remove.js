@@ -30,14 +30,14 @@ module.exports = {
     guildOnly: true,
     aliases: ['r'],
     description: true,
-    execute(message, args, language) {
-        remove(message, args, language);
+    async execute(message, args, language) {
+        await remove(message, args, language);
     },
     slashCommand: {
         data: new SlashCommandBuilder()
             .addIntegerOption((option) => option.setName('index').setDescription('song to remove').setRequired(true)),
         async execute(interaction, language) {
-            remove(interaction, interaction.options.getInteger('index'), language);
+            await remove(interaction, interaction.options.getInteger('index'), language);
         },
     },
 };
