@@ -1,8 +1,8 @@
 node_modules
 opus-master
-other bots
 index.js
 config.json
 functions/commandReply.js
 functions/fuzzysort.js
 functions/dynamicEmbed.js
+*.map
