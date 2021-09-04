@@ -1,3 +1,16 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const CommandReply = require('../../functions/commandReply.js');
+const Discord = require('discord.js');
+const commandReply = new CommandReply();
+
+async function kick(command, args = []) {
+    const taggedUser = command instanceof Discord.CommandInteraction ? args[0] : command.mentions.members.first();
+    if (!taggedUser) return commandReply.reply(command, ':warning: | You need to tag a user in order to kick them!', 'YELLOW');
+    if (taggedUser.id === command.author.id) return commandReply.reply(command, ':x: | You Cannot Kick Yourself!', 'RED');
+    if (!taggedUser.kickable) return command.channel.send('Cannot Kick This User!');
+    await taggedUser.kick();
+    await commandReply.reply(command, `Successfully Kicked: ${taggedUser.user.username}!`, 'GREEN');
+}
 module.exports = {
     name: 'kick',
     description: 'Kick someone out.',
@@ -5,12 +18,16 @@ module.exports = {
     usage: '[mention]',
     permissions: 'ADMINISTRATOR',
     async execute(message) {
-        if (!message.mentions.users.size) return message.reply('You need to tag a user in order to kick them!');
-        const taggedUser = message.mentions.members.first();
-        if (!taggedUser) return message.channel.send(':x: | **User Is Not In The Guild!');
-        if (taggedUser.id === message.author.id) return message.channel.send('You Cannot Kick Yourself!');
-        if (!taggedUser.kickable) return message.channel.send('Cannot Kick This User!');
-        await taggedUser.kick();
-        message.channel.send(`Successfully Kicked: ${taggedUser.user.username}!`);
+        await kick(message);
+    },
+    slashCommand: {
+        data: new SlashCommandBuilder()
+            .addUserOption((option) =>
+                option.setName('member')
+                    .setDescription('Member to kick')
+                    .setRequired(true)),
+        async execute(interaction, language) {
+            await kick(interaction, [interaction.options.getUser('member')], language);
+        },
     },
 };
