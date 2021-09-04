@@ -3,7 +3,6 @@ const { PassThrough } = require('stream');
 const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 const Ffmpeg = require('fluent-ffmpeg');
 
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const CommandReply = require('./commandReply.js');
 const commandReply = new CommandReply();
 
@@ -36,7 +35,7 @@ async function play(guild, song, message) {
     }
     switch (song.source) {
     case 'yt':
-        proc = new Ffmpeg(ytdl(song.url, { quality: 'highestaudio' }));
+        proc = new Ffmpeg(ytdl(song.url, { quality: 'highestaudio', filter: 'audioonly', highWaterMark: 1 << 25 }));
         break;
     case 'sc':
         proc = new Ffmpeg(await scdl.download(song.url, scID));
@@ -102,6 +101,7 @@ function hmsToSecondsOnly(str) {
 }
 module.exports = {
     async waitimport(name, length, message) {
+        // eslint-disable-next-line no-async-promise-executor
         return new Promise(async (resolve, reject) => {
             let embed = new MessageEmbed()
                 .setAuthor('清單', message.member.user.displayAvatarURL())
@@ -110,18 +110,19 @@ module.exports = {
                 .setDescription(`清單: ${name}\n長度:${length}`)
                 .setTimestamp(Date.now())
                 .setFooter('音樂系統', message.client.user.displayAvatarURL());
-            const m = await commandReply.reply(message, embed);
+            const m = await commandReply.edit(message, embed);
             await m.react('📥');
             await m.react('❌');
             const filter = (reaction, user) => ['📥', '❌'].includes(reaction.emoji.name) && user.id === message.member.user.id;
-            const collected = await m.awaitReactions(filter, {
+            const collected = await m.awaitReactions({
+                filter,
                 maxEmojis: 1,
                 time: 10000,
             });
             switch (collected.first()?.emoji?.name) {
             case undefined:
                 return;
-                case '📥':
+            case '📥':
                 embed = new MessageEmbed()
                     .setAuthor('清單', message.member.user.displayAvatarURL())
                     .setColor('BLUE')
@@ -129,9 +130,9 @@ module.exports = {
                     .setDescription(`清單: ${name}`)
                     .setTimestamp(Date.now())
                     .setFooter('音樂系統', message.client.user.displayAvatarURL());
-                m.edit(embed);
+                await commandReply.edit(m, embed);
                 return resolve(true);
-                case '❌':
+            case '❌':
                 embed = new MessageEmbed()
                     .setAuthor('清單', message.member.user.displayAvatarURL())
                     .setColor('BLUE')
@@ -139,7 +140,7 @@ module.exports = {
                     .setDescription(`清單: ${name}`)
                     .setTimestamp(Date.now())
                     .setFooter('音樂系統', message.client.user.displayAvatarURL());
-                m.edit(embed);
+                await commandReply.edit(m, embed);
                 return reject(false);
             }
         });
@@ -211,7 +212,7 @@ module.exports = {
             .setTimestamp(Date.now())
             .addField('播放者', `<@!${song.requseter}>`)
             .setFooter('音樂系統', message.client.user.displayAvatarURL());
-        return commandReply.reply(message, embed);
+        return commandReply.edit(message, embed);
     },
     async play(guild, song, message) {
         await play(guild, song, message);

@@ -25,5 +25,8 @@ class CommandReply {
         });
         return await command.fetchReply();
     }
+    async edit(command: Discord.Message, embed: Discord.MessageEmbed) {
+        return command.edit({ embeds: [embed] });
+    }
 }
 module.exports = CommandReply;

@@ -109,6 +109,7 @@ async function play(command, args, language) {
             }
 
             const m = await commandReply.reply(command, language.importPlaylist1.replace('${title}', title), 'BLUE');
+            // eslint-disable-next-line no-constant-condition
             while (true) {
                 for (const i in result.tracks.items) {
                     const videos = await ytsr.search(
@@ -161,12 +162,12 @@ async function play(command, args, language) {
     if (url.includes('soundcloud.com')) return processSoundcloudLink(url);
 
     const keyword = command instanceof Message ? command.content.substr(command.content.indexOf(' ') + 1) : args;
-    await commandReply.reply(command, language.searching.replace('${keyword}', keyword), 'YELLOW');
+    let msg = await commandReply.reply(command, language.searching.replace('${keyword}', keyword), 'YELLOW');
     const videos = await ytsr.search(keyword);
     const options = videos.map((video) => ({
         label: video.channel.name.length > 20 ? `${video.channel.name.slice(0, 20)}...` : video.channel.name,
         description: `${video.title.length > 35 ? `${video.title.slice(0, 30)}...` : video.title} - ${video.durationFormatted}`,
-        value: (videos.indexOf(video) + 1).toString(),
+        value: (videos.indexOf(video)).toString(),
     }));
 
     const row = new MessageActionRow()
@@ -176,7 +177,7 @@ async function play(command, args, language) {
                 .setPlaceholder('Nothing selected')
                 .addOptions(options),
         );
-    const msg = await command.channel.send({ content: language.choose, components: [row] });
+    msg = await msg.edit({ content: language.choose, components: [row] });
     const filter = (interaction) => {
         interaction.deferReply();
         return interaction.customId === 'select' && interaction.user.id === command.member.id;
@@ -184,7 +185,7 @@ async function play(command, args, language) {
     const collector = msg.createMessageComponentCollector({ filter, time: 100000 });
     collector.on('collect', async (menu) => {
         await handleVideo([videos[menu.values[0]]], voiceChannel, false, serverQueue, 'yt', command);
-        await menu.deleteReply();
+        msg.delete();
     });
     collector.on('end', (menu) => {
         if (!menu.first()) {
@@ -203,9 +204,9 @@ module.exports = {
     },
     slashCommand: {
         data: new SlashCommandBuilder()
-            .addStringOption((option) => option.setName('link').setDescription('link/keyword').setRequired(true)),
+            .addStringOption((option) => option.setName('song').setDescription('link/keyword').setRequired(true)),
         async execute(interaction, language) {
-            await play(interaction, interaction.options.getString('link'), language);
+            await play(interaction, interaction.options.getString('song'), language);
         },
     },
 };
