@@ -1,4 +1,60 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const CommandReply = require('../../functions/commandReply.js');
+const FuzzySort = require('../../functions/fuzzysort.js');
+const Discord = require('discord.js');
+const commandReply = new CommandReply();
+
+// const { MessageEmbed } = require('discord.js');
+
+function avatar(command, args, language) {
+    const fuzzysort = new FuzzySort(command);
+    if (args.length < 1) {
+        // display author's avatar
+        const embed = new Discord.MessageEmbed()
+            .setTitle(language.yourAvatar)
+            .setColor('RANDOM')
+            .setImage(`${command.author.displayAvatarURL({
+                format: 'png',
+                dynamic: true,
+                size: 2048,
+            })}`);
+        return commandReply.reply(command, embed);
+    }
+
+    // check if an id is provided
+    const user = command.guild.members.cache.find((member) => member.user.id === args[0]);
+    // if id exists
+    if (user) {
+        const embed = new Discord.MessageEmbed()
+            .setTitle(language.memberAvatar.replace('${user.displayName}', user.displayName))
+            .setColor(user.displayHexColor)
+            .setImage(
+                `${user.user.displayAvatarURL({
+                    format: 'png',
+                    dynamic: true,
+                    size: 2048,
+                })}`,
+            );
+        return commandReply.reply(command, embed);
+    }
+
+    // perform a fuzzy search based on the keyword given
+    const keyword = command.content.substr(command.content.indexOf(' ') + 1);
+    const member = fuzzysort.search(keyword);
+    if (!member) {
+        return commandReply.reply(command, language.noMember.replace('${keyword}', keyword), 'RED');
+    }
+
+    const embed = new Discord.MessageEmbed()
+        .setTitle(language.memberAvatar.replace('${user.displayName}', member.displayName))
+        .setColor(member.displayHexColor)
+        .setImage(`${member.user.displayAvatarURL({
+            format: 'png',
+            dynamic: true,
+            size: 2048,
+        })}`);
+    commandReply.reply(command, embed);
+}
 module.exports = {
     name: 'avatar',
     cooldown: 10,
@@ -6,21 +62,7 @@ module.exports = {
     guildOnly: true,
     description: true,
     execute(message, args, language) {
-        const Discord = require('discord.js');
-        const FuzzySort = require('../../functions/fuzzysort.js');
-        const fuzzysort = new FuzzySort(message);
-        if (args.length < 1) {
-            // display author's avatar
-            const embed = new Discord.MessageEmbed()
-                .setTitle(language.yourAvatar)
-                .setColor('RANDOM')
-                .setImage(`${message.author.displayAvatarURL({
-                    format: 'png',
-                    dynamic: true,
-                    size: 2048,
-                })}`);
-            return message.channel.send(embed);
-        }
+        console.log(message.mentions.users);
         if (message.mentions.users.size > 0) {
             // display all user's avatars mentioned by the author
             const avatarList = message.mentions.users.map((user) => {
@@ -39,45 +81,14 @@ module.exports = {
                 message.channel.send(embed);
             });
         }
-        // check if an id is provided
-        const user = message.guild.members.cache.find((member) => member.user.id === args[0]);
-        // if id exists
-        if (user) {
-            const embed = new Discord.MessageEmbed()
-                .setTitle(language.memberAvatar.replace('${user.displayName}', user.displayName))
-                .setColor(user.displayHexColor)
-                .setImage(
-                    `${user.user.displayAvatarURL({
-                        format: 'png',
-                        dynamic: true,
-                        size: 2048,
-                    })}`,
-                );
-            return message.channel.send(embed);
+        else {
+            avatar(message, args, language);
         }
-
-        // perform a fuzzy search based on the keyword given
-        const keyword = message.content.substr(message.content.indexOf(' ') + 1);
-        const member = fuzzysort.search(keyword);
-        if (!member) {
-            return message.channel.send(language.noMember.replace('${keyword}', keyword));
-        }
-
-        const embed = new Discord.MessageEmbed()
-            .setTitle(language.memberAvatar.replace('${user.displayName}', member.displayName))
-            .setColor(member.displayHexColor)
-            .setImage(`${member.user.displayAvatarURL({
-                format: 'png',
-                dynamic: true,
-                size: 2048,
-            })}`);
-        message.channel.send(embed);
     },
     slashCommand: {
         data: new SlashCommandBuilder()
             .addUserOption((option) => option.setName('member').setDescription('member\'s avatar')),
         async execute(interaction, language) {
-            const Discord = require('discord.js');
             const user = interaction.options.getMember('member') ?? interaction.member;
             const embed = new Discord.MessageEmbed()
                 .setTitle(language.memberAvatar.replace('${user.displayName}', user.displayName))
@@ -89,7 +100,7 @@ module.exports = {
                         size: 2048,
                     })}`,
                 );
-            return interaction.reply({ embeds: [embed] });
+            return commandReply.reply(interaction, embed);
         },
     },
 };
