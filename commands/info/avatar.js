@@ -21,7 +21,7 @@ module.exports = {
                 })}`);
             return message.channel.send(embed);
         }
-        if (message.mentions.users.size) {
+        if (message.mentions.users.size > 0) {
             // display all user's avatars mentioned by the author
             const avatarList = message.mentions.users.map((user) => {
                 return new Discord.MessageEmbed()
