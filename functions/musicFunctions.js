@@ -35,7 +35,8 @@ async function play(guild, song, message) {
     }
     switch (song.source) {
     case 'yt':
-        proc = new Ffmpeg(ytdl(song.url, { quality: 'highestaudio', filter: 'audioonly', highWaterMark: 1024 * 1024 * 3 }));
+        proc = new Ffmpeg(ytdl(song.url, { quality: 'highestaudio', filter: 'audioonly', highWaterMark: 1 << 25 }));
+        //               (ytdl(song.url,        { filter: 'audioonly', quality: 'highestaudio', highWaterMark: 1<<25 }), {highWaterMark: 1})
         break;
     case 'sc':
         proc = new Ffmpeg(await scdl.download(song.url, scID));
