@@ -22,8 +22,8 @@ function getUserInfo(author, language) {
         .setColor('#0099ff')
         .setTitle('User Info')
         .setAuthor(
-            '蘿莉控們的FBI避難所',
-            'https://cdn.discordapp.com/icons/764839074228994069/a_0fd2b80512df6d23e33e9380da334b83.gif?size=256',
+            author.guild.name,
+            author.guild.iconURL({ dynamic: true }),
             'https://loliconshelter.netlify.app/',
         )
         .setThumbnail(
