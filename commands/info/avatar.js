@@ -62,8 +62,7 @@ module.exports = {
     guildOnly: true,
     description: true,
     execute(message, args, language) {
-        console.log(message.mentions.users);
-        if (message.mentions.users.size > 0) {
+        if (message.mentions.users.size) {
             // display all user's avatars mentioned by the author
             const avatarList = message.mentions.users.map((user) => {
                 return new Discord.MessageEmbed()
@@ -78,7 +77,7 @@ module.exports = {
 
             // send the entire array of embed to the channel
             avatarList.forEach((embed) => {
-                message.channel.send(embed);
+                commandReply.reply(message, embed);
             });
         }
         else {
