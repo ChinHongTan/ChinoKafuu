@@ -7,7 +7,7 @@ function getUserInfo(author, language) {
     let activityDescription = '';
     if (author.presence.activities) {
         for (const activity of author.presence.activities) {
-            if (activity.type === 'CUSTOM_STATUS') {
+            if (activity.type === 'CUSTOM') {
                 activityDescription += language.customStatus.replace('${name}', activity.emoji.name).replace('${id}', activity.emoji.id).replace('${state}', activity.state);
             }
             else {
