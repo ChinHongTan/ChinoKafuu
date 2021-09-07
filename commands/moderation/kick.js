@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const CommandReply = require('../../functions/commandReply.js');
-const { CommandInteraction }= require('discord.js');
+const { CommandInteraction } = require('discord.js');
 const commandReply = new CommandReply();
 
 async function kick(command, args = []) {
