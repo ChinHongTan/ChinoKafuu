@@ -100,7 +100,7 @@ module.exports = {
         const userInfoList = message.mentions.members.map((user) => {
             return getUserInfo(user, language);
         });
-        commandReply.reply(message, userInfoList);
+        commandReply.multiReply(message, userInfoList);
     },
     slashCommand: {
         data: new SlashCommandBuilder()
