@@ -103,7 +103,6 @@ async function connect4(command, language) {
         for (let i = 6; i > 0; i--) {
             coordinate = (column * 10 + i).toString();
             const square = squaresDict[coordinate];
-            console.log(square);
             if (square.isOccupied !== 'white') {
                 // pass
             }
@@ -129,7 +128,6 @@ async function connect4(command, language) {
     }
 
     function doMove(r, embedMessage, round, collector) {
-        console.log(squares);
         const [win, coordinate] = place(
             reactCol[r.emoji.name],
             round,
