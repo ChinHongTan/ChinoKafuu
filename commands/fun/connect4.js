@@ -1,10 +1,9 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const CommandReply = require('../../functions/commandReply.js');
+const Discord = require('discord.js');
 const commandReply = new CommandReply();
 
 async function connect4(command, language) {
-    const Discord = require('discord.js');
-
     const coordinates = setCoordinates(7, 6);
     const squares = {};
 
@@ -139,7 +138,8 @@ async function connect4(command, language) {
         board = draw(squares, coordinate, round, board);
         if (win) {
             collector.stop();
-            commandReply.reply(command, language.win.replace('${round.name}', round.emoji), 'GREEN');
+            if (command instanceof Discord.CommandInteraction) return command.followUp({ embeds: [{ description: language.win.replace('${round.name}', round.emoji), color: 'GREEN' }] });
+            if (command instanceof Discord.Message) return commandReply.reply(command, language.win.replace('${round.name}', round.emoji), 'GREEN');
         }
         if (round.name === 'red') {
             round.name = 'yellow';
