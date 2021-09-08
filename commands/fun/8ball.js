@@ -32,13 +32,13 @@ module.exports = {
     name: '8ball',
     description: true,
     async execute(message, args, language) {
-        eball(message, args, language);
+        await eball(message, args, language);
     },
     slashCommand: {
         data: new SlashCommandBuilder()
             .addStringOption((option) => option.setName('question').setDescription('Qeustion you would like to ask the 8ball')),
         async execute(interaction, language) {
-            eball(interaction, interaction.options.getString('question'), language);
+            await eball(interaction, interaction.options.getString('question'), language);
         },
     },
 };
