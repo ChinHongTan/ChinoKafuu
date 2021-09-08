@@ -5,20 +5,12 @@ const { MessageEmbed } = require('discord.js');
 
 function getUserInfo(author, language) {
     let activityDescription = '';
-    if (author.presence.activities) {
+    if (author?.presence?.activities) {
         for (const activity of author.presence.activities) {
             if (activity.type === 'CUSTOM') {
-                if (activity.emoji.id) {
-                    activityDescription += language.customStatus
-                        .replace('${name}', activity.emoji.name)
-                        .replace('${id}', activity.emoji.id)
-                        .replace('${state}', activity.state);
-                }
-                else {
-                    activityDescription += language.customStatus
-                        .replace('<:${name}:${id}>', activity.emoji.name)
-                        .replace('${state}', activity.state);
-                }
+                activityDescription += language.customStatus
+                    .replace('<:${name}:${id}>', activity.emoji)
+                    .replace('${state}', activity.state);
             }
             else {
                 activityDescription += language.gameStatus
@@ -84,12 +76,12 @@ function getUserInfo(author, language) {
             },
             {
                 name: language.status,
-                value: author.presence.status,
+                value: author?.presence?.status || 'Offline',
                 inline: true,
             },
             {
                 name: language.device,
-                value: author.presence.clientStatus ? Object.keys(author.presence.clientStatus).join(', ') : 'None',
+                value: author?.presence?.clientStatus ? Object.keys(author.presence.clientStatus).join(', ') : 'None',
                 inline: true,
             },
             {
