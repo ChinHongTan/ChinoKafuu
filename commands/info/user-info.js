@@ -8,10 +8,23 @@ function getUserInfo(author, language) {
     if (author.presence.activities) {
         for (const activity of author.presence.activities) {
             if (activity.type === 'CUSTOM') {
-                activityDescription += language.customStatus.replace('${name}', activity.emoji.name).replace('${id}', activity.emoji.id).replace('${state}', activity.state);
+                if (activity.emoji.id) {
+                    activityDescription += language.customStatus
+                        .replace('${name}', activity.emoji.name)
+                        .replace('${id}', activity.emoji.id)
+                        .replace('${state}', activity.state);
+                }
+                else {
+                    activityDescription += language.customStatus
+                        .replace('<:${name}:${id}>', activity.emoji.name)
+                        .replace('${state}', activity.state);
+                }
             }
             else {
-                activityDescription += language.gameStatus.replace('type', activity.type).replace('${name}', activity.name).replace('${details}', activity.details ? activity.details : '');
+                activityDescription += language.gameStatus
+                    .replace('${type}', activity.type)
+                    .replace('${name}', activity.name)
+                    .replace('${details}', activity.details ? activity.details : '');
             }
         }
     }
@@ -50,7 +63,8 @@ function getUserInfo(author, language) {
             },
             {
                 name: language.avatarurl,
-                value: language.avatarValue.replace('${url}', author.user.displayAvatarURL({ format: 'png', dynamic: true })),
+                value: language.avatarValue
+                    .replace('${url}', author.user.displayAvatarURL({ format: 'png', dynamic: true })),
                 inline: true,
             },
             {
@@ -109,7 +123,7 @@ module.exports = {
                     .setDescription('Member to display avatar'),
             ),
         async execute(interaction, language) {
-            const user = interaction.getUser('member');
+            const user = interaction.options.getMember('member');
             if (!user) {
                 return commandReply.reply(interaction, getUserInfo(interaction.member, language));
             }
