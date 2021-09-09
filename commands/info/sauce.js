@@ -25,7 +25,7 @@ async function sauce(command, args, language) {
         // .setFooter(`page ${response.page + 1}/${response.total}`);
         return new Discord.MessageEmbed()
             .setTitle(response.site)
-            .setDescription(language.similarity.replace('${response.similarity}', response.similarity))
+            .setDescription(language.similarity.replace('${similarity * 100}', response.similarity))
             .setColor('#008000')
             .setImage(response.thumbnail)
             .addFields(
@@ -98,7 +98,7 @@ async function sauce(command, args, language) {
 
     let searchImage = '';
 
-    if (args.length > 0) {
+    if (args[0]) {
         searchImage = args[0];
         return searchForImage(searchImage);
     }
@@ -113,8 +113,8 @@ async function sauce(command, args, language) {
     if (!searchImage) {
         return commandReply.reply(command, language.noImage, 'RED');
     }
-    commandReply.reply(command, language.searchingSauce, 'YELLOW');
-    searchForImage(searchImage);
+    await commandReply.reply(command, language.searchingSauce, 'YELLOW');
+    await searchForImage(searchImage);
 }
 
 module.exports = {
@@ -131,7 +131,7 @@ module.exports = {
                     .setDescription('URL of image you want to search for'),
             ),
         async execute(interaction, language) {
-            await sauce(interaction, [interaction.getString('url')], language);
+            await sauce(interaction, [interaction.options.getString('url')], language);
         },
     },
 };

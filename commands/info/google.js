@@ -12,14 +12,6 @@ module.exports = {
         };
         const keyword = message.content.substr(message.content.indexOf(' ') + 1);
         const response = await google.search(keyword, options);
-        message.channel.send({
-            embeds: [{
-                title: response.results[0].title,
-                url: response.results[0].url,
-                description: response.results[0].description,
-                color: 'BLUE',
-            }],
-        });
         const images = await google.image(keyword, options);
         const cleanPanel = { ...response.knowledge_panel };
         delete cleanPanel.title;
@@ -30,7 +22,12 @@ module.exports = {
         for (const [key, value] of Object.entries(response.knowledge_panel)) {
             if (value === 'N/A') delete response.knowledge_panel[key];
         }
-        console.log(response.knowledge_panel);
+        if (!response.knowledge_panel.title && !response.knowledge_panel.url && !response.knowledge_panel.description) {
+            response.knowledge_panel.title = response.results[0].title;
+            response.knowledge_panel.url = response.results[0].url;
+            response.knowledge_panel.description = response.results[0].description;
+        }
+
         if (response.knowledge_panel && Object.keys(response.knowledge_panel).length !== 0) {
             const fields = [];
             for (const [key, value] of Object.entries(cleanPanel)) {
@@ -39,7 +36,6 @@ module.exports = {
                 entry['value'] = value;
                 fields.push(entry);
             }
-            console.log(fields);
             message.channel.send({
                 embeds: [{
                     title: `Knowledge Panel: ${response.knowledge_panel.title ?? 'None'}`,
@@ -47,9 +43,9 @@ module.exports = {
                     url: response.knowledge_panel.url,
                     fields: fields,
                     image: { url: response.knowledge_panel.images?.[0] ?? images?.[0]?.url ?? '' },
+                    color: 'BLUE',
                 }],
             });
         }
-
     },
 };
