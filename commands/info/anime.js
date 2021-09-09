@@ -20,6 +20,7 @@ async function anime(command, args, language) {
     }
 
     function createEmbed(response) {
+        console.log(response);
         return new MessageEmbed()
             .setTitle(response.anilist.title.native)
             .setDescription(language.similarity.replace('${similarity * 100}', response.similarity * 100))
@@ -32,11 +33,11 @@ async function anime(command, args, language) {
                 { name: language.englishTitle, value: response.anilist.title.english },
                 { name: language.episode, value: response.episode },
                 { name: language.NSFW, value: response.anilist.isAdult },
-            )
-            .setFooter(`page ${response.page + 1}/${response.total}`);
+            );
+        // .setFooter(`page ${response.page + 1}/${response.total}`);
     }
 
-    if (args.length > 0) {
+    if (args[0]) {
         if (!isValidHttpUrl(args[0])) {
             return commandReply.reply(command, language.invalidURL, 'RED');
         }
@@ -57,6 +58,7 @@ async function anime(command, args, language) {
     }
     const e = await fetch(`https://api.trace.moe/search?cutBorders&anilistInfo&url=${encodeURIComponent(searchImage)}`);
     const response = await e.json();
+    console.log(createEmbed(response));
     return dynamicEmbed.createEmbedFlip(command, response.result, ['⬅️', '➡️'], createEmbed);
 }
 module.exports = {
@@ -64,13 +66,13 @@ module.exports = {
     guildOnly: true,
     description: true,
     async execute(message, args, language) {
-        anime(message, args, language);
+        await anime(message, args, language);
     },
     slashCommand: {
         data: new SlashCommandBuilder()
             .addStringOption((option) => option.setName('url').setDescription('Enter image url')),
         async execute(interaction, language) {
-            await anime(interaction, interaction.options.getString('url'), language);
+            await anime(interaction, [interaction.options.getString('url')], language);
         },
     },
 };
