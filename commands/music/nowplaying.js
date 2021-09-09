@@ -1,14 +1,14 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const CommandReply = require('../../functions/commandReply.js');
 const commandReply = new CommandReply();
+const { format } = require('../../functions/musicFunctions');
+const { MessageEmbed } = require('discord.js');
+const progressbar = require('string-progressbar');
 function nowplaying(command, language) {
     const queueData = require('../../data/queueData');
     const { queue } = queueData;
     const serverQueue = queue.get(command.guild.id);
     const resource = serverQueue?.resource;
-    const { format } = require('../../functions/musicFunctions');
-    const Discord = require('discord.js');
-    const progressbar = require('string-progressbar');
 
     if (!command.member.voice.channel) {
         return commandReply.reply(command, language.notInVC, 'RED');
@@ -17,7 +17,7 @@ function nowplaying(command, language) {
     if (serverQueue) {
         const song = serverQueue.songs[0];
 
-        const embed = new Discord.MessageEmbed()
+        const embed = new MessageEmbed()
             .setColor('#ff0000')
             .setTitle(language.npTitle)
             .setDescription(`[${song.title}](${song.url})\n\`[${format(resource.playbackDuration / 1000)}/${format(song.duration)}]\`\n${progressbar.splitBar(song.duration, resource.playbackDuration / 1000, 15)[0]}`)

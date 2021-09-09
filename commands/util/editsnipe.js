@@ -1,8 +1,8 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const CommandReply = require('../../functions/commandReply.js');
 const commandReply = new CommandReply();
+const { MessageEmbed } = require('discord.js');
 async function esnipe(command, args, language) {
-    const { MessageEmbed } = require('discord.js');
     const collection = command.client.editSnipeCollection;
 
     const editSnipesWithGuild = await collection.findOne({ id: command.guild.id });

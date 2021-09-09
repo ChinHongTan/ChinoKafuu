@@ -1,14 +1,14 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const CommandReply = require('../../functions/commandReply.js');
 const commandReply = new CommandReply();
+const { format } = require('../../functions/musicFunctions');
+const { MessageEmbed } = require('discord.js');
+const DynamicEmbed = require('../../functions/dynamicEmbed');
+const dynamicEmbed = new DynamicEmbed();
 function queueFunc(command, language) {
     const queueData = require('../../data/queueData');
     const { queue } = queueData;
     const serverQueue = queue.get(command.guild.id);
-    const { format } = require('../../functions/musicFunctions');
-    const Discord = require('discord.js');
-    const DynamicEmbed = require('../../functions/dynamicEmbed');
-    const dynamicEmbed = new DynamicEmbed();
     const array_chunks = (array, chunkSize) => Array(Math.ceil(array.length / chunkSize)).fill().map((_, index) => index * chunkSize).map((begin) => array.slice(begin, begin + chunkSize));
 
     /**
@@ -19,7 +19,7 @@ function queueFunc(command, language) {
     function createEmbed(smallChunk) {
         const arr = smallChunk.map((item) => `${item.index}.[${item.title}](${item.url}) | ${format(item.duration)}`);
         const printQueue = arr.join('\n\n');
-        return new Discord.MessageEmbed()
+        return new MessageEmbed()
             .setColor('#ff0000')
             .setTitle(language.queueTitle)
             .setDescription(language.queueBody.replace('${serverQueue.songs[0].title}', serverQueue.songs[0].title).replace('${serverQueue.songs[0].url}', serverQueue.songs[0].url).replace('${printQueue}', printQueue).replace('${serverQueue.songs.length - 1}', serverQueue.songs.length - 1));

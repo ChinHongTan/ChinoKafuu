@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const CommandReply = require('../../functions/commandReply.js');
-const Discord = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const { searchByUrl } = require('ascii2d');
 const commandReply = new CommandReply();
 const sagiriToken = process.env.SAGIRI || require('../../config/config.json').sagiri_token;
@@ -13,7 +13,7 @@ async function sauce(command, args, language) {
     /**
      * Generates a discord embed
      * @param {object} response - Response object from sauceNao API call
-     * @return {Discord.MessageEmbed} Discord embed.
+     * @return {MessageEmbed} Discord embed.
      */
     function createEmbed(response) {
         const sourceURL = response.url;
@@ -23,7 +23,7 @@ async function sauce(command, args, language) {
             info += `\`${key} : ${value}\`\n`;
         }
         // .setFooter(`page ${response.page + 1}/${response.total}`);
-        return new Discord.MessageEmbed()
+        return new MessageEmbed()
             .setTitle(response.site)
             .setDescription(language.similarity.replace('${similarity * 100}', response.similarity))
             .setColor('#008000')
@@ -37,14 +37,14 @@ async function sauce(command, args, language) {
     /**
      * Generates a discord embed
      * @param {object} response - Response object from ascii2d API call
-     * @return {Discord.MessageEmbed} Discord embed.
+     * @return {MessageEmbed} Discord embed.
      */
     function createEmbed2(response) {
         const sourceURL = response?.source?.url ?? 'None';
         const title = response?.source?.title ?? 'None';
         const author = response?.source?.author ? language.sauceAuthor.replace('${authorinfo.name}', response?.source?.author.name).replace('${authorinfo.url}', response?.source?.author.url) : language.noAuthor;
         // .setFooter(`page ${response.page + 1}/${response.total}`);
-        return new Discord.MessageEmbed()
+        return new MessageEmbed()
             .setTitle(response?.source?.type ?? 'None')
             .setColor('#008000')
             .setImage(response.thumbnailUrl)

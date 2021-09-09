@@ -1,10 +1,9 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const CommandReply = require('../../functions/commandReply.js');
 const commandReply = new CommandReply();
+const { DiscordTogether } = require('discord-together');
 async function yttogether(command, language) {
     const { client } = command;
-    const { DiscordTogether } = require('discord-together');
-
     client.discordTogether = new DiscordTogether(client);
     if (command.member.voice.channel) {
         const invite = await client.discordTogether.createTogetherCode(command.member.voice.channelID, 'youtube');

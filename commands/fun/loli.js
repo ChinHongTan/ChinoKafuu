@@ -1,10 +1,9 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const CommandReply = require('../../functions/commandReply.js');
 const commandReply = new CommandReply();
+const fs = require('fs');
+const { MessageEmbed } = require('discord.js');
 function loli(command, language) {
-    const fs = require('fs');
-    const Discord = require('discord.js');
-
     const imageFiles = fs
         .readdirSync('./images')
         .filter((file) => file.endsWith('.json'));
@@ -24,7 +23,7 @@ function loli(command, language) {
     const { messageurl } = images;
     random = Math.floor(Math.random() * images.attachments.length);
     const imageInfo = images.attachments[random];
-    const embed = new Discord.MessageEmbed()
+    const embed = new MessageEmbed()
         .setColor('#2d9af8')
         .setTitle(language.loliPic)
         .setDescription(language.loliProvider.replace('${images.author}', images.author).replace('${messageurl}', messageurl))

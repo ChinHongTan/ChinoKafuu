@@ -1,15 +1,15 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const CommandReply = require('../../functions/commandReply.js');
 const commandReply = new CommandReply();
+const lyricsFinder = require('lyrics-finder');
+const solenolyrics = require('solenolyrics');
+const Genius = require('genius-lyrics');
+const geniusToken = process.env.GENIUS || require('../../config/config.json').genius_token;
+const Client = new Genius.Client(geniusToken);
 async function lyric(command, args, language) {
     const queueData = require('../../data/queueData');
     const { queue } = queueData;
-    const serverQueue = queue.get(command.guild.id);
-    const lyricsFinder = require('lyrics-finder');
-    const solenolyrics = require('solenolyrics');
-    const Genius = require('genius-lyrics');
-    const geniusToken = process.env.GENIUS || require('../../config/config.json').genius_token;
-    const Client = new Genius.Client(geniusToken);
+    const serverQueue = queue.get(command.guild.id)
 
     if (!command.member.voice.channel) {
         return commandReply.reply(command, language.notInVC, 'RED');

@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const CommandReply = require('../../functions/commandReply.js');
-const Discord = require('discord.js');
+const { MessageEmbed, Message, CommandInteraction } = require('discord.js');
 const commandReply = new CommandReply();
 
 async function connect4(command, language) {
@@ -69,7 +69,7 @@ async function connect4(command, language) {
 
     function createEmbed(round, board) {
         const boardStr = stringify(board);
-        return new Discord.MessageEmbed()
+        return new MessageEmbed()
             .setTitle('**CONNECT FOUR**')
             .setDescription(language.board.replace('${round.name}', round.emoji).replace('${boardStr}', boardStr))
             .setColor('#ff0000');
@@ -136,8 +136,8 @@ async function connect4(command, language) {
         board = draw(squares, coordinate, round, board);
         if (win) {
             collector.stop();
-            if (command instanceof Discord.CommandInteraction) return command.followUp({ embeds: [{ description: language.win.replace('${round.name}', round.emoji), color: 'GREEN' }] });
-            if (command instanceof Discord.Message) return commandReply.reply(command, language.win.replace('${round.name}', round.emoji), 'GREEN');
+            if (command instanceof CommandInteraction) return command.followUp({ embeds: [{ description: language.win.replace('${round.name}', round.emoji), color: 'GREEN' }] });
+            if (command instanceof Message) return commandReply.reply(command, language.win.replace('${round.name}', round.emoji), 'GREEN');
         }
         if (round.name === 'red') {
             round.name = 'yellow';

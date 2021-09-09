@@ -1,12 +1,11 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const CommandReply = require('../../functions/commandReply.js');
 const commandReply = new CommandReply();
+const fetch = require('node-fetch');
+const { MessageEmbed } = require('discord.js');
+const DynamicEmbed = require('../../functions/dynamicEmbed');
+const dynamicEmbed = new DynamicEmbed();
 async function anime(command, args, language) {
-    const fetch = require('node-fetch');
-    const Discord = require('discord.js');
-    const DynamicEmbed = require('../../functions/dynamicEmbed');
-    const dynamicEmbed = new DynamicEmbed();
-
     function isValidHttpUrl(string) {
         let url;
 
@@ -21,7 +20,7 @@ async function anime(command, args, language) {
     }
 
     function createEmbed(response) {
-        return new Discord.MessageEmbed()
+        return new MessageEmbed()
             .setTitle(response.anilist.title.native)
             .setDescription(language.similarity.replace('${similarity * 100}', response.similarity * 100))
             .setColor('#008000')
