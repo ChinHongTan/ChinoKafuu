@@ -20,21 +20,17 @@ async function anime(command, args, language) {
     }
 
     function createEmbed(response) {
-        console.log(response);
         return new MessageEmbed()
             .setTitle(response.anilist.title.native)
             .setDescription(language.similarity.replace('${similarity * 100}', response.similarity * 100))
             .setColor('#008000')
             .setImage(response.image)
-            .addFields(
-                { name: language.sourceURL, value: response.video },
-                { name: language.nativeTitle, value: response.anilist.title.native },
-                { name: language.romajiTitle, value: response.anilist.title.romaji },
-                { name: language.englishTitle, value: response.anilist.title.english },
-                { name: language.episode, value: response.episode },
-                { name: language.NSFW, value: response.anilist.isAdult },
-            );
-        // .setFooter(`page ${response.page + 1}/${response.total}`);
+            .addField(language.sourceURL, response.video)
+            .addField(language.nativeTitle, response.anilist.title.native)
+            .addField(language.romajiTitle, response.anilist.title.romaji)
+            .addField(language.englishTitle, response.anilist.title.english)
+            .addField(language.episode, response.episode.toString())
+            .addField(language.NSFW, response.anilist.isAdult.toString());
     }
 
     if (args[0]) {
@@ -58,7 +54,6 @@ async function anime(command, args, language) {
     }
     const e = await fetch(`https://api.trace.moe/search?cutBorders&anilistInfo&url=${encodeURIComponent(searchImage)}`);
     const response = await e.json();
-    console.log(createEmbed(response));
     return dynamicEmbed.createEmbedFlip(command, response.result, ['⬅️', '➡️'], createEmbed);
 }
 module.exports = {

@@ -4,10 +4,10 @@ import { Message, MessageReaction, MessageEmbed, ReactionCollector, User } from 
  * Function to update embed message after a user had reacted
  * @param {MessageReaction} r - Reaction from the user
  * @param {number} page - Which result to be displayed
- * @param {object} itemList - The result from the API.
- * @param {object} embedMessage - Discord message with an embed.
+ * @param {object[]} itemList - The result from the API.
+ * @param {Message} embedMessage - Discord message with an embed.
  * @param {function} createEmbed - Function to create embed.
- * @param {object} collector - Discord reaction collector.
+ * @param {ReactionCollector} collector - Discord reaction collector.
  * @param {function} collectorFunc - Function after stopping the collector.
  * @param {any[]} collectorParams - parameters for collector function.
  * @returns {number} Page
@@ -48,10 +48,15 @@ import { Message, MessageReaction, MessageEmbed, ReactionCollector, User } from 
 
 class DynamicEmbed {
     /**
-    * Creates and sends a reactable message
-    * @param {object} result - The result from the API.
-    */
-    async createEmbedFlip(message: Message, itemList: object[], emojiList: string[], createEmbed: (item: object) => MessageEmbed, collectorFunc: (collectorParams: any[]) => void, collectorParams: any[]) {
+     * Creates and sends a reactable message
+     * @param {Message} message - Message that initiated this function
+     * @param {object[]} itemList - Result from API call
+     * @param {string[]} emojiList - Emoji used to control dynamic embed
+     * @param {function} createEmbed - Function to create embed
+     * @param {function} collectorFunc - Function to tell what is the next thing to do after receiving an emoji
+     * @param {any[]} collectorParams - collectorFunc's params
+     */
+    async createEmbedFlip(message: Message, itemList: object[], emojiList: string[], createEmbed: (item: object) => MessageEmbed, collectorFunc?: (collectorParams: any[]) => void, collectorParams?: any[]) {
         let page = 0;
         if (typeof itemList[page] === "object") {
             itemList["page"] = page;
