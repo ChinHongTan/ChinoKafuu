@@ -23,11 +23,11 @@ async function play(command, args, language) {
 
     const voiceChannel = command.member.voice.channel;
     if (!voiceChannel) {
-        return commandReply.reply(command, language.notInVC, 'RED');
+        return commandReply.edit(command, language.notInVC, 'RED');
     }
     const permissions = voiceChannel.permissionsFor(command.client.user);
     if (!permissions.has('CONNECT') || !permissions.has('SPEAK')) {
-        return commandReply.reply(command, language.cantJoinVC, 'RED');
+        return commandReply.edit(command, language.cantJoinVC, 'RED');
     }
 
     if (!serverQueue) {
@@ -80,7 +80,7 @@ async function play(command, args, language) {
         if (link.includes('album')) {
             result = await spotify.getAlbum(Id);
             const title = result.name;
-            const m = await commandReply.reply(command, language.importAlbum1.replace('${title}', title), 'BLUE');
+            const m = await commandReply.edit(command, language.importAlbum1.replace('${title}', title), 'BLUE');
             for (const i in result.tracks.items) {
                 const videos = await ytsr.search(
                     `${result.artists[0].name} ${result.tracks.items[i].name}`,
@@ -107,7 +107,7 @@ async function play(command, args, language) {
                 return await handleVideo(videos, voiceChannel, false, serverQueue, 'yt', command);
             }
 
-            const m = await commandReply.reply(command, language.importPlaylist1.replace('${title}', title), 'BLUE');
+            const m = await commandReply.edit(command, language.importPlaylist1.replace('${title}', title), 'BLUE');
             // eslint-disable-next-line no-constant-condition
             while (true) {
                 for (const i in result.tracks.items) {
@@ -116,7 +116,7 @@ async function play(command, args, language) {
                         { limit: 1 },
                     );
                     await handleVideo(videos, voiceChannel, true, serverQueue, 'yt', command);
-                    m.edit(language.importPlaylist2.replace('${videos[0].title}', videos[0].title).replace('${i}', i));
+                    await m.edit(language.importPlaylist2.replace('${videos[0].title}', videos[0].title).replace('${i}', i));
                 }
                 if (!result.tracks.next) {
                     break;
@@ -133,12 +133,12 @@ async function play(command, args, language) {
         if (scdl.isPlaylistURL(link)) {
             const data = await scdl.getSetInfo(link).catch((err) => {
                 console.log(err);
-                return commandReply.reply(command, language.noResult, 'RED');
+                return commandReply.edit(command, language.noResult, 'RED');
             });
             const wait = await waitimport(data.title, data.tracks.length, command);
             let m;
             if (wait) {
-                m = await commandReply.reply(command, language.importPlaylist1.replace('${data.title}', data.title), 'BLUE');
+                m = await commandReply.edit(command, language.importPlaylist1.replace('${data.title}', data.title), 'BLUE');
                 for (const i in data.tracks) {
                     await handleVideo(data.tracks[i], voiceChannel, true, serverQueue, 'sc', command);
                     m.edit(language.importPlaylist2.replace('${data.tracks[i].title}', data.tracks[i].title).replace('${i}', i));
@@ -149,19 +149,19 @@ async function play(command, args, language) {
         if (link.match(scrxt)) {
             const data = await scdl.getInfo(link).catch((err) => {
                 console.log(err);
-                throw commandReply.reply(command, language.noResult, 'RED');
+                throw commandReply.edit(command, language.noResult, 'RED');
             });
             await handleVideo(data, voiceChannel, true, serverQueue, 'sc', command);
         }
     }
 
-    if (!args[0]) return commandReply.reply(command, language.noArgs, 'RED');
+    if (!args[0]) return commandReply.edit(command, language.noArgs, 'RED');
     if (url.match(ytrx)) return processYoutubeLink(url);
     if (url.includes('open.spotify.com')) return processSpotifyLink(url);
     if (url.includes('soundcloud.com')) return processSoundcloudLink(url);
 
     const keyword = command instanceof Message ? command.content.substr(command.content.indexOf(' ') + 1) : args;
-    let msg = await commandReply.reply(command, language.searching.replace('${keyword}', keyword), 'YELLOW');
+    let msg = await commandReply.edit(command, language.searching.replace('${keyword}', keyword), 'YELLOW');
     const videos = await ytsr.search(keyword);
     const options = videos.map((video) => ({
         label: video.channel.name.length > 20 ? `${video.channel.name.slice(0, 20)}...` : video.channel.name,
@@ -184,12 +184,11 @@ async function play(command, args, language) {
     const collector = msg.createMessageComponentCollector({ filter, time: 100000 });
     collector.on('collect', async (menu) => {
         await handleVideo([videos[menu.values[0]]], voiceChannel, false, serverQueue, 'yt', command);
-        msg.delete();
     });
-    collector.on('end', (menu) => {
+    collector.on('end', async (menu) => {
         if (!menu.first()) {
-            msg.delete();
             msg.channel.send(language.timeout);
+            await msg.delete();
         }
     });
 }
@@ -205,6 +204,7 @@ module.exports = {
         data: new SlashCommandBuilder()
             .addStringOption((option) => option.setName('song').setDescription('link/keyword').setRequired(true)),
         async execute(interaction, language) {
+            await interaction.deferReply();
             await play(interaction, interaction.options.getString('song'), language);
         },
     },
