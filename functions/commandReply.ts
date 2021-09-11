@@ -1,35 +1,32 @@
-import * as Discord from 'discord.js';
+import { Message, MessageEmbed, CommandInteraction, ColorResolvable } from "discord.js";
 
 class CommandReply {
-    command: Discord.Message | Discord.CommandInteraction;
+    command: Message | CommandInteraction;
     // reply to a user command
-    async reply(command: Discord.Message | Discord.CommandInteraction, response: string | Discord.MessageEmbed, color?: Discord.ColorResolvable) {
-        if (response instanceof Discord.MessageEmbed) {
-            if (command instanceof Discord.Message) return command.channel.send({ embeds: [response] });
+    async reply(command: Message | CommandInteraction, response: string | MessageEmbed, color?: ColorResolvable) {
+        if (response instanceof MessageEmbed) {
+            if (command instanceof Message) return command.channel.send({ embeds: [response] });
             await command.reply({ embeds: [response] });
             return await command.fetchReply();
         }
-        if (command instanceof Discord.Message) {
-            return command.channel.send({
-                embeds: [{
-                    description: response,
-                    color: color
-                }]
-            });
+        if (command instanceof Message) {
+            return command.channel.send({ embeds: [{ description: response, color: color }] });
         }
-        await command.reply({
-            embeds: [{
-                description: response,
-                color: color
-            }]
-        });
+        await command.reply({ embeds: [{ description: response, color: color }] });
         return await command.fetchReply();
     }
-    async edit(command: Discord.Message, embed: Discord.MessageEmbed) {
-        return command.edit({ embeds: [embed] });
+    // edit a message or interaction
+    async edit(command: Message | CommandInteraction, response?: MessageEmbed | string, color?: ColorResolvable) {
+        if (command instanceof Message) {
+            if (response instanceof MessageEmbed) return command.edit({ embeds: [response] });
+            return command.edit({ embeds: [{ description: response, color: color }] });
+        }
+        if (response instanceof MessageEmbed) return command.editReply({ embeds: [response] });
+        return command.editReply( { embeds: [{ description: response, color: color }] });
     }
-    async multiReply(command: Discord.Message | Discord.CommandInteraction, response: Discord.MessageEmbed[]) {
-        if (command instanceof Discord.Message) return command.channel.send({ embeds: response });
+    // reply with multiple embeds
+    async multiReply(command: Message | CommandInteraction, response: MessageEmbed[]) {
+        if (command instanceof Message) return command.channel.send({ embeds: response });
         return command.reply({ embeds: response })
     }
 }
