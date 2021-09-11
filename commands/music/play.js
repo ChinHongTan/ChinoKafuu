@@ -17,8 +17,7 @@ const scrxt = new RegExp('^(?<track>https://soundcloud.com/(?:(?!sets|stats|grou
 const sprxtrack = new RegExp('(http[s]?://)?(open.spotify.com)/');
 
 async function play(command, args, language) {
-    const queueData = require('../../data/queueData');
-    const { queue } = queueData;
+    const { queue } = require('../../data/queueData');
     let serverQueue = queue.get(command.guild.id);
     const url = args[0];
 

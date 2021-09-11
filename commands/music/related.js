@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const CommandReply = require('../../functions/commandReply.js');
-const queueData = require('../../data/queueData');
+const { queue } = require('../../data/queueData');
 const ytsr = require('youtube-sr').default;
 const { handleVideo } = require('../../functions/musicFunctions');
 const ytdl = require('ytdl-core');
@@ -8,7 +8,6 @@ const scdl = require('soundcloud-downloader').default;
 const commandReply = new CommandReply();
 
 async function related(command, language) {
-    const { queue } = queueData;
     const serverQueue = queue.get(command.guild.id);
     if (!serverQueue) {
         return commandReply.reply(command, language.notPlayingMusic, 'RED');

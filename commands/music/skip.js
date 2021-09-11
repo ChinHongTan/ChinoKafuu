@@ -2,8 +2,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const CommandReply = require('../../functions/commandReply.js');
 const commandReply = new CommandReply();
 function skip(command, language) {
-    const queueData = require('../../data/queueData');
-    const { queue } = queueData;
+    const { queue } = require('../../data/queueData');
     const serverQueue = queue.get(command.guild.id);
 
     if (!command.member.voice.channel) {

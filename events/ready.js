@@ -47,7 +47,7 @@ module.exports = {
                 console.log('Successfully registered application commands.');
             }
             catch (error) {
-                console.error(`Missing access: ${error}`);
+                console.error(`Missing access: ${error} for ID: ${id}`);
             }
         }
     },

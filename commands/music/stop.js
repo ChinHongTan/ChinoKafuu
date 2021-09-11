@@ -2,8 +2,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const CommandReply = require('../../functions/commandReply.js');
 const commandReply = new CommandReply();
 function stop(command, language) {
-    const queueData = require('../../data/queueData');
-    const { queue } = queueData;
+    const { queue } = require('../../data/queueData');
     const serverQueue = queue.get(command.guild.id);
 
     if (!command.member.voice.channel) {
@@ -19,13 +18,13 @@ module.exports = {
     name: 'stop',
     guildOnly: true,
     description: true,
-    execute(message, _args, language) {
-        stop(message, language);
+    async execute(message, _args, language) {
+        await stop(message, language);
     },
     slashCommand: {
         data: new SlashCommandBuilder(),
         async execute(interaction, language) {
-            stop(interaction, language);
+            await stop(interaction, language);
         },
     },
 };

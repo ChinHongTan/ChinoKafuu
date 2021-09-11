@@ -6,8 +6,7 @@ const { MessageEmbed } = require('discord.js');
 const DynamicEmbed = require('../../functions/dynamicEmbed');
 const dynamicEmbed = new DynamicEmbed();
 function queueFunc(command, language) {
-    const queueData = require('../../data/queueData');
-    const { queue } = queueData;
+    const { queue } = require('../../data/queueData');
     const serverQueue = queue.get(command.guild.id);
     const array_chunks = (array, chunkSize) => Array(Math.ceil(array.length / chunkSize)).fill().map((_, index) => index * chunkSize).map((begin) => array.slice(begin, begin + chunkSize));
 

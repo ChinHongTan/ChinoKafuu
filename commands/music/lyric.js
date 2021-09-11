@@ -7,8 +7,7 @@ const Genius = require('genius-lyrics');
 const geniusToken = process.env.GENIUS || require('../../config/config.json').genius_token;
 const Client = new Genius.Client(geniusToken);
 async function lyric(command, args, language) {
-    const queueData = require('../../data/queueData');
-    const { queue } = queueData;
+    const { queue } = require('../../data/queueData');
     const serverQueue = queue.get(command.guild.id)
 
     if (!command.member.voice.channel) {

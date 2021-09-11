@@ -5,8 +5,7 @@ const { format } = require('../../functions/musicFunctions');
 const { MessageEmbed } = require('discord.js');
 const progressbar = require('string-progressbar');
 function nowplaying(command, language) {
-    const queueData = require('../../data/queueData');
-    const { queue } = queueData;
+    const { queue } = require('../../data/queueData');
     const serverQueue = queue.get(command.guild.id);
     const resource = serverQueue?.resource;
 
