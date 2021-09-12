@@ -178,7 +178,6 @@ async function play(command, args, language) {
         );
     msg = await msg.edit({ content: language.choose, components: [row] });
     const filter = (interaction) => {
-        interaction.deferReply();
         return interaction.customId === 'select' && interaction.user.id === command.member.id;
     };
     const collector = msg.createMessageComponentCollector({ filter, time: 100000 });

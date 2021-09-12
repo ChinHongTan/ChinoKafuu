@@ -12,7 +12,7 @@ function stop(command, language) {
     if (!serverQueue) return commandReply.reply(command, language.noSong, 'RED');
 
     serverQueue.songs = [];
-    serverQueue.player.end();
+    serverQueue.player.stop();
 }
 module.exports = {
     name: 'stop',

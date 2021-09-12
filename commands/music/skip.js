@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const CommandReply = require('../../functions/commandReply.js');
 const commandReply = new CommandReply();
-function skip(command, language) {
+async function skip(command, language) {
     const { queue } = require('../../data/queueData');
     const serverQueue = queue.get(command.guild.id);
 
@@ -11,20 +11,20 @@ function skip(command, language) {
     if (!serverQueue) {
         return commandReply.reply(command, language.cantSkip, 'RED');
     }
-    serverQueue.player.end();
+    serverQueue.player.stop();
 }
 module.exports = {
     name: 'skip',
     guildOnly: true,
     aliases: ['next'],
     description: true,
-    execute(message, _args, language) {
-        skip(message, language);
+    async execute(message, _args, language) {
+        await skip(message, language);
     },
     slashCommand: {
         data: new SlashCommandBuilder(),
         async execute(interaction, language) {
-            skip(interaction, language);
+            await skip(interaction, language);
         },
     },
 };

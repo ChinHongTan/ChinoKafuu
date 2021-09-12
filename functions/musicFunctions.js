@@ -10,7 +10,6 @@ Ffmpeg.setFfmpegPath(ffmpegPath);
 const { Util, MessageEmbed } = require('discord.js');
 const scdl = require('soundcloud-downloader').default;
 const queueData = require('../data/queueData');
-const scID = process.env.SCID || require('../config/config.json').scID;
 const {
     AudioPlayerStatus,
     StreamType,
@@ -86,7 +85,12 @@ async function play(guild, song, message) {
         .setTimestamp(Date.now())
         .addField('播放者', `<@!${serverQueue.songs[0].requseter}>`)
         .setFooter('音樂系統', message.client.user.displayAvatarURL());
-    serverQueue.textChannel.send({ embeds: [embed] });
+    if (serverQueue.textChannel.lastMessage === message) {
+        await commandReply.edit(message, embed);
+    }
+    else {
+        serverQueue.textChannel.send({ embeds: [embed] });
+    }
 }
 function hmsToSecondsOnly(str) {
     const p = str.split(':');

@@ -22,8 +22,7 @@ module.exports = {
         snipeWithGuild.snipes = snipes;
         const query = { id: message.guild.id };
         const options = { upsert: true };
-        const replacement = snipeWithGuild;
-        collection.replaceOne(query, replacement, options);
+        await collection.replaceOne(query, snipeWithGuild, options);
     },
     async storeEditSnipes(oldMessage, newMessage) {
         const collection = oldMessage.client.editSnipeCollection;
@@ -50,30 +49,29 @@ module.exports = {
         editSnipeWithGuild.editSnipe = editSnipes;
         const query = { id: oldMessage.guild.id };
         const options = { upsert: true };
-        const replacement = editSnipeWithGuild;
-        collection.replaceOne(query, replacement, options);
+        await collection.replaceOne(query, editSnipeWithGuild, options);
     },
     async dynamic(oldState, newState) {
         if (newState.member.user.bot) return;
-        const mainChannel = oldState.guild.channels.cache.find((channel) => channel.id === '860456123953840128');
+        const mainChannel = oldState.guild.channels.cache.find((channel) => channel.id === '881378732705718292');
         if (mainChannel) {
             const channels = mainChannel.parent.children;
             channels.each((channel) => {
-                if (channel.id === '860456123953840128') return;
+                if (channel.id === '881378732705718292') return;
                 if (channel.members.size < 1) channel.delete();
             });
         }
-        if (newState.channelId === '860456123953840128') {
+        if (newState.channelId === '881378732705718292') {
             const voiceChannel = await newState.guild.channels
                 .create(`${newState.member.displayName}的頻道`, {
                     type: 'GUILD_VOICE',
                     bitrate: 256000,
                     userLimit: 99,
                     parent: newState.guild.channels.cache.find(
-                        (channel) => channel.id === '860456123953840128',
+                        (channel) => channel.id === '881378732705718292',
                     ).parent,
                 });
-            newState.member.voice.setChannel(voiceChannel);
+            await newState.member.voice.setChannel(voiceChannel);
         }
     },
     async sendWelcomeMessage(member) {
@@ -153,12 +151,15 @@ module.exports = {
                 }
                 else {
                     matrix[i][j] = Math.min(
-                        matrix[i - 1][j - 1] + 1, // substitution
+                        // substitution
+                        matrix[i - 1][j - 1] + 1,
                         Math.min(
-                            matrix[i][j - 1] + 1, // insertion
+                            matrix[i][j - 1] + 1,
+                            // insertion
                             matrix[i - 1][j] + 1,
                         ),
-                    ); // deletion
+                        // deletion
+                    );
                 }
             }
         }

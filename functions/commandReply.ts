@@ -18,11 +18,11 @@ class CommandReply {
     // edit a message or interaction
     async edit(command: Message | CommandInteraction, response?: MessageEmbed | string, color?: ColorResolvable) {
         if (command instanceof Message) {
-            if (response instanceof MessageEmbed) return command.edit({ embeds: [response] });
-            return command.edit({ embeds: [{ description: response, color: color }] });
+            if (response instanceof MessageEmbed) return command.edit({ embeds: [response], components: [], content: '\u200b' });
+            return command.edit({ embeds: [{ description: response, color: color }], components: [], content: '\u200b' });
         }
-        if (response instanceof MessageEmbed) return command.editReply({ embeds: [response] });
-        return command.editReply( { embeds: [{ description: response, color: color }] });
+        if (response instanceof MessageEmbed) return command.editReply({ embeds: [response], components: [], content: '\u200b' });
+        return command.editReply( { embeds: [{ description: response, color: color }], components: [], content: '\u200b' });
     }
     // reply with multiple embeds
     async multiReply(command: Message | CommandInteraction, response: MessageEmbed[]) {

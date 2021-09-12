@@ -11,7 +11,7 @@ function clear(command, language) {
 
     if (!serverQueue) return commandReply.reply(command, language.noSong, 'RED');
 
-    serverQueue.songs = [];
+    serverQueue.songs.splice(1);
 }
 module.exports = {
     name: 'clear',

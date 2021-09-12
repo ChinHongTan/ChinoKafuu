@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const CommandReply = require('../../functions/commandReply.js');
 const commandReply = new CommandReply();
-function remove(command, args, language) {
+async function remove(command, args, language) {
     const { queue } = require('../../data/queueData');
     const serverQueue = queue.get(command.guild.id);
     if (!command.member.voice.channel) {
