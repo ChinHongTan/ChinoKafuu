@@ -69,3 +69,8 @@ for (const file of eventFiles) {
     client.guildOptions = db.collection('guildoptions');
     await client.login(token);
 })();
+
+// catch errors so that code wouldn't stop
+process.on('unhandledRejection', error => {
+    console.error('Unhandled promise rejection:', error);
+});
