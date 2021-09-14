@@ -8,10 +8,8 @@ async function setLanguage(command, args, language) {
     if (!args.length > 0) return commandReply.reply(command, language.noArgs, 'RED');
     if (args[0] !== 'en_US' && args[0] !== 'zh_CN' && args[0] !== 'zh_TW') return commandReply.reply(command, language.languageNotSupported, 'RED');
 
-    const guildOption = {
-        id: command.guild.id,
-        options: { language: args[0] },
-    };
+    const guildOption = await collection.findOne({ id: command.guild.id }) ?? { id: command.guild.id, options: {} };
+    guildOption.options['language'] = args[0];
 
     const query = { id: command.guild.id };
     const options = { upsert: true };
