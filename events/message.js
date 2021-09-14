@@ -13,7 +13,7 @@ module.exports = {
         };
         const language = client.language[guildOption.options.language];
 
-        if (message.author.bot && !message.author.id === '761766088337391626') return;
+        if (message.author.bot && !(message.author.id === '761766088337391626')) return;
         if (!message.content.startsWith(prefix)) return;
 
         const args = message.content.slice(prefix.length).trim().split(/\s+/);

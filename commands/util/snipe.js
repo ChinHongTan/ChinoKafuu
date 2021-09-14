@@ -35,13 +35,13 @@ module.exports = {
     guildOnly: true,
     description: true,
     async execute(message, args, language) {
-        snipe(message, args, language);
+        await snipe(message, args, language);
     },
     slashCommand: {
         data: new SlashCommandBuilder()
             .addIntegerOption((option) => option.setName('number').setDescription('message to snipe')),
         async execute(interaction, language) {
-            snipe(interaction, interaction.options.getInteger('number') ?? 1, language);
+            await snipe(interaction, interaction.options.getInteger('number') ?? 1, language);
         },
     },
 };
