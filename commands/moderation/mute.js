@@ -10,7 +10,7 @@ async function mute(command, args = []) {
 
     const taggedUser = command instanceof CommandInteraction ? args[0] : command.mentions.members.first();
     if (!taggedUser) return commandReply.edit(command, ':warning: | You need to tag a user in order to mute them!', 'YELLOW');
-    if (taggedUser.bot) return commandReply.edit(command, ':warning: | You can\'t mute bots!');
+    if (taggedUser.user.bot) return commandReply.edit(command, ':warning: | You can\'t mute bots!', 'YELLOW');
     if (taggedUser.id === command.member.user.id) return commandReply.edit(command, ':x: | You Cannot Mute Yourself!', 'RED');
     if (taggedUser.permissions.has('ADMINISTRATOR')) return commandReply.edit(command, ':x: | You cannot mute an admin!', 'RED');
     if (taggedUser.roles.highest.comparePositionTo(command.guild.me.roles.highest) >= 0 && (taggedUser.roles)) {
@@ -41,7 +41,8 @@ async function mute(command, args = []) {
     }
     if (taggedUser.roles.cache.has(muteRole.id)) return commandReply.edit(command, ':x: | User is already muted!', 'RED');
     await taggedUser.roles.set([muteRole]);
-    const reason = args[1] ? args.shift().join(' ') : 'None';
+    args.shift();
+    const reason = args[0] ? args.join(' ') : 'None';
     const query = { id: command.guild.id };
     const options = { upsert: true };
     await collection.replaceOne(query, guildOption, options);
