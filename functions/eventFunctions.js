@@ -65,7 +65,6 @@ module.exports = {
             const voiceChannel = await newState.guild.channels
                 .create(`${newState.member.displayName}的頻道`, {
                     type: 'GUILD_VOICE',
-                    bitrate: 256000,
                     userLimit: 99,
                     parent: newState.guild.channels.cache.find(
                         (channel) => channel.id === '881378732705718292',
