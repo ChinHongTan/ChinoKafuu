@@ -39,6 +39,7 @@ async function mute(command, args = []) {
             console.log(e);
         }
     }
+    guildOption.options['muteRole'] = muteRole;
     if (taggedUser.roles.cache.has(muteRole.id)) return commandReply.edit(command, ':x: | User is already muted!', 'RED');
     await taggedUser.roles.set([muteRole]);
     args.shift();
