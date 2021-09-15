@@ -21,7 +21,7 @@
   "license": "ISC",
   "dependencies": {
     "@discordjs/builders": "^0.6.0",
-    "@discordjs/opus": "^0.5.3",
+    "@discordjs/opus": "^0.6.0",
     "@discordjs/rest": "^0.1.0-canary.0",
     "@discordjs/voice": "^0.6.0",
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
