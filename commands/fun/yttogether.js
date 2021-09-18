@@ -6,7 +6,7 @@ async function yttogether(command, language) {
     const { client } = command;
     client.discordTogether = new DiscordTogether(client);
     if (command.member.voice.channel) {
-        const invite = await client.discordTogether.createTogetherCode(command.member.voice.channelID, 'youtube');
+        const invite = await client.discordTogether.createTogetherCode(command.member.voice.channel.id, 'youtube');
         return commandReply.reply(command, invite.code, 'BLUE');
     }
     commandReply.reply(command, language.notInVC, 'RED');
