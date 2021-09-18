@@ -46,7 +46,7 @@
     "mongodb": "^4.1.0",
     "nana-api": "^1.1.4",
     "nhentai-js": "^4.0.0",
-    "node-fetch": "^3.0.0",
+    "node-fetch": "^2.6.2",
     "novelcovid": "^3.0.2",
     "sagiri": "^3.1.1",
     "solenolyrics": "^5.0.0",
