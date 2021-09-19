@@ -8,7 +8,7 @@ const geniusToken = process.env.GENIUS || require('../../config/config.json').ge
 const Client = new Genius.Client(geniusToken);
 async function lyric(command, args, language) {
     const { queue } = require('../../data/queueData');
-    const serverQueue = queue.get(command.guild.id)
+    const serverQueue = queue.get(command.guild.id);
 
     if (!command.member.voice.channel) {
         return commandReply.reply(command, language.notInVC, 'RED');
@@ -65,7 +65,7 @@ module.exports = {
         data: new SlashCommandBuilder()
             .addStringOption((option) => option.setName('keyword').setDescription('Song title to search for lyrics')),
         async execute(interaction, args, language) {
-            await lyric(interaction, interaction.options.getString('keyword'), language);
+            await lyric(interaction, [interaction.options.getString('keyword')], language);
         },
     },
 };

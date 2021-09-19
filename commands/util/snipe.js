@@ -41,7 +41,7 @@ module.exports = {
         data: new SlashCommandBuilder()
             .addIntegerOption((option) => option.setName('number').setDescription('message to snipe')),
         async execute(interaction, language) {
-            await snipe(interaction, interaction.options.getInteger('number') ?? 1, language);
+            await snipe(interaction, [interaction.options.getInteger('number') ?? 1], language);
         },
     },
 };

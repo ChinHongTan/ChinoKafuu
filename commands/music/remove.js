@@ -36,7 +36,7 @@ module.exports = {
         data: new SlashCommandBuilder()
             .addIntegerOption((option) => option.setName('index').setDescription('song to remove').setRequired(true)),
         async execute(interaction, language) {
-            await remove(interaction, interaction.options.getInteger('index'), language);
+            await remove(interaction, [interaction.options.getInteger('index')], language);
         },
     },
 };
