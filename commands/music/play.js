@@ -14,7 +14,7 @@ const { MessageActionRow, MessageSelectMenu, Message } = require('discord.js');
 const { waitimport, handleVideo } = require('../../functions/musicFunctions');
 const ytrx = /(?:youtube\.com.*(?:\?|&)(?:v|list)=|youtube\.com.*embed\/|youtube\.com.*v\/|youtu\.be\/)((?!videoseries)[a-zA-Z0-9_-]*)/;
 const scrxt = new RegExp('^(?<track>https://soundcloud.com/(?:(?!sets|stats|groups|upload|you|mobile|stream|messages|discover|notifications|terms-of-use|people|pages|jobs|settings|logout|charts|imprint|popular)(?:[a-z0-9-_]{1,25}))/(?:(?:(?!sets|playlist|stats|settings|logout|notifications|you|messages)(?:[a-z0-9-_]{1,100}))(?:/s-[a-zA-Z0-9-_]{1,10})?))(?:[a-z0-9-?=/]*)$');
-const sprxtrack = /(http[s]?:\/\/)?(open.spotify.com)\//;
+const sprxtrack = /(http[s]?:\/\/)?(open\.spotify\.com)\//;
 
 async function play(command, args, language) {
     const { queue } = require('../../data/queueData');
