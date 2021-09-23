@@ -16,11 +16,11 @@ module.exports = {
                 .setColor('BLUE')
                 .setThumbnail(message.client.user.displayAvatarURL());
             commands.forEach((command) => {
-                embed.addField(command.name, language[command.name] || command.description, true);
+                embed.addField(command.name ?? 'none', language[command.name] ?? 'none', true);
             });
 
             return message.author
-                .send({ split: true, embed })
+                .send({ split: true, embeds: [embed] })
                 .then(() => {
                     if (message.channel.type === 'dm') return;
                     message.reply(language.helpSend);
@@ -45,6 +45,6 @@ module.exports = {
             .addField(language.cmdUsage, `${prefix}${command.name} ${command.usage || ''}`, true)
             .addField(language.cmdCooldown, command.cooldown || 3, true);
 
-        message.channel.send(embed, { split: true });
+        message.channel.send({ split: true, embeds: [embed] });
     },
 };
