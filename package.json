@@ -31,7 +31,7 @@
     "better-hastebin": "^1.0.0",
     "btoa": "^1.2.1",
     "canvas": "^2.8.0",
-    "discord-api-types": "^0.23.1",
+    "discord-api-types": "^0.24.0",
     "discord-backup": "^3.0.1",
     "discord-together": "^1.1.62",
     "discord.js": "^13.1.0",
