@@ -27,7 +27,7 @@
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "aki-api": "^6.0.7",
     "ascii2d": "^3.0.1",
-    "axios": "^0.21.1",
+    "axios": "^0.23.0",
     "better-hastebin": "^1.0.0",
     "btoa": "^1.2.1",
     "canvas": "^2.8.0",
