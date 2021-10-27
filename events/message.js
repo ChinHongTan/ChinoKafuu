@@ -1,5 +1,5 @@
 module.exports = {
-    name: 'message',
+    name: 'messageCreate',
     async execute(message, client) {
         const { getEditDistance } = require('../functions/eventFunctions');
         const prefix = process.env.PREFIX || require('../config/config.json').prefix;

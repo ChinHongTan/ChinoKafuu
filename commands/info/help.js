@@ -8,7 +8,6 @@ module.exports = {
         const prefix = process.env.PREFIX || require('../../config/config.json').prefix;
         const { commands } = message.client;
         const Discord = require('discord.js');
-
         if (!args.length) {
             const embed = new Discord.MessageEmbed()
                 .setTitle(language.helpTitle)
@@ -18,7 +17,6 @@ module.exports = {
             commands.forEach((command) => {
                 embed.addField(command.name ?? 'none', language[command.name] ?? 'none', true);
             });
-
             return message.author
                 .send({ split: true, embeds: [embed] })
                 .then(() => {
@@ -44,7 +42,6 @@ module.exports = {
             .addField(language.cmdDescription, language[command.name])
             .addField(language.cmdUsage, `${prefix}${command.name} ${command.usage || ''}`, true)
             .addField(language.cmdCooldown, command.cooldown || 3, true);
-
         message.channel.send({ split: true, embeds: [embed] });
     },
 };

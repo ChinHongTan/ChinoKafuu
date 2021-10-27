@@ -104,7 +104,7 @@ function hmsToSecondsOnly(str) {
     return s;
 }
 module.exports = {
-    async waitimport(name, length, message) {
+    async waitImport(name, length, message) {
         // eslint-disable-next-line no-async-promise-executor
         return new Promise(async (resolve, reject) => {
             let embed = new MessageEmbed()

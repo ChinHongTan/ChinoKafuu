@@ -12,15 +12,15 @@ module.exports = {
 
         const backupID = args[0];
         if (!backupID) return message.channel.send(language.invalidBackupID);
-        let rawdata;
+        let rawData;
         try {
-            rawdata = fs.readFileSync(`./my-backups/${backupID}.json`);
+            rawData = fs.readFileSync(`./my-backups/${backupID}.json`);
         }
         catch (err) {
             return message.channel.send(language.noBackupFound.replace('${backupID}', backupID));
         }
-        const serverbackup = JSON.parse(rawdata);
-        const data = JSON.stringify(serverbackup, null, 2);
+        const serverBackup = JSON.parse(rawData);
+        const data = JSON.stringify(serverBackup, null, 2);
         const filename = `${backupID}.json`;
         fs.writeFileSync(`./my-backups/${filename}`, data);
         // Fetching the backup to know if it exists

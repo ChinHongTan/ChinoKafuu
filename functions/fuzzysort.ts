@@ -13,7 +13,7 @@ interface Options {
     limit?: number;
 }
 
-class FuzzySort {
+class FuzzySort{
     message: Message;
     array: object[];
     constructor(message: Message, searchArray?: object[]) {

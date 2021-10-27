@@ -6,7 +6,9 @@ module.exports = {
     execute(message, args, language) {
         const backup = require('discord-backup');
         const Discord = require('discord.js');
+        
         const backupID = args[0];
+        
         if (!backupID) return message.channel.send(language.invalidBackupID);
         // Fetch the backup
         backup

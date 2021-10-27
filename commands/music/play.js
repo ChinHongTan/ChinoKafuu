@@ -11,7 +11,7 @@ const Spotify = require('../../functions/spotify');
 const spotify = new Spotify(SpotifyClientID, SpotifyClientSecret);
 const { MessageActionRow, MessageSelectMenu, Message } = require('discord.js');
 
-const { waitimport, handleVideo } = require('../../functions/musicFunctions');
+const { waitImport, handleVideo } = require('../../functions/musicFunctions');
 const ytrx = /(?:youtube\.com.*(?:\?|&)(?:v|list)=|youtube\.com.*embed\/|youtube\.com.*v\/|youtu\.be\/)((?!videoseries)[a-zA-Z0-9_-]*)/;
 const scrxt = new RegExp('^(?<track>https://soundcloud.com/(?:(?!sets|stats|groups|upload|you|mobile|stream|messages|discover|notifications|terms-of-use|people|pages|jobs|settings|logout|charts|imprint|popular)(?:[a-z0-9-_]{1,25}))/(?:(?:(?!sets|playlist|stats|settings|logout|notifications|you|messages)(?:[a-z0-9-_]{1,100}))(?:/s-[a-zA-Z0-9-_]{1,10})?))(?:[a-z0-9-?=/]*)$');
 const sprxtrack = /(http[s]?:\/\/)?(open\.spotify\.com)\//;
@@ -56,7 +56,7 @@ async function play(command, args, language) {
         }
         const playlist = await ytpl(link, { limit: Infinity });
         if (!playlist) return;
-        const result = await waitimport(playlist.title, playlist.estimatedItemCount, command);
+        const result = await waitImport(playlist.title, playlist.estimatedItemCount, command);
         if (result) {
             playlist.items.forEach((video) => handleVideo(video, voiceChannel, true, serverQueue, 'ytlist', command));
         }
@@ -69,7 +69,7 @@ async function play(command, args, language) {
         let result;
 
         if (link.includes('track')) {
-            result = await spotify.gettrack(Id);
+            result = await spotify.getTrack(Id);
             const videos = await ytsr.search(
                 `${result.artists[0].name} ${result.name}`,
                 { limit: 1 },
@@ -93,12 +93,12 @@ async function play(command, args, language) {
         }
 
         if (link.includes('playlist')) {
-            result = await spotify.getplaylist(Id);
+            result = await spotify.getPlaylist(Id);
 
             const title = result.name;
             const lenght = result.tracks.total;
 
-            const wait = await waitimport(title, lenght, command);
+            const wait = await waitImport(title, lenght, command);
             if (!wait) {
                 const videos = await ytsr.search(
                     `${result.tracks.items[0].track.artists[0].name} ${result.tracks.items[0].track.name}`,
@@ -122,7 +122,7 @@ async function play(command, args, language) {
                     break;
                 }
                 else {
-                    result = await spotify._make_spotify_req(result.tracks.next);
+                    result = await spotify.makeRequest(result.tracks.next);
                 }
             }
             return m.edit(language.importPlaylistDone.replace('${title}', title));
@@ -135,7 +135,7 @@ async function play(command, args, language) {
                 console.log(err);
                 return commandReply.edit(command, language.noResult, 'RED');
             });
-            const wait = await waitimport(data.title, data.tracks.length, command);
+            const wait = await waitImport(data.title, data.tracks.length, command);
             let m;
             if (wait) {
                 m = await commandReply.edit(command, language.importPlaylist1.replace('${data.title}', data.title), 'BLUE');
