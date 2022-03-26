@@ -45,6 +45,17 @@
     http-response-object "^3.0.1"
     parse-cache-control "^1.0.1"
 
+"@discordjs/builders@^0.12.0":
+  version "0.12.0"
+  resolved "https://registry.npmjs.org/@discordjs/builders/-/builders-0.12.0.tgz"
+  integrity sha512-Vx2MjUZd6QVo1uS2uWt708Fd6cHWGFblAvbpL5EBO+kLl0BADmPwwvts+YJ/VfSywed6Vsk6K2cEooR/Ytjhjw==
+  dependencies:
+    "@sindresorhus/is" "^4.3.0"
+    discord-api-types "^0.26.1"
+    ts-mixer "^6.0.0"
+    tslib "^2.3.1"
+    zod "^3.11.6"
+
 "@discordjs/builders@^0.6.0":
   version "0.6.0"
   resolved "https://registry.npmjs.org/@discordjs/builders/-/builders-0.6.0.tgz"
@@ -52,17 +63,6 @@
   dependencies:
     "@sindresorhus/is" "^4.0.1"
     discord-api-types "^0.22.0"
-    ow "^0.27.0"
-    ts-mixer "^6.0.0"
-    tslib "^2.3.1"
-
-"@discordjs/builders@^0.7.0":
-  version "0.7.0"
-  resolved "https://registry.npmjs.org/@discordjs/builders/-/builders-0.7.0.tgz"
-  integrity sha512-0dnRH5ABy6DfyPU+gYeIE16P6+fnc9BSK53r0/jCe0aJiBQIVLcPrA7r/5vBV0MaoQOeuhlRQ2vwoawABDkn5w==
-  dependencies:
-    "@sindresorhus/is" "^4.2.0"
-    discord-api-types "^0.24.0"
     ow "^0.27.0"
     ts-mixer "^6.0.0"
     tslib "^2.3.1"
@@ -268,10 +268,10 @@
   resolved "https://registry.npmjs.org/@sindresorhus/is/-/is-0.14.0.tgz"
   integrity sha512-9NET910DNaIPngYnLLPeg+Ogzqsi9uM4mSboU5y6p8S5DzMTVEsJZrawi+BoDNUVBa2DhJqQYUFvMDfgU062LQ==
 
-"@sindresorhus/is@^4.0.0", "@sindresorhus/is@^4.0.1", "@sindresorhus/is@^4.2.0":
-  version "4.2.0"
-  resolved "https://registry.npmjs.org/@sindresorhus/is/-/is-4.2.0.tgz"
-  integrity sha512-VkE3KLBmJwcCaVARtQpfuKcKv8gcBmUubrfHGF84dXuuW6jgsRYxPtzcIhPyK9WAPpRt2/xY6zkD9MnRaJzSyw==
+"@sindresorhus/is@^4.0.0", "@sindresorhus/is@^4.0.1", "@sindresorhus/is@^4.3.0":
+  version "4.6.0"
+  resolved "https://registry.npmjs.org/@sindresorhus/is/-/is-4.6.0.tgz"
+  integrity sha512-t09vSN3MdfsyCHoFcTRCH/iUtG7OJ0CsjzB8cjAmKc/va/kIgeDI/TxsigdncE/4be734m0cvIYwNaV4i2XqAw==
 
 "@szmarczak/http-timer@^1.1.2":
   version "1.1.2"
@@ -1167,6 +1167,11 @@ discord-api-types@^0.24.0:
   version "0.24.0"
   resolved "https://registry.npmjs.org/discord-api-types/-/discord-api-types-0.24.0.tgz"
   integrity sha512-X0uA2a92cRjowUEXpLZIHWl4jiX1NsUpDhcEOpa1/hpO1vkaokgZ8kkPtPih9hHth5UVQ3mHBu/PpB4qjyfJ4A==
+
+discord-api-types@^0.26.1:
+  version "0.26.1"
+  resolved "https://registry.npmjs.org/discord-api-types/-/discord-api-types-0.26.1.tgz"
+  integrity sha512-T5PdMQ+Y1MEECYMV5wmyi9VEYPagEDEi4S0amgsszpWY0VB9JJ/hEvM6BgLhbdnKky4gfmZEXtEEtojN8ZKJQQ==
 
 discord-backup@^3.0.1:
   version "3.0.1"
@@ -2604,7 +2609,7 @@ node-addon-api@^4.0.0:
   resolved "https://registry.npmjs.org/node-addon-api/-/node-addon-api-4.2.0.tgz"
   integrity sha512-eazsqzwG2lskuzBqCGPi7Ac2UgOoMz8JVOXVhTvvPDYhthvNpefx8jWD8Np7Gv+2Sz0FlPWZk0nJV0z598Wn8Q==
 
-node-fetch@*, node-fetch@^2.6.0, node-fetch@^2.6.1, node-fetch@^2.6.5, node-fetch@^2.6.7:
+node-fetch@*, node-fetch@^2.6.0, node-fetch@^2.6.1, node-fetch@^2.6.2, node-fetch@^2.6.5:
   version "2.6.7"
   resolved "https://registry.npmjs.org/node-fetch/-/node-fetch-2.6.7.tgz"
   integrity sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ==
@@ -3348,7 +3353,7 @@ tr46@^2.1.0:
 
 tr46@~0.0.3:
   version "0.0.3"
-  resolved "https://registry.yarnpkg.com/tr46/-/tr46-0.0.3.tgz#8184fd347dac9cdc185992f3a6622e14b9d9ab6a"
+  resolved "https://registry.npmjs.org/tr46/-/tr46-0.0.3.tgz"
   integrity sha1-gYT9NH2snNwYWZLzpmIuFLnZq2o=
 
 ts-mixer@^6.0.0:
@@ -3516,7 +3521,7 @@ w3c-xmlserializer@^2.0.0:
 
 webidl-conversions@^3.0.0:
   version "3.0.1"
-  resolved "https://registry.yarnpkg.com/webidl-conversions/-/webidl-conversions-3.0.1.tgz#24534275e2a7bc6be7bc86611cc16ae0a5654871"
+  resolved "https://registry.npmjs.org/webidl-conversions/-/webidl-conversions-3.0.1.tgz"
   integrity sha1-JFNCdeKnvGvnvIZhHMFq4KVlSHE=
 
 webidl-conversions@^5.0.0:
@@ -3543,7 +3548,7 @@ whatwg-mimetype@^2.3.0:
 
 whatwg-url@^5.0.0:
   version "5.0.0"
-  resolved "https://registry.yarnpkg.com/whatwg-url/-/whatwg-url-5.0.0.tgz#966454e8765462e37644d3626f6742ce8b70965d"
+  resolved "https://registry.npmjs.org/whatwg-url/-/whatwg-url-5.0.0.tgz"
   integrity sha1-lmRU6HZUYuN2RNNib2dCzotwll0=
   dependencies:
     tr46 "~0.0.3"
@@ -3675,3 +3680,8 @@ ytpl@^2.2.3:
   integrity sha512-d18HibT8wzEWzWsXFS6u6kUKCCFL20roFVwpjyGCzl+nP8sOAz5xSLafxLflkkoeXJU8AFuO7BEsJXIREASvFQ==
   dependencies:
     miniget "^4.2.1"
+
+zod@^3.11.6:
+  version "3.14.2"
+  resolved "https://registry.npmjs.org/zod/-/zod-3.14.2.tgz"
+  integrity sha512-iF+wrtzz7fQfkmn60PG6XFxaWBhYYKzp2i+nv24WbLUWb2JjymdkHlzBwP0erpc78WotwP5g9AAu7Sk8GWVVNw==
