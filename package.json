@@ -60,7 +60,7 @@
     "ytpl": "^2.2.3"
   },
   "devDependencies": {
-    "@types/ffmpeg-static": "3.0.0",
+    "@types/ffmpeg-static": "3.0.1",
     "@types/node": "16.9.2",
     "@types/node-fetch": "3.0.3",
     "@types/pg": "8.6.1",
