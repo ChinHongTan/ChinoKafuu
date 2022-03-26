@@ -356,10 +356,10 @@
   resolved "https://registry.npmjs.org/@types/node/-/node-10.17.60.tgz"
   integrity sha512-F0KIgDJfy2nA3zMLmWGKxcH2ZVEtCZXHHdOQs2gSaQ27+lNeEfGxzkIw90aXswATX7AZ33tahPbzy6KAfUreVw==
 
-"@types/pg@8.6.1":
-  version "8.6.1"
-  resolved "https://registry.npmjs.org/@types/pg/-/pg-8.6.1.tgz"
-  integrity sha512-1Kc4oAGzAl7uqUStZCDvaLFqZrW9qWSjXOmBfdgyBP5La7Us6Mg4GBvRlSoaZMhQF/zSj1C8CtKMBkoiT8eL8w==
+"@types/pg@8.6.5":
+  version "8.6.5"
+  resolved "https://registry.npmjs.org/@types/pg/-/pg-8.6.5.tgz"
+  integrity sha512-tOkGtAqRVkHa/PVZicq67zuujI4Oorfglsr2IbKofDwBSysnaqSx7W1mDqFqdkGE6Fbgh+PZAl0r/BWON/mozw==
   dependencies:
     "@types/node" "*"
     pg-protocol "*"
