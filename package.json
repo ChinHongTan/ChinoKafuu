@@ -36,7 +36,7 @@
     "discord-together": "^1.1.62",
     "discord.js": "^13.1.0",
     "discord.js-akinator": "^3.0.2",
-    "ffmpeg-static": "^4.4.0",
+    "ffmpeg-static": "^5.0.0",
     "fluent-ffmpeg": "^2.1.2",
     "fuzzysort": "^1.1.4",
     "genius-lyrics": "^4.2.9",
