@@ -4,7 +4,7 @@ const commandReply = new CommandReply();
 const { MessageEmbed } = require('discord.js');
 const google = require('googlethis');
 
-async function googleFunc(command, keyword, language) {
+async function googleFunc(command, keyword, _language) {
     const options = {
         page: 0,
         safe: false,
@@ -37,13 +37,13 @@ async function googleFunc(command, keyword, language) {
             entry['value'] = value;
             fields.push(entry);
         }
-        let knowledgePanel = new MessageEmbed()
+        const knowledgePanel = new MessageEmbed()
             .setTitle(`Knowledge Panel: ${response.knowledge_panel.title ?? 'None'}`)
             .setDescription(response.knowledge_panel.description)
             .setURL(response.knowledge_panel.url)
             .setFields(fields)
             .setImage(response.knowledge_panel.images?.[0] ?? images?.[0]?.url ?? '')
-            .setColor('BLUE')
+            .setColor('BLUE');
         commandReply.edit(command, knowledgePanel);
     }
 }
@@ -51,9 +51,9 @@ async function googleFunc(command, keyword, language) {
 module.exports = {
     name: 'google',
     description: true,
-    async execute(message, args, language) {
-        let reply = await message.channel.send('Please wait...');
-        await googleFunc(reply, message.content.substr(message.content.indexOf(' ') + 1), language)
+    async execute(message, _args, language) {
+        const reply = await message.channel.send('Please wait...');
+        await googleFunc(reply, message.content.substr(message.content.indexOf(' ') + 1), language);
     },
     slashCommand: {
         data: new SlashCommandBuilder()

@@ -45,7 +45,7 @@ function help(interaction, args, language) {
         .addField(language.cmdDescription, language[command.name])
         .addField(language.cmdUsage, `${prefix}${command.name} ${command.usage || ''}`, true)
         .addField(language.cmdCooldown, `${command.cooldown || 3}`, true);
-    return interaction.reply({ split: true, embeds: [embed]});
+    return interaction.reply({ split: true, embeds: [embed] });
 }
 module.exports = {
     name: 'help',
@@ -60,7 +60,7 @@ module.exports = {
         data: new SlashCommandBuilder()
             .addStringOption((option) => option.setName('command').setDescription('Help for a specific command')),
         execute(interaction, language) {
-            let optionContent = interaction.options.getString('command');
+            const optionContent = interaction.options.getString('command');
             help(interaction, optionContent ? [optionContent] : [], language);
         },
     },

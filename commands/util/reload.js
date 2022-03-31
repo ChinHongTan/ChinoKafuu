@@ -1,9 +1,4 @@
-//------------------- not done ---------------------
-
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const CommandReply = require('../../functions/commandReply.js');
-const commandReply = new CommandReply();
-const { MessageEmbed } = require('discord.js');
 
 const fs = require('fs');
 
@@ -12,7 +7,7 @@ function reload(interaction, args, user) {
     const commandName = args[0].toLowerCase();
     const command = interaction.client.commands.get(commandName) || interaction.client.commands.find((cmd) => cmd.aliases && cmd.aliases.includes(commandName));
 
-    if (!command) return interaction.reply(`There is no command with name or alias \`${commandName}\`, ${message.author}!`);
+    if (!command) return interaction.reply(`There is no command with name or alias \`${commandName}\`, ${user}!`);
 
     const commandFolders = fs.readdirSync('./commands');
     const folderName = commandFolders.find((folder) => fs.readdirSync(`./commands/${folder}`).includes(`${commandName}.js`));
@@ -28,7 +23,7 @@ function reload(interaction, args, user) {
         console.error(error);
         interaction.reply(`There was an error while reloading a command \`${command.name}\`:\n\`${error.message}\``);
     }
-};
+}
 module.exports = {
     name: 'reload',
     description: true,
@@ -39,11 +34,11 @@ module.exports = {
     },
     slashCommand: {
         data: new SlashCommandBuilder()
-            .addStringOption((option) => 
+            .addStringOption((option) =>
                 option.setName('command')
                     .setDescription('Reload a command')
                     .setRequired(true)),
-        execute(interaction, language) {
+        execute(interaction, _language) {
             reload(interaction, [interaction.options.getString('command')], interaction.user);
         },
     },

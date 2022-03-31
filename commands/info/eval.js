@@ -30,12 +30,12 @@ module.exports = {
     cooldown: 5,
     slashCommand: {
         data: new SlashCommandBuilder()
-            .addStringOption((option) => 
+            .addStringOption((option) =>
                 option.setName('code')
                     .setDescription('Code to be evaled by the bot')
                     .setRequired(true)),
         execute(interaction, language) {
-            evalFunc(interaction, [interaction.options.getString('code')], language)
-        }
-    }
+            evalFunc(interaction, [interaction.options.getString('code')], language);
+        },
+    },
 };

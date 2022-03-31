@@ -33,7 +33,7 @@ class Spotify {
                 Authorization: `Bearer ${token}`,
             },
         });
-        if (response.status !== 200) throw `Issue making request to ${url} status ${response.status} error ${a}`;
+        if (response.status !== 200) throw `Issue making request to ${url} status ${response.status} error ${response.a}`;
         return response.data;
     }
 

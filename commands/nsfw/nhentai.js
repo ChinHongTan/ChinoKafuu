@@ -116,14 +116,14 @@ module.exports = {
     },
     slashCommand: {
         data: new SlashCommandBuilder()
-            .addIntegerOption((option) => 
+            .addIntegerOption((option) =>
                 option.setName('id')
                     .setDescription('Nhentai ID'))
-            .addStringOption((option) => 
+            .addStringOption((option) =>
                 option.setName('keyword')
                     .setDescription('Keyword to search in nhentai')),
         execute(interaction, language) {
-            nhentaiFunc(interaction, [interaction.options.getInteger('id')], language)
-        }
-    }
+            nhentaiFunc(interaction, [interaction.options.getInteger('id')], language);
+        },
+    },
 };

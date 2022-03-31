@@ -37,12 +37,12 @@ async function getAndReturnResponse(lang, code, command) {
     commandReply.edit(command, response.output);
 }
 
-async function runFromCommand(command, args, language) {
+async function runFromCommand(command, args, _language) {
     if (!args) return commandReply.reply(command, 'Usage: c!run <language> [code](with or without codeblock)', 'YELLOW');
 
     const codeLanguage = args.shift();
     let code = args[0].trim().replace(/^`+|`+$/g, '');
-    let lang = codeLanguage.replace(/^`+|`+$/g, '');
+    const lang = codeLanguage.replace(/^`+|`+$/g, '');
     if (!lang) return commandReply.reply(command, 'Invalid usage! Invalid language/code.', 'RED');
     if (/(^ $|^[0-9A-z]*$)/g.test(code.split('\n')[0])) {
         code = code.slice(code.split('\n')[0].length + 1);
@@ -52,18 +52,18 @@ async function runFromCommand(command, args, language) {
     await getAndReturnResponse(lang, code, command);
 }
 
-async function runFromMessage(message, args, language) {
+async function runFromMessage(message, args, _language) {
     if (!args) return message.channel.send('Usage: c!run <language> [code](with or without codeblock)');
 
     const codeLanguage = args.shift();
     let code = message.content.substring(prefix.length + 3 + codeLanguage.length + 1).trim().replace(/^`+|`+$/g, '');
-    let lang = codeLanguage.replace(/^`+|`+$/g, '');
+    const lang = codeLanguage.replace(/^`+|`+$/g, '');
     if (!lang) return message.channel.send('Invalid usage! Invalid language/code.');
     if (/(^ $|^[0-9A-z]*$)/g.test(code.split('\n')[0])) {
         code = code.slice(code.split('\n')[0].length + 1);
     }
     if (!code) return message.channel.send('Invalid usage! Invalid language/code.');
-    let reply = await message.channel.send('Please wait...');
+    const reply = await message.channel.send('Please wait...');
     await getAndReturnResponse(lang, code, reply);
 }
 
