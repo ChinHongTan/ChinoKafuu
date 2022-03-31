@@ -3448,10 +3448,10 @@
   "resolved" "https://registry.npmjs.org/tiny-typed-emitter/-/tiny-typed-emitter-2.1.0.tgz"
   "version" "2.1.0"
 
-"tio.js@^2.0.0":
-  "integrity" "sha512-AaR2aiwSwrPGkhYj0qaeKPEqUOrFgqqUAuWoHTrMUlBreY1MKi+8bATQZt4vA7EhYWlhpLpqx4cuVDMeDTZM8g=="
-  "resolved" "https://registry.npmjs.org/tio.js/-/tio.js-2.0.0.tgz"
-  "version" "2.0.0"
+"tio.js@^1.1.0":
+  "integrity" "sha512-NqSEXSn/ZVjF1stV8Up0A3uYjCDUIITpiUDFqPQiU70SKHg1qpzhIfpbPTjHHTag/qWofC6abYb0bnYSweBmDg=="
+  "resolved" "https://registry.npmjs.org/tio.js/-/tio.js-1.1.0.tgz"
+  "version" "1.1.0"
 
 "to-readable-stream@^1.0.0":
   "integrity" "sha512-Iq25XBt6zD5npPhlLVXGFN3/gyR2/qODcKNNyTMd4vbm39HUaOiAM4PMq0eMVC/Tkxz+Zjdsc55g9yyz+Yq00Q=="
