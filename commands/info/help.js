@@ -1,3 +1,52 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const CommandReply = require('../../functions/commandReply.js');
+const commandReply = new CommandReply();
+const { MessageEmbed } = require('discord.js');
+
+function sendHelp(user, interaction, language, embed) {
+    return user
+        .send({ split: true, embeds: [embed] })
+        .then(() => {
+            if (interaction.channel.type === 'dm') return;
+            commandReply.reply(interaction, language.helpSend, 'GREEN');
+        })
+        .catch((error) => {
+            console.error(`Could not send help DM to ${user.tag}.\n`, error);
+            commandReply.reply(interaction, language.cantDM, 'RED');
+        });
+}
+
+function help(interaction, args, language) {
+    const prefix = process.env.PREFIX || require('../../config/config.json').prefix;
+    const { commands } = interaction.client;
+    if (!args.length) {
+        const embed = new MessageEmbed()
+            .setTitle(language.helpTitle)
+            .setDescription(`${language.helpPrompt}\n${language.helpPrompt2.replace('${prefix}', prefix)}`)
+            .setColor('BLUE')
+            .setThumbnail(interaction.client.user.displayAvatarURL());
+        commands.forEach((command) => {
+            embed.addField(command.name ?? 'none', language[command.name] ?? 'none', true);
+        });
+        if (interaction.author) return sendHelp(interaction.author, interaction, language, embed);
+        return sendHelp(interaction.user, interaction, language, embed);
+    }
+
+    const name = args[0].toLowerCase();
+    const command = commands.get(name) || commands.find((c) => c.aliases && c.aliases.includes(name));
+
+    if (!command) return commandReply.reply(interaction, language.invalidcmd, 'RED');
+    const embed = new MessageEmbed()
+        .setTitle(`**${command.name}**`)
+        .setThumbnail(interaction.client.user.displayAvatarURL())
+        .setColor('BLUE')
+        .addField(language.cmdName, command.name, true)
+        .addField(language.cmdAliases, command?.aliases?.join(', ') || 'None', true)
+        .addField(language.cmdDescription, language[command.name])
+        .addField(language.cmdUsage, `${prefix}${command.name} ${command.usage || ''}`, true)
+        .addField(language.cmdCooldown, `${command.cooldown || 3}`, true);
+    return interaction.reply({ split: true, embeds: [embed]});
+}
 module.exports = {
     name: 'help',
     description: true,
@@ -5,43 +54,14 @@ module.exports = {
     usage: '[command name]',
     cooldown: 5,
     execute(message, args, language) {
-        const prefix = process.env.PREFIX || require('../../config/config.json').prefix;
-        const { commands } = message.client;
-        const Discord = require('discord.js');
-        if (!args.length) {
-            const embed = new Discord.MessageEmbed()
-                .setTitle(language.helpTitle)
-                .setDescription(`${language.helpPrompt}\n${language.helpPrompt2.replace('${prefix}', prefix)}`)
-                .setColor('BLUE')
-                .setThumbnail(message.client.user.displayAvatarURL());
-            commands.forEach((command) => {
-                embed.addField(command.name ?? 'none', language[command.name] ?? 'none', true);
-            });
-            return message.author
-                .send({ split: true, embeds: [embed] })
-                .then(() => {
-                    if (message.channel.type === 'dm') return;
-                    message.reply(language.helpSend);
-                })
-                .catch((error) => {
-                    console.error(`Could not send help DM to ${message.author.tag}.\n`, error);
-                    message.reply(language.cantDM);
-                });
-        }
-
-        const name = args[0].toLowerCase();
-        const command = commands.get(name) || commands.find((c) => c.aliases && c.aliases.includes(name));
-
-        if (!command) return message.reply(language.invalidcmd);
-        const embed = new Discord.MessageEmbed()
-            .setTitle(`**${command.name}**`)
-            .setThumbnail(message.client.user.displayAvatarURL())
-            .setColor('BLUE')
-            .addField(language.cmdName, command.name, true)
-            .addField(language.cmdAliases, command?.aliases?.join(', ') || 'None', true)
-            .addField(language.cmdDescription, language[command.name])
-            .addField(language.cmdUsage, `${prefix}${command.name} ${command.usage || ''}`, true)
-            .addField(language.cmdCooldown, command.cooldown || 3, true);
-        message.channel.send({ split: true, embeds: [embed] });
+        help(message, args, language);
+    },
+    slashCommand: {
+        data: new SlashCommandBuilder()
+            .addStringOption((option) => option.setName('command').setDescription('Help for a specific command')),
+        execute(interaction, language) {
+            let optionContent = interaction.options.getString('command');
+            help(interaction, optionContent ? [optionContent] : [], language);
+        },
     },
 };

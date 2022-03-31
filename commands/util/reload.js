@@ -1,29 +1,50 @@
+//------------------- not done ---------------------
+
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const CommandReply = require('../../functions/commandReply.js');
+const commandReply = new CommandReply();
+const { MessageEmbed } = require('discord.js');
+
 const fs = require('fs');
 
+function reload(interaction, args, user) {
+    if (!args.length) return interaction.channel.send(`You didn't pass any command to reload, ${user}!`);
+    const commandName = args[0].toLowerCase();
+    const command = interaction.client.commands.get(commandName) || interaction.client.commands.find((cmd) => cmd.aliases && cmd.aliases.includes(commandName));
+
+    if (!command) return interaction.reply(`There is no command with name or alias \`${commandName}\`, ${message.author}!`);
+
+    const commandFolders = fs.readdirSync('./commands');
+    const folderName = commandFolders.find((folder) => fs.readdirSync(`./commands/${folder}`).includes(`${commandName}.js`));
+
+    delete require.cache[require.resolve(`../${folderName}/${command.name}.js`)];
+
+    try {
+        const newCommand = require(`../${folderName}/${command.name}.js`);
+        interaction.client.commands.set(newCommand.name, newCommand);
+        interaction.reply(`Command \`${command.name}\` was reloaded!`);
+    }
+    catch (error) {
+        console.error(error);
+        interaction.reply(`There was an error while reloading a command \`${command.name}\`:\n\`${error.message}\``);
+    }
+};
 module.exports = {
     name: 'reload',
     description: true,
     args: true,
+    ownerOnly: true,
     execute(message, args) {
-        if (!args.length) return message.channel.send(`You didn't pass any command to reload, ${message.author}!`);
-        const commandName = args[0].toLowerCase();
-        const command = message.client.commands.get(commandName) || message.client.commands.find((cmd) => cmd.aliases && cmd.aliases.includes(commandName));
-
-        if (!command) return message.channel.send(`There is no command with name or alias \`${commandName}\`, ${message.author}!`);
-
-        const commandFolders = fs.readdirSync('./commands');
-        const folderName = commandFolders.find((folder) => fs.readdirSync(`./commands/${folder}`).includes(`${commandName}.js`));
-
-        delete require.cache[require.resolve(`../${folderName}/${command.name}.js`)];
-
-        try {
-            const newCommand = require(`../${folderName}/${command.name}.js`);
-            message.client.commands.set(newCommand.name, newCommand);
-            message.channel.send(`Command \`${command.name}\` was reloaded!`);
-        }
-        catch (error) {
-            console.error(error);
-            message.channel.send(`There was an error while reloading a command \`${command.name}\`:\n\`${error.message}\``);
-        }
+        reload(message, args, message.author);
+    },
+    slashCommand: {
+        data: new SlashCommandBuilder()
+            .addStringOption((option) => 
+                option.setName('command')
+                    .setDescription('Reload a command')
+                    .setRequired(true)),
+        execute(interaction, language) {
+            reload(interaction, [interaction.options.getString('command')], interaction.user);
+        },
     },
 };
