@@ -45,6 +45,17 @@
     "http-response-object" "^3.0.1"
     "parse-cache-control" "^1.0.1"
 
+"@discordjs/builders@^0.12.0":
+  version "0.12.0"
+  resolved "https://registry.npmjs.org/@discordjs/builders/-/builders-0.12.0.tgz"
+  integrity sha512-Vx2MjUZd6QVo1uS2uWt708Fd6cHWGFblAvbpL5EBO+kLl0BADmPwwvts+YJ/VfSywed6Vsk6K2cEooR/Ytjhjw==
+  dependencies:
+    "@sindresorhus/is" "^4.3.0"
+    discord-api-types "^0.26.1"
+    ts-mixer "^6.0.0"
+    tslib "^2.3.1"
+    zod "^3.11.6"
+
 "@discordjs/builders@^0.6.0":
   "integrity" "sha512-mH3Gx61LKk2CD05laCI9K5wp+a3NyASHDUGx83DGJFkqJlRlSV5WMJNY6RS37A5SjqDtGMF4wVR9jzFaqShe6Q=="
   "resolved" "https://registry.npmjs.org/@discordjs/builders/-/builders-0.6.0.tgz"
@@ -76,6 +87,11 @@
   "integrity" "sha512-vhxqzzM8gkomw0TYRF3tgx7SwElzUlXT/Aa41O7mOcyN6wIJfj5JmDWaO5XGKsGSsNx7F3i5oIlrucCCWV1Nog=="
   "resolved" "https://registry.npmjs.org/@discordjs/collection/-/collection-0.2.1.tgz"
   "version" "0.2.1"
+
+"@discordjs/collection@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.npmjs.org/@discordjs/collection/-/collection-0.4.0.tgz"
+  integrity sha512-zmjq+l/rV35kE6zRrwe8BHqV78JvIh2ybJeZavBi5NySjWXqN3hmmAKg7kYMMXSeiWtSsMoZ/+MQi0DiQWy2lw==
 
 "@discordjs/form-data@^3.0.1":
   "integrity" "sha512-ZfFsbgEXW71Rw/6EtBdrP5VxBJy4dthyC0tpQKGKmYFImlmmrykO14Za+BiIVduwjte0jXEBlhSKf0MWbFp9Eg=="
@@ -443,8 +459,9 @@
   "resolved" "https://registry.npmjs.org/@typescript-eslint/scope-manager/-/scope-manager-5.1.0.tgz"
   "version" "5.1.0"
   dependencies:
-    "@typescript-eslint/types" "5.1.0"
-    "@typescript-eslint/visitor-keys" "5.1.0"
+    "@typescript-eslint/utils" "5.17.0"
+    debug "^4.3.2"
+    tsutils "^3.21.0"
 
 "@typescript-eslint/types@5.1.0":
   "integrity" "sha512-sEwNINVxcB4ZgC6Fe6rUyMlvsB2jvVdgxjZEjQUQVlaSPMNamDOwO6/TB98kFt4sYYfNhdhTPBEQqNQZjMMswA=="
