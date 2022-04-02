@@ -1,49 +1,42 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const CommandReply = require('../../functions/commandReply.js');
 const commandReply = new CommandReply();
-const fs = require('fs');
-const { MessageEmbed } = require('discord.js');
-function loli(command, language) {
-    const imageFiles = fs
-        .readdirSync('./images')
-        .filter((file) => file.endsWith('.json'));
-    const pictures = {};
+const { MessageEmbed, MessageAttachment } = require('discord.js');
+const Pixiv = require('pixiv.ts');
+const refreshToken = process.env.PIXIV_REFRESH_TOKEN || require('../../config/config.json').PixivRefreshToken;
 
-    for (const filename of imageFiles) {
-        const rawdata = fs.readFileSync(`./images/${filename}`);
-        pictures[filename] = JSON.parse(rawdata);
+async function loli(command, language) {
+    const pixiv = await Pixiv.default.refreshLogin(refreshToken);
+    const word = 'Chino Kafuu';
+    let illusts = await pixiv.search.illusts({ word: word, r18: false, type:'illust', bookmarks: '500', search_target: 'partial_match_for_tags' });
+    if (pixiv.search.nextURL) illusts = await pixiv.util.multiCall({ next_url: pixiv.search.nextURL, illusts }, 3);
+    const sorted_illusts = pixiv.util.sort(illusts);
+    const randomIllust = sorted_illusts[Math.floor(Math.random() * sorted_illusts.length)];
+    await pixiv.util.downloadIllust(`https://www.pixiv.net/en/artworks/${randomIllust.id}`, './illust', 'original');
+    try {
+        const file = new MessageAttachment(`./illust/${randomIllust.id}.png`);
+        const embed = new MessageEmbed()
+            .setImage(`attachment://${randomIllust.id}.png`);
+        await command.editReply({ embeds: [embed], files: [file] });
+    } catch (e) {
+        const file = new MessageAttachment(`./illust/${randomIllust.id}_p0.png`);
+        const embed = new MessageEmbed()
+            .setImage(`attachment://${randomIllust.id}.png`);
+        await command.editReply({ embeds: [embed], files: [file] });
     }
-
-    const target = ['蘿莉圖.json'];
-    let random = Math.floor(Math.random() * target.length);
-    const targetFile = target[random];
-    const pic = pictures[targetFile];
-    random = Math.floor(Math.random() * pic.length);
-    const images = pic[random];
-    const { messageurl } = images;
-    random = Math.floor(Math.random() * images.attachments.length);
-    const imageInfo = images.attachments[random];
-    const embed = new MessageEmbed()
-        .setColor('#2d9af8')
-        .setTitle(language.loliPic)
-        .setDescription(language.loliProvider.replace('${images.author}', images.author).replace('${messageurl}', messageurl))
-        .setImage(imageInfo.url)
-        .setFooter(
-            '蘿莉控的FBI避難所',
-            'https://cdn.discordapp.com/icons/764839074228994069/5be3f532073fdae6a9d934e1c6f6a2b5.png?size=2048',
-        );
-    commandReply.reply(command, embed);
 }
 module.exports = {
     name: 'loli',
     cooldown: 3,
     description: true,
     execute(message, _args, language) {
+        message.reply('Please wait...');
         loli(message, language);
     },
     slashCommand: {
         data: new SlashCommandBuilder(),
         async execute(interaction, language) {
+            interaction.deferReply();
             loli(interaction, language);
         },
     },
