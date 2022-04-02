@@ -28,6 +28,9 @@ module.exports = {
     guildOnly: true,
     ownerOnly: true,
     cooldown: 5,
+    execute(message, args, language) {
+        evalFunc(message, args, language);
+    },
     slashCommand: {
         data: new SlashCommandBuilder()
             .addStringOption((option) =>
