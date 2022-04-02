@@ -16,6 +16,9 @@ async function loli(command, language) {
     try {
         const file = new MessageAttachment(`./illust/${randomIllust.id}.png`);
         const embed = new MessageEmbed()
+            .setTitle(randomIllust.title)
+            .setURL(`https://www.pixiv.net/en/artworks/${randomIllust.id}`)
+            .setDescription(randomIllust.caption)
             .setImage(`attachment://${randomIllust.id}.png`);
         await command.editReply({ embeds: [embed], files: [file] });
     } catch (e) {
