@@ -12,7 +12,8 @@ async function snipe(command, args, language) {
         snipeWithGuild = await collection.findOne({ id: command.guild.id });
     }
     else {
-        snipeWithGuild = fs.readFileSync('./data/snipes.json');
+        const rawData = fs.readFileSync('./data/snipes.json');
+        snipeWithGuild = JSON.parse(rawData);
     }
     let snipes;
 

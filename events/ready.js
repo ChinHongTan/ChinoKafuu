@@ -20,7 +20,10 @@ module.exports = {
             const collection = client.guildOptions;
             let rawData;
             if (collection) rawData = await collection.findOne({ id });
-            else rawData = fs.readFileSync('./data/guildOption.json');
+            else {
+                const buffer = fs.readFileSync('./data/guildOption.json');
+                rawData = JSON.parse(buffer);
+            }
             const guildOption = rawData ?? {
                 id,
                 options: { language: 'en_US' },

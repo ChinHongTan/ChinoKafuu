@@ -9,7 +9,10 @@ async function esnipe(command, args, language) {
 
     let editSnipesWithGuild;
     if (collection) editSnipesWithGuild = await collection.findOne({ id: command.guild.id });
-    else editSnipesWithGuild = fs.readFileSync('./data/editsnipes.json');
+    else {
+        const rawData = fs.readFileSync('./data/editsnipes.json');
+        editSnipesWithGuild = JSON.parse(rawData);
+    }
     const arg = args[0] ?? 1;
 
     if (editSnipesWithGuild) {
