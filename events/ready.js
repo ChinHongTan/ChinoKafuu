@@ -18,7 +18,9 @@ module.exports = {
 
         for (const id of guilds) {
             const collection = client.guildOptions;
-            const rawData = await collection.findOne({ id });
+            let rawData;
+            if (collection) rawData = await collection.findOne({ id });
+            else rawData = fs.readFileSync('./data/guildOption.json');
             const guildOption = rawData ?? {
                 id,
                 options: { language: 'en_US' },

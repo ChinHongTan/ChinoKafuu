@@ -5,6 +5,7 @@ module.exports = {
         const collection = message.client.snipeCollection;
         let rawData;
         if (collection) rawData = await collection.findOne({ id: message.guild.id });
+        else rawData = fs.readFileSync('./data/snipes.json');
         const snipeWithGuild = rawData ?? { id: message.guild.id };
         if (message.author.bot) return;
         if (!message.guild) return;
@@ -36,6 +37,7 @@ module.exports = {
         const collection = oldMessage.client.editSnipeCollection;
         let rawData;
         if (collection) rawData = await collection.findOne({ id: oldMessage.guild.id });
+        else rawData = fs.readFileSync('./data/editSnipes.json');
         const editSnipeWithGuild = rawData ?? { id: oldMessage.guild.id };
 
         if (oldMessage.author.bot) return;
