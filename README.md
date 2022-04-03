@@ -77,7 +77,7 @@ The others are just optional features.
 
 To start the bot:
 ```bash
-$ node .
+$ npm start
 ```
 
 
