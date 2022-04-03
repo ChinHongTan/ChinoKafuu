@@ -1,9 +1,17 @@
 {
 	"prefix": "c!",
+    "clientId": "bot's-discord-id",
 	"token": "discord-bot-token-here",
+    "owner_id": "bot-owner's-discord-id",
     "sagiri_token": "saucenao-api-token-here",
+    "genius_token": "lyric-api-token-here",
     "host": "database-host-here",
     "database": "database-here",
     "password": "database-password-here",
-    "username": "database-username-here"
+    "username": "database-username-here",
+    "mongodb": "database-url-here",
+    "SpotifyClientID": "spotify-client-id",
+    "SpotifyClientSecret": "spotify-client-secret",
+    "scID" : "not-sure-what-is-this-will-update-soon",
+    "PixivRefreshToken" : "used-to-login-pixiv"
 }
