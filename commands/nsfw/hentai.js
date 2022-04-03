@@ -16,9 +16,7 @@ function hentai(command, _args, language) {
 
     for (const filename of imageFiles) {
         const rawdata = fs.readFileSync(`./images/${filename}`);
-        const imagefile = JSON.parse(rawdata);
-
-        pictures[filename] = imagefile;
+        pictures[filename] = JSON.parse(rawdata);
     }
 
     const nsfw = ['發圖區（18r）.json', 'vtuber18r區域.json'];

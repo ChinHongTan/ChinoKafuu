@@ -5,7 +5,8 @@ const { searchByUrl } = require('ascii2d');
 const commandReply = new CommandReply();
 const sagiriToken = process.env.SAGIRI || require('../../config/config.json').sagiri_token;
 const sagiri = require('sagiri');
-const mySauce = sagiri(sagiriToken);
+let mySauce;
+if (sagiriToken) mySauce = sagiri(sagiriToken);
 const DynamicEmbed = require('../../functions/dynamicEmbed');
 const dynamicEmbed = new DynamicEmbed();
 
@@ -122,6 +123,7 @@ module.exports = {
     description: true,
     cooldown: 5,
     async execute(message, args, language) {
+        if (!sagiriToken) return message.reply('This command can\'t be used without SauceNAO token!');
         await sauce(message, args, language);
     },
     slashCommand: {
@@ -131,6 +133,7 @@ module.exports = {
                     .setDescription('URL of image you want to search for'),
             ),
         async execute(interaction, language) {
+            if (!sagiriToken) return interaction.reply('This command can\'t be used without SauceNAO token!');
             await sauce(interaction, [interaction.options.getString('url')], language);
         },
     },

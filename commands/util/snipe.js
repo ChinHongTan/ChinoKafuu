@@ -2,10 +2,18 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const CommandReply = require('../../functions/commandReply.js');
 const commandReply = new CommandReply();
 const { MessageEmbed } = require('discord.js');
+const fs = require('fs');
+
 async function snipe(command, args, language) {
     const collection = command.client.snipeCollection;
 
-    const snipeWithGuild = await collection.findOne({ id: command.guild.id });
+    let snipeWithGuild;
+    if (collection) {
+        snipeWithGuild = await collection.findOne({ id: command.guild.id });
+    }
+    else {
+        snipeWithGuild = fs.readFileSync('./data/snipes.json');
+    }
     let snipes;
 
     if (snipeWithGuild) {

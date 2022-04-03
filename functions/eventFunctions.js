@@ -1,7 +1,10 @@
+const fs = require('fs');
+
 module.exports = {
     async storeSnipes(message) {
         const collection = message.client.snipeCollection;
-        const rawData = await collection.findOne({ id: message.guild.id });
+        let rawData;
+        if (collection) rawData = await collection.findOne({ id: message.guild.id });
         const snipeWithGuild = rawData ?? { id: message.guild.id };
         if (message.author.bot) return;
         if (!message.guild) return;
@@ -20,13 +23,19 @@ module.exports = {
         snipes.unshift(snipe);
         if (snipes.length > 10) snipes.pop();
         snipeWithGuild.snipes = snipes;
-        const query = { id: message.guild.id };
-        const options = { upsert: true };
-        await collection.replaceOne(query, snipeWithGuild, options);
+        if (collection) {
+            const query = { id: message.guild.id };
+            const options = { upsert: true };
+            await collection.replaceOne(query, snipeWithGuild, options);
+        }
+        else {
+            fs.writeFileSync('./data/snipes.json', JSON.stringify(snipeWithGuild));
+        }
     },
     async storeEditSnipes(oldMessage, newMessage) {
         const collection = oldMessage.client.editSnipeCollection;
-        const rawData = await collection.findOne({ id: oldMessage.guild.id });
+        let rawData;
+        if (collection) rawData = await collection.findOne({ id: oldMessage.guild.id });
         const editSnipeWithGuild = rawData ?? { id: oldMessage.guild.id };
 
         if (oldMessage.author.bot) return;
@@ -47,9 +56,14 @@ module.exports = {
         }
         if (editSnipes.length > 10) editSnipes.pop();
         editSnipeWithGuild.editSnipe = editSnipes;
-        const query = { id: oldMessage.guild.id };
-        const options = { upsert: true };
-        await collection.replaceOne(query, editSnipeWithGuild, options);
+        if (collection) {
+            const query = { id: oldMessage.guild.id };
+            const options = { upsert: true };
+            await collection.replaceOne(query, editSnipeWithGuild, options);
+        }
+        else {
+            fs.writeFileSync('./data/editSnipes.json', JSON.stringify(editSnipeWithGuild));
+        }
     },
     async dynamic(oldState, newState) {
         if (newState.member.user.bot) return;

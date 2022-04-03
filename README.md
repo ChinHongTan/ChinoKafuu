@@ -28,6 +28,58 @@ This bot runs on [`Node.js v16`](https://nodejs.org/) and is built with [`discor
 
 [Click me to invite the bot!](https://discord.com/api/oauth2/authorize?client_id=958201832528838706&permissions=8&scope=bot%20applications.commands)
 
+##Set up
+This project uses node.js v16 to run, so make sure you set up node.js first.
+
+Also, make sure you give the bot `Administrator` permission and has the `applications.commands` application scope enabled.
+
+First you have to clone the project:
+```bash
+$ git clone https://github.com/ChinHongTan/ChinoKafuu.git
+```
+Then you have to install all the npm modules
+```bash
+$ cd ChinoKafuu
+$ npm i
+```
+After that you will need to create a file named "config.json" in the "config" folder.
+An example "config.example.json" has been given in the "config" folder.
+Here's what you should fill in the config.json:
+
+## Prepare config.json
+```json
+{
+  "prefix": "c!",
+  "clientId": "bot's-discord-id",
+  "token": "discord-bot-token-here",
+  "owner_id": "bot-owner's-discord-id",
+  "sagiri_token": "saucenao-api-token-here",
+  "genius_token": "lyric-api-token-here",
+  "mongodb": "database-uri-here",
+  "SpotifyClientID": "spotify-client-id",
+  "SpotifyClientSecret": "spotify-client-secret",
+  "PixivRefreshToken" : "used-to-login-pixiv"
+}
+```
+- prefix: The prefix you want to use to interact with the bot. (Use \<prefix>help for more information.)
+- clientId: The discord id of the bot's main server. [How do I get it?](https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-)
+- token: The token needed to get the bot online. [How do I get it?](https://github.com/reactiflux/discord-irc/wiki/Creating-a-discord-bot-&-getting-a-token)
+- owner_id: Bot owner's discord id
+- sagiri_token: Needed for reverse image searching using [Saucenao](https://saucenao.com/). 
+You can get a token by [registering an account](https://saucenao.com/user.php) and going to the API page.
+- genius_token: Needed to search for a song's lyrics.[How do I get it?](https://genius.com/developers)
+- mongodb: uri to connect to the database. This bot uses MongoDB: [Getting started](https://www.mongodb.com/docs/manual/tutorial/getting-started/)
+- SpotifyClientID & SpotifyClientSecret: Needed to get songs from Spotify. [How do I get it?](https://developer.spotify.com/documentation/general/guides/authorization/app-settings/)
+- PixivRefreshToken: Needed to login pixiv. [How do I get it?](https://gist.github.com/ZipFile/c9ebedb224406f4f11845ab700124362)
+
+Note that only `prefix`, `clientId`, `token` and `owner_id` are needed to get the bot online.
+The others are just optional features.
+
+To start the bot:
+```bash
+$ node .
+```
+
 
 ## Features
 
@@ -50,18 +102,7 @@ Use `c!help` for detailed usage!
     -   anime [image / link] -> search trace.moe for anime screenshots / scene
     -   loli -> sends a loli image xD
 ```
--   ### Economy
 
-    ~~not actually useful but who cares~~
-    Send a message to earn $1
-```
-    -   balance -> see how much money you've got
-    -   shop -> see what's on sale in shop
-    -   buy -> buys an item from shop
-    -   transfer [@user] -> gives money to another user
-    -   inventory -> see what you've got in your bag!
-    -   leaderboard -> see who's the richest person
-```
 -   ### Games
 ```
     -   youtube -> watch youtube together (\*Join a channel before using this command!)

@@ -5,7 +5,7 @@ const lyricsFinder = require('lyrics-finder');
 const solenolyrics = require('solenolyrics');
 const Genius = require('genius-lyrics');
 const geniusToken = process.env.GENIUS || require('../../config/config.json').genius_token;
-const Client = new Genius.Client(geniusToken);
+const Client = geniusToken ? new Genius.Client(geniusToken) : undefined;
 async function lyric(command, args, language) {
     const { queue } = require('../../data/queueData');
     const serverQueue = queue.get(command.guild.id);
@@ -18,7 +18,7 @@ async function lyric(command, args, language) {
         let lyrics;
         lyrics = await lyricsFinder(keyword).catch((err) => console.error(err));
         if (!lyrics) lyrics = await solenolyrics.requestLyricsFor(encodeURIComponent(keyword));
-        if (!lyrics) {
+        if (!lyrics && Client !== undefined) {
             const searches = await Client.songs.search(keyword);
             if (searches) lyrics = await searches[0].lyrics().catch((err) => console.log(err));
         }
@@ -31,7 +31,7 @@ async function lyric(command, args, language) {
                 },
             });
         }
-        msg.edit({
+        await msg.edit({
             embed: {
                 title: `Lyric for \`${keyword}\``,
                 description: lyrics,

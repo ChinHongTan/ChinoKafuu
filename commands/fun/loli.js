@@ -27,12 +27,14 @@ module.exports = {
     cooldown: 3,
     description: true,
     async execute(message, _args, language) {
+        if (!refreshToken) return message.reply('This command can\'t be used without pixiv refreshToken!');
         const repliedMessage = await message.reply('Please wait...');
         loli(repliedMessage, language);
     },
     slashCommand: {
         data: new SlashCommandBuilder(),
         async execute(interaction, language) {
+            if (!refreshToken) return interaction.reply('This command can\'t be used without pixiv refreshToken!');
             await interaction.deferReply();
             loli(interaction, language);
         },

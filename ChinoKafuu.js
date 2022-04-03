@@ -2,15 +2,11 @@ const fs = require('fs');
 const Discord = require('discord.js');
 const token = process.env.TOKEN || require('./config/config.json').token;
 
-const { MongoClient } = require('mongodb');
-const mongoClient = new MongoClient(process.env.MONGODB_URI || require('./config/config.json').mongodb);
+const mongodbURI = process.env.MONGODB_URI || require('./config/config.json').mongodb;
 
 const en_US = require('./language/en_US.json');
 const zh_CN = require('./language/zh_CN.json');
 const zh_TW = require('./language/zh_TW.json');
-
-// Database Name
-const dbName = 'projectSekai';
 
 const client = new Discord.Client({
     intents: [
@@ -59,16 +55,27 @@ for (const file of eventFiles) {
     }
 }
 
-// Use connect method to connect to the server
-(async () => {
-    await mongoClient.connect();
-    console.log('Connected successfully to server');
-    const db = mongoClient.db(dbName);
-    client.snipeCollection = db.collection('snipes');
-    client.editSnipeCollection = db.collection('editsnipes');
-    client.guildOptions = db.collection('guildoptions');
-    await client.login(token);
-})();
+// if mongodbURI was given
+if (mongodbURI) {
+    const { MongoClient } = require('mongodb');
+    const mongoClient = new MongoClient(mongodbURI);
+
+    // Database Name
+    const dbName = 'projectSekai';
+    // Use connect method to connect to the server
+    (async () => {
+        await mongoClient.connect();
+        console.log('Connected successfully to server');
+        const db = mongoClient.db(dbName);
+        client.snipeCollection = db.collection('snipes');
+        client.editSnipeCollection = db.collection('editsnipes');
+        client.guildOptions = db.collection('guildoptions');
+        await client.login(token);
+    })();
+}
+else {
+    client.login(token);
+}
 
 // catch errors so that code wouldn't stop
 process.on('unhandledRejection', error => {

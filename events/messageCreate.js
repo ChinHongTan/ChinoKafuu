@@ -6,22 +6,26 @@ module.exports = {
         const owner_id = process.env.OWNERID || require('../config/config.json').owner_id;
         const Discord = require('discord.js');
         const collection = message.client.guildOptions;
-        const rawData = await collection.findOne({ id: message?.guild?.id });
+        const rawData = collection ? await collection.findOne({ id: message?.guild?.id }) : undefined;
+
+        // set the default language to English
         const guildOption = rawData ?? {
             id: message?.guild?.id,
             options: { language: 'en_US' },
         };
         const language = client.language[guildOption.options.language];
 
-        if (message.author.bot && !(message.author.id === '761766088337391626')) return;
+        if (message.author.bot) return;
         if (!message.content.startsWith(prefix)) return;
 
         const args = message.content.slice(prefix.length).trim().split(/\s+/);
         const commandName = args.shift().toLowerCase();
 
+        // search for command
         const command = client.commands.get(commandName)
             || client.commands.find((cmd) => cmd.aliases && cmd.aliases.includes(commandName));
 
+        // suggest a possible command
         if (!command) {
             const keys = Array.from(client.commands.keys());
             const distances = new Map();
@@ -67,6 +71,7 @@ module.exports = {
             return message.reply('I can\'t execute that command inside DMs!');
         }
 
+        // command cool down
         const { cooldowns } = client;
 
         if (!cooldowns.has(command.name)) {

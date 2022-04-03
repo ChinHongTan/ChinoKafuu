@@ -8,12 +8,13 @@ const SpotifyClientID = process.env.SPOTIFY_CLIENT_ID || require('../../config/c
 const SpotifyClientSecret = process.env.SPOTIFY_CLIENT_SECRET || require('../../config/config.json').SpotifyClientSecret;
 const scdl = require('soundcloud-downloader').default;
 const Spotify = require('../../functions/spotify');
-const spotify = new Spotify(SpotifyClientID, SpotifyClientSecret);
+let spotify;
+if (SpotifyClientID && SpotifyClientSecret) spotify = new Spotify(SpotifyClientID, SpotifyClientSecret);
 const { MessageActionRow, MessageSelectMenu, Message } = require('discord.js');
 
 const { waitImport, handleVideo } = require('../../functions/musicFunctions');
-const ytrx = /(?:youtube\.com.*(?:\?|&)(?:v|list)=|youtube\.com.*embed\/|youtube\.com.*v\/|youtu\.be\/)((?!videoseries)[a-zA-Z0-9_-]*)/;
-const scrxt = new RegExp('^(?<track>https://soundcloud.com/(?:(?!sets|stats|groups|upload|you|mobile|stream|messages|discover|notifications|terms-of-use|people|pages|jobs|settings|logout|charts|imprint|popular)(?:[a-z0-9-_]{1,25}))/(?:(?:(?!sets|playlist|stats|settings|logout|notifications|you|messages)(?:[a-z0-9-_]{1,100}))(?:/s-[a-zA-Z0-9-_]{1,10})?))(?:[a-z0-9-?=/]*)$');
+const ytrx = /(?:youtube\.com.*[?|&](?:v|list)=|youtube\.com.*embed\/|youtube\.com.*v\/|youtu\.be\/)((?!videoseries)[a-zA-Z0-9_-]*)/;
+const scrxt = new RegExp('^(?<track>https://soundcloud.com/(?!sets|stats|groups|upload|you|mobile|stream|messages|discover|notifications|terms-of-use|people|pages|jobs|settings|logout|charts|imprint|popular[a-z0-9-_]{1,25})/(?!sets|playlist|stats|settings|logout|notifications|you|messages[a-z0-9-_]{1,100}(?:/s-[a-zA-Z0-9-_]{1,10})?))[a-z0-9-?=/]*$');
 const sprxtrack = /(http[s]?:\/\/)?(open\.spotify\.com)\//;
 
 async function play(command, args, language) {
@@ -157,7 +158,10 @@ async function play(command, args, language) {
 
     if (!args[0]) return commandReply.edit(command, language.noArgs, 'RED');
     if (url.match(ytrx)) return processYoutubeLink(url);
-    if (url.includes('open.spotify.com')) return processSpotifyLink(url);
+    if (url.includes('open.spotify.com')) {
+        if (!SpotifyClientID || !SpotifyClientSecret) return commandReply.edit(command, 'Spotify songs cannot be processed!', 'RED');
+        return processSpotifyLink(url);
+    }
     if (url.includes('soundcloud.com')) return processSoundcloudLink(url);
 
     const keyword = command instanceof Message ? command.content.substr(command.content.indexOf(' ') + 1) : args;
