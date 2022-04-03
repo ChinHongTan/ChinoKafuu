@@ -7,8 +7,7 @@
 </h1>
 
 **Note: The bot is now being translated into TypeScript! As I am new to TypeScript, you can expect me to upload very slowly in the following couple weeks. Bug fixing rate will also be affected, sorry for the inconvenience!**
-    
-**Note 2: I am now migrating from discord.js v12 to v13. No new commands will be updated before I finish migrating!**
+
 
 A nice little discord bot I make to learn JavaScript and how bots works XD
 
@@ -23,11 +22,12 @@ And yes, Chino is the best girl in the world!
 
 ## Introduction
 
-This bot runs on [`Node.js v14`](https://nodejs.org/) and is built with [`discord.js v12`](https://discord.js.org/#/docs/main/v12/general/welcome).
+This bot runs on [`Node.js v16`](https://nodejs.org/) and is built with [`discord.js v13`](https://discord.js.org/#/docs/main/v12/general/welcome).
 
 ## Invite link
 
-[Click me to invite the bot!](https://discord.com/api/oauth2/authorize?client_id=859653069276839967&permissions=8&scope=applications.commands%20bot)
+[Click me to invite the bot!](https://discord.com/api/oauth2/authorize?client_id=958201832528838706&permissions=8&scope=bot%20applications.commands)
+
 
 ## Features
 
