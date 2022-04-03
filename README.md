@@ -28,7 +28,7 @@ This bot runs on [`Node.js v16`](https://nodejs.org/) and is built with [`discor
 
 [Click me to invite the bot!](https://discord.com/api/oauth2/authorize?client_id=958201832528838706&permissions=8&scope=bot%20applications.commands)
 
-##Set up
+## Set up
 This project uses node.js v16 to run, so make sure you set up node.js first.
 
 Also, make sure you give the bot `Administrator` permission and has the `applications.commands` application scope enabled.
