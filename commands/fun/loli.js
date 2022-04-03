@@ -11,8 +11,7 @@ async function loli(command, language) {
     const word = 'Chino Kafuu';
     let illusts = await pixiv.search.illusts({ word: word, r18: false, type: 'illust', bookmarks: '1000', search_target: 'partial_match_for_tags' });
     if (pixiv.search.nextURL) illusts = await pixiv.util.multiCall({ next_url: pixiv.search.nextURL, illusts }, 3);
-    const sorted_illusts = pixiv.util.sort(illusts);
-    const randomIllust = sorted_illusts[Math.floor(Math.random() * sorted_illusts.length)];
+    const randomIllust = illusts[Math.floor(Math.random() * illusts.length)];
     await pixiv.util.downloadIllust(`https://www.pixiv.net/en/artworks/${randomIllust.id}`, './illust', 'original');
     const target_file = fs.existsSync(`./illust/${randomIllust.id}.png`) ? `./illust/${randomIllust.id}.png` : `./illust/${randomIllust.id}_p0.jpg`;
     const file = new MessageAttachment(target_file);
