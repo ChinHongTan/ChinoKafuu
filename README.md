@@ -80,6 +80,12 @@ To start the bot:
 $ npm start
 ```
 
+**Note:** If you encounter errors like
+`The specified module could not be found.`,
+please do:
+```bash
+$ npm i canvas@2.8.0
+```
 
 ## Features
 
