@@ -4,14 +4,24 @@ const commandReply = new CommandReply();
 const { MessageEmbed } = require('discord.js');
 const Pixiv = require('pixiv.ts');
 const refreshToken = process.env.PIXIV_REFRESH_TOKEN || require('../../config/config.json').PixivRefreshToken;
+const fs = require('fs');
 
 // search pixiv for loli pictures
 async function loli(command, language) {
     const pixiv = await Pixiv.default.refreshLogin(refreshToken);
     const word = 'Chino Kafuu';
-    // search 4 pages
-    let illusts = await pixiv.search.illusts({ word: word, r18: false, type: 'illust', bookmarks: '1000', search_target: 'partial_match_for_tags' });
-    if (pixiv.search.nextURL) illusts = await pixiv.util.multiCall({ next_url: pixiv.search.nextURL, illusts }, 3);
+    let illusts;
+    // if illust list exists
+    if (fs.existsSync('./data/illusts.json')) {
+        illusts = JSON.parse(fs.readFileSync('./data/illusts.json'));
+    }
+    else {
+        // search 4 pages
+        illusts = await pixiv.search.illusts({ word: word, r18: false, type: 'illust', bookmarks: '1000', search_target: 'partial_match_for_tags' });
+        if (pixiv.search.nextURL) illusts = await pixiv.util.multiCall({ next_url: pixiv.search.nextURL, illusts }, 3);
+    }
+
+    // choose an illust randomly and send it
     const randomIllust = illusts[Math.floor(Math.random() * illusts.length)];
     const targetURL = randomIllust.meta_pages.length === 0 ? `https://pixiv.cat/${randomIllust.id}.png` : `https://pixiv.cat/${randomIllust.id}-1.png`;
     const embed = new MessageEmbed()
