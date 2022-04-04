@@ -22,7 +22,8 @@ module.exports = {
             if (collection) rawData = await collection.findOne({ id });
             else {
                 const buffer = fs.readFileSync('./data/guildOption.json');
-                rawData = JSON.parse(buffer);
+                const parsedJSON = JSON.parse(buffer);
+                rawData = parsedJSON[id];
             }
             const guildOption = rawData ?? {
                 id,

@@ -5,7 +5,11 @@ module.exports = {
         const collection = message.client.snipeCollection;
         let rawData;
         if (collection) rawData = await collection.findOne({ id: message.guild.id });
-        else rawData = fs.readFileSync('./data/snipes.json');
+        else {
+            const buffer = fs.readFileSync('./data/snipes.json');
+            const parsedJSON = JSON.parse(buffer);
+            rawData = parsedJSON[message.guild.id];
+        }
         const snipeWithGuild = rawData ?? { id: message.guild.id };
         if (message.author.bot) return;
         if (!message.guild) return;
@@ -39,7 +43,8 @@ module.exports = {
         if (collection) rawData = await collection.findOne({ id: oldMessage.guild.id });
         else {
             const buffer = fs.readFileSync('./data/editSnipes.json');
-            rawData = JSON.parse(buffer);
+            const parsedJSON = JSON.parse(buffer);
+            rawData = parsedJSON[oldMessage.guild.id];
         }
         const editSnipeWithGuild = rawData ?? { id: oldMessage.guild.id };
 
