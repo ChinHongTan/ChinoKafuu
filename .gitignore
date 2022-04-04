@@ -5,3 +5,4 @@ functions/fuzzysort.js
 functions/dynamicEmbed.js
 functions/updateIllusts.js
 *.map
+functions/updateIllust.js
