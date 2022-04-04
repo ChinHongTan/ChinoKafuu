@@ -5,6 +5,7 @@ const token = process.env.TOKEN || require('./config/config.json').token;
 const mongodbURI = process.env.MONGODB_URI || require('./config/config.json').mongodb;
 
 const CronJob = require('cron').CronJob;
+const pixivRefreshToken = require('./config/config.json').PixivRefreshToken;
 const updateIllust = require('./functions/updateIllust.js');
 
 const en_US = require('./language/en_US.json');
@@ -81,12 +82,13 @@ else {
 }
 
 // update pixiv illust list every day at noon
-
-const job = new CronJob('0 12 * * *', async function() {
-    console.log('Updating pixiv illust list...');
-    await updateIllust('Chino Kafuu');
-}, null, false, 'Asia/Kuala_Lumpur');
-job.start();
+if (pixivRefreshToken) {
+    const job = new CronJob('0 12 * * *', async function () {
+        console.log('Updating pixiv illust list...');
+        await updateIllust('Chino Kafuu');
+    }, null, false, 'Asia/Kuala_Lumpur');
+    job.start();
+}
 
 // catch errors so that code wouldn't stop
 process.on('unhandledRejection', error => {
