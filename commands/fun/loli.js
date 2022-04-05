@@ -30,7 +30,7 @@ async function loli(command, args) {
         const targetURL = randomIllust.meta_pages.length === 0 ? `https://pixiv.cat/${randomIllust.id}.png` : `https://pixiv.cat/${randomIllust.id}-1.png`;
         const embed = new MessageEmbed()
             //.setTitle(randomIllust.title)
-            .setURL(`https://www.pixiv.net`)
+            .setURL(`https://www.pixiv.net`) //test again ><
             //.setColor('RANDOM')
             //// remove html tags
             //.setDescription(randomIllust
