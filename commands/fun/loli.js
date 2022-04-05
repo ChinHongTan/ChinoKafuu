@@ -31,7 +31,7 @@ async function loli(command, args) {
         const targetURL = randomIllust.meta_pages.length === 0 ? `https://pixiv.cat/${randomIllust.id}.png` : `https://pixiv.cat/${randomIllust.id}-1.png`;
         if (num >= 2 && num <= 4) {
             const multipleIllust = new MessageEmbed()
-                .setUrl('https://www.pixiv.net')
+                .setURL('https://www.pixiv.net')
                 .setImage(targetURL)
             multipleIllusts.push(multipleIllust);
         }
