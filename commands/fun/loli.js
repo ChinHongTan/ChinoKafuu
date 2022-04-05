@@ -23,7 +23,7 @@ async function loli(command, args) {
         if (pixiv.search.nextURL) illusts = await pixiv.util.multiCall({ next_url: pixiv.search.nextURL, illusts }, 3);
     }
 
-    let embeds = [];
+    const embeds = [];
     const multipleIllusts = [];
     for (let i = 0; i < num; i++) {
         // choose an illust randomly and send it
@@ -54,7 +54,9 @@ async function loli(command, args) {
             .setImage(multipleIllusts.length === 0 ? targetURL : null);
         embeds.push(embed);
     }
-    if (multipleIllusts.length !== 0) embeds = multipleIllusts.concat(embeds);
+    if (multipleIllusts.length !== 0) {
+        return await commandReply.edit(command, { embeds: multipleIllusts.concat(embeds), components: [], content: '\u200b' });
+    }
     await commandReply.edit(command, { embeds: embeds, components: [], content: '\u200b' });
 }
 module.exports = {
