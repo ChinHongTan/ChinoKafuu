@@ -31,6 +31,7 @@ async function loli(command, args) {
         const embed = new MessageEmbed()
             .setTitle(randomIllust.title)
             .setURL(`https://www.pixiv.net/en/artworks/${randomIllust.id}`)
+            .setColor('RANDOM')
             // remove html tags
             .setDescription(randomIllust
                 ?.caption
