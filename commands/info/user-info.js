@@ -106,7 +106,7 @@ module.exports = {
         const userInfoList = message.mentions.members.map((user) => {
             return getUserInfo(user, language);
         });
-        commandReply.multiReply(message, userInfoList);
+        commandReply.reply(message, { embeds: userInfoList });
     },
     slashCommand: {
         data: new SlashCommandBuilder()

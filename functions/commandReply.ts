@@ -34,10 +34,5 @@ class CommandReply {
         else if (isString(response)) return await command.editReply( { embeds: [{ description: response, color: color }], components: [], content: '\u200b' });
         return await command.editReply(response);
     }
-    // reply with multiple embeds
-    async multiReply(command: Message | CommandInteraction, response: MessageEmbed[]) {
-        if (command instanceof Message) return await command.channel.send({ embeds: response });
-        return await command.reply({ embeds: response })
-    }
 }
 module.exports = CommandReply;
