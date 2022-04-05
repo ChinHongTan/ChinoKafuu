@@ -54,7 +54,7 @@ async function loli(command, args) {
             .setImage(multipleIllusts.length === 0 ? targetURL : null);
         embeds.push(embed);
     }
-    if (multipleIllusts.length !== 0) {
+    if (num >= 2 && num <= 4) {
         return await commandReply.edit(command, { embeds: multipleIllusts.concat(embeds), components: [], content: '\u200b' });
     }
     await commandReply.edit(command, { embeds: embeds, components: [], content: '\u200b' });
