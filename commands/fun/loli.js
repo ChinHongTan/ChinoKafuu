@@ -29,21 +29,21 @@ async function loli(command, args) {
         const randomIllust = illusts[Math.floor(Math.random() * illusts.length)];
         const targetURL = randomIllust.meta_pages.length === 0 ? `https://pixiv.cat/${randomIllust.id}.png` : `https://pixiv.cat/${randomIllust.id}-1.png`;
         const embed = new MessageEmbed()
-            .setTitle(randomIllust.title)
-            .setURL(`https://www.pixiv.net/en/artworks/${randomIllust.id}`)
-            .setColor('RANDOM')
-            // remove html tags
-            .setDescription(randomIllust
-                ?.caption
-                .replace(/\n/ig, '')
-                .replace(/<style[^>]*>[\s\S]*?<\/style[^>]*>/ig, '')
-                .replace(/<head[^>]*>[\s\S]*?<\/head[^>]*>/ig, '')
-                .replace(/<script[^>]*>[\s\S]*?<\/script[^>]*>/ig, '')
-                .replace(/<\/\s*(?:p|div)>/ig, '\n')
-                .replace(/<br[^>]*\/?>/ig, '\n')
-                .replace(/<[^>]*>/ig, '')
-                .replace('&nbsp;', ' ')
-                .replace(/[^\S\r\n][^\S\r\n]+/ig, ' '))
+            //.setTitle(randomIllust.title)
+            //.setURL(`https://www.pixiv.net/en/artworks/${randomIllust.id}`)
+            //.setColor('RANDOM')
+            //// remove html tags
+            //.setDescription(randomIllust
+            //    ?.caption
+            //    .replace(/\n/ig, '')
+            //    .replace(/<style[^>]*>[\s\S]*?<\/style[^>]*>/ig, '')
+            //    .replace(/<head[^>]*>[\s\S]*?<\/head[^>]*>/ig, '')
+            //    .replace(/<script[^>]*>[\s\S]*?<\/script[^>]*>/ig, '')
+            //    .replace(/<\/\s*(?:p|div)>/ig, '\n')
+            //    .replace(/<br[^>]*\/?>/ig, '\n')
+            //    .replace(/<[^>]*>/ig, '')
+            //    .replace('&nbsp;', ' ')
+            //    .replace(/[^\S\r\n][^\S\r\n]+/ig, ' '))
             .setImage(targetURL);
         embeds.push(embed);
     }
