@@ -24,7 +24,7 @@ async function loli(command, args) {
     }
 
     const embeds = [];
-    for (let i = 0; i <= num; i++) {
+    for (let i = 0; i < num; i++) {
         // choose an illust randomly and send it
         const randomIllust = illusts[Math.floor(Math.random() * illusts.length)];
         const targetURL = randomIllust.meta_pages.length === 0 ? `https://pixiv.cat/${randomIllust.id}.png` : `https://pixiv.cat/${randomIllust.id}-1.png`;
