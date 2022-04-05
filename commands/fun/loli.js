@@ -75,8 +75,6 @@ module.exports = {
     },
     slashCommand: {
         data: new SlashCommandBuilder()
-            .addIntegerOption((option) =>
-                option.setName('number').setDescription('Number of illusts to be send at once')),
         async execute(interaction) {
             if (!refreshToken) return interaction.reply('This command can\'t be used without pixiv refreshToken!');
             await interaction.deferReply();
