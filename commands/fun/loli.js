@@ -23,7 +23,7 @@ async function loli(command) {
 
     const multipleIllusts = [];
     const targetURL = [];
-    const embeds = [];
+
     // choose an illust randomly and send it
     const randomIllust = illusts[Math.floor(Math.random() * illusts.length)];
     if (randomIllust.meta_pages.length === 0 || randomIllust.meta_pages.length > 5) {
@@ -37,11 +37,12 @@ async function loli(command) {
     targetURL.forEach((URL) => {
         const multipleIllust = new MessageEmbed()
             .setURL('https://www.pixiv.net')
-            .setImage(URL);
+            .setImage(URL)
+            .setColor('RANDOM');
         multipleIllusts.push(multipleIllust);
     });
 
-    const embed = new MessageEmbed()
+    const descriptionEmbed = new MessageEmbed()
         .setTitle(randomIllust.title)
         .setURL(`https://www.pixiv.net/en/artworks/${randomIllust.id}`)
         .setColor('RANDOM')
@@ -56,13 +57,10 @@ async function loli(command) {
             .replace(/<br[^>]*\/?>/ig, '\n')
             .replace(/<[^>]*>/ig, '')
             .replace('&nbsp;', ' ')
-            .replace(/[^\S\r\n][^\S\r\n]+/ig, ' '))
-        .setImage(multipleIllusts.length === 0 ? targetURL[0] : null);
-    embeds.push(embed);
-    if (multipleIllusts.length !== 0) {
-        return await commandReply.edit(command, { embeds: multipleIllusts.concat(embeds), components: [], content: '\u200b' });
-    }
-    await commandReply.edit(command, { embeds: embeds, components: [], content: '\u200b' });
+            .replace(/[^\S\r\n][^\S\r\n]+/ig, ' '));
+    multipleIllusts.push(descriptionEmbed);
+
+    return await commandReply.edit(command, { embeds: multipleIllusts, components: [], content: '\u200b' });
 }
 module.exports = {
     name: 'loli',
@@ -74,7 +72,7 @@ module.exports = {
         await loli(repliedMessage);
     },
     slashCommand: {
-        data: new SlashCommandBuilder()
+        data: new SlashCommandBuilder(),
         async execute(interaction) {
             if (!refreshToken) return interaction.reply('This command can\'t be used without pixiv refreshToken!');
             await interaction.deferReply();
