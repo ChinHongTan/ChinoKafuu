@@ -1,6 +1,7 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const token = process.env.TOKEN || require('./config/config.json').token;
+const util = require('util');
 
 const mongodbURI = process.env.MONGODB_URI || require('./config/config.json').mongodb;
 
@@ -78,7 +79,9 @@ if (mongodbURI) {
     })();
 }
 else {
-    client.login(token);
+    (async () => {
+        await client.login(token);
+    })();
 }
 
 // update pixiv illust list every day at noon
@@ -92,5 +95,17 @@ if (pixivRefreshToken) {
 
 // catch errors so that code wouldn't stop
 process.on('unhandledRejection', error => {
-    console.error('Unhandled promise rejection:', error);
+    console.error(`Unhandled promise rejection: ${error}`);
 });
+
+/*
+console.log = async function(d) {
+    const logChannel = await client.channels.fetch('960803056251990017');
+    await logChannel.send(util.format(d) + '\n');
+};
+
+console.error = async function(d) {
+    const logChannel = await client.channels.fetch('960803056251990017');
+    await logChannel.send(util.format(d) + '\n');
+};
+*/
