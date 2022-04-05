@@ -83,7 +83,7 @@ else {
 
 // update pixiv illust list every day at noon
 if (pixivRefreshToken) {
-    const job = new CronJob('0 12 * * *', async function () {
+    const job = new CronJob('0 12 * * *', async function() {
         console.log('Updating pixiv illust list...');
         await updateIllust('Chino Kafuu');
     }, null, false, 'Asia/Kuala_Lumpur');

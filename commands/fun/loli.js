@@ -7,7 +7,9 @@ const refreshToken = process.env.PIXIV_REFRESH_TOKEN || require('../../config/co
 const fs = require('fs');
 
 // search pixiv for loli pictures
-async function loli(command, language) {
+async function loli(command, args) {
+    const num = args[0] ?? 1;
+    if (args[0] > 10) return commandReply.reply(command, 'Number cannot exceed 10!', 'RED');
     const pixiv = await Pixiv.default.refreshLogin(refreshToken);
     const word = 'Chino Kafuu';
     let illusts;
@@ -21,26 +23,30 @@ async function loli(command, language) {
         if (pixiv.search.nextURL) illusts = await pixiv.util.multiCall({ next_url: pixiv.search.nextURL, illusts }, 3);
     }
 
-    // choose an illust randomly and send it
-    const randomIllust = illusts[Math.floor(Math.random() * illusts.length)];
-    const targetURL = randomIllust.meta_pages.length === 0 ? `https://pixiv.cat/${randomIllust.id}.png` : `https://pixiv.cat/${randomIllust.id}-1.png`;
-    const embed = new MessageEmbed()
-        .setTitle(randomIllust.title)
-        .setURL(`https://www.pixiv.net/en/artworks/${randomIllust.id}`)
-        // remove html tags
-        .setDescription(randomIllust
-            ?.caption
-            .replace(/\n/ig, '')
-            .replace(/<style[^>]*>[\s\S]*?<\/style[^>]*>/ig, '')
-            .replace(/<head[^>]*>[\s\S]*?<\/head[^>]*>/ig, '')
-            .replace(/<script[^>]*>[\s\S]*?<\/script[^>]*>/ig, '')
-            .replace(/<\/\s*(?:p|div)>/ig, '\n')
-            .replace(/<br[^>]*\/?>/ig, '\n')
-            .replace(/<[^>]*>/ig, '')
-            .replace('&nbsp;', ' ')
-            .replace(/[^\S\r\n][^\S\r\n]+/ig, ' '))
-        .setImage(targetURL);
-    await commandReply.edit(command, embed);
+    const embeds = [];
+    for (let i = 0; i <= num; i++) {
+        // choose an illust randomly and send it
+        const randomIllust = illusts[Math.floor(Math.random() * illusts.length)];
+        const targetURL = randomIllust.meta_pages.length === 0 ? `https://pixiv.cat/${randomIllust.id}.png` : `https://pixiv.cat/${randomIllust.id}-1.png`;
+        const embed = new MessageEmbed()
+            .setTitle(randomIllust.title)
+            .setURL(`https://www.pixiv.net/en/artworks/${randomIllust.id}`)
+            // remove html tags
+            .setDescription(randomIllust
+                ?.caption
+                .replace(/\n/ig, '')
+                .replace(/<style[^>]*>[\s\S]*?<\/style[^>]*>/ig, '')
+                .replace(/<head[^>]*>[\s\S]*?<\/head[^>]*>/ig, '')
+                .replace(/<script[^>]*>[\s\S]*?<\/script[^>]*>/ig, '')
+                .replace(/<\/\s*(?:p|div)>/ig, '\n')
+                .replace(/<br[^>]*\/?>/ig, '\n')
+                .replace(/<[^>]*>/ig, '')
+                .replace('&nbsp;', ' ')
+                .replace(/[^\S\r\n][^\S\r\n]+/ig, ' '))
+            .setImage(targetURL);
+        embeds.push(embed);
+    }
+    await commandReply.edit(command, { embeds: embeds, components: [], content: '\u200b' });
 }
 module.exports = {
     name: 'loli',
@@ -52,11 +58,13 @@ module.exports = {
         await loli(repliedMessage, language);
     },
     slashCommand: {
-        data: new SlashCommandBuilder(),
+        data: new SlashCommandBuilder()
+            .addIntegerOption((option) =>
+                option.setName('number').setDescription('Number of illusts to be send at once')),
         async execute(interaction, language) {
             if (!refreshToken) return interaction.reply('This command can\'t be used without pixiv refreshToken!');
             await interaction.deferReply();
-            await loli(interaction, language);
+            await loli(interaction, [interaction.options.getInteger('number') ?? 1], language);
         },
     },
 };
