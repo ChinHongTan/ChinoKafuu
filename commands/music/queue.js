@@ -1,13 +1,12 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const CommandReply = require('../../functions/commandReply.js');
 const commandReply = new CommandReply();
-const { format } = require('../../functions/musicFunctions');
+const { format, checkStats } = require('../../functions/musicFunctions');
 const { MessageEmbed } = require('discord.js');
 const DynamicEmbed = require('../../functions/dynamicEmbed');
 const dynamicEmbed = new DynamicEmbed();
-function queueFunc(command, language) {
-    const { queue } = require('../../data/queueData');
-    const serverQueue = queue.get(command.guild.id);
+async function queueFunc(command, language) {
+    const serverQueue = checkStats(command, language);
     const array_chunks = (array, chunkSize) => Array(Math.ceil(array.length / chunkSize)).fill().map((_, index) => index * chunkSize).map((begin) => array.slice(begin, begin + chunkSize));
 
     /**
@@ -24,10 +23,6 @@ function queueFunc(command, language) {
             .setDescription(language.queueBody.replace('${serverQueue.songs[0].title}', serverQueue.songs[0].title).replace('${serverQueue.songs[0].url}', serverQueue.songs[0].url).replace('${printQueue}', printQueue).replace('${serverQueue.songs.length - 1}', serverQueue.songs.length - 1));
     }
 
-    if (!command.member.voice.channel) {
-        return commandReply.reply(command, language.notInVC, 'RED');
-    }
-
     if (serverQueue) {
         const songQueue = serverQueue.songs.slice(1);
         songQueue.forEach((item, index) => {
@@ -35,15 +30,12 @@ function queueFunc(command, language) {
         });
         const arrayChunk = array_chunks(songQueue, 10);
         if (songQueue.length > 10) {
-            dynamicEmbed.createEmbedFlip(command, arrayChunk, ['⬅️', '➡️'], createEmbed);
+            await dynamicEmbed.createEmbedFlip(command, arrayChunk, ['⬅️', '➡️'], createEmbed);
         }
         else {
             const embed = createEmbed(songQueue);
             return commandReply.reply(command, embed);
         }
-    }
-    else {
-        return commandReply.reply(command, language.noSong, 'RED');
     }
 }
 module.exports = {
@@ -51,8 +43,8 @@ module.exports = {
     guildOnly: true,
     aliases: ['q'],
     description: true,
-    execute(message, _args, language) {
-        queueFunc(message, language);
+    async execute(message, _args, language) {
+        await queueFunc(message, language);
     },
     slashCommand: {
         data: new SlashCommandBuilder(),

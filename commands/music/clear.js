@@ -1,29 +1,24 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const CommandReply = require('../../functions/commandReply.js');
-const { queue } = require('../../data/queueData');
+const { checkStats } = require('../../functions/musicFunctions');
 const commandReply = new CommandReply();
 function clear(command, language) {
-    const serverQueue = queue.get(command.guild.id);
-
-    if (!command.member.voice.channel) {
-        return commandReply.reply(command, language.notInVC, 'RED');
-    }
-
-    if (!serverQueue) return commandReply.reply(command, language.noSong, 'RED');
+    const serverQueue = checkStats(command, language);
 
     serverQueue.songs.splice(1);
+    return commandReply.reply(command, language.cleared, 'RED');
 }
 module.exports = {
     name: 'clear',
     guildOnly: true,
     description: true,
-    async execute(message, _args, language) {
-        await clear(message, language);
+    execute(message, _args, language) {
+        clear(message, language);
     },
     slashCommand: {
         data: new SlashCommandBuilder(),
-        async execute(interaction, language) {
-            await clear(interaction, language);
+        execute(interaction, language) {
+            clear(interaction, language);
         },
     },
 };

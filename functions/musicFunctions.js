@@ -238,4 +238,21 @@ module.exports = {
         ret += `${secs}`;
         return ret;
     },
+    checkStats(command, language, checkPlaying = false) {
+        const serverQueue = queue.get(command.guild.id);
+
+        if (!command.member.voice.channel) {
+            commandReply.reply(command, language.notInVC, 'RED');
+            return undefined;
+        }
+        if (!serverQueue) {
+            commandReply.reply(command, language.noSong, 'RED');
+            return undefined;
+        }
+        if (checkPlaying && !serverQueue.playing) {
+            commandReply.reply(command, language.notPlayingMusic, 'RED');
+            return undefined;
+        }
+        return serverQueue;
+    },
 };

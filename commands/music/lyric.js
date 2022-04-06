@@ -6,13 +6,10 @@ const solenolyrics = require('solenolyrics');
 const Genius = require('genius-lyrics');
 const geniusToken = process.env.GENIUS || require('../../config/config.json').genius_token;
 const Client = geniusToken ? new Genius.Client(geniusToken) : undefined;
+const { checkStats } = require('../../functions/musicFunctions');
 async function lyric(command, args, language) {
-    const { queue } = require('../../data/queueData');
-    const serverQueue = queue.get(command.guild.id);
+    const serverQueue = checkStats(command, language);
 
-    if (!command.member.voice.channel) {
-        return commandReply.reply(command, language.notInVC, 'RED');
-    }
     async function searchLyrics(keyword) {
         const msg = await commandReply.reply(command, `:mag: | Searching lyrics for ${keyword}...`, 'BLUE');
         let lyrics;
@@ -45,12 +42,6 @@ async function lyric(command, args, language) {
         let keyword;
         if (args[0]) keyword = command.content.substr(command.content.indexOf(' ') + 1);
         await searchLyrics(keyword ?? songTitle);
-    }
-    else {
-        let keyword;
-        if (args[0]) keyword = command.content?.substr(command.content?.indexOf(' ') + 1);
-        if (keyword) return await searchLyrics(keyword);
-        return commandReply.reply(command, language.noSong, 'RED');
     }
 }
 module.exports = {

@@ -1,13 +1,9 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const CommandReply = require('../../functions/commandReply.js');
 const commandReply = new CommandReply();
+const { checkStats } = require('../../functions/musicFunctions');
 function resume(command, language) {
-    const { queue } = require('../../data/queueData');
-    const serverQueue = queue.get(command.guild.id);
-
-    if (!command.member.voice.channel) {
-        return commandReply.reply(command, language.notInVC, 'RED');
-    }
+    const serverQueue = checkStats(command, language);
 
     if (serverQueue) {
         if (serverQueue.playing) return commandReply.reply(command, 'I am already playing!', 'RED');
@@ -15,7 +11,6 @@ function resume(command, language) {
         serverQueue.playing = true;
         return commandReply.reply(command, 'Resumed!', 'GREEN');
     }
-    return commandReply.reply(command, language.noSong, 'RED');
 }
 module.exports = {
     name: 'resume',
@@ -26,7 +21,7 @@ module.exports = {
     },
     slashCommand: {
         data: new SlashCommandBuilder(),
-        async execute(interaction, language) {
+        execute(interaction, language) {
             resume(interaction, language);
         },
     },

@@ -1,12 +1,9 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const CommandReply = require('../../functions/commandReply.js');
 const commandReply = new CommandReply();
+const { checkStats } = require('../../functions/musicFunctions');
 async function remove(command, args, language) {
-    const { queue } = require('../../data/queueData');
-    const serverQueue = queue.get(command.guild.id);
-    if (!command.member.voice.channel) {
-        return commandReply.reply(command, language.notInVC, 'RED');
-    }
+    const serverQueue = checkStats(command, language);
 
     if (serverQueue) {
         args.forEach((number) => {
@@ -19,9 +16,6 @@ async function remove(command, args, language) {
                 commandReply.reply(command, language.invalidInt, 'RED');
             }
         });
-    }
-    else {
-        return commandReply.reply(command, language.noSong, 'RED');
     }
 }
 module.exports = {

@@ -12,20 +12,17 @@ let spotify;
 if (SpotifyClientID && SpotifyClientSecret) spotify = new Spotify(SpotifyClientID, SpotifyClientSecret);
 const { MessageActionRow, MessageSelectMenu, Message } = require('discord.js');
 
-const { waitImport, handleVideo } = require('../../functions/musicFunctions');
+const { waitImport, handleVideo, checkStats } = require('../../functions/musicFunctions');
 const ytrx = /(?:youtube\.com.*[?|&](?:v|list)=|youtube\.com.*embed\/|youtube\.com.*v\/|youtu\.be\/)((?!videoseries)[a-zA-Z0-9_-]*)/;
 const scrxt = new RegExp('^(?<track>https://soundcloud.com/(?!sets|stats|groups|upload|you|mobile|stream|messages|discover|notifications|terms-of-use|people|pages|jobs|settings|logout|charts|imprint|popular[a-z0-9-_]{1,25})/(?!sets|playlist|stats|settings|logout|notifications|you|messages[a-z0-9-_]{1,100}(?:/s-[a-zA-Z0-9-_]{1,10})?))[a-z0-9-?=/]*$');
 const sprxtrack = /(http[s]?:\/\/)?(open\.spotify\.com)\//;
 
 async function play(command, args, language) {
-    const { queue } = require('../../data/queueData');
-    let serverQueue = queue.get(command.guild.id);
+    let serverQueue = checkStats(command, language);
     const url = args[0];
 
     const voiceChannel = command.member.voice.channel;
-    if (!voiceChannel) {
-        return commandReply.edit(command, language.notInVC, 'RED');
-    }
+
     const permissions = voiceChannel.permissionsFor(command.client.user);
     if (!permissions.has('CONNECT') || !permissions.has('SPEAK')) {
         return commandReply.edit(command, language.cantJoinVC, 'RED');

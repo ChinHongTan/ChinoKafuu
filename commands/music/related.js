@@ -1,17 +1,14 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const CommandReply = require('../../functions/commandReply.js');
-const { queue } = require('../../data/queueData');
 const ytsr = require('youtube-sr').default;
-const { handleVideo } = require('../../functions/musicFunctions');
+const { handleVideo, checkStats } = require('../../functions/musicFunctions');
 const ytdl = require('ytdl-core');
 const scdl = require('soundcloud-downloader').default;
 const commandReply = new CommandReply();
 
 async function related(command, language) {
-    const serverQueue = queue.get(command.guild.id);
-    if (!serverQueue) {
-        return commandReply.reply(command, language.notPlayingMusic, 'RED');
-    }
+    const serverQueue = checkStats(command, language);
+
     const { voiceChannel } = serverQueue;
     const { songHistory } = serverQueue;
     const { songs } = serverQueue;
@@ -63,8 +60,6 @@ async function related(command, language) {
         relatedVidsInfo.sort((a, b) => b.mark - a.mark);
         return relatedVidsInfo;
     }
-
-    if (!lastSong) return commandReply.reply(command, language.noSong, 'RED');
 
     await commandReply.reply(command, language.relatedSearch, 'YELLOW');
     let data, url, result, relatedVideos, urlList, relatedVidsInfo = [];

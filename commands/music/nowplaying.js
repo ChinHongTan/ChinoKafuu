@@ -1,17 +1,12 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const CommandReply = require('../../functions/commandReply.js');
 const commandReply = new CommandReply();
-const { format } = require('../../functions/musicFunctions');
+const { format, checkStats } = require('../../functions/musicFunctions');
 const { MessageEmbed } = require('discord.js');
 const progressbar = require('string-progressbar');
-function nowplaying(command, language) {
-    const { queue } = require('../../data/queueData');
-    const serverQueue = queue.get(command.guild.id);
+function nowPlaying(command, language) {
+    const serverQueue = checkStats(command, language, true);
     const resource = serverQueue?.resource;
-
-    if (!command.member.voice.channel) {
-        return commandReply.reply(command, language.notInVC, 'RED');
-    }
 
     if (serverQueue) {
         const song = serverQueue.songs[0];
@@ -25,20 +20,19 @@ function nowplaying(command, language) {
             .setFooter(language.musicFooter, command.client.user.displayAvatarURL());
         return commandReply.reply(command, embed);
     }
-    return commandReply.reply(command, language.noSong, 'RED');
 }
 module.exports = {
-    name: 'nowplaying',
+    name: 'nowPlaying',
     guildOnly: true,
     aliases: ['np'],
     description: true,
-    execute(message, _args, language) {
-        nowplaying(message, language);
+    async execute(message, _args, language) {
+        await nowPlaying(message, language);
     },
     slashCommand: {
         data: new SlashCommandBuilder(),
-        execute(interaction, language) {
-            nowplaying(interaction, language);
+        async execute(interaction, language) {
+            await nowPlaying(interaction, language);
         },
     },
 };

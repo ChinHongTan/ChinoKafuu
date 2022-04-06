@@ -1,18 +1,13 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const CommandReply = require('../../functions/commandReply.js');
 const commandReply = new CommandReply();
+const { checkStats } = require('../../functions/musicFunctions');
 function stop(command, language) {
-    const { queue } = require('../../data/queueData');
-    const serverQueue = queue.get(command.guild.id);
-
-    if (!command.member.voice.channel) {
-        return commandReply.reply(command, language.notInVC, 'RED');
-    }
-
-    if (!serverQueue) return commandReply.reply(command, language.noSong, 'RED');
+    const serverQueue = checkStats(command, language);
 
     serverQueue.songs = [];
     serverQueue.player.stop();
+    return commandReply.reply(command, language.stopped, 'BLUE');
 }
 module.exports = {
     name: 'stop',
