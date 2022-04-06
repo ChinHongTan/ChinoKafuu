@@ -158,11 +158,11 @@ async function play(command, args, language) {
 
     if (!args[0]) return commandReply.edit(command, language.noArgs, 'RED');
     if (url.match(ytrx)) return processYoutubeLink(url);
-    if (url.includes('https://open.spotify.com')) {
+    if (url.startsWith('https://open.spotify.com')) {
         if (!SpotifyClientID || !SpotifyClientSecret) return commandReply.edit(command, 'Spotify songs cannot be processed!', 'RED');
         return processSpotifyLink(url);
     }
-    if (url.includes('https://soundcloud.com')) return processSoundcloudLink(url);
+    if (url.startsWith('https://soundcloud.com')) return processSoundcloudLink(url);
 
     const keyword = command instanceof Message ? command.content.substr(command.content.indexOf(' ') + 1) : args;
     let msg = await commandReply.edit(command, language.searching.replace('${keyword}', keyword), 'YELLOW');
