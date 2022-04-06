@@ -38,14 +38,14 @@ async function loli(command) {
     // choose an illust randomly and send it
     const randomIllust = illusts[Math.floor(Math.random() * illusts.length)];
     if (randomIllust.meta_pages.length === 0) {
-        targetURL.push(randomIllust.meta_single_page.original_image_url.replace('net', 'cat'));
+        targetURL.push(randomIllust.meta_single_page.original_image_url.replace('pximg.net', 'pixiv.cat'));
     }
     if (randomIllust.meta_pages.length > 5) {
-        targetURL.push(randomIllust.meta_pages[0].image_urls.original.replace('net', 'cat'));
+        targetURL.push(randomIllust.meta_pages[0].image_urls.original.replace('pximg.net', 'pixiv.cat'));
     }
     else {
         for (let i = 0; i < randomIllust.meta_pages.length; i++) {
-            targetURL.push(randomIllust.meta_pages[i].image_urls.original.replace('net', 'cat'));
+            targetURL.push(randomIllust.meta_pages[i].image_urls.original.replace('pximg.net', 'pixiv.cat'));
         }
     }
 
