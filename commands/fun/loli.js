@@ -17,8 +17,16 @@ async function loli(command) {
     }
     else {
         // search 4 pages
-        illusts = await pixiv.search.illusts({ word: word, type: 'illust', bookmarks: '1000', r18: false, search_target: 'partial_match_for_tags' });
-        if (pixiv.search.nextURL) illusts = await pixiv.util.multiCall({ next_url: pixiv.search.nextURL, illusts }, 3);
+        illusts = await pixiv.search.illusts({
+            word: word,
+            type: 'illust',
+            bookmarks: '1000',
+            r18: false,
+            search_target: 'partial_match_for_tags',
+        });
+        if (pixiv.search.nextURL) {
+            illusts = await pixiv.util.multiCall({ next_url: pixiv.search.nextURL, illusts }, 3);
+        }
         illusts = illusts.filter((illust) => {
             return illust.x_restrict === 0 && illust.total_bookmarks >= 1000;
         });
@@ -29,11 +37,15 @@ async function loli(command) {
 
     // choose an illust randomly and send it
     const randomIllust = illusts[Math.floor(Math.random() * illusts.length)];
-    if (randomIllust.meta_pages.length === 0) targetURL.push(`https://pixiv.cat/${randomIllust.id}.png`);
-    if (randomIllust.meta_pages.length > 5) targetURL.push(`https://pixiv.cat/${randomIllust.id}-1.png`);
+    if (randomIllust.meta_pages.length === 0) {
+        targetURL.push(randomIllust.meta_single_page.original_image_url.replace('net', 'cat'));
+    }
+    if (randomIllust.meta_pages.length > 5) {
+        targetURL.push(randomIllust.meta_pages[0].image_urls.original.replace('net', 'cat'));
+    }
     else {
-        for (let i = 1; i <= randomIllust.meta_pages.length; i++) {
-            targetURL.push(`https://pixiv.cat/${randomIllust.id}-${i}.png`);
+        for (let i = 0; i < randomIllust.meta_pages.length; i++) {
+            targetURL.push(randomIllust.meta_pages[i].image_urls.original.replace('net', 'cat'));
         }
     }
 
