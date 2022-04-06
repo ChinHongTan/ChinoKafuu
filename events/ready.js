@@ -8,6 +8,7 @@ module.exports = {
         const clientId = process.env.CLIENT_ID || require('../config/config.json').clientId;
         const token = process.env.TOKEN || require('../config/config.json').token;
         const util = require('util');
+
         console.log = async function(d) {
             const logChannel = await client.channels.fetch('960803056251990017');
             await logChannel.send(util.format(d) + '\n');

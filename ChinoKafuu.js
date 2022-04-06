@@ -30,6 +30,7 @@ const client = new Discord.Client({
         Discord.Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
         Discord.Intents.FLAGS.DIRECT_MESSAGE_TYPING,
     ],
+    partials: ['MESSAGE', 'REACTION'],
 });
 
 client.commands = new Discord.Collection();
@@ -95,8 +96,9 @@ if (pixivRefreshToken) {
 
 // catch errors so that code wouldn't stop
 process.on('unhandledRejection', error => {
-    console.error(`Unhandled promise rejection: ${error}`);
+    console.log(JSON.stringify(error, ['message', 'arguments', 'type', 'name']));
 });
+
 
 /*
 console.log = async function(d) {

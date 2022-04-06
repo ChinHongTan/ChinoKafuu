@@ -22,7 +22,7 @@ function nowPlaying(command, language) {
     }
 }
 module.exports = {
-    name: 'nowPlaying',
+    name: 'nowplaying',
     guildOnly: true,
     aliases: ['np'],
     description: true,
