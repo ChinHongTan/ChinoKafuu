@@ -6,19 +6,20 @@ function isString(x: any): x is string {
 
 class CommandReply {
     // reply to a user command
-    async reply(command: Message | CommandInteraction, response: string | MessageEmbed | MessageOptions, color?: ColorResolvable) {
-        if (response instanceof MessageEmbed) {
-            if (command instanceof Message) return command.reply({ embeds: [response] });
-            await command.reply({ embeds: [response] });
-            return await command.fetchReply();
-        } else if (isString(response)) {
+    async reply(command: Message | CommandInteraction, response: string | MessageOptions, color?: ColorResolvable) {
+        if (isString(response)) {
             if (command instanceof Message) {
                 return command.reply({ embeds: [{ description: response, color: color }] });
+            }
+            if (command.deferred) {
+                await command.editReply({ embeds: [{ description: response, color: color }] });
+                return await command.fetchReply();
             }
             await command.reply({ embeds: [{ description: response, color: color }] });
             return await command.fetchReply();
         }
         if (command instanceof Message) return command.reply(response);
+        if (command.deferred) return await command.editReply(response);
         await command.reply(response);
         return await command.fetchReply();
     }
