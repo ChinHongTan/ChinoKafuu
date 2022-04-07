@@ -39,7 +39,7 @@ module.exports = {
             if (image === '' && message.cleanContent.length < 1) return message.channel.send(`${user}, you cannot star an empty message.`);
             const embed = new MessageEmbed()
                 .setColor(15844367)
-                .setDescription(message.cleanContent)
+                .setDescription(`${message.cleanContent}\n[Link](${message.url})`)
                 .setAuthor({ name: message.author.tag, iconURL: message.author.displayAvatarURL() })
                 .setTimestamp(new Date())
                 .setFooter({ text: `⭐ 1 | ${message.id}` })
