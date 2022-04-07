@@ -38,8 +38,7 @@ module.exports = {
                 recommendation.forEach((_similarity, cmd) => {
                     message.channel.send(`\`${prefix}${cmd}\`\n`);
                 });
-            }
-            else {
+            } else {
                 message.channel.send(`\`${prefix}${commandName}\` is not a valid command!`);
             }
 
@@ -96,8 +95,7 @@ module.exports = {
 
         try {
             await command.execute(message, args, language);
-        }
-        catch (error) {
+        } catch (error) {
             console.error(error);
             message.reply('There was an error trying to execute that command!');
             message.channel.send(error.message);

@@ -16,8 +16,7 @@ async function setLanguage(command, args, language) {
         const options = { upsert: true };
         await collection.replaceOne(query, guildOption, options);
         return commandReply.reply(command, language.changeSuccess.replace('${args[0]}', args[0]), 'GREEN');
-    }
-    else {
+    } else {
         const rawData = fs.readFileSync('./data/guildOption.json');
         const guildCollection = JSON.parse(rawData);
         const guildOption = guildCollection[command.guild.id] ?? { id: command.guild.id, options: {} };

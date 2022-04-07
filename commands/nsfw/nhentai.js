@@ -94,12 +94,10 @@ async function nhentaiFunc(command, args, _language) {
         if (nhentai.exists(args[0])) {
             const doujin = await nhentai.getDoujin(args[0]);
             dynamicEmbed.createEmbedFlip(command, [doujin], ['▶️'], createDoujinEmbed, generateContent, [doujin]);
-        }
-        else {
+        } else {
             return commandReply.reply(command, 'The book ID doesn\'t exist!', 'RED');
         }
-    }
-    else {
+    } else {
         // search the keyword given
         const result = await nana.search(args[0]);
         const page = 0;

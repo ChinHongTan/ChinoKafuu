@@ -16,8 +16,7 @@ function evalFunc(message, args, _language) {
         }
 
         message.channel.send(clean(evaled), { code: 'xl' });
-    }
-    catch (err) {
+    } catch (err) {
         message.channel.send(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``);
     }
 }

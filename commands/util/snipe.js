@@ -10,8 +10,7 @@ async function snipe(command, args, language) {
     let snipeWithGuild;
     if (collection) {
         snipeWithGuild = await collection.findOne({ id: command.guild.id });
-    }
-    else {
+    } else {
         const rawData = fs.readFileSync('./data/snipes.json');
         snipeWithGuild = JSON.parse(rawData);
     }
@@ -19,8 +18,7 @@ async function snipe(command, args, language) {
 
     if (snipeWithGuild) {
         snipes = snipeWithGuild.snipes;
-    }
-    else {
+    } else {
         return commandReply.reply(command, language.noSnipe, 'RED');
     }
     const arg = args[0] ?? 1;

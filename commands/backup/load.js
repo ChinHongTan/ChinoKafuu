@@ -15,8 +15,7 @@ module.exports = {
         let rawData;
         try {
             rawData = fs.readFileSync(`./my-backups/${backupID}.json`);
-        }
-        catch (err) {
+        } catch (err) {
             return message.channel.send(language.noBackupFound.replace('${backupID}', backupID));
         }
         const serverBackup = JSON.parse(rawData);
@@ -57,8 +56,7 @@ module.exports = {
                     // If an error occurred
                     return message.author.send(language.backupError);
                 });
-        }
-        catch (err) {
+        } catch (err) {
             console.log(err);
             // if the backup wasn't found
             return message.channel.send(language.noBackupFound.replace('${backupID}', backupID));

@@ -54,8 +54,7 @@ for (const file of eventFiles) {
     const event = require(`./events/${file}`);
     if (event.once) {
         client.once(event.name, async (...args) => await event.execute(...args, client));
-    }
-    else {
+    } else {
         client.on(event.name, async (...args) => await event.execute(...args, client));
     }
 }
@@ -77,8 +76,7 @@ if (mongodbURI) {
         client.guildOptions = db.collection('guildoptions');
         await client.login(token);
     })();
-}
-else {
+} else {
     (async () => {
         await client.login(token);
     })();

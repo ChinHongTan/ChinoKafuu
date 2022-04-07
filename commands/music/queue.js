@@ -31,8 +31,7 @@ async function queueFunc(command, language) {
         const arrayChunk = array_chunks(songQueue, 10);
         if (songQueue.length > 10) {
             await dynamicEmbed.createEmbedFlip(command, arrayChunk, ['⬅️', '➡️'], createEmbed);
-        }
-        else {
+        } else {
             const embed = createEmbed(songQueue);
             return commandReply.reply(command, embed);
         }

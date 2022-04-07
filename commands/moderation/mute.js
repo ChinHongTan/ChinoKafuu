@@ -34,8 +34,7 @@ async function mute(command, args = []) {
                     CONNECT: false,
                 });
             }
-        }
-        catch (e) {
+        } catch (e) {
             console.log(e);
         }
     }

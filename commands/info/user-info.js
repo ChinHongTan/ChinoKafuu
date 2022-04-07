@@ -11,16 +11,14 @@ function getUserInfo(author, language) {
                 activityDescription += language.customStatus
                     .replace('<:${name}:${id}>', activity.emoji)
                     .replace('${state}', activity.state);
-            }
-            else {
+            } else {
                 activityDescription += language.gameStatus
                     .replace('${type}', activity.type)
                     .replace('${name}', activity.name)
                     .replace('${details}', activity.details ? activity.details : '');
             }
         }
-    }
-    else {
+    } else {
         activityDescription = language.notPlaying;
     }
     return new MessageEmbed()

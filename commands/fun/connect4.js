@@ -105,8 +105,7 @@ async function connect4(command, language) {
             const square = squaresDict[coordinate];
             if (square.isOccupied !== 'white') {
                 // pass
-            }
-            else {
+            } else {
                 // say this is Blue’s turn
                 // round refers to Blue's turn
                 square.isOccupied = round.name;
@@ -142,8 +141,7 @@ async function connect4(command, language) {
         if (round.name === 'red') {
             round.name = 'yellow';
             round.emoji = '🟡';
-        }
-        else {
+        } else {
             round.name = 'red';
             round.emoji = '🔴';
         }

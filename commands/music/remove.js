@@ -11,8 +11,7 @@ async function remove(command, args, language) {
             if (Number.isInteger(queuenum) && queuenum <= serverQueue.songs.length && queuenum > 0) {
                 commandReply.reply(command, language.removed.replace('${serverQueue.songs[queuenum].title}', serverQueue.songs[queuenum].title), 'GREEN');
                 serverQueue.songs.splice(queuenum, 1);
-            }
-            else {
+            } else {
                 commandReply.reply(command, language.invalidInt, 'RED');
             }
         });

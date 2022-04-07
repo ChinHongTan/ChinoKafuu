@@ -1,12 +1,11 @@
-const fs = require("fs");
+const fs = require('fs');
 module.exports = {
     name: 'interactionCreate',
     async execute(interaction, client) {
         if (!interaction.isCommand()) return;
         const collection = interaction.client.guildOptions;
         let rawData;
-        if (collection) rawData = await collection.findOne({ id: interaction?.guild?.id });
-        else {
+        if (collection) {rawData = await collection.findOne({ id: interaction?.guild?.id });} else {
             const buffer = fs.readFileSync('./data/guildOption.json');
             const parsedJSON = JSON.parse(buffer);
             rawData = parsedJSON[interaction?.guild?.id];
@@ -23,8 +22,7 @@ module.exports = {
 
         try {
             await command.slashCommand.execute(interaction, language);
-        }
-        catch (error) {
+        } catch (error) {
             console.error(error);
             await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
         }

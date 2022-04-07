@@ -22,8 +22,7 @@ async function related(command, language) {
             url = result[i];
             if (songHistoryUrls.includes(url) || songUrls.includes(url)) {
                 result.splice(i, 1);
-            }
-            else {
+            } else {
                 break;
             }
         }
@@ -87,8 +86,7 @@ async function related(command, language) {
         bestTrack = relatedVidsInfo.filter((vid) => vid.author.id === authorId && vid.mark > 0);
         if (bestTrack.length > 0) {
             await playRelatedTrack(bestTrack);
-        }
-        else {
+        } else {
             await playRelatedTrack(relatedVidsInfo);
         }
         break;

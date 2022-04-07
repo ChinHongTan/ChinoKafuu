@@ -11,8 +11,7 @@ async function anime(command, args, language) {
 
         try {
             url = new URL(string);
-        }
-        catch (_) {
+        } catch (_) {
             return false;
         }
 

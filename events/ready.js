@@ -33,8 +33,7 @@ module.exports = {
         for (const id of guilds) {
             const collection = client.guildOptions;
             let rawData;
-            if (collection) rawData = await collection.findOne({ id });
-            else {
+            if (collection) {rawData = await collection.findOne({ id });} else {
                 const buffer = fs.readFileSync('./data/guildOption.json');
                 const parsedJSON = JSON.parse(buffer);
                 rawData = parsedJSON[id];
@@ -65,8 +64,7 @@ module.exports = {
                 );
 
                 console.log('Successfully registered application commands.');
-            }
-            catch (error) {
+            } catch (error) {
                 console.error(`Missing access: ${error} for ID: ${id}`);
             }
         }

@@ -22,8 +22,7 @@ module.exports = {
                 const data = JSON.stringify(countingData, null, 2);
                 fs.writeFileSync('../data/countingData.json', data);
                 message.react('❌');
-            }
-            else {
+            } else {
                 countingData.counter = message.content;
                 countingData.author = message.author.tag;
                 const data = JSON.stringify(countingData, null, 2);

@@ -14,8 +14,7 @@ async function loli(command) {
     // if illust list exists
     if (fs.existsSync('./data/illusts.json')) {
         illusts = JSON.parse(fs.readFileSync('./data/illusts.json'));
-    }
-    else {
+    } else {
         // search 4 pages
         illusts = await pixiv.search.illusts({
             word: word,
@@ -42,8 +41,7 @@ async function loli(command) {
     }
     if (randomIllust.meta_pages.length > 5) {
         targetURL.push(randomIllust.meta_pages[0].image_urls.original.replace('pximg.net', 'pixiv.cat'));
-    }
-    else {
+    } else {
         for (let i = 0; i < randomIllust.meta_pages.length; i++) {
             targetURL.push(randomIllust.meta_pages[i].image_urls.original.replace('pximg.net', 'pixiv.cat'));
         }

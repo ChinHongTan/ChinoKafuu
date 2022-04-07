@@ -77,8 +77,7 @@ module.exports = {
             avatarList.forEach((embed) => {
                 commandReply.reply(message, embed);
             });
-        }
-        else {
+        } else {
             avatar(message, args, language);
         }
     },

@@ -4,8 +4,9 @@ module.exports = {
     async storeSnipes(message) {
         const collection = message.client.snipeCollection;
         let rawData;
-        if (collection) rawData = await collection.findOne({ id: message.guild.id });
-        else {
+        if (collection) {
+            rawData = await collection.findOne({ id: message.guild.id });
+        } else {
             const buffer = fs.readFileSync('./data/snipes.json');
             const parsedJSON = JSON.parse(buffer);
             rawData = parsedJSON[message.guild.id];
@@ -32,16 +33,16 @@ module.exports = {
             const query = { id: message.guild.id };
             const options = { upsert: true };
             await collection.replaceOne(query, snipeWithGuild, options);
-        }
-        else {
+        } else {
             fs.writeFileSync('./data/snipes.json', JSON.stringify(snipeWithGuild));
         }
     },
     async storeEditSnipes(oldMessage, newMessage) {
         const collection = oldMessage.client.editSnipeCollection;
         let rawData;
-        if (collection) rawData = await collection.findOne({ id: oldMessage.guild.id });
-        else {
+        if (collection) {
+            rawData = await collection.findOne({ id: oldMessage.guild.id });
+        } else {
             const buffer = fs.readFileSync('./data/editSnipes.json');
             const parsedJSON = JSON.parse(buffer);
             rawData = parsedJSON[oldMessage.guild.id];
@@ -70,8 +71,7 @@ module.exports = {
             const query = { id: oldMessage.guild.id };
             const options = { upsert: true };
             await collection.replaceOne(query, editSnipeWithGuild, options);
-        }
-        else {
+        } else {
             fs.writeFileSync('./data/editSnipes.json', JSON.stringify(editSnipeWithGuild));
         }
     },
@@ -148,6 +148,21 @@ module.exports = {
 
         channel.send(`Welcome to the server, ${member}!`, attachment);
     },
+    async searchForStars(reaction) {
+        const { message } = reaction;
+        const starChannel = message.guild.channels.cache.find(channel => channel.name === 'starboard-channel');
+        if (!starChannel) return message.channel.send('It appears that you do not have a starboard channel.');
+        const fetchedMessages = await starChannel.messages.fetch({ limit: 100 });
+        const stars = fetchedMessages.filter((m) => m.embeds.length !== 0).find(m => m?.embeds[0]?.footer?.text?.startsWith('⭐') && m?.embeds[0]?.footer?.text?.endsWith(message.id));
+        return { stars, starChannel };
+    },
+    async extension(reaction, attachment) {
+        const imageLink = attachment.split('.');
+        const typeOfImage = imageLink[imageLink.length - 1];
+        const image = /(jpg|jpeg|png|gif)/gi.test(typeOfImage);
+        if (!image) return '';
+        return attachment;
+    },
     getEditDistance(a, b) {
         if (a.length === 0) return b.length;
         if (b.length === 0) return a.length;
@@ -171,8 +186,7 @@ module.exports = {
             for (j = 1; j <= a.length; j++) {
                 if (b.charAt(i - 1) === a.charAt(j - 1)) {
                     matrix[i][j] = matrix[i - 1][j - 1];
-                }
-                else {
+                } else {
                     matrix[i][j] = Math.min(
                         // substitution
                         matrix[i - 1][j - 1] + 1,

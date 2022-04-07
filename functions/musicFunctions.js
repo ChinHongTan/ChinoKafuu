@@ -87,8 +87,7 @@ async function play(guild, song, message) {
         .setFooter('音樂系統', message.client.user.displayAvatarURL());
     if (serverQueue.textChannel.lastMessage === message) {
         await commandReply.edit(message, embed);
-    }
-    else {
+    } else {
         serverQueue.textChannel.send({ embeds: [embed] });
     }
 }
@@ -197,8 +196,7 @@ module.exports = {
                     adapterCreator: voiceChannel.guild.voiceAdapterCreator,
                 });
                 await play(message.guild, serverQueue.songs[0], message);
-            }
-            catch (error) {
+            } catch (error) {
                 console.error(error);
                 serverQueue.songs.length = 0;
                 return message.channel.send(`I could not join the voice channel: ${error}`);
