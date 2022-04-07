@@ -26,7 +26,7 @@ module.exports = {
             const embed = new MessageEmbed()
                 .setColor(foundStar.color)
                 .addField(foundStar.description, '\u200B')
-                .setDescription(`[Url](${foundStar.url})`)
+                .setDescription(`[Url](www.google.com)`)
                 .setAuthor({ name: message.author.tag, iconURL: message.author.displayAvatarURL() })
                 .setTimestamp()
                 .setFooter({ text: `⭐ ${parseInt(star[1]) - 1} | ${message.id}` })
