@@ -26,8 +26,7 @@ module.exports = {
             const image = message.attachments.size > 0 ? await extension(reaction, message.attachments.first().url) : '';
             const embed = new MessageEmbed()
                 .setColor(foundStar.color)
-                .addField(foundStar.description, '\u200B')
-                .setDescription(`[Url](www.google.com)`)
+                .setDescription(foundStar.description)
                 .setAuthor({ name: message.author.tag, iconURL: message.author.displayAvatarURL() })
                 .setTimestamp()
                 .setFooter({ text: `⭐ ${parseInt(star[1]) + 1} | ${message.id}` })
