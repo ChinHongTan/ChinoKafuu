@@ -4,6 +4,7 @@ const { checkStats } = require('../../functions/musicFunctions');
 const commandReply = new CommandReply();
 function clear(command, language) {
     const serverQueue = checkStats(command, language);
+    if (serverQueue === 'error') return;
 
     serverQueue.songs.splice(1);
     return commandReply.reply(command, language.cleared, 'RED');

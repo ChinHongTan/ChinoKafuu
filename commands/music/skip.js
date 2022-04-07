@@ -4,6 +4,7 @@ const commandReply = new CommandReply();
 const { checkStats } = require('../../functions/musicFunctions');
 function skip(command, language) {
     const serverQueue = checkStats(command, language);
+    if (serverQueue === 'error') return;
 
     serverQueue.player.stop();
     return commandReply.reply(command, language.skipped, 'BLUE');

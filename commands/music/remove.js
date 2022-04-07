@@ -4,6 +4,7 @@ const commandReply = new CommandReply();
 const { checkStats } = require('../../functions/musicFunctions');
 async function remove(command, args, language) {
     const serverQueue = checkStats(command, language);
+    if (serverQueue === 'error') return;
 
     if (serverQueue) {
         args.forEach((number) => {

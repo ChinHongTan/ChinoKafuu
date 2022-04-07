@@ -9,6 +9,7 @@ const Client = geniusToken ? new Genius.Client(geniusToken) : undefined;
 const { checkStats } = require('../../functions/musicFunctions');
 async function lyric(command, args, language) {
     const serverQueue = checkStats(command, language);
+    if (serverQueue === 'error') return;
 
     async function searchLyrics(keyword) {
         const msg = await commandReply.reply(command, `:mag: | Searching lyrics for ${keyword}...`, 'BLUE');

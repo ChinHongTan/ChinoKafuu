@@ -4,6 +4,7 @@ const commandReply = new CommandReply();
 const { checkStats } = require('../../functions/musicFunctions');
 function stop(command, language) {
     const serverQueue = checkStats(command, language);
+    if (serverQueue === 'error') return;
 
     serverQueue.songs = [];
     serverQueue.player.stop();

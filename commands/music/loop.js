@@ -4,6 +4,7 @@ const commandReply = new CommandReply();
 const { checkStats } = require('../../functions/musicFunctions');
 function loop(command, language) {
     const serverQueue = checkStats(command, language);
+    if (serverQueue === 'error') return;
 
     if (serverQueue) {
         serverQueue.loop = !serverQueue.loop;

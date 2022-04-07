@@ -6,6 +6,7 @@ const { MessageEmbed } = require('discord.js');
 const progressbar = require('string-progressbar');
 function nowPlaying(command, language) {
     const serverQueue = checkStats(command, language, true);
+    if (serverQueue === 'error') return;
     const resource = serverQueue?.resource;
 
     if (serverQueue) {

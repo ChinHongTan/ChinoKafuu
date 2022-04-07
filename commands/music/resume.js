@@ -4,6 +4,7 @@ const commandReply = new CommandReply();
 const { checkStats } = require('../../functions/musicFunctions');
 function resume(command, language) {
     const serverQueue = checkStats(command, language);
+    if (serverQueue === 'error') return;
 
     if (serverQueue) {
         if (serverQueue.playing) return commandReply.reply(command, 'I am already playing!', 'RED');

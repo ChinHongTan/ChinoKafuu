@@ -4,6 +4,7 @@ const commandReply = new CommandReply();
 const { checkStats } = require('../../functions/musicFunctions');
 function pause(command, language) {
     const serverQueue = checkStats(command, language, true);
+    if (serverQueue === 'error') return;
 
     if (serverQueue) {
         serverQueue.player.pause(true);

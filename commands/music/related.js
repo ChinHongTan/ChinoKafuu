@@ -8,6 +8,7 @@ const commandReply = new CommandReply();
 
 async function related(command, language) {
     const serverQueue = checkStats(command, language);
+    if (serverQueue === 'error') return;
 
     const { voiceChannel } = serverQueue;
     const { songHistory } = serverQueue;

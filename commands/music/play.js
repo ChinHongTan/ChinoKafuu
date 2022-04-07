@@ -21,6 +21,7 @@ const sprxtrack = /(http[s]?:\/\/)?(open\.spotify\.com)\//;
 
 async function play(command, args, language) {
     let serverQueue = checkStats(command, language);
+    if (serverQueue === 'error') return;
     const url = args[0];
 
     const voiceChannel = command.member.voice.channel;

@@ -241,15 +241,15 @@ module.exports = {
 
         if (!command.member.voice.channel) {
             commandReply.reply(command, language.notInVC, 'RED');
-            return undefined;
+            return 'error';
         }
         if (!serverQueue) {
             commandReply.reply(command, language.noSong, 'RED');
-            return undefined;
+            return 'error';
         }
         if (checkPlaying && !serverQueue.playing) {
             commandReply.reply(command, language.notPlayingMusic, 'RED');
-            return undefined;
+            return 'error';
         }
         return serverQueue;
     },
