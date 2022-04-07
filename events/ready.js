@@ -9,6 +9,7 @@ module.exports = {
         const token = process.env.TOKEN || require('../config/config.json').token;
         const util = require('util');
 
+
         console.log = async function(d) {
             const logChannel = await client.channels.fetch('960803056251990017');
             await logChannel.send(util.format(d) + '\n');
@@ -18,6 +19,7 @@ module.exports = {
             const logChannel = await client.channels.fetch('960803056251990017');
             await logChannel.send(util.format(d) + '\n');
         };
+
 
         console.log('Ready!');
         client.user.setPresence({

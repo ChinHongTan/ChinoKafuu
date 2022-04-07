@@ -96,7 +96,7 @@ if (pixivRefreshToken) {
 
 // catch errors so that code wouldn't stop
 process.on('unhandledRejection', error => {
-    console.log(JSON.stringify(error, ['message', 'arguments', 'type', 'name']));
+    console.log(error);
 });
 
 
