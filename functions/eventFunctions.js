@@ -148,17 +148,6 @@ module.exports = {
 
         channel.send(`Welcome to the server, ${member}!`, attachment);
     },
-    async searchForStars(reaction) {
-        const { message } = reaction;
-        const starChannel = message.guild.channels.cache.find(channel => channel.name === 'starboard-channel');
-        if (!starChannel) {
-            message.channel.send('It appears that you do not have a starboard channel.');
-            return undefined;
-        }
-        const fetchedMessages = await starChannel.messages.fetch({ limit: 100 });
-        const stars = fetchedMessages.filter((m) => m.embeds.length !== 0).find(m => m?.embeds[0]?.footer?.text?.startsWith('⭐') && m?.embeds[0]?.footer?.text?.endsWith(message.id));
-        return { stars, starChannel };
-    },
     async extension(reaction, attachment) {
         const imageLink = attachment.split('.');
         const typeOfImage = imageLink[imageLink.length - 1];

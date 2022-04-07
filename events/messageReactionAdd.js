@@ -1,5 +1,5 @@
 const { MessageEmbed } = require('discord.js');
-const { searchForStars, extension } = require('../functions/eventFunctions');
+const { extension } = require('../functions/eventFunctions');
 
 module.exports = {
     name: 'messageReactionAdd',
@@ -9,7 +9,10 @@ module.exports = {
         if (reaction.emoji.name !== '⭐') return;
         if (message.author.id === user.id) return message.channel.send(`${user}, you cannot star your own messages.`);
         if (message.author.bot) return message.channel.send(`${user}, you cannot star bot messages.`);
-        const { stars, starChannel } = searchForStars(reaction);
+        const starChannel = message.guild.channels.cache.find(channel => channel.name === 'starboard-channel');
+        if (!starChannel) message.channel.send('It appears that you do not have a starboard channel.');
+        const fetchedMessages = await starChannel.messages.fetch({ limit: 100 });
+        const stars = fetchedMessages.filter((m) => m.embeds.length !== 0).find(m => m?.embeds[0]?.footer?.text?.startsWith('⭐') && m?.embeds[0]?.footer?.text?.endsWith(message.id));
         if (stars) {
             const star = /^⭐\s([0-9]{1,3})\s\|\s([0-9]{17,20})/.exec(stars.embeds[0].footer.text);
             const foundStar = stars.embeds[0];
