@@ -25,7 +25,7 @@ module.exports = {
             dynamic: true,
         });
         snipe.content = message.content ?? 'None';
-        snipe.timestamp = message.createdAt.toUTCString([8]);
+        snipe.timestamp = message.createdAt;
         snipe.attachments = message.attachments.first()?.proxyURL;
 
         snipes.unshift(snipe);
@@ -66,7 +66,7 @@ module.exports = {
         });
         editSnipe.content = oldMessage.content ?? 'None';
         if (newMessage.editedAt) {
-            editSnipe.timestamp = newMessage.editedAt.toUTCString([8]);
+            editSnipe.timestamp = newMessage.editedAt;
             editSnipes.unshift(editSnipe);
         }
         if (editSnipes.length > 10) editSnipes.pop();

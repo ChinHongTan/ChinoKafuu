@@ -31,9 +31,9 @@ async function snipe(command, args, language) {
 
     const embed = new MessageEmbed()
         .setColor('RANDOM')
-        .setAuthor(msg.author, msg.authorAvatar)
+        .setAuthor({ name: msg.author, iconURL: msg.authorAvatar })
         .setDescription(msg.content)
-        .setFooter(msg.timestamp)
+        .setTimestamp(msg.timestamp)
         .setImage(image);
     return commandReply.reply(command, { embeds: [embed] });
 }

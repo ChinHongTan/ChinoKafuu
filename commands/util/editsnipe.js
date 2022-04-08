@@ -21,9 +21,9 @@ async function esnipe(command, args, language) {
         if (!msg) return commandReply.reply(command, language.invalidSnipe, 'RED');
         const embed = new MessageEmbed()
             .setColor('RANDOM')
-            .setAuthor(msg.author, msg.authorAvatar)
+            .setAuthor({ name: msg.author, iconURL: msg.authorAvatar })
             .setDescription(msg.content)
-            .setFooter(msg.timestamp);
+            .setTimestamp(msg.timestamp);
         return commandReply.reply(command, { embeds: [embed] });
     }
     return commandReply.reply(command, language.noSnipe, 'RED');
