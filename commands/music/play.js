@@ -20,6 +20,7 @@ const scrxt = new RegExp('^(?<track>https://soundcloud.com/(?!sets|stats|groups|
 const sprxtrack = /(http[s]?:\/\/)?(open\.spotify\.com)\//;
 
 async function play(command, args, language) {
+    console.log(args);
     let serverQueue = queue.get(command.guild.id);
     if (!command.member.voice.channel) {
         return await commandReply.reply(command, language.notInVC, 'RED');
@@ -166,7 +167,7 @@ async function play(command, args, language) {
     }
     if (url.startsWith('https://soundcloud.com/')) return processSoundcloudLink(url);
 
-    const keyword = command instanceof Message ? command.content.substr(command.content.indexOf(' ') + 1) : args;
+    const keyword = command instanceof Message ? command.content.substr(command.content.indexOf(' ') + 1) : args[0];
     let msg = await commandReply.reply(command, language.searching.replace('${keyword}', keyword), 'YELLOW');
     const videos = await ytsr.search(keyword);
     const options = videos.map((video) => ({
