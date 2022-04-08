@@ -7,7 +7,8 @@ function getUserInfo(author, language) {
     let activityDescription = '';
     if (author?.presence?.activities) {
         for (const activity of author.presence.activities) {
-            if (activity.type === 'CUSTOM') {
+            // custom status
+            if (activity.type === 4) {
                 activityDescription += language.customStatus
                     .replace('<:${name}:${id}>', activity.emoji)
                     .replace('${state}', activity.state);
@@ -24,11 +25,11 @@ function getUserInfo(author, language) {
     return new MessageEmbed()
         .setColor('#0099ff')
         .setTitle('User Info')
-        .setAuthor(
-            author.guild.name,
-            author.guild.iconURL({ dynamic: true }),
-            'https://loliconshelter.netlify.app/',
-        )
+        .setAuthor({
+            name: author.guild.name,
+            iconURL: author.guild.iconURL({ dynamic: true }),
+            url: 'https://loliconshelter.netlify.app/',
+        })
         .setThumbnail(
             author.user.displayAvatarURL({
                 format: 'png',
@@ -98,7 +99,7 @@ module.exports = {
     execute(message, _args, language) {
         if (!message.mentions.members.size) {
             const embed = getUserInfo(message.member);
-            return commandReply.reply(message, embed);
+            return commandReply.reply(message, { embeds: [embed] });
         }
 
         const userInfoList = message.mentions.members.map((user) => {
@@ -115,9 +116,9 @@ module.exports = {
         async execute(interaction, language) {
             const user = interaction.options.getMember('member');
             if (!user) {
-                return commandReply.reply(interaction, getUserInfo(interaction.member, language));
+                return commandReply.reply(interaction, { embeds: [getUserInfo(interaction.member, language)] });
             }
-            await commandReply.reply(interaction, getUserInfo(user, language));
+            await commandReply.reply(interaction, { embeds: [getUserInfo(user, language)] });
         },
     },
 };

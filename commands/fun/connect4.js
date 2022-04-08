@@ -184,7 +184,7 @@ async function connect4(command, language) {
     };
 
     const embed = createEmbed(round, board);
-    const embedMessage = await commandReply.reply(command, embed);
+    const embedMessage = await commandReply.reply(command, { embeds: [embed] });
     for (const emoji of emojiList) {
         await embedMessage.react(emoji);
     }

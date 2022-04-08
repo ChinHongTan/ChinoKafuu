@@ -18,8 +18,8 @@ function nowPlaying(command, language) {
             .setDescription(`[${song.title}](${song.url})\n\`[${format(resource.playbackDuration / 1000)}/${format(song.duration)}]\`\n${progressbar.splitBar(song.duration, resource.playbackDuration / 1000, 15)[0]}`)
             .setThumbnail(song.thumb)
             .addField(language.requester, `<@!${song.requseter}>`)
-            .setFooter(language.musicFooter, command.client.user.displayAvatarURL());
-        return commandReply.reply(command, embed);
+            .setFooter({ text: language.musicFooter, iconURL: command.client.user.displayAvatarURL() });
+        return commandReply.reply(command, { embeds: [embed] });
     }
 }
 module.exports = {

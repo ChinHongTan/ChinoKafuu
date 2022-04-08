@@ -20,10 +20,10 @@ async function covid(command, args, language) {
         return new MessageEmbed()
             .setColor('RANDOM')
             .setTitle(language.covidTitle.replace('${result.country}', result.country))
-            .setAuthor(
-                'ChinoKafuu',
-                'https://cdn.discordapp.com/avatars/781328218753859635/af716f0a9958679bdb17edfc0add53a6.png?size=256',
-            )
+            .setAuthor({
+                name: 'ChinoKafuu',
+                iconURL: 'https://cdn.discordapp.com/avatars/781328218753859635/af716f0a9958679bdb17edfc0add53a6.png?size=256',
+            })
             .addFields(
                 {
                     name: language.totalCases,
@@ -72,10 +72,12 @@ async function covid(command, args, language) {
                 },
             )
             .setThumbnail(result.countryInfo?.flag)
-            .setFooter(
-                language.covidFooter.replace('${message.author.tag}', command.member.user.tag).replace('${date.toUTCString()}', date.toUTCString()),
-                command.member.user.avatarURL(),
-            );
+            .setFooter({
+                text: language.covidFooter
+                    .replace('${message.author.tag}', command.member.user.tag)
+                    .replace('${date.toUTCString()}', date.toUTCString()),
+                iconURL: command.member.user.avatarURL(),
+            });
     }
 
     if (args.length < 1) {
@@ -87,7 +89,7 @@ async function covid(command, args, language) {
         // get global covid data
         const result = await api.all({ allowNull: false });
         result.country = 'Global';
-        return commandReply.reply(command, createEmbed(result));
+        return commandReply.reply(command, { embeds: [createEmbed(result)] });
     }
     if (args[0] === 'countries') {
         // get a list of data of all countries sorted by cases
@@ -101,7 +103,7 @@ async function covid(command, args, language) {
     }
     // get a list of data of a single specific countries
     const result = await api.countries({ country: args, allowNull: false });
-    return commandReply.reply(command, createEmbed(result));
+    return commandReply.reply(command, { embeds: [createEmbed(result)] });
 }
 module.exports = {
     name: 'covid',

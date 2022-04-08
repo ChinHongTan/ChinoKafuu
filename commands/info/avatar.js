@@ -16,7 +16,7 @@ function avatar(command, args, language) {
                 dynamic: true,
                 size: 2048,
             })}`);
-        return commandReply.reply(command, embed);
+        return commandReply.reply(command, { embeds: [embed] });
     }
 
     // check if an id is provided
@@ -33,7 +33,7 @@ function avatar(command, args, language) {
                     size: 2048,
                 })}`,
             );
-        return commandReply.reply(command, embed);
+        return commandReply.reply(command, { embeds: [embed] });
     }
 
     // perform a fuzzy search based on the keyword given
@@ -51,7 +51,7 @@ function avatar(command, args, language) {
             dynamic: true,
             size: 2048,
         })}`);
-    commandReply.reply(command, embed);
+    commandReply.reply(command, { embeds: [embed] });
 }
 module.exports = {
     name: 'avatar',
@@ -75,7 +75,7 @@ module.exports = {
 
             // send the entire array of embed to the channel
             avatarList.forEach((embed) => {
-                commandReply.reply(message, embed);
+                commandReply.reply(message, { embeds: [embed] });
             });
         } else {
             avatar(message, args, language);
@@ -96,7 +96,7 @@ module.exports = {
                         size: 2048,
                     })}`,
                 );
-            return commandReply.reply(interaction, embed);
+            return commandReply.reply(interaction, { embeds: [embed] });
         },
     },
 };

@@ -24,7 +24,7 @@ async function esnipe(command, args, language) {
             .setAuthor(msg.author, msg.authorAvatar)
             .setDescription(msg.content)
             .setFooter(msg.timestamp);
-        return commandReply.reply(command, embed);
+        return commandReply.reply(command, { embeds: [embed] });
     }
     return commandReply.reply(command, language.noSnipe, 'RED');
 }

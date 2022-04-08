@@ -35,7 +35,7 @@ async function snipe(command, args, language) {
         .setDescription(msg.content)
         .setFooter(msg.timestamp)
         .setImage(image);
-    return commandReply.reply(command, embed);
+    return commandReply.reply(command, { embeds: [embed] });
 }
 module.exports = {
     name: 'snipe',

@@ -34,7 +34,7 @@ async function queueFunc(command, language) {
             await dynamicEmbed.createEmbedFlip(command, arrayChunk, ['⬅️', '➡️'], createEmbed);
         } else {
             const embed = createEmbed(songQueue);
-            return commandReply.reply(command, embed);
+            return commandReply.reply(command, { embeds: [embed] });
         }
     }
 }

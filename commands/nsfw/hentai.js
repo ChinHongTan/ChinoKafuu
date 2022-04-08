@@ -37,7 +37,7 @@ function hentai(command, _args, language) {
             '蘿莉控的FBI避難所',
             'https://cdn.discordapp.com/icons/764839074228994069/5be3f532073fdae6a9d934e1c6f6a2b5.png?size=2048',
         );
-    return commandReply.reply(command, embed);
+    return commandReply.reply(command, { embeds: [embed] });
 }
 
 module.exports = {

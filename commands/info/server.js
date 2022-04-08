@@ -8,7 +8,7 @@ function server(command) {
         .setThumbnail(command.guild.iconURL())
         .setDescription(`Information about ${command.guild.name}`)
         .setColor('BLUE')
-        .setAuthor(`${command.guild.name} Info`, command.guild.iconURL())
+        .setAuthor({ name: `${command.guild.name} Info`, iconURL: command.guild.iconURL() })
         .addFields(
             { name: 'Server name', value: command.guild.name, inline: true },
             { name: 'Server owner', value: command.guild.owner, inline: true },
@@ -18,8 +18,8 @@ function server(command) {
             { name: 'Server creation', value: command.guild.createdAt, inline: true },
             { name: 'Channels count', value: command.guild.channels.cache.size, inline: true },
         )
-        .setFooter('ChinoKafuu | Server Info', command.client.user.displayAvatarURL());
-    commandReply.reply(command, embed);
+        .setFooter({ text:'ChinoKafuu | Server Info', iconURL: command.client.user.displayAvatarURL() });
+    commandReply.reply(command, { embeds: [embed] });
 }
 module.exports = {
     name: 'server',
