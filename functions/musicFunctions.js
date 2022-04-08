@@ -78,13 +78,13 @@ async function play(guild, song, message) {
     resource.volume.setVolume(serverQueue.volume / 5);
     const embed = new MessageEmbed()
         .setThumbnail(song.thumb)
-        .setAuthor('開始撥放', message.member.user.displayAvatarURL())
+        .setAuthor({ name: '開始撥放', iconURL: message.member.user.displayAvatarURL() })
         .setColor('BLUE')
         .setTitle(song.title)
         .setURL(song.url)
         .setTimestamp(Date.now())
         .addField('播放者', `<@!${serverQueue.songs[0].requseter}>`)
-        .setFooter('音樂系統', message.client.user.displayAvatarURL());
+        .setFooter({ text: '音樂系統', iconURL: message.client.user.displayAvatarURL() });
     if (serverQueue.textChannel.lastMessage === message) {
         await commandReply.edit(message, embed);
     } else {
@@ -107,12 +107,12 @@ module.exports = {
         // eslint-disable-next-line no-async-promise-executor
         return new Promise(async (resolve, reject) => {
             let embed = new MessageEmbed()
-                .setAuthor('清單', message.member.user.displayAvatarURL())
+                .setAuthor({ name: '清單', iconURL: message.member.user.displayAvatarURL() })
                 .setColor('BLUE')
                 .setTitle('您要加入這個清單嗎')
                 .setDescription(`清單: ${name}\n長度:${length}`)
                 .setTimestamp(Date.now())
-                .setFooter('音樂系統', message.client.user.displayAvatarURL());
+                .setFooter({ text: '音樂系統', iconURL: message.client.user.displayAvatarURL() });
             const m = await commandReply.edit(message, embed);
             await m.react('📥');
             await m.react('❌');
@@ -127,22 +127,22 @@ module.exports = {
                 return;
             case '📥':
                 embed = new MessageEmbed()
-                    .setAuthor('清單', message.member.user.displayAvatarURL())
+                    .setAuthor({ name: '清單', iconURL: message.member.user.displayAvatarURL() })
                     .setColor('BLUE')
                     .setTitle('您加入了清單')
                     .setDescription(`清單: ${name}`)
                     .setTimestamp(Date.now())
-                    .setFooter('音樂系統', message.client.user.displayAvatarURL());
+                    .setFooter({ text: '音樂系統', iconURL: message.client.user.displayAvatarURL() });
                 await commandReply.edit(m, embed);
                 return resolve(true);
             case '❌':
                 embed = new MessageEmbed()
-                    .setAuthor('清單', message.member.user.displayAvatarURL())
+                    .setAuthor({ name: '清單', iconURL: message.member.user.displayAvatarURL() })
                     .setColor('BLUE')
                     .setTitle('您取消了加入清單')
                     .setDescription(`清單: ${name}`)
                     .setTimestamp(Date.now())
-                    .setFooter('音樂系統', message.client.user.displayAvatarURL());
+                    .setFooter({ text: '音樂系統', iconURL: message.client.user.displayAvatarURL() });
                 await commandReply.edit(m, embed);
                 return reject(false);
             }
@@ -207,13 +207,13 @@ module.exports = {
         if (playlist) return;
         const embed = new MessageEmbed()
             .setThumbnail(song.thumb)
-            .setAuthor('已加入播放佇列', message.member.user.displayAvatarURL())
+            .setAuthor({ name: '已加入播放佇列', iconURL: message.member.user.displayAvatarURL() })
             .setColor('BLUE')
             .setTitle(song.title)
             .setURL(song.url)
             .setTimestamp(Date.now())
             .addField('播放者', `<@!${song.requseter}>`)
-            .setFooter('音樂系統', message.client.user.displayAvatarURL());
+            .setFooter({ text:'音樂系統', iconURL: message.client.user.displayAvatarURL() });
         return commandReply.edit(message, embed);
     },
     async play(guild, song, message) {

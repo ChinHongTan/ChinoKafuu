@@ -12,7 +12,7 @@ let spotify;
 if (SpotifyClientID && SpotifyClientSecret) spotify = new Spotify(SpotifyClientID, SpotifyClientSecret);
 const { MessageActionRow, MessageSelectMenu, Message } = require('discord.js');
 
-const { waitImport, handleVideo, checkStats } = require('../../functions/musicFunctions');
+const { waitImport, handleVideo } = require('../../functions/musicFunctions');
 const queueData = require('../../data/queueData');
 const { queue } = queueData;
 const ytrx = /(?:youtube\.com.*[?|&](?:v|list)=|youtube\.com.*embed\/|youtube\.com.*v\/|youtu\.be\/)((?!videoseries)[a-zA-Z0-9_-]*)/;
@@ -20,15 +20,18 @@ const scrxt = new RegExp('^(?<track>https://soundcloud.com/(?!sets|stats|groups|
 const sprxtrack = /(http[s]?:\/\/)?(open\.spotify\.com)\//;
 
 async function play(command, args, language) {
-    let serverQueue = checkStats(command, language);
-    if (serverQueue === 'error') return;
+    let serverQueue = queue.get(command.guild.id);
+    if (!command.member.voice.channel) {
+        return await commandReply.reply(command, language.notInVC, 'RED');
+    }
+
     const url = args[0];
 
     const voiceChannel = command.member.voice.channel;
 
     const permissions = voiceChannel.permissionsFor(command.client.user);
     if (!permissions.has('CONNECT') || !permissions.has('SPEAK')) {
-        return commandReply.edit(command, language.cantJoinVC, 'RED');
+        return commandReply.reply(command, language.cantJoinVC, 'RED');
     }
 
     if (!serverQueue) {
@@ -88,7 +91,7 @@ async function play(command, args, language) {
                     { limit: 1 },
                 );
                 await handleVideo(videos, voiceChannel, true, serverQueue, 'yt', command);
-                m.edit(language.importAlbum2.replace('${videos[0].title}', videos[0].title).replace('${i}', i));
+                await m.edit(language.importAlbum2.replace('${videos[0].title}', videos[0].title).replace('${i}', i));
             }
             return m.edit(language.importAlbumDone.replace('${title}', title));
         }
@@ -141,7 +144,7 @@ async function play(command, args, language) {
                 m = await commandReply.edit(command, language.importPlaylist1.replace('${data.title}', data.title), 'BLUE');
                 for (const i in data.tracks) {
                     await handleVideo(data.tracks[i], voiceChannel, true, serverQueue, 'sc', command);
-                    m.edit(language.importPlaylist2.replace('${data.tracks[i].title}', data.tracks[i].title).replace('${i}', i));
+                    await m.edit(language.importPlaylist2.replace('${data.tracks[i].title}', data.tracks[i].title).replace('${i}', i));
                 }
             }
             return m.edit(language.importPlaylistDone.replace('${data.title}', data.title));
@@ -155,16 +158,16 @@ async function play(command, args, language) {
         }
     }
 
-    if (!args[0]) return commandReply.edit(command, language.noArgs, 'RED');
+    if (!args[0]) return commandReply.reply(command, language.noArgs, 'RED');
     if (url.match(ytrx)) return processYoutubeLink(url);
     if (url.startsWith('https://open.spotify.com/')) {
-        if (!SpotifyClientID || !SpotifyClientSecret) return commandReply.edit(command, 'Spotify songs cannot be processed!', 'RED');
+        if (!SpotifyClientID || !SpotifyClientSecret) return commandReply.reply(command, 'Spotify songs cannot be processed!', 'RED');
         return processSpotifyLink(url);
     }
     if (url.startsWith('https://soundcloud.com/')) return processSoundcloudLink(url);
 
     const keyword = command instanceof Message ? command.content.substr(command.content.indexOf(' ') + 1) : args;
-    let msg = await commandReply.edit(command, language.searching.replace('${keyword}', keyword), 'YELLOW');
+    let msg = await commandReply.reply(command, language.searching.replace('${keyword}', keyword), 'YELLOW');
     const videos = await ytsr.search(keyword);
     const options = videos.map((video) => ({
         label: video.channel.name.length > 20 ? `${video.channel.name.slice(0, 20)}...` : video.channel.name,
