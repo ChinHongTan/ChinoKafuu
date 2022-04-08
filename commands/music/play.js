@@ -20,7 +20,6 @@ const scrxt = new RegExp('^(?<track>https://soundcloud.com/(?!sets|stats|groups|
 const sprxtrack = /(http[s]?:\/\/)?(open\.spotify\.com)\//;
 
 async function play(command, args, language) {
-    console.log(args);
     let serverQueue = queue.get(command.guild.id);
     if (!command.member.voice.channel) {
         return await commandReply.reply(command, language.notInVC, 'RED');
