@@ -2,6 +2,8 @@ const fs = require('fs');
 
 module.exports = {
     async storeSnipes(message) {
+        // can't fetch anything
+        if (message.partial) return;
         const collection = message.client.snipeCollection;
         let rawData;
         if (collection) {
@@ -38,6 +40,8 @@ module.exports = {
         }
     },
     async storeEditSnipes(oldMessage, newMessage) {
+        if (oldMessage.partial) oldMessage.fetch();
+        if (newMessage.partial) newMessage.fetch();
         const collection = oldMessage.client.editSnipeCollection;
         let rawData;
         if (collection) {
