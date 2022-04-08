@@ -187,6 +187,16 @@ module.exports = {
         default:
             break;
         }
+        const embed = new MessageEmbed()
+            .setThumbnail(song.thumb)
+            .setAuthor({ name: '已加入播放佇列', iconURL: message.member.user.displayAvatarURL() })
+            .setColor('BLUE')
+            .setTitle(song.title)
+            .setURL(song.url)
+            .setTimestamp(Date.now())
+            .addField('播放者', `<@!${song.requseter}>`)
+            .setFooter({ text:'音樂系統', iconURL: message.client.user.displayAvatarURL() });
+
         if (!serverQueue.songs[0]) {
             try {
                 serverQueue.songs.push(song);
@@ -195,6 +205,7 @@ module.exports = {
                     guildId: voiceChannel.guildId,
                     adapterCreator: voiceChannel.guild.voiceAdapterCreator,
                 });
+                await commandReply.edit(message, embed);
                 await play(message.guild, serverQueue.songs[0], message);
             } catch (error) {
                 console.error(error);
@@ -205,15 +216,6 @@ module.exports = {
         }
         serverQueue.songs.push(song);
         if (playlist) return;
-        const embed = new MessageEmbed()
-            .setThumbnail(song.thumb)
-            .setAuthor({ name: '已加入播放佇列', iconURL: message.member.user.displayAvatarURL() })
-            .setColor('BLUE')
-            .setTitle(song.title)
-            .setURL(song.url)
-            .setTimestamp(Date.now())
-            .addField('播放者', `<@!${song.requseter}>`)
-            .setFooter({ text:'音樂系統', iconURL: message.client.user.displayAvatarURL() });
         return commandReply.edit(message, embed);
     },
     async play(guild, song, message) {
