@@ -1,6 +1,7 @@
 {
 	"prefix": "c!",
     "clientId": "bot's-discord-id",
+    "channelId": "ID-of-channel-to-log-errors/messages",
 	"token": "discord-bot-token-here",
     "owner_id": "bot-owner's-discord-id",
     "sagiri_token": "saucenao-api-token-here",

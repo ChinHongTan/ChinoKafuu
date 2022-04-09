@@ -96,16 +96,3 @@ if (pixivRefreshToken) {
 process.on('unhandledRejection', error => {
     console.log(error);
 });
-
-
-/*
-console.log = async function(d) {
-    const logChannel = await client.channels.fetch('960803056251990017');
-    await logChannel.send(util.format(d) + '\n');
-};
-
-console.error = async function(d) {
-    const logChannel = await client.channels.fetch('960803056251990017');
-    await logChannel.send(util.format(d) + '\n');
-};
-*/

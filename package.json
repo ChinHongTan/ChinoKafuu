@@ -5,7 +5,7 @@
   "main": "ChinoKafuu.js",
   "scripts": {
     "prestart": "npm run build",
-    "start": "node .",
+    "start": "node . -r",
     "watch": "tsc -p tsconfig.json -w",
     "build": "tsc --build tsconfig.json",
     "postinstall": "npm run build"
@@ -36,12 +36,14 @@
     "discord-together": "^1.1.62",
     "discord.js": "^13.1.0",
     "discord.js-akinator": "^3.0.2",
+    "encoding": "^0.1.13",
     "ffmpeg-static": "^5.0.0",
     "fluent-ffmpeg": "^2.1.2",
     "fuzzysort": "^1.1.4",
     "genius-lyrics": "^4.2.9",
     "googlethis": "^1.1.6",
     "hastebin": "^0.2.1",
+    "html-to-text": "^8.2.0",
     "libsodium": "^0.7.9",
     "libsodium-wrappers": "^0.7.9",
     "lyrics-finder": "^21.7.0",

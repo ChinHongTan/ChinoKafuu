@@ -51,6 +51,7 @@ Here's what you should fill in the config.json:
 {
   "prefix": "c!",
   "clientId": "bot's-discord-id",
+  "channelId": "ID-of-channel-to-log-errors/messages",
   "token": "discord-bot-token-here",
   "owner_id": "bot-owner's-discord-id",
   "sagiri_token": "saucenao-api-token-here",
@@ -63,6 +64,10 @@ Here's what you should fill in the config.json:
 ```
 - prefix: The prefix you want to use to interact with the bot. (Use \<prefix>help for more information.)
 - clientId: The discord id of the bot's main server. [How do I get it?](https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-)
+- channelId: The id of channel for bot to `console.log` output at.
+Useful if you are hosting the bot on online platform, and wish to monitor the bot's logs without logging into the online platform.
+If the output is too long and exceeds discord's message length limit, the bot will not log anything and not sending any errors at the same time.
+Leave blank to make the bot log to terminal instead.
 - token: The token needed to get the bot online. [How do I get it?](https://github.com/reactiflux/discord-irc/wiki/Creating-a-discord-bot-&-getting-a-token)
 - owner_id: Bot owner's discord id
 - sagiri_token: Needed for reverse image searching using [Saucenao](https://saucenao.com/). 
