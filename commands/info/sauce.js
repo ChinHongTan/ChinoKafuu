@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const CommandReply = require('../../functions/commandReply.js');
 const { MessageEmbed } = require('discord.js');
-const { searchByUrl } = require('ascii2d');
+const { searchByUrl } = require('../../functions/ascii2d.js');
 const commandReply = new CommandReply();
 const sagiriToken = process.env.SAGIRI || require('../../config/config.json').sagiri_token;
 const sagiri = require('sagiri');
@@ -124,6 +124,7 @@ module.exports = {
     cooldown: 5,
     async execute(message, args, language) {
         if (!sagiriToken) return message.reply('This command can\'t be used without SauceNAO token!');
+        console.log(await searchByUrl('https://media.discordapp.net/attachments/960803056251990017/962678715073040474/20220410_193741.jpg?width=265&height=325'));
         await sauce(message, args, language);
     },
     slashCommand: {
