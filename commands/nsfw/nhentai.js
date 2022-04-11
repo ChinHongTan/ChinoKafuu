@@ -1,6 +1,4 @@
 const nhentai = require('nhentai-js');
-const NanaApi = require('nana-api');
-const nana = new NanaApi();
 const DynamicEmbed = require('../../functions/dynamicEmbed');
 const dynamicEmbed = new DynamicEmbed();
 const { SlashCommandBuilder } = require('@discordjs/builders');
@@ -27,14 +25,13 @@ async function nhentaiFunc(command, args, _language) {
             });
             description += `${key}: ${info}\n`;
         }
-        const embed = new MessageEmbed()
+        return new MessageEmbed()
             .setTitle(doujin.title)
             .setDescription(`${description}`)
             .setColor('#ff0000')
             .setImage(doujin.thumbnails[0])
             .addField('Link', doujin.link)
-            .setFooter('▶️: Read the book');
-        return embed;
+            .setFooter({ text: '▶️: Read the book' });
     }
 
     /**
@@ -45,13 +42,12 @@ async function nhentaiFunc(command, args, _language) {
      * @return {object} Discord embed.
      */
     function createSearchEmbed(result) {
-        const embed = new MessageEmbed()
+        return new MessageEmbed()
             .setTitle(result.title)
             .setDescription(`Book Id: ${result.id}\nLanguage: ${result.language}`)
             .setColor('#ff0000')
             .setImage(result.thumbnail.s)
-            .setFooter('⬅️: Back, ➡️: Forward, ▶️: Read the book');
-        return embed;
+            .setFooter({ text: '⬅️: Back, ➡️: Forward, ▶️: Read the book' });
     }
 
     /**
@@ -61,10 +57,9 @@ async function nhentaiFunc(command, args, _language) {
      * @return {object} Discord embed.
      */
     function createBookEmbed(pages) {
-        const embed = new MessageEmbed()
+        return new MessageEmbed()
             .setImage(pages)
-            .setFooter('⬅️: Back, ➡️: Forward');
-        return embed;
+            .setFooter({ text: '⬅️: Back, ➡️: Forward' });
     }
 
     /**
@@ -91,17 +86,17 @@ async function nhentaiFunc(command, args, _language) {
 
     // if an id is provided
     if (Number(args[0])) {
-        if (nhentai.exists(args[0])) {
+        if (await nhentai.exists(args[0])) {
             const doujin = await nhentai.getDoujin(args[0]);
-            dynamicEmbed.createEmbedFlip(command, [doujin], ['▶️'], createDoujinEmbed, generateContent, [doujin]);
+            await dynamicEmbed.createEmbedFlip(command, [doujin], ['▶️'], createDoujinEmbed, generateContent, [doujin]);
         } else {
             return commandReply.reply(command, 'The book ID doesn\'t exist!', 'RED');
         }
     } else {
         // search the keyword given
-        const result = await nana.search(args[0]);
+        const result = await nhentai.search(args[0]);
         const page = 0;
-        dynamicEmbed.createEmbedFlip(command, result.results, ['⬅️', '➡️', '▶️'], createSearchEmbed, generateDoujin, [result, page]);
+        await dynamicEmbed.createEmbedFlip(command, result.results, ['⬅️', '➡️', '▶️'], createSearchEmbed, generateDoujin, [result, page]);
     }
 }
 

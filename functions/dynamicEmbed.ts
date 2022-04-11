@@ -1,52 +1,52 @@
 import { Message, MessageReaction, MessageEmbed, ReactionCollector, User } from "discord.js";
 
-/**
- * Function to update embed message after a user had reacted
- * @param {MessageReaction} r - Reaction from the user
- * @param {number} page - Which result to be displayed
- * @param {object[]} itemList - The result from the API.
- * @param {Message} embedMessage - Discord message with an embed.
- * @param {function} createEmbed - Function to create embed.
- * @param {ReactionCollector} collector - Discord reaction collector.
- * @param {function} collectorFunc - Function after stopping the collector.
- * @param {any[]} collectorParams - parameters for collector function.
- * @returns {number} Page
- */
- function updateEmbed(r: MessageReaction, page: number, itemList: object[], embedMessage: Message, createEmbed: (item: object) => MessageEmbed, collector: ReactionCollector, collectorFunc: (...collectorParams: any[]) => void, collectorParams: any[]) {
-    let editedEmbed: MessageEmbed;
-    switch (r.emoji.name) {
-        case "⬅️":
-            page -= 1;
-            if (page < 0) page = itemList.length - 1;
-            itemList["page"] = page;
-            itemList["total"] = itemList.length
-            editedEmbed = createEmbed(itemList[page]);
-            embedMessage.edit({ embeds: [editedEmbed] });
-            if (collectorParams && collectorParams.length > 1) {
-                collectorParams[1] = page;
-            }
-            break;
-        case "➡️":
-            page += 1;
-            if (page + 1 > itemList.length) page = 0;
-            itemList["page"] = page;
-            itemList["total"] = itemList.length
-            editedEmbed = createEmbed(itemList[page]);
-            embedMessage.edit({ embeds: [editedEmbed] });
-            if (collectorParams && collectorParams.length > 1) {
-                collectorParams[1] = page;
-            }
-            break;
-        case "▶️":
-            collector.stop();
-            collectorFunc(...collectorParams);
-            embedMessage.delete();
-            break;
-    }
-    return page;
-}
-
 class DynamicEmbed {
+    /**
+     * Function to update embed message after a user had reacted
+     * @param {MessageReaction} r - Reaction from the user
+     * @param {number} page - Which result to be displayed
+     * @param {object[]} itemList - The result from the API.
+     * @param {Message} embedMessage - Discord message with an embed.
+     * @param {function} createEmbed - Function to create embed.
+     * @param {ReactionCollector} collector - Discord reaction collector.
+     * @param {function} collectorFunc - Function after stopping the collector.
+     * @param {any[]} collectorParams - parameters for collector function.
+     * @returns {number} Page
+     */
+    async updateEmbed(r: MessageReaction, page: number, itemList: object[], embedMessage: Message, createEmbed: (item: object) => MessageEmbed, collector: ReactionCollector, collectorFunc: (...collectorParams: any[]) => void, collectorParams: any[]) {
+        let editedEmbed: MessageEmbed;
+        switch (r.emoji.name) {
+            case "⬅️":
+                page -= 1;
+                if (page < 0) page = itemList.length - 1;
+                itemList["page"] = page;
+                itemList["total"] = itemList.length
+                editedEmbed = createEmbed(itemList[page]);
+                await embedMessage.edit({ embeds: [editedEmbed] });
+                if (collectorParams && collectorParams.length > 1) {
+                    collectorParams[1] = page;
+                }
+                break;
+            case "➡️":
+                page += 1;
+                if (page + 1 > itemList.length) page = 0;
+                itemList["page"] = page;
+                itemList["total"] = itemList.length
+                editedEmbed = createEmbed(itemList[page]);
+                await embedMessage.edit({ embeds: [editedEmbed] });
+                if (collectorParams && collectorParams.length > 1) {
+                    collectorParams[1] = page;
+                }
+                break;
+            case "▶️":
+                collector.stop();
+                collectorFunc(...collectorParams);
+                await embedMessage.delete();
+                break;
+        }
+        return page;
+    }
+
     /**
      * Creates and sends a reactable message
      * @param {Message} message - Message that initiated this function
@@ -73,11 +73,11 @@ class DynamicEmbed {
             idle: 600000,
             dispose: true,
         });
-        collector.on("collect", (r: MessageReaction) => {
-            page = updateEmbed(r, page, itemList, embedMessage, createEmbed, collector, collectorFunc, collectorParams);
+        collector.on("collect", async (r: MessageReaction) => {
+            page = await this.updateEmbed(r, page, itemList, embedMessage, createEmbed, collector, collectorFunc, collectorParams);
         });
-        collector.on("remove", (r: MessageReaction) => {
-            page = updateEmbed(r, page, itemList, embedMessage, createEmbed, collector, collectorFunc, collectorParams);
+        collector.on("remove", async (r: MessageReaction) => {
+            page = await this.updateEmbed(r, page, itemList, embedMessage, createEmbed, collector, collectorFunc, collectorParams);
         });
     }
 }
