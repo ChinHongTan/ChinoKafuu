@@ -1,5 +1,9 @@
 {
-	"extends": "eslint:recommended",
+	"extends": [
+		"eslint:recommended",
+		"plugin:promise/recommended",
+		"plugin:import/recommended"
+	],
 	"env": {
 		"node": true,
 		"es6": true
