@@ -47,6 +47,7 @@ async function play(command, args, language) {
             loopQueue: false,
             player: undefined,
             resource: undefined,
+            playMessage: undefined,
             filter: '',
         };
         queue.set(command.guild.id, queueConstruct);
@@ -183,6 +184,7 @@ async function play(command, args, language) {
                 .addOptions(options),
         );
     msg = await msg.edit({ content: language.choose, components: [row] });
+    serverQueue.playMessage = msg;
     const filter = (interaction) => {
         return interaction.customId === 'select' && interaction.user.id === command.member.id;
     };

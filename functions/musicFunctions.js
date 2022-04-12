@@ -85,11 +85,10 @@ async function play(guild, song, message) {
         .setTimestamp(Date.now())
         .addField('播放者', `<@!${serverQueue.songs[0].requseter}>`)
         .setFooter({ text: '音樂系統', iconURL: message.client.user.displayAvatarURL() });
-    if (serverQueue.textChannel.lastMessage === message) {
-        await commandReply.edit(message, embed);
-    } else {
-        serverQueue.textChannel.send({ embeds: [embed] });
+    if (serverQueue.playMessage) {
+        await serverQueue.playMessage.delete();
     }
+    serverQueue.playMessage = await serverQueue.textChannel.send({ embeds: [embed] });
 }
 function hmsToSecondsOnly(str) {
     const p = str.split(':');
@@ -113,7 +112,7 @@ module.exports = {
                 .setDescription(`清單: ${name}\n長度:${length}`)
                 .setTimestamp(Date.now())
                 .setFooter({ text: '音樂系統', iconURL: message.client.user.displayAvatarURL() });
-            const m = await commandReply.edit(message, embed);
+            const m = await commandReply.reply(message, { embeds: [embed] });
             await m.react('📥');
             await m.react('❌');
             const filter = (reaction, user) => ['📥', '❌'].includes(reaction.emoji.name) && user.id === message.member.user.id;
@@ -205,7 +204,7 @@ module.exports = {
                     guildId: voiceChannel.guildId,
                     adapterCreator: voiceChannel.guild.voiceAdapterCreator,
                 });
-                await commandReply.edit(message, embed);
+                await commandReply.reply(message, { embeds: [embed] });
                 await play(message.guild, serverQueue.songs[0], message);
             } catch (error) {
                 console.error(error);
@@ -216,7 +215,7 @@ module.exports = {
         }
         serverQueue.songs.push(song);
         if (playlist) return;
-        return commandReply.edit(message, embed);
+        return commandReply.reply(message, { embeds: [embed] });
     },
     async play(guild, song, message) {
         await play(guild, song, message);
