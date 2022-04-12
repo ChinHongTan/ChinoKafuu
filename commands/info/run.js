@@ -3,7 +3,7 @@ const CommandReply = require('../../functions/commandReply.js');
 const commandReply = new CommandReply();
 const prefix = process.env.PREFIX || require('../../config/config.json').prefix;
 const default_langs = require('../../data/default_langs.json');
-const tio = require('tio.js');
+const { tio, getLanguages } = require('../../functions/tio.js');
 const axios = require('axios').default;
 
 async function postToHaste(content) {
@@ -11,7 +11,7 @@ async function postToHaste(content) {
     return `https://www.toptal.com/developers/hastebin/${res.data.key}`;
 }
 async function getAndReturnResponse(lang, code, command) {
-    const languages = await tio.languages();
+    const languages = await getLanguages();
     const quickmap = {
         asm: 'assembly',
         'c#': 'cs',
