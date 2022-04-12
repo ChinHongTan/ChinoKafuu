@@ -4,8 +4,12 @@ const commandReply = new CommandReply();
 const prefix = process.env.PREFIX || require('../../config/config.json').prefix;
 const default_langs = require('../../data/default_langs.json');
 const tio = require('tio.js');
-const hastebin = require('hastebin');
+const axios = require('axios').default;
 
+async function postToHaste(content) {
+    const res = await axios.post('https://www.toptal.com/developers/hastebin/documents', content, { headers: { 'Content-Type': 'text/plain' } });
+    return `https://www.toptal.com/developers/hastebin/${res.data.key}`;
+}
 async function getAndReturnResponse(lang, code, command) {
     const languages = await tio.languages();
     const quickmap = {
@@ -27,14 +31,14 @@ async function getAndReturnResponse(lang, code, command) {
     if (!languages.includes(lang)) return commandReply.edit(command, ':x: | Language not supported!', 'RED');
     const response = await tio(code, lang, 20000);
     if (response.output.length > 1994 || (response.output.match(/,/g) || []).length > 40) {
-        const link = await hastebin.createPaste(response.output);
-        commandReply.edit(command, 'Your output was too long, but I couldn\'t make an online bin out of it', 'YELLOW');
+        const link = await postToHaste(response.output);
+        await commandReply.edit(command, 'Your output was too long, but I couldn\'t make an online bin out of it', 'YELLOW');
         return commandReply.edit(command, `Output was too long (more than 2000 characters or 40 lines) so I put it here: ${link}`, 'YELLOW');
     }
     if (response.output.length < 1) {
         return commandReply.edit(command, 'No output!', 'RED');
     }
-    commandReply.edit(command, response.output);
+    await commandReply.edit(command, response.output);
 }
 
 async function runFromCommand(command, args, _language) {
