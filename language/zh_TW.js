@@ -1,4 +1,5 @@
-{
+/* eslint quotes: 0 */
+module.exports = {
     "backup-info":"查詢備份信息",
     "invalidBackupID":"❌ | 您必須輸入有效的備份文件ID！",
     "backupInformations":"備份信息",
@@ -193,5 +194,5 @@
     "pruneError":"❌ | 在嘗試刪除訊息時發生了錯誤!",
     "reload":"重新加載指令",
     "snipe":"狙擊一條訊息",
-    "webhook":"把自己變成機器人說話"
-}
+    "webhook":"把自己變成機器人說話",
+};

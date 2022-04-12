@@ -1,4 +1,5 @@
-{
+/* eslint quotes: 0 */
+module.exports = {
     "backup-info":"Load a backup info.",
     "invalidBackupID":"❌ | You must specify a valid backup ID!",
     "backupInformations":"Backup Informations",
@@ -193,5 +194,5 @@
     "pruneError":"❌ | there was an error trying to prune messages in this channel!",
     "reload":"Reloads a command",
     "snipe":"Snipe a message.",
-    "webhook":"Create a webhook."
-}
+    "webhook":"Create a webhook.",
+};
