@@ -12,7 +12,7 @@ async function update(command) {
 }
 
 module.exports = {
-    name: 'updateIllust',
+    name: 'updateillust',
     aliases: ['ui', 'update', 'refresh', 'ri'],
     cooldown: 3,
     ownerOnly: true,
