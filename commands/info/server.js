@@ -1,7 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const CommandReply = require('../../functions/commandReply.js');
+const { reply } = require('../../functions/commandReply.js');
 const { MessageEmbed } = require('discord.js');
-const commandReply = new CommandReply();
 function server(command) {
     const embed = new MessageEmbed()
         .setTitle('Server Info')
@@ -19,7 +18,7 @@ function server(command) {
             { name: 'Channels count', value: command.guild.channels.cache.size, inline: true },
         )
         .setFooter({ text:'ChinoKafuu | Server Info', iconURL: command.client.user.displayAvatarURL() });
-    commandReply.reply(command, { embeds: [embed] });
+    return reply(command, { embeds: [embed] });
 }
 module.exports = {
     name: 'server',
@@ -27,8 +26,8 @@ module.exports = {
     description: 'Information about server.',
     guildOnly: true,
     cooldown: 5,
-    execute(message) {
-        server(message);
+    async execute(message) {
+        await server(message);
     },
     slashCommand: {
         data: new SlashCommandBuilder(),

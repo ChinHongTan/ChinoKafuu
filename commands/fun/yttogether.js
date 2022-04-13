@@ -1,15 +1,14 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const CommandReply = require('../../functions/commandReply.js');
-const commandReply = new CommandReply();
+const { reply } = require('../../functions/commandReply.js');
 const { DiscordTogether } = require('discord-together');
 async function yttogether(command, language) {
     const { client } = command;
     client.discordTogether = new DiscordTogether(client);
     if (command.member.voice.channel) {
         const invite = await client.discordTogether.createTogetherCode(command.member.voice.channel.id, 'youtube');
-        return commandReply.reply(command, invite.code, 'BLUE');
+        return reply(command, invite.code, 'BLUE');
     }
-    commandReply.reply(command, language.notInVC, 'RED');
+    await reply(command, language.notInVC, 'RED');
 }
 module.exports = {
     name: 'yttogether',
@@ -17,12 +16,12 @@ module.exports = {
     aliases: ['yt', 'youtube'],
     description: true,
     async execute(message, _args, language) {
-        yttogether(message, language);
+        await yttogether(message, language);
     },
     slashCommand: {
         data: new SlashCommandBuilder(),
         async execute(interaction, language) {
-            yttogether(interaction, language);
+            await yttogether(interaction, language);
         },
     },
 };

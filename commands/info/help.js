@@ -1,6 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const CommandReply = require('../../functions/commandReply.js');
-const commandReply = new CommandReply();
+const { reply } = require('../../functions/commandReply.js');
 const { MessageEmbed } = require('discord.js');
 
 function sendHelp(user, interaction, language, embed) {
@@ -8,11 +7,11 @@ function sendHelp(user, interaction, language, embed) {
         .send({ split: true, embeds: [embed] })
         .then(() => {
             if (interaction.channel.type === 'dm') return;
-            commandReply.reply(interaction, language.helpSend, 'GREEN');
+            return reply(interaction, language.helpSend, 'GREEN');
         })
         .catch((error) => {
             console.error(`Could not send help DM to ${user.tag}.\n`, error);
-            commandReply.reply(interaction, language.cantDM, 'RED');
+            return reply(interaction, language.cantDM, 'RED');
         });
 }
 
@@ -35,7 +34,7 @@ function help(interaction, args, language) {
     const name = args[0].toLowerCase();
     const command = commands.get(name) || commands.find((c) => c.aliases && c.aliases.includes(name));
 
-    if (!command) return commandReply.reply(interaction, language.invalidcmd, 'RED');
+    if (!command) return reply(interaction, language.invalidcmd, 'RED');
     const embed = new MessageEmbed()
         .setTitle(`**${command.name}**`)
         .setThumbnail(interaction.client.user.displayAvatarURL())

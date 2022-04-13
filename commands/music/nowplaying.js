@@ -1,6 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const CommandReply = require('../../functions/commandReply.js');
-const commandReply = new CommandReply();
+const { reply } = require('../../functions/commandReply.js');
 const { format, checkStats } = require('../../functions/musicFunctions');
 const { MessageEmbed } = require('discord.js');
 const progressbar = require('string-progressbar');
@@ -19,7 +18,7 @@ function nowPlaying(command, language) {
             .setThumbnail(song.thumb)
             .addField(language.requester, `<@!${song.requseter}>`)
             .setFooter({ text: language.musicFooter, iconURL: command.client.user.displayAvatarURL() });
-        return commandReply.reply(command, { embeds: [embed] });
+        return reply(command, { embeds: [embed] });
     }
 }
 module.exports = {
@@ -27,13 +26,13 @@ module.exports = {
     guildOnly: true,
     aliases: ['np'],
     description: true,
-    async execute(message, _args, language) {
-        await nowPlaying(message, language);
+    execute(message, _args, language) {
+        return nowPlaying(message, language);
     },
     slashCommand: {
         data: new SlashCommandBuilder(),
-        async execute(interaction, language) {
-            await nowPlaying(interaction, language);
+        execute(interaction, language) {
+            return nowPlaying(interaction, language);
         },
     },
 };

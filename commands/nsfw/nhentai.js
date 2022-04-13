@@ -4,8 +4,7 @@ const nana = new NanaApi();
 const DynamicEmbed = require('../../functions/dynamicEmbed');
 const dynamicEmbed = new DynamicEmbed();
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const CommandReply = require('../../functions/commandReply.js');
-const commandReply = new CommandReply();
+const { reply } = require('../../functions/commandReply.js');
 const { MessageEmbed } = require('discord.js');
 
 async function nhentaiFunc(command, args, _language) {
@@ -27,14 +26,13 @@ async function nhentaiFunc(command, args, _language) {
             });
             description += `${key}: ${info}\n`;
         }
-        const embed = new MessageEmbed()
+        return new MessageEmbed()
             .setTitle(doujin.title)
             .setDescription(`${description}`)
             .setColor('#ff0000')
             .setImage(doujin.thumbnails[0])
             .addField('Link', doujin.link)
-            .setFooter('▶️: Read the book');
-        return embed;
+            .setFooter({ text: '▶️: Read the book' });
     }
 
     /**
@@ -45,13 +43,12 @@ async function nhentaiFunc(command, args, _language) {
      * @return {object} Discord embed.
      */
     function createSearchEmbed(result) {
-        const embed = new MessageEmbed()
+        return new MessageEmbed()
             .setTitle(result.title)
             .setDescription(`Book Id: ${result.id}\nLanguage: ${result.language}`)
             .setColor('#ff0000')
             .setImage(result.thumbnail.s)
-            .setFooter('⬅️: Back, ➡️: Forward, ▶️: Read the book');
-        return embed;
+            .setFooter({ text: '⬅️: Back, ➡️: Forward, ▶️: Read the book' });
     }
 
     /**
@@ -61,10 +58,9 @@ async function nhentaiFunc(command, args, _language) {
      * @return {object} Discord embed.
      */
     function createBookEmbed(pages) {
-        const embed = new MessageEmbed()
+        return new MessageEmbed()
             .setImage(pages)
-            .setFooter('⬅️: Back, ➡️: Forward');
-        return embed;
+            .setFooter({ text: '⬅️: Back, ➡️: Forward' });
     }
 
     /**
@@ -73,8 +69,8 @@ async function nhentaiFunc(command, args, _language) {
      * @param {array} doujin.pages - The list of pages of the doujin.
      * @param {number} [page = 0] - The page number of the doujin being displayed.
      */
-    function generateContent(doujin) {
-        dynamicEmbed.createEmbedFlip(command, doujin.pages, ['⬅️', '➡️'], createBookEmbed);
+    async function generateContent(doujin) {
+        return await dynamicEmbed.createEmbedFlip(command, doujin.pages, ['⬅️', '➡️'], createBookEmbed);
     }
 
     /**
@@ -83,25 +79,24 @@ async function nhentaiFunc(command, args, _language) {
      * @param {array} result.results - An array of doujins.
      * @param {number} page - The position of displayed doujin in the array.
      */
-    function generateDoujin(result, page) {
-        nhentai.getDoujin(result.results[page].id).then((doujin) => {
-            dynamicEmbed.createEmbedFlip(command, [doujin], ['▶️'], createDoujinEmbed, generateContent, [doujin]);
-        });
+    async function generateDoujin(result, page) {
+        const doujin = await nhentai.getDoujin(result.results[page].id);
+        await dynamicEmbed.createEmbedFlip(command, [doujin], ['▶️'], createDoujinEmbed, generateContent, [doujin]);
     }
 
     // if an id is provided
     if (Number(args[0])) {
-        if (nhentai.exists(args[0])) {
+        if (await nhentai.exists(args[0])) {
             const doujin = await nhentai.getDoujin(args[0]);
-            dynamicEmbed.createEmbedFlip(command, [doujin], ['▶️'], createDoujinEmbed, generateContent, [doujin]);
+            await dynamicEmbed.createEmbedFlip(command, [doujin], ['▶️'], createDoujinEmbed, generateContent, [doujin]);
         } else {
-            return commandReply.reply(command, 'The book ID doesn\'t exist!', 'RED');
+            return reply(command, 'The book ID doesn\'t exist!', 'RED');
         }
     } else {
         // search the keyword given
         const result = await nana.search(args[0]);
         const page = 0;
-        dynamicEmbed.createEmbedFlip(command, result.results, ['⬅️', '➡️', '▶️'], createSearchEmbed, generateDoujin, [result, page]);
+        await dynamicEmbed.createEmbedFlip(command, result.results, ['⬅️', '➡️', '▶️'], createSearchEmbed, generateDoujin, [result, page]);
     }
 }
 
@@ -109,8 +104,8 @@ module.exports = {
     name: 'nhentai',
     cooldown: 10,
     description: true,
-    execute(message, args, language) {
-        nhentaiFunc(message, args, language);
+    async execute(message, args, language) {
+        await nhentaiFunc(message, args, language);
     },
     slashCommand: {
         data: new SlashCommandBuilder()
@@ -120,8 +115,8 @@ module.exports = {
             .addStringOption((option) =>
                 option.setName('keyword')
                     .setDescription('Keyword to search in nhentai')),
-        execute(interaction, language) {
-            nhentaiFunc(interaction, [interaction.options.getInteger('id')], language);
+        async execute(interaction, language) {
+            await nhentaiFunc(interaction, [interaction.options.getInteger('id')], language);
         },
     },
 };

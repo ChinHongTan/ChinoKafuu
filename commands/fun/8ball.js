@@ -1,12 +1,9 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const CommandReply = require('../../functions/commandReply.js');
-const commandReply = new CommandReply();
-const { CommandInteraction, Message } = require('discord.js');
-function eball(command, args, language) {
-    if (!args[0]) return commandReply.reply(command, 'Psst. You need to ask the 8ball a question, ya\'know?', 'YELLOW');
-    let question;
-    if (command instanceof CommandInteraction) question = args[0];
-    if (command instanceof Message) question = args.join(' ');
+const { reply } = require('../../functions/commandReply.js');
+
+function eightBall(command, args, language) {
+    if (!args[0]) return reply(command, 'Psst. You need to ask the 8ball a question, ya\'know?', 'YELLOW');
+    const question = args[0];
     const answers = [
         { reply1: 'GREEN' },
         { reply2: 'GREEN' },
@@ -30,22 +27,22 @@ function eball(command, args, language) {
         { reply20: 'RED' },
     ];
     const choice = answers[Math.floor(Math.random() * answers.length)];
-    commandReply.reply(command, `${language.reply} \`\`\`css\nQ: ${question}\nA: ${language[Object.keys(choice)[0]]}\`\`\``, Object.values(choice)[0]);
+    return reply(command, `${language.reply} \`\`\`css\nQ: ${question}\nA: ${language[Object.keys(choice)[0]]}\`\`\``, Object.values(choice)[0]);
 }
 module.exports = {
     name: '8ball',
     description: true,
     async execute(message, args, language) {
-        await eball(message, args, language);
+        await eightBall(message, [args.join(' ')], language);
     },
     slashCommand: {
         data: new SlashCommandBuilder()
             .addStringOption((option) =>
                 option.setName('question')
-                    .setDescription('Qeustion you would like to ask the 8ball')
+                    .setDescription('Question you would like to ask the 8ball')
                     .setRequired(true)),
         async execute(interaction, language) {
-            await eball(interaction, [interaction.options.getString('question')], language);
+            await eightBall(interaction, [interaction.options.getString('question')], language);
         },
     },
 };

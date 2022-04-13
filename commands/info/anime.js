@@ -1,6 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const CommandReply = require('../../functions/commandReply.js');
-const commandReply = new CommandReply();
+const { reply } = require('../../functions/commandReply.js');
 const fetch = require('node-fetch');
 const { MessageEmbed } = require('discord.js');
 const DynamicEmbed = require('../../functions/dynamicEmbed');
@@ -34,7 +33,7 @@ async function anime(command, args, language) {
 
     if (args[0]) {
         if (!isValidHttpUrl(args[0])) {
-            return commandReply.reply(command, language.invalidURL, 'RED');
+            return reply(command, language.invalidURL, 'RED');
         }
         const e = await fetch(`https://api.trace.moe/search?cutBorders&anilistInfo&url=${encodeURIComponent(args[0])}`);
         const response = await e.json();
@@ -49,7 +48,7 @@ async function anime(command, args, language) {
         }
     }
     if (!searchImage) {
-        return commandReply.reply(command, language.noImage, 'RED');
+        return reply(command, language.noImage, 'RED');
     }
     const e = await fetch(`https://api.trace.moe/search?cutBorders&anilistInfo&url=${encodeURIComponent(searchImage)}`);
     const response = await e.json();

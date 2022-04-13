@@ -1,8 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const CommandReply = require('../../functions/commandReply.js');
+const { reply } = require('../../functions/commandReply.js');
 const { MessageEmbed } = require('discord.js');
 const { searchByUrl } = require('../../functions/ascii2d.js');
-const commandReply = new CommandReply();
 const sagiriToken = process.env.SAGIRI || require('../../config/config.json').sagiri_token;
 const sagiri = require('sagiri');
 let mySauce;
@@ -90,7 +89,7 @@ async function sauce(command, args, language) {
         // search with ascii2d
         const result2 = await searchByUrl(searchImage, 'bovw');
         if (!result2 || result2.length < 1) {
-            return commandReply.reply(command, language.noResult, 'RED');
+            return reply(command, language.noResult, 'RED');
         }
         const response2 = result2.items.filter((r2) => r2.source !== 0);
         mode = 2;
@@ -112,9 +111,9 @@ async function sauce(command, args, language) {
         }
     }
     if (!searchImage) {
-        return commandReply.reply(command, language.noImage, 'RED');
+        return reply(command, language.noImage, 'RED');
     }
-    await commandReply.reply(command, language.searchingSauce, 'YELLOW');
+    await reply(command, language.searchingSauce, 'YELLOW');
     await searchForImage(searchImage);
 }
 

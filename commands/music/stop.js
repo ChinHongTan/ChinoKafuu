@@ -1,6 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const CommandReply = require('../../functions/commandReply.js');
-const commandReply = new CommandReply();
+const { reply } = require('../../functions/commandReply.js');
 const { checkStats } = require('../../functions/musicFunctions');
 function stop(command, language) {
     const serverQueue = checkStats(command, language);
@@ -8,7 +7,7 @@ function stop(command, language) {
 
     serverQueue.songs = [];
     serverQueue.player.stop();
-    return commandReply.reply(command, language.stopped, 'BLUE');
+    return reply(command, language.stopped, 'BLUE');
 }
 module.exports = {
     name: 'stop',

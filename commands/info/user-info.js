@@ -1,6 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const CommandReply = require('../../functions/commandReply.js');
-const commandReply = new CommandReply();
+const { reply } = require('../../functions/commandReply.js');
 const { MessageEmbed } = require('discord.js');
 
 function getUserInfo(author, language) {
@@ -99,13 +98,13 @@ module.exports = {
     execute(message, _args, language) {
         if (!message.mentions.members.size) {
             const embed = getUserInfo(message.member);
-            return commandReply.reply(message, { embeds: [embed] });
+            return reply(message, { embeds: [embed] });
         }
 
         const userInfoList = message.mentions.members.map((user) => {
             return getUserInfo(user, language);
         });
-        commandReply.reply(message, { embeds: userInfoList });
+        return reply(message, { embeds: userInfoList });
     },
     slashCommand: {
         data: new SlashCommandBuilder()
@@ -113,12 +112,12 @@ module.exports = {
                 option.setName('member')
                     .setDescription('Member to display avatar'),
             ),
-        async execute(interaction, language) {
+        execute(interaction, language) {
             const user = interaction.options.getMember('member');
             if (!user) {
-                return commandReply.reply(interaction, { embeds: [getUserInfo(interaction.member, language)] });
+                return reply(interaction, { embeds: [getUserInfo(interaction.member, language)] });
             }
-            await commandReply.reply(interaction, { embeds: [getUserInfo(user, language)] });
+            return reply(interaction, { embeds: [getUserInfo(user, language)] });
         },
     },
 };

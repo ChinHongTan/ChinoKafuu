@@ -1,6 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const CommandReply = require('../../functions/commandReply.js');
-const commandReply = new CommandReply();
+const { reply, edit } = require('../../functions/commandReply.js');
 const { MessageEmbed } = require('discord.js');
 const google = require('googlethis');
 
@@ -15,14 +14,14 @@ async function googleFunc(command, keyword, _language) {
     const response = await google.search(keyword, options);
     const images = await google.image(keyword, options);
     const cleanPanel = { ...response.knowledge_panel };
-    delete cleanPanel.title;
-    delete cleanPanel.description;
-    delete cleanPanel.url;
-    delete cleanPanel.images;
-    delete cleanPanel.type;
+    // delete this 5 keys from response
+    ['title', 'description', 'url', 'images', 'type'].forEach(key => delete cleanPanel[key]);
     for (const [key, value] of Object.entries(response.knowledge_panel)) {
+        // remove unavailable keys
         if (value === 'N/A') delete response.knowledge_panel[key];
     }
+
+    // knowledge_panel probably doesn't exist, use first result instead
     if (!response.knowledge_panel.title && !response.knowledge_panel.url && !response.knowledge_panel.description) {
         response.knowledge_panel.title = response.results[0].title;
         response.knowledge_panel.url = response.results[0].url;
@@ -44,7 +43,7 @@ async function googleFunc(command, keyword, _language) {
             .setFields(fields)
             .setImage(response.knowledge_panel.images?.[0] ?? images?.[0]?.url ?? '')
             .setColor('BLUE');
-        commandReply.edit(command, knowledgePanel);
+        await edit(command, knowledgePanel);
     }
 }
 
@@ -52,8 +51,8 @@ module.exports = {
     name: 'google',
     description: true,
     async execute(message, _args, language) {
-        const reply = await message.channel.send('Please wait...');
-        await googleFunc(reply, message.content.substr(message.content.indexOf(' ') + 1), language);
+        const repliedMsg = await message.channel.send('Please wait...');
+        await googleFunc(repliedMsg, message.content.substr(message.content.indexOf(' ') + 1), language);
     },
     slashCommand: {
         data: new SlashCommandBuilder()

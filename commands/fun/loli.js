@@ -1,6 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const CommandReply = require('../../functions/commandReply.js');
-const commandReply = new CommandReply();
+const { reply, edit } = require('../../functions/commandReply.js');
 const { MessageEmbed } = require('discord.js');
 const Pixiv = require('pixiv.ts');
 const refreshToken = process.env.PIXIV_REFRESH_TOKEN || require('../../config/config.json').PixivRefreshToken;
@@ -73,15 +72,15 @@ async function loli(command) {
             .replace(/[^\S\r\n][^\S\r\n]+/ig, ' '));
     multipleIllusts.push(descriptionEmbed);
 
-    return await commandReply.edit(command, { embeds: multipleIllusts, components: [], content: '\u200b' });
+    return await edit(command, { embeds: multipleIllusts, components: [], content: '\u200b' });
 }
 module.exports = {
     name: 'loli',
     cooldown: 3,
     description: true,
     async execute(message) {
-        if (!refreshToken) return message.reply('This command can\'t be used without pixiv refreshToken!');
-        const repliedMessage = await message.reply('Please wait...');
+        if (!refreshToken) return reply(message, 'This command can\'t be used without pixiv refreshToken!', 'RED');
+        const repliedMessage = await reply(message, 'Please wait...', 'YELLOW');
         await loli(repliedMessage);
     },
     slashCommand: {

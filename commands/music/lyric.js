@@ -1,6 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const CommandReply = require('../../functions/commandReply.js');
-const commandReply = new CommandReply();
+const { reply } = require('../../functions/commandReply.js');
 
 const solenolyrics = require('solenolyrics');
 const Genius = require('genius-lyrics');
@@ -44,10 +43,10 @@ async function lyricsFinder(artist = '', title = '') {
     return String(encoding.convert(final)).trim();
 }
 
-async function lyric(command, args, language) {
+async function lyric(command, args) {
     const serverQueue = queue.get(command.guild.id);
     async function searchLyrics(keyword) {
-        const msg = await commandReply.reply(command, `:mag: | Searching lyrics for ${keyword}...`, 'BLUE');
+        const msg = await reply(command, `:mag: | Searching lyrics for ${keyword}...`, 'BLUE');
         let lyrics = await lyricsFinder(' ', keyword).catch((err) => console.error(err));
         if (!lyrics) lyrics = await solenolyrics.requestLyricsFor(encodeURIComponent(keyword));
         if (!lyrics && Client !== undefined) {
@@ -78,7 +77,7 @@ async function lyric(command, args, language) {
         return await searchLyrics(keyword);
     }
     if (args[0]) return await searchLyrics(args[0]);
-    return commandReply.reply(command, 'No keyword given!', 'RED');
+    return reply(command, 'No keyword given!', 'RED');
 }
 module.exports = {
     name: 'lyric',
@@ -86,7 +85,7 @@ module.exports = {
     aliases: ['ly'],
     description: true,
     async execute(message, args, language) {
-        await lyric(message, [message.content.substr(message.content.indexOf(' ') + 1)], language);
+        await lyric(message, [message.content.substring(message.content.indexOf(' ') + 1)], language);
     },
     slashCommand: {
         data: new SlashCommandBuilder()

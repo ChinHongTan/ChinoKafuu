@@ -1,7 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const CommandReply = require('../../functions/commandReply.js');
+const { reply } = require('../../functions/commandReply.js');
 const FuzzySort = require('../../functions/fuzzysort.js');
-const commandReply = new CommandReply();
 const { MessageEmbed } = require('discord.js');
 
 function avatar(command, args, language) {
@@ -16,7 +15,7 @@ function avatar(command, args, language) {
                 dynamic: true,
                 size: 2048,
             })}`);
-        return commandReply.reply(command, { embeds: [embed] });
+        return reply(command, { embeds: [embed] });
     }
 
     // check if an id is provided
@@ -33,14 +32,14 @@ function avatar(command, args, language) {
                     size: 2048,
                 })}`,
             );
-        return commandReply.reply(command, { embeds: [embed] });
+        return reply(command, { embeds: [embed] });
     }
 
     // perform a fuzzy search based on the keyword given
     const keyword = command.content.substr(command.content.indexOf(' ') + 1);
     const member = fuzzysort.search(keyword);
     if (!member) {
-        return commandReply.reply(command, language.noMember.replace('${keyword}', keyword), 'RED');
+        return reply(command, language.noMember.replace('${keyword}', keyword), 'RED');
     }
 
     const embed = new MessageEmbed()
@@ -51,7 +50,7 @@ function avatar(command, args, language) {
             dynamic: true,
             size: 2048,
         })}`);
-    commandReply.reply(command, { embeds: [embed] });
+    return reply(command, { embeds: [embed] });
 }
 module.exports = {
     name: 'avatar',
@@ -59,7 +58,7 @@ module.exports = {
     aliases: ['icon', 'pfp', 'av'],
     guildOnly: true,
     description: true,
-    execute(message, args, language) {
+    async execute(message, args, language) {
         if (message.mentions.users.size) {
             // display all user's avatars mentioned by the author
             const avatarList = message.mentions.users.map((user) => {
@@ -75,10 +74,10 @@ module.exports = {
 
             // send the entire array of embed to the channel
             avatarList.forEach((embed) => {
-                commandReply.reply(message, { embeds: [embed] });
+                reply(message, { embeds: [embed] });
             });
         } else {
-            avatar(message, args, language);
+            return avatar(message, args, language);
         }
     },
     slashCommand: {
@@ -96,7 +95,7 @@ module.exports = {
                         size: 2048,
                     })}`,
                 );
-            return commandReply.reply(interaction, { embeds: [embed] });
+            return reply(interaction, { embeds: [embed] });
         },
     },
 };

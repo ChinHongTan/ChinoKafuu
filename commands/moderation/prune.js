@@ -1,18 +1,17 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const CommandReply = require('../../functions/commandReply.js');
-const commandReply = new CommandReply();
+const { reply } = require('../../functions/commandReply.js');
 function prune(command, args, language) {
     const amount = parseInt(args[0]) + 1;
 
     if (isNaN(amount)) {
-        return commandReply.reply(command, language.invalidNum, 'RED');
+        return reply(command, language.invalidNum, 'RED');
     } if (amount <= 2 || amount > 100) {
-        return commandReply.reply(command, language.notInRange, 'RED');
+        return reply(command, language.notInRange, 'RED');
     }
 
     command.channel.bulkDelete(amount, true).catch((err) => {
         console.error(err);
-        return commandReply.reply(command, language.pruneError, 'RED');
+        return reply(command, language.pruneError, 'RED');
     });
 }
 module.exports = {

@@ -1,12 +1,11 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const CommandReply = require('../../functions/commandReply.js');
-const commandReply = new CommandReply();
+const { reply } = require('../../functions/commandReply.js');
 const { MessageEmbed } = require('discord.js');
 
 function hentai(command, _args, language) {
     const fs = require('fs');
     if (!command.channel.nsfw) {
-        return commandReply.reply(command, language.notNSFW, 'RED');
+        return reply(command, language.notNSFW, 'RED');
     }
 
     const imageFiles = fs
@@ -33,11 +32,11 @@ function hentai(command, _args, language) {
         .setTitle('死变态！')
         .setDescription(language.loliProvider.replace('${images.author}', images.author).replace('${messageurl}', messageurl))
         .setImage(imageInfo.url)
-        .setFooter(
-            '蘿莉控的FBI避難所',
-            'https://cdn.discordapp.com/icons/764839074228994069/5be3f532073fdae6a9d934e1c6f6a2b5.png?size=2048',
-        );
-    return commandReply.reply(command, { embeds: [embed] });
+        .setFooter({
+            text: '蘿莉控的FBI避難所',
+            iconURL: 'https://cdn.discordapp.com/icons/764839074228994069/5be3f532073fdae6a9d934e1c6f6a2b5.png?size=2048',
+        });
+    return reply(command, { embeds: [embed] });
 }
 
 module.exports = {
@@ -45,12 +44,12 @@ module.exports = {
     cooldown: 3,
     description: true,
     execute(message, _args, language) {
-        hentai(message, language);
+        return hentai(message, language);
     },
     slashCommand: {
         data: new SlashCommandBuilder(),
-        async execute(interaction, language) {
-            hentai(interaction, language);
+        execute(interaction, language) {
+            return hentai(interaction, language);
         },
     },
 };

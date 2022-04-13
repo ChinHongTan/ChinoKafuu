@@ -1,6 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const CommandReply = require('../../functions/commandReply.js');
-const commandReply = new CommandReply();
+const { reply } = require('../../functions/commandReply.js');
 const { MessageEmbed } = require('discord.js');
 const api = require('novelcovid');
 api.settings({
@@ -82,14 +81,14 @@ async function covid(command, args, language) {
 
     if (args.length < 1) {
         // no arguments were provided
-        await commandReply.reply(command, language.invalidArgument, 'RED');
-        return commandReply.reply(command, language.covidExample, 'RED');
+        await reply(command, language.invalidArgument, 'RED');
+        return reply(command, language.covidExample, 'RED');
     }
     if (args[0] === 'global') {
         // get global covid data
         const result = await api.all({ allowNull: false });
         result.country = 'Global';
-        return commandReply.reply(command, { embeds: [createEmbed(result)] });
+        return reply(command, { embeds: [createEmbed(result)] });
     }
     if (args[0] === 'countries') {
         // get a list of data of all countries sorted by cases
@@ -103,7 +102,7 @@ async function covid(command, args, language) {
     }
     // get a list of data of a single specific countries
     const result = await api.countries({ country: args, allowNull: false });
-    return commandReply.reply(command, { embeds: [createEmbed(result)] });
+    return reply(command, { embeds: [createEmbed(result)] });
 }
 module.exports = {
     name: 'covid',

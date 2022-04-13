@@ -1,6 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const CommandReply = require('../../functions/commandReply.js');
-const commandReply = new CommandReply();
+const { reply } = require('../../functions/commandReply.js');
 const { format, checkStats } = require('../../functions/musicFunctions');
 const { MessageEmbed } = require('discord.js');
 const DynamicEmbed = require('../../functions/dynamicEmbed');
@@ -11,7 +10,7 @@ async function queueFunc(command, language) {
     const array_chunks = (array, chunkSize) => Array(Math.ceil(array.length / chunkSize)).fill().map((_, index) => index * chunkSize).map((begin) => array.slice(begin, begin + chunkSize));
 
     /**
-     * Create an Discord embed message
+     * Create a Discord embed message
      * @param {object} smallChunk - Song queue split by 10 songs
      * @return {object} Discord embed
      */
@@ -21,7 +20,12 @@ async function queueFunc(command, language) {
         return new MessageEmbed()
             .setColor('#ff0000')
             .setTitle(language.queueTitle)
-            .setDescription(language.queueBody.replace('${serverQueue.songs[0].title}', serverQueue.songs[0].title).replace('${serverQueue.songs[0].url}', serverQueue.songs[0].url).replace('${printQueue}', printQueue).replace('${serverQueue.songs.length - 1}', serverQueue.songs.length - 1));
+            .setDescription(
+                language.queueBody
+                    .replace('${serverQueue.songs[0].title}', serverQueue.songs[0].title)
+                    .replace('${serverQueue.songs[0].url}', serverQueue.songs[0].url)
+                    .replace('${printQueue}', printQueue)
+                    .replace('${serverQueue.songs.length - 1}', `${serverQueue.songs.length - 1}`));
     }
 
     if (serverQueue) {
@@ -34,7 +38,7 @@ async function queueFunc(command, language) {
             await dynamicEmbed.createEmbedFlip(command, arrayChunk, ['⬅️', '➡️'], createEmbed);
         } else {
             const embed = createEmbed(songQueue);
-            return commandReply.reply(command, { embeds: [embed] });
+            return reply(command, { embeds: [embed] });
         }
     }
 }

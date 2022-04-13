@@ -1,6 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const CommandReply = require('../../functions/commandReply.js');
-const commandReply = new CommandReply();
+const { reply } = require('../../functions/commandReply.js');
 const { MessageEmbed } = require('discord.js');
 const fs = require('fs');
 
@@ -19,13 +18,13 @@ async function snipe(command, args, language) {
     if (snipeWithGuild) {
         snipes = snipeWithGuild.snipes;
     } else {
-        return commandReply.reply(command, language.noSnipe, 'RED');
+        return reply(command, language.noSnipe, 'RED');
     }
     const arg = args[0] ?? 1;
 
-    if (Number(arg) > 10) return commandReply.reply(command, language.exceed10, 'RED');
+    if (Number(arg) > 10) return reply(command, language.exceed10, 'RED');
     const msg = snipes?.[Number(arg) - 1];
-    if (!msg) return commandReply.reply(command, language.invalidSnipe, 'RED');
+    if (!msg) return reply(command, language.invalidSnipe, 'RED');
 
     const image = msg.attachments;
 
@@ -35,7 +34,7 @@ async function snipe(command, args, language) {
         .setDescription(msg.content)
         .setTimestamp(msg.timestamp)
         .setImage(image);
-    return commandReply.reply(command, { embeds: [embed] });
+    return reply(command, { embeds: [embed] });
 }
 module.exports = {
     name: 'snipe',

@@ -1,7 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const CommandReply = require('../../functions/commandReply.js');
+const { reply } = require('../../functions/commandReply.js');
 const { MessageEmbed, Message, CommandInteraction } = require('discord.js');
-const commandReply = new CommandReply();
 
 async function connect4(command, language) {
     const coordinates = setCoordinates(7, 6);
@@ -115,7 +114,7 @@ async function connect4(command, language) {
         }
         // if a new piece can’t be placed in this column
         if (!placed) {
-            return commandReply.reply(command, language.invalidMove, 'RED');
+            return reply(command, language.invalidMove, 'RED');
         }
         const directions = [11, 1, 9, 10, -11, -1, -9, -10];
         for (const direction of directions) {
@@ -136,7 +135,7 @@ async function connect4(command, language) {
         if (win) {
             collector.stop();
             if (command instanceof CommandInteraction) return command.followUp({ embeds: [{ description: language.win.replace('${round.name}', round.emoji), color: 'GREEN' }] });
-            if (command instanceof Message) return commandReply.reply(command, language.win.replace('${round.name}', round.emoji), 'GREEN');
+            if (command instanceof Message) return reply(command, language.win.replace('${round.name}', round.emoji), 'GREEN');
         }
         if (round.name === 'red') {
             round.name = 'yellow';
@@ -184,7 +183,7 @@ async function connect4(command, language) {
     };
 
     const embed = createEmbed(round, board);
-    const embedMessage = await commandReply.reply(command, { embeds: [embed] });
+    const embedMessage = await reply(command, { embeds: [embed] });
     for (const emoji of emojiList) {
         await embedMessage.react(emoji);
     }

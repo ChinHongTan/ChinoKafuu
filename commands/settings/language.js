@@ -1,11 +1,10 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const CommandReply = require('../../functions/commandReply.js');
-const commandReply = new CommandReply();
+const { reply } = require('../../functions/commandReply.js');
 const fs = require('fs');
 
 async function setLanguage(command, args, language) {
-    if (!args.length > 0) return commandReply.reply(command, language.noArgs, 'RED');
-    if (args[0] !== 'en_US' && args[0] !== 'zh_CN' && args[0] !== 'zh_TW') return commandReply.reply(command, language.languageNotSupported, 'RED');
+    if (!args.length > 0) return reply(command, language.noArgs, 'RED');
+    if (args[0] !== 'en_US' && args[0] !== 'zh_CN' && args[0] !== 'zh_TW') return reply(command, language.languageNotSupported, 'RED');
 
     const collection = command.client.guildOptions;
     if (collection) {
@@ -15,7 +14,7 @@ async function setLanguage(command, args, language) {
         const query = { id: command.guild.id };
         const options = { upsert: true };
         await collection.replaceOne(query, guildOption, options);
-        return commandReply.reply(command, language.changeSuccess.replace('${args[0]}', args[0]), 'GREEN');
+        return reply(command, language.changeSuccess.replace('${args[0]}', args[0]), 'GREEN');
     } else {
         const rawData = fs.readFileSync('./data/guildOption.json');
         const guildCollection = JSON.parse(rawData);
@@ -24,7 +23,7 @@ async function setLanguage(command, args, language) {
         guildCollection[command.guild.id] = guildOption;
 
         fs.writeFileSync('./data/guildOption.json', JSON.stringify(guildCollection));
-        return commandReply.reply(command, language.changeSuccess.replace('${args[0]}', args[0]), 'GREEN');
+        return reply(command, language.changeSuccess.replace('${args[0]}', args[0]), 'GREEN');
     }
 }
 module.exports = {

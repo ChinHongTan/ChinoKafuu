@@ -1,8 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const CommandReply = require('../../functions/commandReply.js');
-const commandReply = new CommandReply();
+const { reply } = require('../../functions/commandReply.js');
 const { checkStats } = require('../../functions/musicFunctions');
-async function remove(command, args, language) {
+function remove(command, args, language) {
     const serverQueue = checkStats(command, language);
     if (serverQueue === 'error') return;
 
@@ -10,10 +9,10 @@ async function remove(command, args, language) {
         args.forEach((number) => {
             const queuenum = Number(number);
             if (Number.isInteger(queuenum) && queuenum <= serverQueue.songs.length && queuenum > 0) {
-                commandReply.reply(command, language.removed.replace('${serverQueue.songs[queuenum].title}', serverQueue.songs[queuenum].title), 'GREEN');
                 serverQueue.songs.splice(queuenum, 1);
+                return reply(command, language.removed.replace('${serverQueue.songs[queuenum].title}', serverQueue.songs[queuenum].title), 'GREEN');
             } else {
-                commandReply.reply(command, language.invalidInt, 'RED');
+                return reply(command, language.invalidInt, 'RED');
             }
         });
     }
@@ -23,14 +22,14 @@ module.exports = {
     guildOnly: true,
     aliases: ['r'],
     description: true,
-    async execute(message, args, language) {
-        await remove(message, args, language);
+    execute(message, args, language) {
+        return remove(message, args, language);
     },
     slashCommand: {
         data: new SlashCommandBuilder()
             .addIntegerOption((option) => option.setName('index').setDescription('song to remove').setRequired(true)),
-        async execute(interaction, language) {
-            await remove(interaction, [interaction.options.getInteger('index')], language);
+        execute(interaction, language) {
+            return remove(interaction, [interaction.options.getInteger('index')], language);
         },
     },
 };

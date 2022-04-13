@@ -1,6 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const CommandReply = require('../../functions/commandReply.js');
-const commandReply = new CommandReply();
+const { reply } = require('../../functions/commandReply.js');
 // eslint-disable-next-line no-unused-vars
 const { Message, CommandInteraction } = require('discord.js');
 /**
@@ -14,7 +13,7 @@ async function addEmoji(command, string, language) {
     const emojiID = string.match(/(?<=:.*:).+?(?=>)/g);
     // name of the emoji
     const emojiName = string.match(/(?<=<).+?(?=:\d+>)/g);
-    if (!emojiID || !emojiName) return commandReply.reply(command, language.noEmoji, 'RED');
+    if (!emojiID || !emojiName) return reply(command, language.noEmoji, 'RED');
     // combine id and name into an object
     const emojiObj = emojiName.reduce((obj, key, index) => {
         obj[key] = emojiID[index];
@@ -24,10 +23,10 @@ async function addEmoji(command, string, language) {
     for (const [name, id] of Object.entries(emojiObj)) {
         if (name.startsWith('a:')) {
             const emoji = await command.guild.emojis.create(`https://cdn.discordapp.com/emojis/${id}.gif?v=1`, name.substring(2));
-            await commandReply.reply(command, language.addSuccess.replace('${emoji.name}', emoji.name).replace('${emoji}', emoji), 'BLUE');
+            await reply(command, language.addSuccess.replace('${emoji.name}', emoji.name).replace('${emoji}', emoji), 'BLUE');
         } else {
             const emoji = await command.guild.emojis.create(`https://cdn.discordapp.com/emojis/${id}.png?v=1`, name.substring(1));
-            await commandReply.reply(command, language.addSuccess.replace('${emoji.name}', emoji.name).replace('${emoji}', emoji), 'BLUE');
+            await reply(command, language.addSuccess.replace('${emoji.name}', emoji.name).replace('${emoji}', emoji), 'BLUE');
         }
     }
 }
