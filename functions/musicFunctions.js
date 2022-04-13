@@ -3,8 +3,7 @@ const { PassThrough } = require('stream');
 const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 const Ffmpeg = require('fluent-ffmpeg');
 
-const CommandReply = require('./commandReply.js');
-const commandReply = new CommandReply();
+const { reply, edit } = require('./commandReply.js');
 
 Ffmpeg.setFfmpegPath(ffmpegPath);
 const { Util, MessageEmbed } = require('discord.js');
@@ -112,7 +111,7 @@ module.exports = {
                 .setDescription(`清單: ${name}\n長度:${length}`)
                 .setTimestamp(Date.now())
                 .setFooter({ text: '音樂系統', iconURL: message.client.user.displayAvatarURL() });
-            const m = await commandReply.reply(message, { embeds: [embed] });
+            const m = await reply(message, { embeds: [embed] });
             await m.react('📥');
             await m.react('❌');
             const filter = (reaction, user) => ['📥', '❌'].includes(reaction.emoji.name) && user.id === message.member.user.id;
@@ -132,7 +131,7 @@ module.exports = {
                     .setDescription(`清單: ${name}`)
                     .setTimestamp(Date.now())
                     .setFooter({ text: '音樂系統', iconURL: message.client.user.displayAvatarURL() });
-                await commandReply.edit(m, embed);
+                await edit(m, embed);
                 return resolve(true);
             case '❌':
                 embed = new MessageEmbed()
@@ -142,7 +141,7 @@ module.exports = {
                     .setDescription(`清單: ${name}`)
                     .setTimestamp(Date.now())
                     .setFooter({ text: '音樂系統', iconURL: message.client.user.displayAvatarURL() });
-                await commandReply.edit(m, embed);
+                await edit(m, embed);
                 return reject(false);
             }
         });
@@ -204,7 +203,7 @@ module.exports = {
                     guildId: voiceChannel.guildId,
                     adapterCreator: voiceChannel.guild.voiceAdapterCreator,
                 });
-                await commandReply.reply(message, { embeds: [embed] });
+                await reply(message, { embeds: [embed] });
                 await play(message.guild, serverQueue.songs[0], message);
             } catch (error) {
                 console.error(error);
@@ -215,7 +214,7 @@ module.exports = {
         }
         serverQueue.songs.push(song);
         if (playlist) return;
-        return commandReply.reply(message, { embeds: [embed] });
+        return reply(message, { embeds: [embed] });
     },
     async play(guild, song, message) {
         await play(guild, song, message);
@@ -237,19 +236,19 @@ module.exports = {
         ret += `${secs}`;
         return ret;
     },
-    checkStats(command, language, checkPlaying = false) {
+    async checkStats(command, language, checkPlaying = false) {
         const serverQueue = queue.get(command.guild.id);
 
         if (!command.member.voice.channel) {
-            commandReply.reply(command, language.notInVC, 'RED');
+            await reply(command, language.notInVC, 'RED');
             return 'error';
         }
         if (!serverQueue) {
-            commandReply.reply(command, language.noSong, 'RED');
+            await reply(command, language.noSong, 'RED');
             return 'error';
         }
         if (checkPlaying && !serverQueue.playing) {
-            commandReply.reply(command, language.notPlayingMusic, 'RED');
+            await reply(command, language.notPlayingMusic, 'RED');
             return 'error';
         }
         return serverQueue;

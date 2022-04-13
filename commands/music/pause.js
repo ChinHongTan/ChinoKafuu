@@ -1,8 +1,8 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply } = require('../../functions/commandReply.js');
 const { checkStats } = require('../../functions/musicFunctions');
-function pause(command, language) {
-    const serverQueue = checkStats(command, language, true);
+async function pause(command, language) {
+    const serverQueue = await checkStats(command, language, true);
     if (serverQueue === 'error') return;
 
     if (serverQueue) {

@@ -6,7 +6,7 @@ const ytdl = require('ytdl-core');
 const scdl = require('soundcloud-downloader').default;
 
 async function related(command, language) {
-    const serverQueue = checkStats(command, language);
+    const serverQueue = await checkStats(command, language);
     if (serverQueue === 'error') return;
 
     const { voiceChannel } = serverQueue;

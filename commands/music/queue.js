@@ -5,7 +5,7 @@ const { MessageEmbed } = require('discord.js');
 const DynamicEmbed = require('../../functions/dynamicEmbed');
 const dynamicEmbed = new DynamicEmbed();
 async function queueFunc(command, language) {
-    const serverQueue = checkStats(command, language);
+    const serverQueue = await checkStats(command, language);
     if (serverQueue === 'error') return;
     const array_chunks = (array, chunkSize) => Array(Math.ceil(array.length / chunkSize)).fill().map((_, index) => index * chunkSize).map((begin) => array.slice(begin, begin + chunkSize));
 

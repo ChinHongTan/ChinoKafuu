@@ -3,8 +3,8 @@ const { reply } = require('../../functions/commandReply.js');
 const { format, checkStats } = require('../../functions/musicFunctions');
 const { MessageEmbed } = require('discord.js');
 const progressbar = require('string-progressbar');
-function nowPlaying(command, language) {
-    const serverQueue = checkStats(command, language, true);
+async function nowPlaying(command, language) {
+    const serverQueue = await checkStats(command, language, true);
     if (serverQueue === 'error') return;
     const resource = serverQueue?.resource;
 
