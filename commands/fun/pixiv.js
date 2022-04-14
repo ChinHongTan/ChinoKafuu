@@ -19,17 +19,17 @@ function processIllustURL(illust) {
     return targetURL;
 }
 
-async function generateIllustDescriptionEmbed(illust) {
+function generateIllustDescriptionEmbed(illust) {
     const multipleIllusts = [];
 
     const targetURL = processIllustURL(illust);
 
     targetURL.forEach((URL) => {
-        const multipleIllust = new MessageEmbed()
+        const imageEmbed = new MessageEmbed()
             .setURL('https://www.pixiv.net')
             .setImage(URL)
             .setColor('RANDOM');
-        multipleIllusts.push(multipleIllust);
+        multipleIllusts.push(imageEmbed);
     });
 
     const descriptionEmbed = new MessageEmbed()
@@ -60,12 +60,12 @@ async function pixivFunc(command, subcommand) {
     switch (subcommand) {
     case 'illust':
         illust = await pixiv.search.illusts({
-            illust_id: command.options.getInteger('id'),
+            illust_id: command.options.getInteger('illust_id'),
         });
         break;
     case 'author':
         illusts = await pixiv.user.illusts({
-            user_id: command.options.getInteger('author'),
+            user_id: command.options.getInteger('author_id'),
         });
         illust = illusts[Math.floor(Math.random() * illusts.length)];
         break;
@@ -108,7 +108,7 @@ module.exports = {
                             .setDescription('Search an illust with given ID')
                             .addIntegerOption(option =>
                                 option
-                                    .setName('id')
+                                    .setName('illust_id')
                                     .setDescription('ID of the illust')
                                     .setRequired(true),
                             ),
@@ -119,7 +119,7 @@ module.exports = {
                             .setDescription('Search and get a random illust from the author')
                             .addIntegerOption(option =>
                                 option
-                                    .setName('author')
+                                    .setName('author_id')
                                     .setDescription('Search an author with given ID')
                                     .setRequired(true),
                             ),
