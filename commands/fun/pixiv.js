@@ -73,10 +73,13 @@ async function pixivFunc(command, subcommand) {
         illust = await pixiv.search.illusts({
             word: command.options.getString('query'),
             r18: command.options.getBoolean('r18'),
-            bookmarks: command.options.getString('bookmarks'),
+            bookmarks: command.options.getString('bookmarks') || '1000',
         });
         if (pixiv.search.nextURL && command.options?.getInteger('pages') !== 0) {
-            illusts = await pixiv.util.multiCall({ next_url: pixiv.search.nextURL, illusts }, command.options.getInteger('pages'));
+            illusts = await pixiv.util.multiCall({
+                next_url: pixiv.search.nextURL, illusts,
+            // minus 1 because we had already searched the first page
+            }, command.options.getInteger('pages') - 1 || 0);
         }
         illust = illusts[Math.floor(Math.random() * illusts.length)];
         break;
@@ -131,10 +134,16 @@ module.exports = {
                                     .setDescription('query to search illust on pixiv')
                                     .setRequired(true),
                             )
+                            .addBooleanOption(option =>
+                                option
+                                    .setName('r18')
+                                    .setDescription('whether to search with r18 mode')
+                                    .setRequired(true),
+                            )
                             .addStringOption(option =>
                                 option
                                     .setName('bookmarks')
-                                    .setDescription('filter search results with bookmarks')
+                                    .setDescription('filter search results with bookmarks, default to 1000 bookmarks')
                                     .addChoices([
                                         ['50', '50'], ['100', '100'], ['300', '300'], ['500', '500'], ['1000', '1000'],
                                         ['3000', '3000'], ['5000', '5000'], ['10000', '10000'],
@@ -143,15 +152,9 @@ module.exports = {
                             .addIntegerOption(option =>
                                 option
                                     .setName('pages')
-                                    .setMinValue(0)
+                                    .setMinValue(1)
                                     .setMaxValue(10)
-                                    .setDescription('how many pages to search (more pages = longer)'),
-                            )
-                            .addBooleanOption(option =>
-                                option
-                                    .setName('r18')
-                                    .setDescription('whether to search with r18 mode')
-                                    .setRequired(true),
+                                    .setDescription('how many pages to search (more pages = longer), default to 1'),
                             ),
                     ),
             ),
