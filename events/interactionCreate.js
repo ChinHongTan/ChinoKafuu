@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { reply } = require('../functions/commandReply.js');
 module.exports = {
     name: 'interactionCreate',
     async execute(interaction, client) {
@@ -29,7 +30,7 @@ module.exports = {
             await command.slashCommand.execute(interaction, language);
         } catch (error) {
             console.error(error);
-            await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+            await reply(interaction, { content: 'There was an error while executing this command!', ephemeral: true });
         }
     },
 };

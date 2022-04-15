@@ -64,7 +64,7 @@ async function pixivFunc(command, subcommand) {
                 illust_id: command.options.getInteger('illust_id'),
             });
         } catch (error) {
-            return reply(command, 'illust doesn\'t exist!', 'RED');
+            return reply(command, 'Illust doesn\'t exist!', 'RED');
         }
         break;
     case 'author':

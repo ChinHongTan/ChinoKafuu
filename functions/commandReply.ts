@@ -1,11 +1,18 @@
-import { Message, MessageEmbed, CommandInteraction, ColorResolvable, MessageOptions } from "discord.js";
+import {
+    Message,
+    MessageEmbed,
+    CommandInteraction,
+    ColorResolvable,
+    MessageOptions,
+    InteractionReplyOptions
+} from "discord.js";
 
 function isString(x: any): x is string {
     return typeof x === "string";
 }
 
 // reply to a user command
-async function reply(command: Message | CommandInteraction, response: string | MessageOptions, color?: ColorResolvable) {
+async function reply(command: Message | CommandInteraction, response: string | MessageOptions | InteractionReplyOptions, color?: ColorResolvable) {
     if (isString(response)) {
         if (command instanceof Message) {
             return command.reply({ embeds: [{ description: response, color: color }] });
@@ -24,7 +31,7 @@ async function reply(command: Message | CommandInteraction, response: string | M
 }
 
 // edit a message or interaction
-async function edit(command: Message | CommandInteraction, response?: MessageEmbed | string | MessageOptions, color?: ColorResolvable) {
+async function edit(command: Message | CommandInteraction, response?: MessageEmbed | string | MessageOptions | InteractionReplyOptions, color?: ColorResolvable) {
     if (command instanceof Message) {
         if (response instanceof MessageEmbed) return await command.edit({ embeds: [response], components: [], content: '\u200b' });
         else if (isString(response)) return await command.edit({ embeds: [{ description: response, color: color }], components: [], content: '\u200b' });
