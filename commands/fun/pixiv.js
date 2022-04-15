@@ -59,23 +59,32 @@ async function pixivFunc(command, subcommand) {
     let illust;
     switch (subcommand) {
     case 'illust':
-        illust = await pixiv.search.illusts({
-            illust_id: command.options.getInteger('illust_id'),
-        });
+        try {
+            illust = await pixiv.search.illusts({
+                illust_id: command.options.getInteger('illust_id'),
+            });
+        } catch (error) {
+            return reply(command, 'illust doesn\'t exist!', 'RED');
+        }
         break;
     case 'author':
-        illusts = await pixiv.user.illusts({
-            user_id: command.options.getInteger('author_id'),
-        });
+        try {
+            illusts = await pixiv.user.illusts({
+                user_id: command.options.getInteger('author_id'),
+            });
+        } catch (error) {
+            return reply(command, 'User doesn\'t exist!', 'RED');
+        }
         illust = illusts[Math.floor(Math.random() * illusts.length)];
         break;
     case 'query':
-        illust = await pixiv.search.illusts({
+        illusts = await pixiv.search.illusts({
             word: command.options.getString('query'),
             r18: command.options.getBoolean('r18'),
             bookmarks: command.options.getString('bookmarks') || '1000',
         });
-        if (pixiv.search.nextURL && command.options?.getInteger('pages') !== 0) {
+        if (illusts.length === 0) return reply(command, 'No result found!', 'RED');
+        if (pixiv.search.nextURL && command.options?.getInteger('pages') !== 1) {
             illusts = await pixiv.util.multiCall({
                 next_url: pixiv.search.nextURL, illusts,
             // minus 1 because we had already searched the first page
@@ -87,6 +96,7 @@ async function pixivFunc(command, subcommand) {
     const illustEmbed = generateIllustDescriptionEmbed(illust);
     return reply(command, { embeds: illustEmbed });
 }
+
 module.exports = {
     name: 'pixiv',
     cooldown: 3,
@@ -132,6 +142,7 @@ module.exports = {
                                 option
                                     .setName('query')
                                     .setDescription('query to search illust on pixiv')
+                                    .setAutocomplete(true)
                                     .setRequired(true),
                             )
                             .addBooleanOption(option =>
@@ -162,6 +173,17 @@ module.exports = {
             if (!refreshToken) return interaction.reply('This command can\'t be used without pixiv refreshToken!');
             await interaction.deferReply();
             await pixivFunc(interaction, interaction.options.getSubcommand());
+        },
+        async autoComplete(interaction) {
+            const pixiv = await Pixiv.default.refreshLogin(refreshToken);
+            const keyword = interaction.options.getString('query');
+            const suggestedKeywords = await pixiv.search.autoCompleteV2({ word: keyword });
+            const respondArray = [];
+            suggestedKeywords.tags.forEach(tag => {
+                respondArray.push({ name: tag.name, value: tag.name });
+            });
+            // respond to the request
+            return interaction.respond(respondArray);
         },
     },
 };

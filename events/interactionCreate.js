@@ -2,11 +2,18 @@ const fs = require('fs');
 module.exports = {
     name: 'interactionCreate',
     async execute(interaction, client) {
+        const command = client.commands.get(interaction.commandName);
+
+        if (interaction.isAutocomplete()) {
+            await command.slashCommand.autoComplete(interaction);
+        }
         if (!interaction.isCommand()) return;
         const collection = interaction.client.guildOptions;
         let rawData;
-        if (collection) {rawData = await collection.findOne({ id: interaction?.guild?.id });} else {
-            const buffer = fs.readFileSync('./data/guildOption.json');
+        if (collection) {
+            rawData = await collection.findOne({ id: interaction?.guild?.id });
+        } else {
+            const buffer = fs.readFileSync('./data/guildOption.json', 'utf-8');
             const parsedJSON = JSON.parse(buffer);
             rawData = parsedJSON[interaction?.guild?.id];
         }
@@ -15,8 +22,6 @@ module.exports = {
             options: { language: 'en_US' },
         };
         const language = client.language[guildOption.options.language];
-
-        const command = client.commands.get(interaction.commandName);
 
         if (!command) return;
 
