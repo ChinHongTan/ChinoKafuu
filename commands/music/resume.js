@@ -15,7 +15,11 @@ async function resume(command, language) {
 module.exports = {
     name: 'resume',
     guildOnly: true,
-    description: true,
+    description: {
+        'en_US': 'Resume the song!',
+        'zh_CN': '继续播放歌曲！',
+        'zh_TW': '繼續播放歌曲！',
+    },
     execute(message, _args, language) {
         return resume(message, language);
     },

@@ -106,7 +106,11 @@ async function covid(command, args, language) {
 }
 module.exports = {
     name: 'covid',
-    description: true,
+    description: {
+        'en_US': 'Get latest global/country covid status!',
+        'zh_CN': '取得最新的全球/国家的新冠肺炎状态!',
+        'zh_TW': '取得最新的全球/國家的新冠肺炎狀態!',
+    },
     async execute(message, args, language) {
         await covid(message, args, language);
     },

@@ -42,7 +42,11 @@ function hentai(command, _args, language) {
 module.exports = {
     name: 'hentai',
     cooldown: 3,
-    description: true,
+    description: {
+        'en_US': 'Get a NSFW picture',
+        'zh_CN': '色图',
+        'zh_TW': '色圖',
+    },
     execute(message, _args, language) {
         return hentai(message, language);
     },

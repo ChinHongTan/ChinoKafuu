@@ -14,7 +14,11 @@ async function pause(command, language) {
 module.exports = {
     name: 'pause',
     guildOnly: true,
-    description: true,
+    description: {
+        'en_US': 'Pause the song!',
+        'zh_CN': '暂停播放歌曲！',
+        'zh_TW': '暫停播放歌曲！',
+    },
     execute(message, _args, language) {
         return pause(message, language);
     },

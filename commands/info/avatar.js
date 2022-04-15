@@ -57,7 +57,11 @@ module.exports = {
     cooldown: 10,
     aliases: ['icon', 'pfp', 'av'],
     guildOnly: true,
-    description: true,
+    description: {
+        'en_US': 'Send user avatar.',
+        'zh_CN': '发送用户头像',
+        'zh_TW': '發送用戶頭像',
+    },
     async execute(message, args, language) {
         if (message.mentions.users.size) {
             // display all user's avatars mentioned by the author

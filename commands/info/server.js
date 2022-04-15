@@ -23,7 +23,11 @@ function server(command) {
 module.exports = {
     name: 'server',
     aliases: ['server-info'],
-    description: 'Information about server.',
+    description: {
+        'en_US': 'Get information about server.',
+        'zh_CN': '取得伺服器的基本资料',
+        'zh_TW': '取得伺服器的基本資料',
+    },
     guildOnly: true,
     cooldown: 5,
     async execute(message) {

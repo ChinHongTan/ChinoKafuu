@@ -15,7 +15,11 @@ module.exports = {
     name: 'loop-queue',
     guildOnly: true,
     aliases: ['lq', 'loopqueue'],
-    description: true,
+    description: {
+        'en_US': 'Loop the currently played queue!',
+        'zh_CN': '循环播放歌曲清单',
+        'zh_TW': '循環播放歌曲清單',
+    },
     execute(message, _args, language) {
         return loopQueue(message, language);
     },

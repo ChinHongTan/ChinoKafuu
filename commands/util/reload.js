@@ -25,7 +25,11 @@ async function reload(interaction, args, user) {
 }
 module.exports = {
     name: 'reload',
-    description: true,
+    description: {
+        'en_US': 'Reloads a command',
+        'zh_CN': '重新加载指令',
+        'zh_TW': '重新加載指令',
+    },
     args: true,
     ownerOnly: true,
     async execute(message, args) {

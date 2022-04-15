@@ -31,7 +31,11 @@ function eightBall(command, args, language) {
 }
 module.exports = {
     name: '8ball',
-    description: true,
+    description: {
+        'en_US': 'Ask the 8ball your question~',
+        'zh_CN': '问问神奇八号球~',
+        'zh_TW': '問問神奇八號球~',
+    },
     async execute(message, args, language) {
         await eightBall(message, [args.join(' ')], language);
     },

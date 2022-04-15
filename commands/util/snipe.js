@@ -10,7 +10,7 @@ async function snipe(command, args, language) {
     if (collection) {
         snipeWithGuild = await collection.findOne({ id: command.guild.id });
     } else {
-        const rawData = fs.readFileSync('./data/snipes.json');
+        const rawData = fs.readFileSync('./data/snipes.json', 'utf-8');
         snipeWithGuild = JSON.parse(rawData);
     }
     let snipes;
@@ -39,7 +39,11 @@ async function snipe(command, args, language) {
 module.exports = {
     name: 'snipe',
     guildOnly: true,
-    description: true,
+    description: {
+        'en_US': 'Snipe a message.',
+        'zh_CN': '狙击一条讯息',
+        'zh_TW': '狙擊一條訊息',
+    },
     async execute(message, args, language) {
         await snipe(message, args, language);
     },

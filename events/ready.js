@@ -36,7 +36,7 @@ module.exports = {
             const collection = client.guildOptions;
             let rawData;
             if (collection) {rawData = await collection.findOne({ id });} else {
-                const buffer = fs.readFileSync('./data/guildOption.json');
+                const buffer = fs.readFileSync('./data/guildOption.json', 'utf-8');
                 const parsedJSON = JSON.parse(buffer);
                 rawData = parsedJSON[id];
             }
@@ -44,7 +44,7 @@ module.exports = {
                 id,
                 options: { language: 'en_US' },
             };
-            const language = client.language[guildOption.options.language];
+            const language = guildOption.options.language;
             const commands = [];
             const commandFolders = fs.readdirSync('./commands');
             for (const folder of commandFolders) {
@@ -54,7 +54,7 @@ module.exports = {
                     if (command.slashCommand) {
                         const { data } = command.slashCommand;
                         data.setName(command.name);
-                        data.setDescription(language[command.name] ?? 'none');
+                        data.setDescription(command.description[language] ?? 'none');
                         commands.push(command.slashCommand.data.toJSON());
                     }
                 }

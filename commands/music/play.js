@@ -202,7 +202,11 @@ module.exports = {
     name: 'play',
     guildOnly: true,
     aliases: ['p'],
-    description: true,
+    description: {
+        'en_US': 'Play a song based on a given url or a keyword',
+        'zh_CN': '根据关键字或网址播放歌曲',
+        'zh_TW': '根據關鍵字或網址播放歌曲',
+    },
     async execute(message, args, language) {
         await play(message, args, language);
     },

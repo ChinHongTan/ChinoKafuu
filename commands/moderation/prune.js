@@ -19,7 +19,11 @@ module.exports = {
     aliases: ['cut', 'delete', 'del'],
     guildOnly: true,
     permissions: 'MANAGE_MESSAGES',
-    description: true,
+    description: {
+        'en_US': 'Bulk delete messages.',
+        'zh_CN': '删除多条讯息',
+        'zh_TW': '刪除多條訊息',
+    },
     async execute(message, args, language) {
         await prune(message, args, language);
     },

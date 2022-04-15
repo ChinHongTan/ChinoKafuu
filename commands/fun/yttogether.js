@@ -14,7 +14,11 @@ module.exports = {
     name: 'yttogether',
     cooldown: 3,
     aliases: ['yt', 'youtube'],
-    description: true,
+    description: {
+        'en_US': 'Watch YouTube videos together!',
+        'zh_CN': '一起看YouTube視頻!',
+        'zh_TW': '一起看YouTube視頻!',
+    },
     async execute(message, _args, language) {
         await yttogether(message, language);
     },

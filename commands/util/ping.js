@@ -2,7 +2,11 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 
 module.exports = {
     name: 'ping',
-    description: 'Ping!',
+    description: {
+        'en_US': 'Get my latency~',
+        'zh_CN': '取得我的网络延迟~',
+        'zh_TW': ' 取得我的網絡延遲~',
+    },
     cooldown: 5,
     async execute(message) {
         message.channel.send({ embeds: [{ description: `Websocket heartbeat: ${message.client.ws.ping}ms.`, color: 'BLUE' }] });

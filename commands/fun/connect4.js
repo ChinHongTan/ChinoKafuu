@@ -203,7 +203,11 @@ async function connect4(command, language) {
 module.exports = {
     name: 'connect4',
     cooldown: 3,
-    description: true,
+    description: {
+        'en_US': 'A little Connect 4 game!',
+        'zh_CN': '四子棋小游戏！',
+        'zh_TW': '四子棋小遊戲！',
+    },
     async execute(message, _args, language) {
         await connect4(message, language);
     },

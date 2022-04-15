@@ -23,7 +23,11 @@ function evalFunc(message, args, _language) {
 
 module.exports = {
     name: 'eval',
-    description: true,
+    description: {
+        'en_US': 'Evaluate codes!',
+        'zh_CN': '执行代码!',
+        'zh_TW': '執行代碼!',
+    },
     guildOnly: true,
     ownerOnly: true,
     cooldown: 5,

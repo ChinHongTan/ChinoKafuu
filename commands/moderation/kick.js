@@ -11,7 +11,11 @@ async function kick(command, taggedUser) {
 
 module.exports = {
     name: 'kick',
-    description: 'Kick someone out.',
+    description: {
+        'en_US': 'Kick a server member out',
+        'zh_CN': '踢出群组成员',
+        'zh_TW': '踢出群組成員',
+    },
     guildOnly: true,
     usage: '[mention]',
     permissions: 'ADMINISTRATOR',

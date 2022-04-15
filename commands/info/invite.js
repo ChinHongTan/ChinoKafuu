@@ -8,7 +8,11 @@ async function sendLink(command) {
 module.exports = {
     name: 'invite',
     aliases: ['inv'],
-    description: true,
+    description: {
+        'en_US': 'Get the invitation link of me!',
+        'zh_CN': '取得我的邀请链接~',
+        'zh_TW': '取得我的邀請鏈接~',
+    },
     async execute(message) {
         await sendLink(message);
     },

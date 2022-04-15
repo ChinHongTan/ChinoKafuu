@@ -12,7 +12,11 @@ async function stop(command, language) {
 module.exports = {
     name: 'stop',
     guildOnly: true,
-    description: true,
+    description: {
+        'en_US': 'Stops playing songs.',
+        'zh_CN': '停止播放歌曲',
+        'zh_TW': '停止播放歌曲',
+    },
     async execute(message, _args, language) {
         await stop(message, language);
     },

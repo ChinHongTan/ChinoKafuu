@@ -103,7 +103,11 @@ async function nhentaiFunc(command, args, _language) {
 module.exports = {
     name: 'nhentai',
     cooldown: 10,
-    description: true,
+    description: {
+        'en_US': 'Search for a doujin on nhentai.',
+        'zh_CN': '在nhentai上搜寻本本',
+        'zh_TW': '在nhentai上搜尋本本',
+    },
     async execute(message, args, language) {
         await nhentaiFunc(message, args, language);
     },

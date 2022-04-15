@@ -46,7 +46,11 @@ module.exports = {
     name: 'queue',
     guildOnly: true,
     aliases: ['q'],
-    description: true,
+    description: {
+        'en_US': 'Get the current song queue.',
+        'zh_CN': '查询目前的播放清单',
+        'zh_TW': '查詢目前的播放清單',
+    },
     async execute(message, _args, language) {
         await queueFunc(message, language);
     },

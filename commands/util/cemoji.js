@@ -33,7 +33,11 @@ async function addEmoji(command, string, language) {
 module.exports = {
     name: 'cemoji',
     cooldown: 3,
-    description: true,
+    description: {
+        'en_US': 'Copy emoji from other guilds! (nitro needed)',
+        'zh_CN': '从其他伺服器复制表情!（需要nitro）',
+        'zh_TW': '從其他伺服器復製表情!（需要nitro）',
+    },
     async execute(message, _args, language) {
         await addEmoji(message, message.content, language);
     },

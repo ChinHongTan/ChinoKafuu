@@ -3,7 +3,11 @@ module.exports = {
     cooldown: 10,
     guildOnly: true,
     permissions: 'ADMINISTRATOR',
-    description: true,
+    description: {
+        'en_US': 'Load a server backup based on backup ID.',
+        'zh_CN': '根据ID加载备份文件',
+        'zh_TW': '根據ID加載備份文件',
+    },
     async execute(message, args, language) {
         const backup = require('discord-backup');
         const fs = require('fs');

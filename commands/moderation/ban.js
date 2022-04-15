@@ -13,7 +13,11 @@ async function ban(command, args = []) {
 
 module.exports = {
     name: 'ban',
-    description: 'Ban someone.',
+    description: {
+        'en_US': 'Ban a server member',
+        'zh_CN': '停权群组成员',
+        'zh_TW': '停權群組成員',
+    },
     guildOnly: true,
     usage: '[mention]',
     permissions: 'ADMINISTRATOR',

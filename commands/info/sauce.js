@@ -119,7 +119,11 @@ async function sauce(command, args, language) {
 
 module.exports = {
     name: 'sauce',
-    description: true,
+    description: {
+        'en_US': 'Search SauceNao/Ascii2d for an image source.',
+        'zh_CN': '在SauceNao/Ascii2d网站上搜索图源',
+        'zh_TW': '在SauceNao/Ascii2d網站上搜索圖源',
+    },
     cooldown: 5,
     async execute(message, args, language) {
         if (!sagiriToken) return message.reply('This command can\'t be used without SauceNAO token!');

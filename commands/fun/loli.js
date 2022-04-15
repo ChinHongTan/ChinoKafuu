@@ -77,7 +77,11 @@ async function loli(command) {
 module.exports = {
     name: 'loli',
     cooldown: 3,
-    description: true,
+    description: {
+        'en_US': 'Get a picture of a loli',
+        'zh_CN': '萝莉图',
+        'zh_TW': '蘿莉圖',
+    },
     async execute(message) {
         if (!refreshToken) return reply(message, 'This command can\'t be used without pixiv refreshToken!', 'RED');
         const repliedMessage = await reply(message, 'Please wait...', 'YELLOW');

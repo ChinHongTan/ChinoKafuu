@@ -16,7 +16,11 @@ module.exports = {
     aliases: ['ui', 'update', 'refresh', 'ri'],
     cooldown: 3,
     ownerOnly: true,
-    description: true,
+    description: {
+        'en_US': 'Update the illust list used in loli command.',
+        'zh_CN': '更新萝莉功能使用的pixiv图片列表',
+        'zh_TW': '更新蘿莉功能使用的pixiv圖片列表',
+    },
     async execute(message) {
         if (!refreshToken) return message.reply('This command can\'t be used without pixiv refreshToken!');
         const repliedMessage = await message.reply('Please wait... This might take a while...');

@@ -45,7 +45,11 @@ async function mute(command, [taggedUser, reason]) {
 }
 module.exports = {
     name: 'mute',
-    description: 'Mute a server member.',
+    description: {
+        'en_US': 'Mute a server member',
+        'zh_CN': '禁言群组成员',
+        'zh_TW': '禁言群組成員',
+    },
     guildOnly: true,
     usage: '[mention] [reason(optional)]',
     permissions: 'ADMINISTRATOR',

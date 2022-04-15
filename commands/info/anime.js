@@ -57,7 +57,11 @@ async function anime(command, args, language) {
 module.exports = {
     name: 'anime',
     guildOnly: true,
-    description: true,
+    description: {
+        'en_US': 'Search for anime details or search anime with frames.',
+        'zh_CN': '根据动漫截图查找动漫/查询动漫相关信息',
+        'zh_TW': '根據動漫截圖查找動漫/查詢動漫相關信息',
+    },
     async execute(message, args, language) {
         await anime(message, args, language);
     },

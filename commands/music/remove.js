@@ -21,7 +21,11 @@ module.exports = {
     name: 'remove',
     guildOnly: true,
     aliases: ['r'],
-    description: true,
+    description: {
+        'en_US': 'Removes a song from the song queue',
+        'zh_CN': '从清单中移除歌曲',
+        'zh_TW': '從清單中移除歌曲',
+    },
     execute(message, args, language) {
         return remove(message, args, language);
     },

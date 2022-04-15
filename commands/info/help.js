@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply } = require('../../functions/commandReply.js');
 const { MessageEmbed } = require('discord.js');
+const fs = require('fs');
 
 function sendHelp(user, interaction, language, embed) {
     return user
@@ -15,7 +16,21 @@ function sendHelp(user, interaction, language, embed) {
         });
 }
 
-function help(interaction, args, language) {
+async function help(interaction, args, language) {
+    const collection = interaction.client.guildOptions;
+    let rawData;
+    const id = interaction.guildId;
+    if (collection) {rawData = await collection.findOne({ id });} else {
+        const buffer = fs.readFileSync('./data/guildOption.json', 'utf-8');
+        const parsedJSON = JSON.parse(buffer);
+        rawData = parsedJSON[id];
+    }
+    const guildOption = rawData ?? {
+        id,
+        options: { language: 'en_US' },
+    };
+    const language_test = guildOption.options.language;
+
     const prefix = process.env.PREFIX || require('../../config/config.json').prefix;
     const { commands } = interaction.client;
     if (!args.length) {
@@ -25,7 +40,8 @@ function help(interaction, args, language) {
             .setColor('BLUE')
             .setThumbnail(interaction.client.user.displayAvatarURL());
         commands.forEach((command) => {
-            embed.addField(command.name ?? 'none', language[command.name] ?? 'none', true);
+            console.log(command.description);
+            embed.addField(command.name ?? 'none', command.description?.[language_test] ?? 'none', true);
         });
         if (interaction.author) return sendHelp(interaction.author, interaction, language, embed);
         return sendHelp(interaction.user, interaction, language, embed);
@@ -48,7 +64,11 @@ function help(interaction, args, language) {
 }
 module.exports = {
     name: 'help',
-    description: true,
+    description: {
+        'en_US': 'List all of my commands or info about a specific command.',
+        'zh_CN': '列出我所有的指令/單個的指令详情',
+        'zh_TW': '列出我所有的指令/單個的指令詳情',
+    },
     aliases: ['commands'],
     usage: '[command name]',
     cooldown: 5,

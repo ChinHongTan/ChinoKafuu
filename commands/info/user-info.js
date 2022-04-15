@@ -94,7 +94,11 @@ module.exports = {
     name: 'user-info',
     aliases: ['user', 'ui'],
     guildOnly: true,
-    description: true,
+    description: {
+        'en_US': 'Get a user\'s information',
+        'zh_CN': '取得群组成员的基本资料',
+        'zh_TW': '取得群組成員的基本資料',
+    },
     execute(message, _args, language) {
         if (!message.mentions.members.size) {
             const embed = getUserInfo(message.member);

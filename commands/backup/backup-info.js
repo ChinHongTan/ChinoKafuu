@@ -2,7 +2,11 @@ module.exports = {
     name: 'backup-info',
     cooldown: 10,
     aliases: ['bi'],
-    description: true,
+    description: {
+        'en_US': 'Load a backup info.',
+        'zh_CN': '查询备份信息',
+        'zh_TW': '查詢備份信息',
+    },
     execute(message, args, language) {
         const backup = require('discord-backup');
         const Discord = require('discord.js');

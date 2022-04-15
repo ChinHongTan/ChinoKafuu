@@ -83,7 +83,11 @@ module.exports = {
     name: 'lyric',
     guildOnly: true,
     aliases: ['ly'],
-    description: true,
+    description: {
+        'en_US': 'Search for lyrics of a song!!',
+        'zh_CN': '搜索歌词！',
+        'zh_TW': '搜索歌詞！',
+    },
     async execute(message, args, language) {
         await lyric(message, [message.content.substring(message.content.indexOf(' ') + 1)], language);
     },

@@ -49,7 +49,11 @@ async function googleFunc(command, keyword, _language) {
 
 module.exports = {
     name: 'google',
-    description: true,
+    description: {
+        'en_US': 'Search query on Google',
+        'zh_CN': '在谷歌上搜索关键字',
+        'zh_TW': '在谷歌上搜索關鍵字',
+    },
     async execute(message, _args, language) {
         const repliedMsg = await message.channel.send('Please wait...');
         await googleFunc(repliedMsg, message.content.substr(message.content.indexOf(' ') + 1), language);

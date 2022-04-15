@@ -25,7 +25,11 @@ module.exports = {
     name: 'nowplaying',
     guildOnly: true,
     aliases: ['np'],
-    description: true,
+    description: {
+        'en_US': 'Get the song currently being played.',
+        'zh_CN': '查看目前正在播放的歌曲',
+        'zh_TW': '查看目前正在播放的歌曲',
+    },
     execute(message, _args, language) {
         return nowPlaying(message, language);
     },

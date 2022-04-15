@@ -10,7 +10,7 @@ async function editSnipe(command, args, language) {
     if (collection) {
         editSnipesWithGuild = await collection.findOne({ id: command.guild.id });
     } else {
-        const rawData = fs.readFileSync('./data/editSnipes.json');
+        const rawData = fs.readFileSync('./data/editSnipes.json', 'utf-8');
         editSnipesWithGuild = JSON.parse(rawData);
     }
     const arg = args[0] ?? 1;
@@ -33,7 +33,11 @@ module.exports = {
     name: 'editsnipe',
     aliases: ['esnipe'],
     guildOnly: true,
-    description: true,
+    description: {
+        'en_US': 'Snipe an edited message.',
+        'zh_CN': '狙击已编辑的讯息',
+        'zh_TW': '狙擊已編輯的訊息',
+    },
     async execute(message, args, language) {
         await editSnipe(message, args, language);
     },

@@ -100,7 +100,11 @@ async function pixivFunc(command, subcommand) {
 module.exports = {
     name: 'pixiv',
     cooldown: 3,
-    description: true,
+    description: {
+        'en_US': 'Search and get an illust on pixiv',
+        'zh_CN': '在pixiv网站上搜索图片',
+        'zh_TW': '在pixiv網站上搜索圖片',
+    },
     async execute(message) {
         if (!refreshToken) return reply(message, 'This command can\'t be used without pixiv refreshToken!', 'RED');
         const repliedMessage = await reply(message, 'Please wait...', 'YELLOW');

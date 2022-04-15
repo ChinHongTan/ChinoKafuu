@@ -11,7 +11,11 @@ async function clear(command, language) {
 module.exports = {
     name: 'clear',
     guildOnly: true,
-    description: true,
+    description: {
+        'en_US': 'Clear the song queue',
+        'zh_CN': '清除播放行列',
+        'zh_TW': '清除播放佇列',
+    },
     execute(message, _args, language) {
         return clear(message, language);
     },

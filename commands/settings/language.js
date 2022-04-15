@@ -29,7 +29,11 @@ async function setLanguage(command, args, language) {
 module.exports = {
     name: 'language',
     guildOnly: true,
-    description: true,
+    description: {
+        'en_US': 'Set the language used by me in this server.',
+        'zh_CN': '设定我在伺服器里使用的语言',
+        'zh_TW': '設定我在伺服器裡使用的語言',
+    },
     async execute(message, args, language) {
         await setLanguage(message, args, language);
     },

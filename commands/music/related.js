@@ -96,7 +96,11 @@ module.exports = {
     name: 'related',
     guildOnly: true,
     aliases: ['re'],
-    description: true,
+    description: {
+        'en_US': 'Play a related song',
+        'zh_CN': '播放相关歌曲',
+        'zh_TW': '播放相關歌曲',
+    },
     async execute(message, _args, language) {
         await related(message, language);
     },

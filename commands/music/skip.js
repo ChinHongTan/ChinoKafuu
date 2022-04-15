@@ -12,7 +12,11 @@ module.exports = {
     name: 'skip',
     guildOnly: true,
     aliases: ['next'],
-    description: true,
+    description: {
+        'en_US': 'Skips a song.',
+        'zh_CN': '跳过歌曲',
+        'zh_TW': '跳過歌曲',
+    },
     execute(message, _args, language) {
         return skip(message, language);
     },
