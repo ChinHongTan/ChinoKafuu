@@ -40,7 +40,6 @@ async function help(interaction, args, language) {
             .setColor('BLUE')
             .setThumbnail(interaction.client.user.displayAvatarURL());
         commands.forEach((command) => {
-            console.log(command.description);
             embed.addField(command.name ?? 'none', command.description?.[language_test] ?? 'none', true);
         });
         if (interaction.author) return sendHelp(interaction.author, interaction, language, embed);
