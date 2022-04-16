@@ -80,7 +80,7 @@ async function pixivFunc(command, subcommand) {
     case 'query':
         illusts = await pixiv.search.illusts({
             word: command.options.getString('query'),
-            r18: command.options.getBoolean('r18'),
+            r18: false,
             bookmarks: command.options.getString('bookmarks') || '1000',
         });
         if (illusts.length === 0) return reply(command, 'No result found!', 'RED');
@@ -147,12 +147,6 @@ module.exports = {
                                     .setName('query')
                                     .setDescription('query to search illust on pixiv')
                                     .setAutocomplete(true)
-                                    .setRequired(true),
-                            )
-                            .addBooleanOption(option =>
-                                option
-                                    .setName('r18')
-                                    .setDescription('whether to search with r18 mode')
                                     .setRequired(true),
                             )
                             .addStringOption(option =>
