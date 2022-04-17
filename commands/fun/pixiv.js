@@ -91,6 +91,7 @@ async function pixivFunc(command, subcommand) {
             }, command.options.getInteger('pages') - 1 || 0);
         }
         illust = illusts[Math.floor(Math.random() * illusts.length)];
+        console.log(illust);
         break;
     }
     const illustEmbed = generateIllustDescriptionEmbed(illust);
@@ -175,10 +176,10 @@ module.exports = {
         async autoComplete(interaction) {
             const pixiv = await Pixiv.default.refreshLogin(refreshToken);
             const keyword = interaction.options.getString('query');
-            const suggestedKeywords = await pixiv.search.autoCompleteV2({ word: keyword });
+            const candidates = await pixiv.web.candidates({ keyword: keyword, lang: 'en' });
             const respondArray = [];
-            suggestedKeywords.tags.forEach(tag => {
-                respondArray.push({ name: tag.name, value: tag.name });
+            candidates.candidates.forEach(tag => {
+                respondArray.push({ name: `${tag.tag_name} <${tag.tag_translation ?? ''}>`, value: tag.tag_name });
             });
             // respond to the request
             return interaction.respond(respondArray);
