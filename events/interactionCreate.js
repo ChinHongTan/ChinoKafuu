@@ -1,5 +1,7 @@
 const fs = require('fs');
 const { reply } = require('../functions/commandReply.js');
+const owner_id = process.env.OWNERID || require('../config/config.json').owner_id;
+
 module.exports = {
     name: 'interactionCreate',
     async execute(interaction, client) {
@@ -9,6 +11,21 @@ module.exports = {
             await command.slashCommand.autoComplete(interaction);
         }
         if (!interaction.isCommand()) return;
+        if (command.ownerOnly) {
+            if (interaction.author.id !== owner_id) {
+                return reply(interaction, { content: 'This command is only available for the bot owner!', ephemeral: true });
+            }
+        }
+
+        if (command.permissions) {
+            const authorPerms = interaction.channel.permissionsFor(interaction.author);
+            if (!authorPerms || !authorPerms.has(command.permissions)) {
+                return reply(interaction, {
+                    content: `You cannot do this! Permission needed: ${command.permissions}`,
+                    ephemeral: true,
+                });
+            }
+        }
         const collection = interaction.client.guildOptions;
         let rawData;
         if (collection) {

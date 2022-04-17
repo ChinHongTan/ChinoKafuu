@@ -32,7 +32,8 @@ module.exports = {
             for (const cmd of keys) {
                 distances.set(cmd, getEditDistance(commandName, cmd));
             }
-            const recommendation = new Map([...distances].filter(([k, v]) => v <= 2).sort((a, b) => a[1] - b[1]));
+            // experiment: use [, v] instead of [k, v]
+            const recommendation = new Map([...distances].filter(([, v]) => v <= 2).sort((a, b) => a[1] - b[1]));
             if (recommendation.size > 0) {
                 message.channel.send(`\`${prefix}${commandName}\` is not a valid command! Do you mean: `);
                 recommendation.forEach((_similarity, cmd) => {
@@ -52,7 +53,7 @@ module.exports = {
         if (command.permissions) {
             const authorPerms = message.channel.permissionsFor(message.author);
             if (!authorPerms || !authorPerms.has(command.permissions)) {
-                return message.reply('You can not do this!');
+                return message.reply(`You cannot do this! Permission needed: ${command.permissions}`);
             }
         }
 
