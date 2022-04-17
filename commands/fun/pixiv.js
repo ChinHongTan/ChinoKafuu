@@ -7,13 +7,13 @@ const refreshToken = process.env.PIXIV_REFRESH_TOKEN || require('../../config/co
 function processIllustURL(illust) {
     const targetURL = [];
     if (illust.meta_pages.length === 0) {
-        targetURL.push(illust.meta_single_page.original_image_url.replace('pximg.net', 'pixiv.cat'));
+        targetURL.push(illust.image_urls.medium.replace('pximg.net', 'pixiv.cat'));
     }
     if (illust.meta_pages.length > 5) {
-        targetURL.push(illust.meta_pages[0].image_urls.original.replace('pximg.net', 'pixiv.cat'));
+        targetURL.push(illust.meta_pages[0].image_urls.medium.replace('pximg.net', 'pixiv.cat'));
     } else {
         for (let i = 0; i < illust.meta_pages.length; i++) {
-            targetURL.push(illust.meta_pages[i].image_urls.original.replace('pximg.net', 'pixiv.cat'));
+            targetURL.push(illust.meta_pages[i].image_urls.medium.replace('pximg.net', 'pixiv.cat'));
         }
     }
     return targetURL;
@@ -91,7 +91,6 @@ async function pixivFunc(command, subcommand) {
             }, command.options.getInteger('pages') - 1 || 0);
         }
         illust = illusts[Math.floor(Math.random() * illusts.length)];
-        console.log(illust);
         break;
     }
     const illustEmbed = generateIllustDescriptionEmbed(illust);
