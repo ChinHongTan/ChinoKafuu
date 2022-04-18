@@ -15,8 +15,8 @@ module.exports = {
         const max = (args.length < 1) ? 10 : args[0];
         backup.setStorageFolder('./my-backups/');
         // Check member permissions
-        if (!message.member.hasPermission('ADMINISTRATOR')) {
-            return message.channel.send(language.notAdminBackup);
+        if (!message.member.permissions.has('ADMINISTRATOR')) {
+            return message.channel.send(language.notAdmin);
         }
         // Create the backup
         message.channel.send(language.startBackup.replace('${max}', max));
@@ -27,7 +27,7 @@ module.exports = {
                 jsonBeautify: true,
                 saveImages: 'base64',
             });
-        // And send informations to the backup owner
+        // And send information to the backup owner
         message.author.send(language.doneBackupDM.replace('${prefix}', prefix).replace('${backupData.id}', backupData.id));
         message.channel.send(language.doneBackupGuild);
     },

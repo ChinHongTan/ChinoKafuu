@@ -6,10 +6,10 @@ async function resume(command, language) {
     if (serverQueue === 'error') return;
 
     if (serverQueue) {
-        if (serverQueue.playing) return reply(command, 'I am already playing!', 'RED');
+        if (serverQueue.playing) return reply(command, language.playing, 'RED');
         serverQueue.player.unpause();
         serverQueue.playing = true;
-        return reply(command, 'Resumed!', 'GREEN');
+        return reply(command, language.resume, 'GREEN');
     }
 }
 module.exports = {

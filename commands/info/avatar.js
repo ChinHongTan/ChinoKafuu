@@ -4,7 +4,7 @@ const FuzzySort = require('../../functions/fuzzysort.js');
 const { MessageEmbed } = require('discord.js');
 
 function avatar(command, args, language) {
-    const fuzzysort = new FuzzySort(command);
+    const fuzzySort = new FuzzySort(command);
     if (args.length < 1) {
         // display author's avatar
         const embed = new MessageEmbed()
@@ -36,8 +36,8 @@ function avatar(command, args, language) {
     }
 
     // perform a fuzzy search based on the keyword given
-    const keyword = command.content.substr(command.content.indexOf(' ') + 1);
-    const member = fuzzysort.search(keyword);
+    const keyword = command.content.substring(command.content.indexOf(' ') + 1);
+    const member = fuzzySort.search(keyword);
     if (!member) {
         return reply(command, language.noMember.replace('${keyword}', keyword), 'RED');
     }

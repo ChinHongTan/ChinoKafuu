@@ -1,12 +1,12 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply } = require('../../functions/commandReply.js');
 
-async function kick(command, taggedUser) {
-    if (!taggedUser) return reply(command, ':warning: | You need to tag a user in order to kick them!', 'YELLOW');
-    if (taggedUser.id === command.author.id) return reply(command, ':x: | You Cannot Kick Yourself!', 'RED');
-    if (!taggedUser.kickable) return command.channel.send('Cannot Kick This User!');
+async function kick(command, taggedUser, language) {
+    if (!taggedUser) return reply(command, language.noMention, 'YELLOW');
+    if (taggedUser.id === command.author.id) return reply(command, language.cantKickSelf, 'RED');
+    if (!taggedUser.kickable) return reply(command, language.cannotKick, 'RED');
     await taggedUser.kick();
-    return reply(command, `Successfully Kicked: ${taggedUser.user.username}!`, 'GREEN');
+    return reply(command, command.kickSuccess.replace('${taggedUser.user.username}', taggedUser.user.username), 'GREEN');
 }
 
 module.exports = {

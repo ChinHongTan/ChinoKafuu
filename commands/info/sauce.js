@@ -25,7 +25,7 @@ async function sauce(command, args, language) {
         // .setFooter(`page ${response.page + 1}/${response.total}`);
         return new MessageEmbed()
             .setTitle(response.site)
-            .setDescription(language.similarity.replace('${similarity * 100}', response.similarity))
+            .setDescription(language.similarity.replace('${similarity}', response.similarity))
             .setColor('#008000')
             .setImage(response.thumbnail)
             .addFields(
@@ -42,7 +42,7 @@ async function sauce(command, args, language) {
     function createEmbed2(response) {
         const sourceURL = response?.source?.url ?? 'None';
         const title = response?.source?.title ?? 'None';
-        const author = response?.source?.author ? language.sauceAuthor.replace('${authorinfo.name}', response?.source?.author.name).replace('${authorinfo.url}', response?.source?.author.url) : language.noAuthor;
+        const author = response?.source?.author ? language.sauceAuthor.replace('${authorInfo.name}', response?.source?.author.name).replace('${authorInfo.url}', response?.source?.author.url) : language.noAuthor;
         // .setFooter(`page ${response.page + 1}/${response.total}`);
         return new MessageEmbed()
             .setTitle(response?.source?.type ?? 'None')
@@ -91,9 +91,10 @@ async function sauce(command, args, language) {
         if (!result2 || result2.length < 1) {
             return reply(command, language.noResult, 'RED');
         }
-        const response2 = result2.items.filter((r2) => r2.source !== 0);
+        // const response2 = result2.items.filter((r2) => r2.source !== 0);
         mode = 2;
-        sendEmbed(response2, mode);
+        // sendEmbed(response2, mode);
+        sendEmbed(result2.items, mode);
     }
 
     let searchImage = '';

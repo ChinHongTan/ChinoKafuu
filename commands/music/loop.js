@@ -8,7 +8,7 @@ async function loop(command, language) {
     if (serverQueue) {
         serverQueue.loop = !serverQueue.loop;
         if (serverQueue.loopQueue) serverQueue.loopQueue = false;
-        return reply(command, serverQueue.loop ? 'Loop mode on!' : 'Loop mode off!', 'GREEN');
+        return reply(command, serverQueue.loop ? language.on : language.off, 'GREEN');
     }
 }
 module.exports = {

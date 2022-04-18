@@ -43,10 +43,10 @@ async function lyricsFinder(artist = '', title = '') {
     return String(encoding.convert(final)).trim();
 }
 
-async function lyric(command, args) {
+async function lyric(command, args, language) {
     const serverQueue = queue.get(command.guild.id);
     async function searchLyrics(keyword) {
-        const msg = await reply(command, `:mag: | Searching lyrics for ${keyword}...`, 'BLUE');
+        const msg = await reply(command, language.searching.replace('${keyword}', keyword), 'BLUE');
         let lyrics = await lyricsFinder(' ', keyword).catch((err) => console.error(err));
         if (!lyrics) lyrics = await solenolyrics.requestLyricsFor(encodeURIComponent(keyword));
         if (!lyrics && Client !== undefined) {
@@ -57,14 +57,14 @@ async function lyric(command, args) {
             return msg.edit({
                 embeds: [{
                     title: 'ERROR!',
-                    description: `:x: | No lyrics found for \`${keyword}\`!`,
+                    description: language.noLyricsFound.replace('${keyword}', keyword),
                     color: 'RED',
                 }],
             });
         }
         await msg.edit({
             embeds: [{
-                title: `Lyric for \`${keyword}\``,
+                title: language.title.replace('${keyword}', keyword),
                 description: lyrics,
                 color: 'YELLOW',
             }],
@@ -77,7 +77,7 @@ async function lyric(command, args) {
         return await searchLyrics(keyword);
     }
     if (args[0]) return await searchLyrics(args[0]);
-    return reply(command, 'No keyword given!', 'RED');
+    return reply(command, language.noKeyword, 'RED');
 }
 module.exports = {
     name: 'lyric',

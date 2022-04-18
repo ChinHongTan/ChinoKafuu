@@ -12,7 +12,7 @@ async function loli(command) {
     let illusts;
     // if illust list exists
     if (fs.existsSync('./data/illusts.json')) {
-        illusts = JSON.parse(fs.readFileSync('./data/illusts.json'));
+        illusts = JSON.parse(fs.readFileSync('./data/illusts.json', 'utf-8'));
     } else {
         // search 4 pages
         illusts = await pixiv.search.illusts({
@@ -82,15 +82,15 @@ module.exports = {
         'zh_CN': '萝莉图',
         'zh_TW': '蘿莉圖',
     },
-    async execute(message) {
-        if (!refreshToken) return reply(message, 'This command can\'t be used without pixiv refreshToken!', 'RED');
-        const repliedMessage = await reply(message, 'Please wait...', 'YELLOW');
+    async execute(message, _, language) {
+        if (!refreshToken) return reply(message, language.noToken, 'RED');
+        const repliedMessage = await reply(message, language.wait, 'YELLOW');
         await loli(repliedMessage);
     },
     slashCommand: {
         data: new SlashCommandBuilder(),
-        async execute(interaction) {
-            if (!refreshToken) return interaction.reply('This command can\'t be used without pixiv refreshToken!');
+        async execute(interaction, language) {
+            if (!refreshToken) return reply(interaction, language.noToken, 'RED');
             await interaction.deferReply();
             await loli(interaction);
         },

@@ -49,7 +49,7 @@ async function help(interaction, args, language) {
     const name = args[0].toLowerCase();
     const command = commands.get(name) || commands.find((c) => c.aliases && c.aliases.includes(name));
 
-    if (!command) return reply(interaction, language.invalidcmd, 'RED');
+    if (!command) return reply(interaction, language.invalidCmd, 'RED');
     const embed = new MessageEmbed()
         .setTitle(`**${command.name}**`)
         .setThumbnail(interaction.client.user.displayAvatarURL())
@@ -72,14 +72,14 @@ module.exports = {
     usage: '[command name]',
     cooldown: 5,
     execute(message, args, language) {
-        help(message, args, language);
+        return help(message, args, language);
     },
     slashCommand: {
         data: new SlashCommandBuilder()
             .addStringOption((option) => option.setName('command').setDescription('Help for a specific command')),
         execute(interaction, language) {
             const optionContent = interaction.options.getString('command');
-            help(interaction, optionContent ? [optionContent] : [], language);
+            return help(interaction, optionContent ? [optionContent] : [], language);
         },
     },
 };

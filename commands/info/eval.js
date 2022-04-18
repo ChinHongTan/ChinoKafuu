@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 
-function evalFunc(message, args, _language) {
+function evalFunc(message, args) {
     const clean = (text) => {
         if (typeof (text) === 'string') {
             return text.replace(/`/g, `\`${String.fromCharCode(8203)}`).replace(/@/g, `@${String.fromCharCode(8203)}`);
@@ -9,13 +9,13 @@ function evalFunc(message, args, _language) {
     };
     try {
         const code = args.join(' ');
-        let evaled = eval(code);
+        let evaluated = eval(code);
 
-        if (typeof evaled !== 'string') {
-            evaled = require('util').inspect(evaled);
+        if (typeof evaluated !== 'string') {
+            evaluated = require('util').inspect(evaluated);
         }
 
-        message.channel.send(clean(evaled), { code: 'xl' });
+        message.channel.send(clean(evaluated), { code: 'xl' });
     } catch (err) {
         message.channel.send(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``);
     }
@@ -38,7 +38,7 @@ module.exports = {
         data: new SlashCommandBuilder()
             .addStringOption((option) =>
                 option.setName('code')
-                    .setDescription('Code to be evaled by the bot')
+                    .setDescription('Code to be evaluated by the bot')
                     .setRequired(true)),
         execute(interaction, language) {
             evalFunc(interaction, [interaction.options.getString('code')], language);

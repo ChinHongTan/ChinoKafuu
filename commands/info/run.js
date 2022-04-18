@@ -10,7 +10,7 @@ async function postToHaste(content) {
     const res = await axios.post('https://www.toptal.com/developers/hastebin/documents', content, { headers: { 'Content-Type': 'text/plain' } });
     return `https://www.toptal.com/developers/hastebin/${res.data.key}`;
 }
-async function getAndReturnResponse(lang, code, command) {
+async function getAndReturnResponse(lang, code, command, language) {
     const languages = await getLanguages();
     const quickmap = {
         asm: 'assembly',
@@ -28,33 +28,36 @@ async function getAndReturnResponse(lang, code, command) {
     };
     if (lang in quickmap) lang = quickmap[lang];
     if (lang in default_langs) lang = default_langs[lang];
-    if (!languages.includes(lang)) return edit(command, ':x: | Language not supported!', 'RED');
+    if (!languages.includes(lang)) return edit(command, language.notSupported, 'RED');
     const response = await tio(code, lang, 20000);
     if (response.output.length > 1994 || (response.output.match(/,/g) || []).length > 40) {
-        const link = await postToHaste(response.output);
-        await edit(command, 'Your output was too long, but I couldn\'t make an online bin out of it', 'YELLOW');
-        return edit(command, `Output was too long (more than 2000 characters or 40 lines) so I put it here: ${link}`, 'YELLOW');
+        try {
+            const link = await postToHaste(response.output);
+            return edit(command, language.outputTooLong.replace('${link}', link), 'YELLOW');
+        } catch (e) {
+            return edit(command, language.postError, 'RED');
+        }
     }
     if (response.output.length < 1) {
-        return edit(command, 'No output!', 'RED');
+        return edit(command, language.noOutput, 'RED');
     }
     await edit(command, response.output);
 }
 
-async function run(command, args, _language) {
-    if (!args) return reply(command, 'Usage: c!run <language> [code](with or without codeblock)', 'YELLOW');
+async function run(command, args, language) {
+    if (!args) return reply(command, language.usage, 'YELLOW');
 
     const codeLanguage = args.shift();
     let code = args[0].trim().replace(/^`+|`+$/g, '');
     const lang = codeLanguage.replace(/^`+|`+$/g, '');
-    if (!lang) return reply(command, 'Invalid usage! Invalid language/code.', 'RED');
+    if (!lang) return reply(command, language.invalidUsage, 'RED');
     if (/(^ $|^[0-9A-z]*$)/g.test(code.split('\n')[0])) {
         code = code.slice(code.split('\n')[0].length + 1);
     }
-    if (!code) return reply(command, 'Invalid usage! Invalid language/code.', 'RED');
+    if (!code) return reply(command, language.invalidUsage, 'RED');
     if (command instanceof MessageEmbed) await command.deferReply();
-    else command = await command.channel.send('Please wait...');
-    await getAndReturnResponse(lang, code, command);
+    else command = await command.channel.send(language.wait);
+    await getAndReturnResponse(lang, code, command, language);
 }
 
 module.exports = {

@@ -53,7 +53,7 @@ function generateIllustDescriptionEmbed(illust) {
 }
 
 // search pixiv for illusts
-async function pixivFunc(command, subcommand) {
+async function pixivFunc(command, subcommand, language) {
     const pixiv = await Pixiv.default.refreshLogin(refreshToken);
     let illusts = [];
     let illust;
@@ -64,7 +64,7 @@ async function pixivFunc(command, subcommand) {
                 illust_id: command.options.getInteger('illust_id'),
             });
         } catch (error) {
-            return reply(command, 'Illust doesn\'t exist!', 'RED');
+            return reply(command, language.noIllust, 'RED');
         }
         break;
     case 'author':
@@ -73,7 +73,7 @@ async function pixivFunc(command, subcommand) {
                 user_id: command.options.getInteger('author_id'),
             });
         } catch (error) {
-            return reply(command, 'User doesn\'t exist!', 'RED');
+            return reply(command, language.noUser, 'RED');
         }
         illust = illusts[Math.floor(Math.random() * illusts.length)];
         break;
@@ -83,7 +83,7 @@ async function pixivFunc(command, subcommand) {
             r18: false,
             bookmarks: command.options.getString('bookmarks') || '1000',
         });
-        if (illusts.length === 0) return reply(command, 'No result found!', 'RED');
+        if (illusts.length === 0) return reply(command, language.noResult, 'RED');
         if (pixiv.search.nextURL && command.options?.getInteger('pages') !== 1) {
             illusts = await pixiv.util.multiCall({
                 next_url: pixiv.search.nextURL, illusts,
@@ -105,9 +105,9 @@ module.exports = {
         'zh_CN': '在pixiv网站上搜索图片',
         'zh_TW': '在pixiv網站上搜索圖片',
     },
-    async execute(message) {
-        if (!refreshToken) return reply(message, 'This command can\'t be used without pixiv refreshToken!', 'RED');
-        const repliedMessage = await reply(message, 'Please wait...', 'YELLOW');
+    async execute(message, _, language) {
+        if (!refreshToken) return reply(message, language.noToken, 'RED');
+        const repliedMessage = await reply(message, language.wait, 'YELLOW');
         await pixivFunc(repliedMessage);
     },
     slashCommand: {
@@ -167,10 +167,10 @@ module.exports = {
                             ),
                     ),
             ),
-        async execute(interaction) {
-            if (!refreshToken) return interaction.reply('This command can\'t be used without pixiv refreshToken!');
+        async execute(interaction, language) {
+            if (!refreshToken) return interaction.reply(language.noToken);
             await interaction.deferReply();
-            await pixivFunc(interaction, interaction.options.getSubcommand());
+            await pixivFunc(interaction, interaction.options.getSubcommand(), language);
         },
         async autoComplete(interaction) {
             const pixiv = await Pixiv.default.refreshLogin(refreshToken);

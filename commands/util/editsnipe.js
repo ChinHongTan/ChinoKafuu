@@ -30,7 +30,7 @@ async function editSnipe(command, args, language) {
     return reply(command, language.noSnipe, 'RED');
 }
 module.exports = {
-    name: 'editsnipe',
+    name: 'edit-snipe',
     aliases: ['esnipe'],
     guildOnly: true,
     description: {

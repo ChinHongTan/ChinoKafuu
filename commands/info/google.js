@@ -1,9 +1,9 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { reply, edit } = require('../../functions/commandReply.js');
+const { edit } = require('../../functions/commandReply.js');
 const { MessageEmbed } = require('discord.js');
 const google = require('googlethis');
 
-async function googleFunc(command, keyword, _language) {
+async function googleFunc(command, keyword) {
     const options = {
         page: 0,
         safe: false,
@@ -31,9 +31,10 @@ async function googleFunc(command, keyword, _language) {
     if (response.knowledge_panel && Object.keys(response.knowledge_panel).length !== 0) {
         const fields = [];
         for (const [key, value] of Object.entries(cleanPanel)) {
-            const entry = {};
-            entry['name'] = key;
-            entry['value'] = value;
+            const entry = {
+                name: key,
+                value: value,
+            };
             fields.push(entry);
         }
         const knowledgePanel = new MessageEmbed()
@@ -55,15 +56,15 @@ module.exports = {
         'zh_TW': '在谷歌上搜索關鍵字',
     },
     async execute(message, _args, language) {
-        const repliedMsg = await message.channel.send('Please wait...');
-        await googleFunc(repliedMsg, message.content.substr(message.content.indexOf(' ') + 1), language);
+        const repliedMsg = await message.channel.send(language.wait);
+        await googleFunc(repliedMsg, message.content.substring(message.content.indexOf(' ') + 1));
     },
     slashCommand: {
         data: new SlashCommandBuilder()
             .addStringOption((option) => option.setName('query').setDescription('Search google').setRequired(true)),
-        async execute(interaction, language) {
+        async execute(interaction) {
             await interaction.deferReply();
-            await googleFunc(interaction, interaction.options.getString('query'), language);
+            await googleFunc(interaction, interaction.options.getString('query'));
         },
     },
 };

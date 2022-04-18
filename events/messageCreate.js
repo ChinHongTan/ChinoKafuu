@@ -13,7 +13,7 @@ module.exports = {
             id: message?.guild?.id,
             options: { language: 'en_US' },
         };
-        const language = client.language[guildOption.options.language];
+        const language = client.language[guildOption.options.language][command.name];
 
         if (message.author.bot) return;
         if (!message.content.startsWith(prefix)) return;

@@ -4,6 +4,7 @@ const fetch = require('node-fetch');
 const { MessageEmbed } = require('discord.js');
 const DynamicEmbed = require('../../functions/dynamicEmbed');
 const dynamicEmbed = new DynamicEmbed();
+
 async function anime(command, args, language) {
     function isValidHttpUrl(string) {
         let url;

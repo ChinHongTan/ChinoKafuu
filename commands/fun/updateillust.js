@@ -21,15 +21,15 @@ module.exports = {
         'zh_CN': '更新萝莉功能使用的pixiv图片列表',
         'zh_TW': '更新蘿莉功能使用的pixiv圖片列表',
     },
-    async execute(message) {
-        if (!refreshToken) return message.reply('This command can\'t be used without pixiv refreshToken!');
-        const repliedMessage = await message.reply('Please wait... This might take a while...');
+    async execute(message, _, language) {
+        if (!refreshToken) return message.reply(language.noToken);
+        const repliedMessage = await message.reply(language.wait);
         await update(repliedMessage);
     },
     slashCommand: {
         data: new SlashCommandBuilder(),
-        async execute(interaction) {
-            if (!refreshToken) return interaction.reply('This command can\'t be used without pixiv refreshToken!');
+        async execute(interaction, language) {
+            if (!refreshToken) return interaction.reply(language.noToken);
             await interaction.deferReply();
             await update(interaction);
         },

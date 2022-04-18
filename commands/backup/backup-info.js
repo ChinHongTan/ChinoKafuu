@@ -1,3 +1,6 @@
+const backup = require('discord-backup');
+const { MessageEmbed } = require('discord.js');
+
 module.exports = {
     name: 'backup-info',
     cooldown: 10,
@@ -8,9 +11,6 @@ module.exports = {
         'zh_TW': '查詢備份信息',
     },
     execute(message, args, language) {
-        const backup = require('discord-backup');
-        const Discord = require('discord.js');
-
         const backupID = args[0];
 
         if (!backupID) return message.channel.send(language.invalidBackupID);
@@ -22,19 +22,17 @@ module.exports = {
                 const yyyy = date.getFullYear().toString();
                 const mm = (date.getMonth() + 1).toString();
                 const dd = date.getDate().toString();
-                const formatedDate = `${yyyy}/${mm[1] ? mm : `0${mm[0]}`}/${
-                    dd[1] ? dd : `0${dd[0]}`
-                }`;
-                const embed = new Discord.MessageEmbed()
-                    .setAuthor(language.backupInformations)
+                const formattedDate = `${yyyy}/${mm[1] ? mm : `0${mm[0]}`}/${dd[1] ? dd : `0${dd[0]}`}`;
+                const embed = new MessageEmbed()
+                    .setAuthor({ name: language.backupInformation })
                 // Display the backup ID
                     .addField(language.backupID, backupInfos.id, false)
                 // Displays the server from which this backup comes
                     .addField(language.serverID, backupInfos.data.guildID, false)
-                // Display the size (in mb) of the backup
-                    .addField(language.size, `${backupInfos.size} kb`, false)
+                // Display the size (in kb) of the backup
+                    .addField(language.backupSize, `${backupInfos.size} kb`, false)
                 // Display when the backup was created
-                    .addField(language.backupCreatedAt, formatedDate, false)
+                    .addField(language.backupCreatedAt, formattedDate, false)
                     .setColor('#FF0000');
                 message.channel.send(embed);
             })

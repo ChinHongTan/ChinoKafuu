@@ -30,7 +30,7 @@ async function setLanguage(command, args, language) {
 
 async function setChannel(command, args, language) {
     if (!args.length > 0) return reply(command, language.noArgs, 'RED');
-    if (!(args[0] instanceof GuildChannel)) return reply(command, 'Argument not a channel!', 'RED');
+    if (!(args[0] instanceof GuildChannel)) return reply(command, language.argsNotChannel, 'RED');
 
     const collection = command.client.guildOptions;
     if (collection) {
@@ -40,7 +40,7 @@ async function setChannel(command, args, language) {
         const query = { id: command.guild.id };
         const options = { upsert: true };
         await collection.replaceOne(query, guildOption, options);
-        return reply(command, `Changed my log channel to ${args[0]}!`, 'GREEN');
+        return reply(command, language.channelChanged.replace('${args[0]}', args[0]), 'GREEN');
     } else {
         const rawData = fs.readFileSync('./data/guildOption.json', 'utf-8');
         const guildCollection = JSON.parse(rawData);
@@ -49,16 +49,16 @@ async function setChannel(command, args, language) {
         guildCollection[command.guild.id] = guildOption;
 
         fs.writeFileSync('./data/guildOption.json', JSON.stringify(guildCollection));
-        return reply(command, `Changed my log channel to ${args[0]}!`, 'GREEN');
+        return reply(command, language.channelChanged.replace('${args[0]}', args[0]), 'GREEN');
     }
 }
 module.exports = {
     name: 'set',
     guildOnly: true,
     description: {
-        'en_US': 'Set the language used by me in this server.',
-        'zh_CN': '设定我在伺服器里使用的语言',
-        'zh_TW': '設定我在伺服器裡使用的語言',
+        'en_US': 'Adjust my settings in this server',
+        'zh_CN': '调整我的伺服器设定',
+        'zh_TW': '调整我的伺服器設定',
     },
     async execute(message, args, language) {
         await setLanguage(message, args, language);

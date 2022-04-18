@@ -12,7 +12,7 @@ module.exports = {
         const backup = require('discord-backup');
         const fs = require('fs');
         // Check member permissions
-        if (!message.member.hasPermission('ADMINISTRATOR')) return message.channel.send(language.notAdminLoad);
+        if (!message.member.permissions.has('ADMINISTRATOR')) return message.channel.send(language.notAdmin);
 
         const backupID = args[0];
         if (!backupID) return message.channel.send(language.invalidBackupID);
@@ -28,12 +28,14 @@ module.exports = {
         fs.writeFileSync(`./my-backups/${filename}`, data);
         // Fetching the backup to know if it exists
         try {
-            const backupData = JSON.parse(fs.readFileSync(`./my-backups/${backupID}.json`));
+            const backupData = JSON.parse(fs.readFileSync(`./my-backups/${backupID}.json`, 'utf-8'));
             // If the backup exists, request for confirmation
             message.channel.send(language.warningBackup);
+            const filter = (m) => m.author.id === message.author.id && m.content === '-confirm';
             await message.channel
-                .awaitMessages((m) => m.author.id === message.author.id && m.content === '-confirm',
+                .awaitMessages(
                     {
+                        filter,
                         max: 1,
                         time: 20000,
                         errors: ['time'],
@@ -49,11 +51,11 @@ module.exports = {
             backup
                 .load(backupData, message.guild, {
                     clearGuildBeforeRestore: true,
-                    maxMessaggesPerChannel: 100000,
+                    maxMessagesPerChannel: 100000,
                 })
                 .then(() => {
                     // When the backup is loaded, delete them from the server
-                    backup.remove(backupID);
+                    return backup.remove(backupID);
                 })
                 .catch((err) => {
                     console.error(err);

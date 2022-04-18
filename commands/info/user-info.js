@@ -52,7 +52,7 @@ function getUserInfo(author, language) {
                 inline: true,
             },
             {
-                name: language.avatarurl,
+                name: language.avatarURL,
                 value: language.avatarValue
                     .replace('${url}', author.user.displayAvatarURL({ format: 'png', dynamic: true })),
                 inline: true,

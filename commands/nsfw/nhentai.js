@@ -7,7 +7,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply } = require('../../functions/commandReply.js');
 const { MessageEmbed } = require('discord.js');
 
-async function nhentaiFunc(command, args, _language) {
+async function nhentaiFunc(command, args, language) {
     /**
      * Send an embed message with the doujin cover.
      * @param {object} doujin - The doujin contained in the embed message.
@@ -90,7 +90,7 @@ async function nhentaiFunc(command, args, _language) {
             const doujin = await nhentai.getDoujin(args[0]);
             await dynamicEmbed.createEmbedFlip(command, [doujin], ['▶️'], createDoujinEmbed, generateContent, [doujin]);
         } else {
-            return reply(command, 'The book ID doesn\'t exist!', 'RED');
+            return reply(command, language.invalidBookID, 'RED');
         }
     } else {
         // search the keyword given

@@ -8,26 +8,26 @@ module.exports = {
         'zh_TW': ' 取得我的網絡延遲~',
     },
     cooldown: 5,
-    async execute(message) {
-        message.channel.send({ embeds: [{ description: `Websocket heartbeat: ${message.client.ws.ping}ms.`, color: 'BLUE' }] });
-        const sent = await message.channel.send({ embeds: [{ description: 'Pinging...' }] });
-        sent.edit({ embeds: [{ description: `Roundtrip latency: ${sent.createdTimestamp - message.createdTimestamp}ms`, color: 'BLUE' }] });
+    async execute(message, _, language) {
+        message.channel.send({ embeds: [{ description: `${language.heartbeat} ${message.client.ws.ping}ms.`, color: 'BLUE' }] });
+        const sent = await message.channel.send({ embeds: [{ description: language.pinging }] });
+        sent.edit({ embeds: [{ description: `${language.latency} ${sent.createdTimestamp - message.createdTimestamp}ms`, color: 'BLUE' }] });
     },
     slashCommand: {
         data: new SlashCommandBuilder()
             .setName('ping')
-            .setDescription('Ping!淦'),
-        async execute(interaction) {
+            .setDescription('Ping!'),
+        async execute(interaction, language) {
             const sent = await interaction.reply({
                 embeds: [
-                    { description: 'Pinging...', color: 'BLUE' },
+                    { description: language.pinging, color: 'BLUE' },
                 ],
                 fetchReply: true,
             });
             await interaction.editReply({
                 embeds: [
-                    { description: `Websocket heartbeat: ${interaction.client.ws.ping}ms.`, color: 'BLUE' },
-                    { description: `Roundtrip latency: ${sent.createdTimestamp - interaction.createdTimestamp}ms`, color: 'BLUE' },
+                    { description: `${language.heartbeat} ${interaction.client.ws.ping}ms.`, color: 'BLUE' },
+                    { description: `${language.latency} ${sent.createdTimestamp - interaction.createdTimestamp}ms`, color: 'BLUE' },
                 ],
             });
         },
