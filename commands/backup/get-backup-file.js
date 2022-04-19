@@ -15,7 +15,7 @@ async function getBackupFile(command, args, language) {
 }
 
 module.exports = {
-    name: 'load',
+    name: 'get-backup-file',
     cooldown: 10,
     guildOnly: true,
     permissions: 'ADMINISTRATOR',
