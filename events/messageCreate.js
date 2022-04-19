@@ -13,7 +13,6 @@ module.exports = {
             id: message?.guild?.id,
             options: { language: 'en_US' },
         };
-        const language = client.language[guildOption.options.language][command.name];
 
         if (message.author.bot) return;
         if (!message.content.startsWith(prefix)) return;
@@ -95,6 +94,7 @@ module.exports = {
         }
 
         try {
+            const language = client.language[guildOption.options.language][command.name];
             await command.execute(message, args, language);
         } catch (error) {
             console.error(error);
