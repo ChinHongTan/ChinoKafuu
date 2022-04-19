@@ -1,3 +1,33 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const { reply } = require('../../functions/commandReply.js');
+const backup = require('discord-backup');
+const prefix = process.env.PREFIX || require('../../config/config.json').prefix;
+
+async function create(command, args, language) {
+    const max = (args.length < 1) ? 10 : args[0];
+    backup.setStorageFolder('./my-backups/');
+    // Check member permissions
+    if (!command.member.permissions.has('ADMINISTRATOR')) {
+        return reply(command, language.notAdmin, 'RED');
+    }
+    // Create the backup
+    await reply(command, language.startBackup.replace('${max}', max), 'GREEN');
+    const backupData = await backup
+        .create(command.guild, {
+            maxMessagesPerChannel: max,
+            jsonSave: true,
+            jsonBeautify: true,
+            saveImages: 'base64',
+        });
+    // And send information to the backup owner
+    await reply(command,
+        language.doneBackupDM
+            .replace('${prefix}', prefix)
+            .replace('${backupData.id}', backupData.id),
+        'GREEN');
+    await reply(command, language.doneBackupGuild, 'GREEN');
+}
+
 module.exports = {
     name: 'create',
     cooldown: 10,
@@ -10,25 +40,13 @@ module.exports = {
         'zh_TW': '創建一個伺服備份',
     },
     async execute(message, args, language) {
-        const backup = require('discord-backup');
-        const prefix = process.env.PREFIX || require('../../config/config.json').prefix;
-        const max = (args.length < 1) ? 10 : args[0];
-        backup.setStorageFolder('./my-backups/');
-        // Check member permissions
-        if (!message.member.permissions.has('ADMINISTRATOR')) {
-            return message.channel.send(language.notAdmin);
-        }
-        // Create the backup
-        message.channel.send(language.startBackup.replace('${max}', max));
-        const backupData = await backup
-            .create(message.guild, {
-                maxMessagesPerChannel: max,
-                jsonSave: true,
-                jsonBeautify: true,
-                saveImages: 'base64',
-            });
-        // And send information to the backup owner
-        message.author.send(language.doneBackupDM.replace('${prefix}', prefix).replace('${backupData.id}', backupData.id));
-        message.channel.send(language.doneBackupGuild);
+        await create(message, args, language);
+    },
+    slashCommand: {
+        data: new SlashCommandBuilder()
+            .addIntegerOption((option) => option.setName('max').setDescription('max message per channel')),
+        async execute(interaction, language) {
+            await create(interaction, [interaction.option.getInteger('max')], language);
+        },
     },
 };
