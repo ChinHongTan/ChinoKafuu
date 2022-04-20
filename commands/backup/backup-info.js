@@ -2,14 +2,13 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply } = require('../../functions/commandReply.js');
 const { MessageEmbed } = require('discord.js');
 const fs = require('fs');
-const { existsSync } = require('fs');
 
 async function bi(command, args, language) {
     const backupID = args[0];
 
     if (!backupID) return reply(command, language.invalidBackupID);
 
-    if (!existsSync(`./my-backups/${backupID}.json`)) {// if the backup wasn't found
+    if (!fs.existsSync(`./my-backups/${backupID}.json`)) {// if the backup wasn't found
         return reply(command, language.noBackupFound.replace('${backupID}', backupID));
     }
 

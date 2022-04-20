@@ -5,13 +5,8 @@ const fs = require('fs');
 async function getBackupFile(command, args, language) {
     const backupID = args[0];
     if (!backupID) return reply(command, language.invalidBackupID, 'RED');
-    let rawData;
-    try {
-        rawData = fs.readFileSync(`./my-backups/${backupID}.json`);
-    } catch (err) {
-        return reply(command, language.noBackupFound.replace('${backupID}', backupID), 'RED');
-    }
-    return reply(command, { content: `Backup file ID: \`${backupID}\``, files: rawData });
+    if (!fs.existsSync(`./my-backups/${backupID}.json`)) return reply(command, language.noBackupFound.replace('${backupID}', backupID), 'RED');
+    return reply(command, { content: `Backup file ID: \`${backupID}\``, files: ['./my-backups/${backupID}.json'] });
 }
 
 module.exports = {

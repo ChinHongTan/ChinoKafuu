@@ -16,6 +16,7 @@ module.exports = {
         "doneBackupGuild":"✅ | Backup successfully created. The backup ID was sent in dm!",
     },
     "load": {
+        "invalidBackupID":"❌ | You must specify a valid backup ID!",
         "notAdmin": "❌ | You must be an administrator of this server to load a backup!",
         "warningBackup": "⚠️ | When the backup is loaded, all the channels, roles, etc. will be replaced! Type `-confirm` to confirm!",
         "timesUpBackup": "❌ | Time's up! Cancelled backup loading!",

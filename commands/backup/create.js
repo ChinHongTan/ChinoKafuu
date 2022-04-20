@@ -17,7 +17,6 @@ async function create(command, args, language) {
         .create(command.guild, {
             maxMessagesPerChannel: max,
             jsonSave: true,
-            jsonBeautify: true,
             saveImages: 'base64',
         });
     // And send information to the backup owner

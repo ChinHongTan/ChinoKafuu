@@ -16,6 +16,7 @@ module.exports = {
         "doneBackupGuild": "✅ | 備份已創建。備份ID已發送至私訊！",
     },
     "load": {
+        "invalidBackupID": "❌ | 您必須輸入有效的備份文件ID！",
         "notAdmin": "❌ | 只有管理員才能加載備份！",
         "warningBackup": "⚠️ | 加載備份後, 所有的原本的頻道，身分組等將無法復原！ 輸入 `-confirm` 確認!",
         "timesUpBackup": "❌ | 時間到! 已取消備份加載!",
