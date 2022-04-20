@@ -23,7 +23,7 @@ async function create(command, args, language) {
     // And send information to the backup owner
     await user.send({
         embeds: [{
-            content: language.doneBackupDM
+            description: language.doneBackupDM
                 .replace('${prefix}', prefix)
                 .replace('${backupData.id}', backupData.id),
             color: 'GREEN',
