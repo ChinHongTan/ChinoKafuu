@@ -4,8 +4,9 @@ const backup = require('discord-backup');
 const prefix = process.env.PREFIX || require('../../config/config.json').prefix;
 
 async function create(command, args, language) {
-    const max = (args.length < 1) ? 10 : args[0];
-    backup.setStorageFolder('./my-backups/');
+    const user = command?.user || command?.author;
+    const max = args[0] ?? 10;
+    backup.setStorageFolder('./my-backups');
     // Check member permissions
     if (!command.member.permissions.has('ADMINISTRATOR')) {
         return reply(command, language.notAdmin, 'RED');
@@ -20,11 +21,14 @@ async function create(command, args, language) {
             saveImages: 'base64',
         });
     // And send information to the backup owner
-    await reply(command,
-        language.doneBackupDM
-            .replace('${prefix}', prefix)
-            .replace('${backupData.id}', backupData.id),
-        'GREEN');
+    await user.send({
+        embeds: [{
+            content: language.doneBackupDM
+                .replace('${prefix}', prefix)
+                .replace('${backupData.id}', backupData.id),
+            color: 'GREEN',
+        }],
+    });
     await reply(command, language.doneBackupGuild, 'GREEN');
 }
 
