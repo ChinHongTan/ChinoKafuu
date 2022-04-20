@@ -46,7 +46,7 @@ module.exports = {
         data: new SlashCommandBuilder()
             .addIntegerOption((option) => option.setName('max').setDescription('max message per channel')),
         async execute(interaction, language) {
-            await create(interaction, [interaction.option.getInteger('max')], language);
+            await create(interaction, [interaction.options.getInteger('max')], language);
         },
     },
 };

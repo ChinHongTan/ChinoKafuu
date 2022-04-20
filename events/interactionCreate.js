@@ -18,7 +18,7 @@ module.exports = {
         }
 
         if (command.permissions) {
-            const authorPerms = interaction.channel.permissionsFor(interaction.author);
+            const authorPerms = interaction.channel.permissionsFor(interaction.user);
             if (!authorPerms || !authorPerms.has(command.permissions)) {
                 return reply(interaction, {
                     content: `You cannot do this! Permission needed: ${command.permissions}`,

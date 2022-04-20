@@ -31,7 +31,7 @@ module.exports = {
         data: new SlashCommandBuilder()
             .addIntegerOption((option) => option.setName('id').setDescription('backup id')),
         async execute(interaction, language) {
-            await getBackupFile(interaction, [interaction.option.getInteger('id')], language);
+            await getBackupFile(interaction, [interaction.options.getInteger('id')], language);
         },
     },
 };
