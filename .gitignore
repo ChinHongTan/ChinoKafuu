@@ -7,3 +7,4 @@ functions/updateIllust.js
 *.map
 functions/ascii2d.js
 my-backups
+functions/Util.js

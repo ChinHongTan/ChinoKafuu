@@ -1,4 +1,3 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply } = require('../../functions/commandReply.js');
 const { MessageEmbed } = require('discord.js');
 const Pixiv = require('pixiv.ts');
@@ -105,68 +104,109 @@ module.exports = {
         'zh_CN': '在pixiv网站上搜索图片',
         'zh_TW': '在pixiv網站上搜索圖片',
     },
-    async execute(message, _, language) {
+    subcommandGroups: [
+        {
+            name: 'search',
+            description: {
+                'en_US': 'Search on pixiv',
+                'zh_CN': '在pixiv上搜索',
+                'zh_TW': '在pixiv上搜索',
+            },
+            subcommands: [
+                {
+                    name: 'illust',
+                    description: {
+                        'en_US': 'Search an illust with given ID',
+                        'zh_CN': '用ID搜索画作',
+                        'zh_TW': '用ID搜索畫作',
+                    },
+                    options: [
+                        {
+                            name: 'illust_id',
+                            description: {
+                                'en_US': 'ID of the illust',
+                                'zh_CN': '画作ID',
+                                'zh_TW': '畫作ID',
+                            },
+                            type: 'INTEGER',
+                            required: true,
+                        },
+                    ],
+                },
+                {
+                    name: 'author',
+                    description: {
+                        'en_US': 'Search and get a random illust from the author',
+                        'zh_CN': '搜索并取得绘师随机的一个画作',
+                        'zh_TW': '搜索並取得繪師隨機的一個畫作',
+                    },
+                    options: [
+                        {
+                            name: 'author_id',
+                            description: {
+                                'en_us': 'ID of the author',
+                                'zh_CN': '绘师ID',
+                                'zh_TW': '繪師ID',
+                            },
+                            type: 'INTEGER',
+                            required: true,
+                        },
+                    ],
+                },
+                {
+                    name: 'query',
+                    description: {
+                        'en_US': 'query to search illust on pixiv',
+                        'zh_CN': '在pixiv上搜索关键词',
+                        'zh_TW': '在pixiv上搜索關鍵詞',
+                    },
+                    options: [
+                        {
+                            name: 'query',
+                            description: {
+                                'en_US': 'Query to search illust on pixiv',
+                                'zh_CN': '在pixiv上搜索关键词',
+                                'zh_TW': '在pixiv上搜索關鍵詞',
+                            },
+                            type: 'STRING',
+                            required: true,
+                            autocomplete: true,
+                        },
+                        {
+                            name: 'bookmarks',
+                            description: {
+                                'en_US': 'filter search results with bookmarks, default to 1000 bookmarks',
+                                'zh_CN': '用书签数量过滤画作，默认为1000个书签',
+                                'zh_TW': '用書籤數量過濾畫作，默認為1000個書籤',
+                            },
+                            type: 'STRING',
+                            choices: [
+                                ['50', '50'], ['100', '100'], ['300', '300'], ['500', '500'], ['1000', '1000'],
+                                ['3000', '3000'], ['5000', '5000'], ['10000', '10000'],
+                            ],
+                        },
+                        {
+                            name: 'pages',
+                            description:  {
+                                'en_US': 'how many pages to search (more pages = longer), default to 1',
+                                'zh_CN': '搜索页数（頁數越多搜索时间越长），默认为1',
+                                'zh_TW': '搜索頁數（頁數越多搜索時間越長），默認為1',
+                            },
+                            type: 'INTEGER',
+                            min: 1,
+                            max: 10,
+                        },
+                    ],
+                },
+            ],
+        },
+    ],
+    async execute(message, args, language) {
         if (!refreshToken) return reply(message, language.noToken, 'RED');
         const repliedMessage = await reply(message, language.wait, 'YELLOW');
-        await pixivFunc(repliedMessage);
+        if (args[0] === 'search') return await pixivFunc(repliedMessage, args[1], language);
     },
     slashCommand: {
-        data: new SlashCommandBuilder()
-            .addSubcommandGroup(subcommandGroup =>
-                subcommandGroup
-                    .setName('search')
-                    .setDescription('Search on pixiv with given id')
-                    .addSubcommand(subcommand =>
-                        subcommand
-                            .setName('illust')
-                            .setDescription('Search an illust with given ID')
-                            .addIntegerOption(option =>
-                                option
-                                    .setName('illust_id')
-                                    .setDescription('ID of the illust')
-                                    .setRequired(true),
-                            ),
-                    )
-                    .addSubcommand(subcommand =>
-                        subcommand
-                            .setName('author')
-                            .setDescription('Search and get a random illust from the author')
-                            .addIntegerOption(option =>
-                                option
-                                    .setName('author_id')
-                                    .setDescription('Search an author with given ID')
-                                    .setRequired(true),
-                            ),
-                    )
-                    .addSubcommand(subcommand =>
-                        subcommand
-                            .setName('query')
-                            .setDescription('query to search illust on pixiv')
-                            .addStringOption(option =>
-                                option
-                                    .setName('query')
-                                    .setDescription('query to search illust on pixiv')
-                                    .setAutocomplete(true)
-                                    .setRequired(true),
-                            )
-                            .addStringOption(option =>
-                                option
-                                    .setName('bookmarks')
-                                    .setDescription('filter search results with bookmarks, default to 1000 bookmarks')
-                                    .addChoices([
-                                        ['50', '50'], ['100', '100'], ['300', '300'], ['500', '500'], ['1000', '1000'],
-                                        ['3000', '3000'], ['5000', '5000'], ['10000', '10000'],
-                                    ]),
-                            )
-                            .addIntegerOption(option =>
-                                option
-                                    .setName('pages')
-                                    .setMinValue(1)
-                                    .setMaxValue(10)
-                                    .setDescription('how many pages to search (more pages = longer), default to 1'),
-                            ),
-                    ),
-            ),
         async execute(interaction, language) {
             if (!refreshToken) return interaction.reply(language.noToken);
             await interaction.deferReply();

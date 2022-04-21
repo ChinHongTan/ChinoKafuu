@@ -1,15 +1,16 @@
+const { REST } = require('@discordjs/rest');
+const { Routes } = require('discord-api-types/v9');
+const fs = require('fs');
+const clientId = process.env.CLIENT_ID || require('../config/config.json').clientId;
+const channelId = process.env.CHANNEL_ID || require('../config/config.json').channelId;
+const token = process.env.TOKEN || require('../config/config.json').token;
+const util = require('util');
+const Util = require('../functions/Util.js');
+
 module.exports = {
     name: 'ready',
     once: true,
     async execute(client) {
-        const { REST } = require('@discordjs/rest');
-        const { Routes } = require('discord-api-types/v9');
-        const fs = require('fs');
-        const clientId = process.env.CLIENT_ID || require('../config/config.json').clientId;
-        const channelId = process.env.CHANNEL_ID || require('../config/config.json').channelId;
-        const token = process.env.TOKEN || require('../config/config.json').token;
-        const util = require('util');
-
         // when running on heroku, log to discord channel
         if (process.argv[2] === '-r' && channelId) {
             console.log = async function(d) {
@@ -51,12 +52,8 @@ module.exports = {
                 const commandFiles = fs.readdirSync(`./commands/${folder}`).filter((file) => file.endsWith('.js'));
                 for (const file of commandFiles) {
                     const command = require(`../commands/${folder}/${file}`);
-                    if (command.slashCommand) {
-                        const { data } = command.slashCommand;
-                        data.setName(command.name);
-                        data.setDescription(command.description[language] ?? 'none');
-                        commands.push(command.slashCommand.data.toJSON());
-                    }
+                    const data = Util.processCommand(command, language);
+                    commands.push(data.toJSON());
                 }
             }
             try {
