@@ -1,4 +1,3 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply } = require('../../functions/commandReply.js');
 const { MessageEmbed } = require('discord.js');
 const fs = require('fs');

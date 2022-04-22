@@ -1,4 +1,3 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply } = require('../../functions/commandReply.js');
 const { checkStats } = require('../../functions/musicFunctions');
 async function remove(command, args, language) {
