@@ -1,4 +1,3 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply } = require('../../functions/commandReply.js');
 
 async function mute(command, [taggedUser, reason]) {
@@ -62,7 +61,7 @@ module.exports = {
             required: true,
         },
         {
-            name: '',
+            name: 'reason',
             description: {
                 'en_US': 'Mute reason',
                 'zh_CN': '禁言的原因',
@@ -80,14 +79,6 @@ module.exports = {
         await mute(message, [message.mentions.members.first(), reason]);
     },
     slashCommand: {
-        data: new SlashCommandBuilder()
-            .addUserOption((option) =>
-                option.setName('member')
-                    .setDescription('Member to mute')
-                    .setRequired(true))
-            .addStringOption((option) =>
-                option.setName('reason')
-                    .setDescription('Reason')),
         async execute(interaction) {
             await interaction.deferReply();
             await mute(interaction, [interaction.options.getMember('member'), interaction.options.getString('reason')]);
