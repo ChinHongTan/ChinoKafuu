@@ -38,6 +38,7 @@ async function bi(command, args, language) {
         .setColor('#FF0000');
     return reply(command, { embeds: [embed] });
 }
+
 module.exports = {
     name: 'backup-info',
     cooldown: 10,
@@ -47,12 +48,22 @@ module.exports = {
         'zh_CN': '查询备份信息',
         'zh_TW': '查詢備份信息',
     },
+    options: [
+        {
+            name: 'id',
+            description: {
+                'en_US': 'Backup ID',
+                'zh_CN': '备份ID',
+                'zh_TW': '備份ID',
+            },
+            type: 'INTEGER',
+            required: true,
+        },
+    ],
     async execute(message, args, language) {
         await bi(message, args, language);
     },
     slashCommand: {
-        data: new SlashCommandBuilder()
-            .addIntegerOption((option) => option.setName('id').setDescription('backup id')),
         async execute(interaction, language) {
             await bi(interaction, [interaction.options.getInteger('id')], language);
         },

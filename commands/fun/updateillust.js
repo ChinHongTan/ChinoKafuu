@@ -1,4 +1,3 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply } = require('../../functions/commandReply.js');
 const refreshToken = process.env.PIXIV_REFRESH_TOKEN || require('../../config/config.json').PixivRefreshToken;
 
@@ -27,7 +26,6 @@ module.exports = {
         await update(repliedMessage);
     },
     slashCommand: {
-        data: new SlashCommandBuilder(),
         async execute(interaction, language) {
             if (!refreshToken) return interaction.reply(language.noToken);
             await interaction.deferReply();

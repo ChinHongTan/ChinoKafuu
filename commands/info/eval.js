@@ -1,5 +1,3 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-
 function evalFunc(message, args) {
     const clean = (text) => {
         if (typeof (text) === 'string') {
@@ -28,6 +26,18 @@ module.exports = {
         'zh_CN': '执行代码!',
         'zh_TW': '執行代碼!',
     },
+    options: [
+        {
+            name: 'code',
+            description: {
+                'en_US': 'Code to be evaluated by the me',
+                'zh_CN': '让我执行的代码',
+                'zh_TW': '讓我執行的代碼',
+            },
+            type: 'STRING',
+            required: true,
+        },
+    ],
     guildOnly: true,
     ownerOnly: true,
     cooldown: 5,
@@ -35,11 +45,6 @@ module.exports = {
         evalFunc(message, args, language);
     },
     slashCommand: {
-        data: new SlashCommandBuilder()
-            .addStringOption((option) =>
-                option.setName('code')
-                    .setDescription('Code to be evaluated by the bot')
-                    .setRequired(true)),
         execute(interaction, language) {
             evalFunc(interaction, [interaction.options.getString('code')], language);
         },

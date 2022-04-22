@@ -50,6 +50,27 @@ module.exports = {
         'zh_CN': '禁言群组成员',
         'zh_TW': '禁言群組成員',
     },
+    options: [
+        {
+            name: 'member',
+            description: {
+                'en_US': 'Member to mute',
+                'zh_CN': '要禁言的群员',
+                'zh_TW': '要禁言的群員',
+            },
+            type: 'USER',
+            required: true,
+        },
+        {
+            name: '',
+            description: {
+                'en_US': 'Mute reason',
+                'zh_CN': '禁言的原因',
+                'zh_TW': '禁言的原因',
+            },
+            type: 'STRING',
+        },
+    ],
     guildOnly: true,
     usage: '[mention] [reason(optional)]',
     permissions: 'ADMINISTRATOR',

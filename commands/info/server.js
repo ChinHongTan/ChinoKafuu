@@ -1,4 +1,3 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply } = require('../../functions/commandReply.js');
 const { MessageEmbed } = require('discord.js');
 function server(command, language) {
@@ -34,7 +33,6 @@ module.exports = {
         await server(message, language);
     },
     slashCommand: {
-        data: new SlashCommandBuilder(),
         async execute(interaction, language) {
             await server(interaction, language);
         },

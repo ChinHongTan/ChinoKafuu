@@ -1,4 +1,3 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply } = require('../../functions/commandReply.js');
 
 function n(command, args, language) {
@@ -15,15 +14,22 @@ module.exports = {
         'zh_CN': '用本本号码取得N网链接',
         'zh_TW': '用本本號碼取得N網鏈接',
     },
+    options: [
+        {
+            name: 'id',
+            description: {
+                'en_US': '6 digit Nhentai ID',
+                'zh_CN': '6位数N网号码',
+                'zh_TW': '6位數N網號碼',
+            },
+            type: 'INTEGER',
+            required: true,
+        },
+    ],
     execute(message, args, language) {
         return n(message, args, language);
     },
     slashCommand: {
-        data: new SlashCommandBuilder()
-            .addIntegerOption((option) =>
-                option.setName('id')
-                    .setDescription('Nhentai ID')
-                    .setRequired(true)),
         execute(interaction, language) {
             return n(interaction, [interaction.options.getInteger('id')], language);
         },

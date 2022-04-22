@@ -1,4 +1,3 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const { edit } = require('../../functions/commandReply.js');
 const { MessageEmbed } = require('discord.js');
 const google = require('googlethis');
@@ -59,9 +58,19 @@ module.exports = {
         const repliedMsg = await message.channel.send(language.wait);
         await googleFunc(repliedMsg, message.content.substring(message.content.indexOf(' ') + 1));
     },
+    options: [
+        {
+            name: 'query',
+            description: {
+                'en_US': 'Search google)',
+                'zh_CN': '谷歌搜索',
+                'zh_TW': '谷歌搜索',
+            },
+            type: 'STRING',
+            required: true,
+        },
+    ],
     slashCommand: {
-        data: new SlashCommandBuilder()
-            .addStringOption((option) => option.setName('query').setDescription('Search google').setRequired(true)),
         async execute(interaction) {
             await interaction.deferReply();
             await googleFunc(interaction, interaction.options.getString('query'));

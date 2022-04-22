@@ -1,4 +1,3 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply } = require('../../functions/commandReply.js');
 
 function eightBall(command, args, language) {
@@ -39,12 +38,19 @@ module.exports = {
     async execute(message, args, language) {
         await eightBall(message, [args.join(' ')], language);
     },
+    options: [
+        {
+            name: 'question',
+            description: {
+                'en_US': 'Question you would like to ask the 8ball~',
+                'zh_CN': '你想问神奇八号球的问题~',
+                'zh_TW': '你想問神奇八號球的問題~',
+            },
+            type: 'STRING',
+            required: true,
+        },
+    ],
     slashCommand: {
-        data: new SlashCommandBuilder()
-            .addStringOption((option) =>
-                option.setName('question')
-                    .setDescription('Question you would like to ask the 8ball')
-                    .setRequired(true)),
         async execute(interaction, language) {
             await eightBall(interaction, [interaction.options.getString('question')], language);
         },

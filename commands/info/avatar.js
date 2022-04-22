@@ -1,4 +1,3 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply } = require('../../functions/commandReply.js');
 const FuzzySort = require('../../functions/fuzzysort.js');
 const { MessageEmbed } = require('discord.js');
@@ -10,11 +9,11 @@ function avatar(command, args, language) {
         const embed = new MessageEmbed()
             .setTitle(language.yourAvatar)
             .setColor('RANDOM')
-            .setImage(`${command.author.displayAvatarURL({
+            .setImage(command.author.displayAvatarURL({
                 format: 'png',
                 dynamic: true,
                 size: 2048,
-            })}`);
+            }));
         return reply(command, { embeds: [embed] });
     }
 
@@ -25,13 +24,11 @@ function avatar(command, args, language) {
         const embed = new MessageEmbed()
             .setTitle(language.memberAvatar.replace('${user.displayName}', user.displayName))
             .setColor(user.displayHexColor)
-            .setImage(
-                `${user.user.displayAvatarURL({
-                    format: 'png',
-                    dynamic: true,
-                    size: 2048,
-                })}`,
-            );
+            .setImage(user.user.displayAvatarURL({
+                format: 'png',
+                dynamic: true,
+                size: 2048,
+            }));
         return reply(command, { embeds: [embed] });
     }
 
@@ -45,11 +42,11 @@ function avatar(command, args, language) {
     const embed = new MessageEmbed()
         .setTitle(language.memberAvatar.replace('${user.displayName}', member.displayName))
         .setColor(member.displayHexColor)
-        .setImage(`${member.user.displayAvatarURL({
+        .setImage(member.user.displayAvatarURL({
             format: 'png',
             dynamic: true,
             size: 2048,
-        })}`);
+        }));
     return reply(command, { embeds: [embed] });
 }
 module.exports = {
@@ -62,6 +59,17 @@ module.exports = {
         'zh_CN': '发送用户头像',
         'zh_TW': '發送用戶頭像',
     },
+    options: [
+        {
+            name: 'member',
+            description: {
+                'en_US': 'member\'s avatar, will send your avatar if no arguments given',
+                'zh_CN': '群员的头像，如果没有指明群员，我将会发送你的头像',
+                'zh_TW': '群員的頭像，如果没有指明群员，我将会发送你的头像',
+            },
+            type: 'USER',
+        },
+    ],
     async execute(message, args, language) {
         if (message.mentions.users.size) {
             // display all user's avatars mentioned by the author
@@ -69,11 +77,11 @@ module.exports = {
                 return new MessageEmbed()
                     .setTitle(language.userAvatar.replace('${user.username}', user.username))
                     .setColor('RANDOM')
-                    .setImage(`${user.displayAvatarURL({
+                    .setImage(user.displayAvatarURL({
                         format: 'png',
                         dynamic: true,
                         size: 2048,
-                    })}`);
+                    }));
             });
 
             // send the entire array of embed to the channel
@@ -85,20 +93,16 @@ module.exports = {
         }
     },
     slashCommand: {
-        data: new SlashCommandBuilder()
-            .addUserOption((option) => option.setName('member').setDescription('member\'s avatar')),
         async execute(interaction, language) {
             const user = interaction.options.getMember('member') ?? interaction.member;
             const embed = new MessageEmbed()
                 .setTitle(language.memberAvatar.replace('${user.displayName}', user.displayName))
                 .setColor(user.displayHexColor)
-                .setImage(
-                    `${user.user.displayAvatarURL({
-                        format: 'png',
-                        dynamic: true,
-                        size: 2048,
-                    })}`,
-                );
+                .setImage(user.user.displayAvatarURL({
+                    format: 'png',
+                    dynamic: true,
+                    size: 2048,
+                }));
             return reply(interaction, { embeds: [embed] });
         },
     },

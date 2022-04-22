@@ -1,4 +1,3 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply } = require('../../functions/commandReply.js');
 const fs = require('fs');
 const { GuildChannel } = require('discord.js');
@@ -60,33 +59,53 @@ module.exports = {
         'zh_CN': '调整我的伺服器设定',
         'zh_TW': '调整我的伺服器設定',
     },
+    subcommands: [
+        {
+            name: 'language',
+            description: {
+                'en_US': 'Set the language I use',
+                'zh_CN': '设定我使用的语言',
+                'zh_TW': '設定我使用的語言',
+            },
+            options: [
+                {
+                    name: 'language',
+                    description: {
+                        'en_US': 'Set the language I use',
+                        'zh_CN': '设定我使用的语言',
+                        'zh_TW': '設定我使用的語言',
+                    },
+                    type: 'STRING',
+                    choices: [['en_US', 'en_US'], ['zh_CN', 'zh_CN'], ['zh_TW', 'zh_TW']],
+                    required: true,
+                },
+            ],
+        },
+        {
+            name: 'logger_channel',
+            description: {
+                'en_US': 'Channel for me to log server events in!',
+                'zh_CN': '让我记录群內事件的频道',
+                'zh_TW': '讓我記錄群內事件的頻道',
+            },
+            options: [
+                {
+                    name: 'channel',
+                    description: {
+                        'en_US': 'Logger channel',
+                        'zh_CN': '纪录频道',
+                        'zh_TW': '記錄頻道',
+                    },
+                    type: 'CHANNEL',
+                    required: true,
+                },
+            ],
+        },
+    ],
     async execute(message, args, language) {
         await setLanguage(message, args, language);
     },
     slashCommand: {
-        data: new SlashCommandBuilder()
-            .addSubcommand(subcommand =>
-                subcommand
-                    .setName('language')
-                    .setDescription('Language to use by me')
-                    .addStringOption((option) =>
-                        option.setName('language')
-                            .setDescription('language to use')
-                            .setRequired(true)
-                            .addChoice('en_US', 'en_US')
-                            .addChoice('zh_TW', 'zh_TW')
-                            .addChoice('zh_CN', 'zh_CN')),
-            )
-            .addSubcommand(subcommand =>
-                subcommand
-                    .setName('logger_channel')
-                    .setDescription('Channel for me to log in!')
-                    .addChannelOption((option) =>
-                        option.setName('channel')
-                            .setDescription('channel')
-                            .setRequired(true),
-                    ),
-            ),
         async execute(interaction, language) {
             switch (interaction.options.getSubcommand()) {
             case 'language':

@@ -1,4 +1,3 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply } = require('../../functions/commandReply.js');
 const { DiscordTogether } = require('discord-together');
 async function ytTogether(command, language) {
@@ -23,7 +22,6 @@ module.exports = {
         await ytTogether(message, language);
     },
     slashCommand: {
-        data: new SlashCommandBuilder(),
         async execute(interaction, language) {
             await ytTogether(interaction, language);
         },

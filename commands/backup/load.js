@@ -1,4 +1,3 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply } = require('../../functions/commandReply.js');
 const fs = require('fs');
 const backup = require('discord-backup');
@@ -58,12 +57,22 @@ module.exports = {
         'zh_CN': '根据ID加载备份文件',
         'zh_TW': '根據ID加載備份文件',
     },
+    options: [
+        {
+            name: 'id',
+            description: {
+                'en_US': 'Backup ID',
+                'zh_CN': '备份ID',
+                'zh_TW': '備份ID',
+            },
+            type: 'INTEGER',
+            required: true,
+        },
+    ],
     async execute(message, args, language) {
         await load(message, args, language);
     },
     slashCommand: {
-        data: new SlashCommandBuilder()
-            .addIntegerOption((option) => option.setName('id').setDescription('backup id')),
         async execute(interaction, language) {
             await load(interaction, [interaction.options.getInteger('id')], language);
         },

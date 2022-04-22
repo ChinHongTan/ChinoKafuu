@@ -1,4 +1,3 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply } = require('../../functions/commandReply.js');
 const fs = require('fs');
 
@@ -30,17 +29,24 @@ module.exports = {
         'zh_CN': '重新加载指令',
         'zh_TW': '重新加載指令',
     },
+    options: [
+        {
+            name: 'command',
+            description: {
+                'en_US': 'Command to reload',
+                'zh_CN': '重新加载的指令',
+                'zh_TW': '重新加載的指令',
+            },
+            type: 'STRING',
+            required: true,
+        },
+    ],
     args: true,
     ownerOnly: true,
     async execute(message, args) {
         await reload(message, args, message.author);
     },
     slashCommand: {
-        data: new SlashCommandBuilder()
-            .addStringOption((option) =>
-                option.setName('command')
-                    .setDescription('Reload a command')
-                    .setRequired(true)),
         async execute(interaction) {
             await reload(interaction, [interaction.options.getString('command')], interaction.user);
         },

@@ -1,4 +1,3 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply, edit } = require('../../functions/commandReply.js');
 
 const ytsr = require('youtube-sr').default;
@@ -204,15 +203,24 @@ module.exports = {
     aliases: ['p'],
     description: {
         'en_US': 'Play a song based on a given url or a keyword',
-        'zh_CN': '根据关键字或网址播放歌曲',
-        'zh_TW': '根據關鍵字或網址播放歌曲',
+        'zh_CN': '根据关键字或链接播放歌曲',
+        'zh_TW': '根據關鍵字或鏈接播放歌曲',
     },
+    options: [
+        {
+            name: 'song',
+            description: {
+                'en_US': 'YouTube/SoundCloud/Spotify Link / keyword to search on YouTube',
+                'zh_CN': 'YouTube/SoundCloud/Spotify链接/在YouTube上搜索的关键词',
+                'zh_TW': 'YouTube/SoundCloud/Spotify鏈接/在YouTube上搜索的關鍵詞',
+            },
+            type: 'STRING',
+        },
+    ],
     async execute(message, args, language) {
         await play(message, args, language);
     },
     slashCommand: {
-        data: new SlashCommandBuilder()
-            .addStringOption((option) => option.setName('song').setDescription('link/keyword').setRequired(true)),
         async execute(interaction, language) {
             await interaction.deferReply();
             await play(interaction, [interaction.options.getString('song')], language);

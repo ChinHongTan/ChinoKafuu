@@ -1,4 +1,3 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply } = require('../../functions/commandReply.js');
 function prune(command, args, language) {
     const amount = parseInt(args[0]) + 1;
@@ -27,12 +26,19 @@ module.exports = {
     async execute(message, args, language) {
         await prune(message, args, language);
     },
+    options: [
+        {
+            name: 'number',
+            description: {
+                'en_US': 'Number of messages to prune',
+                'zh_CN': '批量删除的讯息数量',
+                'zh_TW': '批量刪除的訊息數量',
+            },
+            type: 'INTEGER',
+            required: true,
+        },
+    ],
     slashCommand: {
-        data: new SlashCommandBuilder()
-            .addIntegerOption((option) =>
-                option.setName('number')
-                    .setDescription('Number of messages to prune')
-                    .setRequired(true)),
         async execute(interaction, language) {
             await prune(interaction, [interaction.options.getInteger('number')], language);
         },

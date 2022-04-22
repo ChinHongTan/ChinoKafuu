@@ -1,4 +1,3 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply } = require('../../functions/commandReply.js');
 const backup = require('discord-backup');
 const prefix = process.env.PREFIX || require('../../config/config.json').prefix;
@@ -42,12 +41,21 @@ module.exports = {
         'zh_CN': '创建一个伺服备份',
         'zh_TW': '創建一個伺服備份',
     },
+    options: [
+        {
+            name: 'max',
+            description: {
+                'en_US': 'Max messages per channel, default to 10',
+                'zh_CN': '频道最大备份讯息量，默认为10',
+                'zh_TW': '頻道最大備份訊息量，默認為10',
+            },
+            type: 'INTEGER',
+        },
+    ],
     async execute(message, args, language) {
         await create(message, args, language);
     },
     slashCommand: {
-        data: new SlashCommandBuilder()
-            .addIntegerOption((option) => option.setName('max').setDescription('max message per channel')),
         async execute(interaction, language) {
             await create(interaction, [interaction.options.getInteger('max')], language);
         },

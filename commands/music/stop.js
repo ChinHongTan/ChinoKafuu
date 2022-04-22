@@ -1,4 +1,3 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply } = require('../../functions/commandReply.js');
 const { checkStats } = require('../../functions/musicFunctions');
 async function stop(command, language) {
@@ -21,7 +20,6 @@ module.exports = {
         await stop(message, language);
     },
     slashCommand: {
-        data: new SlashCommandBuilder(),
         async execute(interaction, language) {
             await stop(interaction, language);
         },

@@ -26,12 +26,22 @@ module.exports = {
         'zh_CN': '从清单中移除歌曲',
         'zh_TW': '從清單中移除歌曲',
     },
+    options: [
+        {
+            name: 'index',
+            description: {
+                'en_US': 'Index of song to remove',
+                'zh_CN': '要移除的歌曲的序号',
+                'zh_TW': '要移除的歌曲的序號',
+            },
+            type: 'INTEGER',
+            required: true,
+        },
+    ],
     execute(message, args, language) {
         return remove(message, args, language);
     },
     slashCommand: {
-        data: new SlashCommandBuilder()
-            .addIntegerOption((option) => option.setName('index').setDescription('song to remove').setRequired(true)),
         execute(interaction, language) {
             return remove(interaction, [interaction.options.getInteger('index')], language);
         },

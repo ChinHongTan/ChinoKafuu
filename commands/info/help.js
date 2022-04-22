@@ -1,4 +1,3 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply } = require('../../functions/commandReply.js');
 const { MessageEmbed } = require('discord.js');
 const fs = require('fs');
@@ -68,6 +67,17 @@ module.exports = {
         'zh_CN': '列出我所有的指令/單個的指令详情',
         'zh_TW': '列出我所有的指令/單個的指令詳情',
     },
+    options: [
+        {
+            name: 'command',
+            description: {
+                'en_US': 'Help for a specific command',
+                'zh_CN': '特定指令的帮助',
+                'zh_TW': '特定指令的幫助',
+            },
+            type: 'STRING',
+        },
+    ],
     aliases: ['commands'],
     usage: '[command name]',
     cooldown: 5,
@@ -75,8 +85,6 @@ module.exports = {
         return help(message, args, language);
     },
     slashCommand: {
-        data: new SlashCommandBuilder()
-            .addStringOption((option) => option.setName('command').setDescription('Help for a specific command')),
         execute(interaction, language) {
             const optionContent = interaction.options.getString('command');
             return help(interaction, optionContent ? [optionContent] : [], language);

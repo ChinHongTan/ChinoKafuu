@@ -1,4 +1,3 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply } = require('../../functions/commandReply.js');
 const { format, checkStats } = require('../../functions/musicFunctions');
 const { MessageEmbed } = require('discord.js');
@@ -34,7 +33,6 @@ module.exports = {
         return nowPlaying(message, language);
     },
     slashCommand: {
-        data: new SlashCommandBuilder(),
         execute(interaction, language) {
             return nowPlaying(interaction, language);
         },

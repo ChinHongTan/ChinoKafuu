@@ -1,4 +1,3 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply } = require('../../functions/commandReply.js');
 
 async function kick(command, taggedUser, language) {
@@ -16,6 +15,18 @@ module.exports = {
         'zh_CN': '踢出群组成员',
         'zh_TW': '踢出群組成員',
     },
+    options: [
+        {
+            name: 'member',
+            description: {
+                'en_US': 'Member to kick',
+                'zh_CN': '要踢出的群员',
+                'zh_TW': '要踢出的群員',
+            },
+            type: 'USER',
+            required: true,
+        },
+    ],
     guildOnly: true,
     usage: '[mention]',
     permissions: 'ADMINISTRATOR',
@@ -23,11 +34,6 @@ module.exports = {
         await kick(message, message.mentions.members.first());
     },
     slashCommand: {
-        data: new SlashCommandBuilder()
-            .addUserOption((option) =>
-                option.setName('member')
-                    .setDescription('Member to kick')
-                    .setRequired(true)),
         async execute(interaction, language) {
             await kick(interaction, interaction.options.getUser('member'), language);
         },

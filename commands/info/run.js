@@ -1,4 +1,3 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply, edit } = require('../../functions/commandReply.js');
 const prefix = process.env.PREFIX || require('../../config/config.json').prefix;
 const default_langs = require('../../data/default_langs.json');
@@ -51,7 +50,7 @@ async function run(command, args, language) {
     let code = args[0].trim().replace(/^`+|`+$/g, '');
     const lang = codeLanguage.replace(/^`+|`+$/g, '');
     if (!lang) return reply(command, language.invalidUsage, 'RED');
-    if (/(^ $|^[0-9A-z]*$)/g.test(code.split('\n')[0])) {
+    if (/(^ $|^[\dA-z]*$)/g.test(code.split('\n')[0])) {
         code = code.slice(code.split('\n')[0].length + 1);
     }
     if (!code) return reply(command, language.invalidUsage, 'RED');
@@ -67,15 +66,35 @@ module.exports = {
         'zh_CN': '用机器人来运行代码！',
         'zh_TW': '用機器人來運行代碼！',
     },
+    options: [
+        {
+            name: 'language',
+            description: {
+                'en_US': 'Language used by the code',
+                'zh_CN': '代码语言',
+                'zh_TW': '代碼語言',
+            },
+            type: 'STRING',
+            required: true,
+        },
+        {
+            name: 'code',
+            description: {
+                'en_US': 'Code',
+                'zh_CN': '代码',
+                'zh_TW': '代碼',
+            },
+            type: 'STRING',
+            required: true,
+        },
+    ],
+
     cooldown: 5,
     async execute(message, args, language) {
         const codeLanguage = args.shift();
         await run(message, [codeLanguage, message.content.substring(prefix.length + 3 + codeLanguage.length + 1)], language);
     },
     slashCommand: {
-        data: new SlashCommandBuilder()
-            .addStringOption((option) => option.setName('language').setDescription('Language used by the code').setRequired(true))
-            .addStringOption((option) => option.setName('code').setDescription('Code').setRequired(true)),
         async execute(interaction, language) {
             await run(interaction, [interaction.options.getString('language'), interaction.options.getString('code')], language);
         },

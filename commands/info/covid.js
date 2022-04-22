@@ -1,4 +1,3 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply } = require('../../functions/commandReply.js');
 const { MessageEmbed } = require('discord.js');
 const api = require('novelcovid');
@@ -10,7 +9,7 @@ const dynamicEmbed = new DynamicEmbed();
 
 async function covid(command, args, language) {
     /**
-     * Create an Discord embed message
+     * Create a Discord embed message
      * @param {object} result - The result from the API.
      * @return {MessageEmbed} Discord embed
      */
@@ -111,15 +110,22 @@ module.exports = {
         'zh_CN': '取得最新的全球/国家的新冠肺炎状态!',
         'zh_TW': '取得最新的全球/國家的新冠肺炎狀態!',
     },
+    options: [
+        {
+            name: 'mode',
+            description: {
+                'en_US': 'Search mode(global/countries/[country name])',
+                'zh_CN': '搜索模式(global/countries/国家名字（英语）)',
+                'zh_TW': '搜索模式(global/countries/國家名字（英語）)',
+            },
+            type: 'STRING',
+            required: true,
+        },
+    ],
     async execute(message, args, language) {
         await covid(message, args, language);
     },
     slashCommand: {
-        data: new SlashCommandBuilder()
-            .addStringOption((option) =>
-                option.setName('mode')
-                    .setDescription('global/countries/country name')
-                    .setRequired(true)),
         async execute(interaction, language) {
             await covid(interaction, [interaction.options.getString('mode')], language);
         },

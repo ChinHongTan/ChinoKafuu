@@ -1,4 +1,3 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply } = require('../../functions/commandReply.js');
 // eslint-disable-next-line no-unused-vars
 const { Message, CommandInteraction } = require('discord.js');
@@ -38,12 +37,22 @@ module.exports = {
         'zh_CN': '从其他伺服器复制表情!（需要nitro）',
         'zh_TW': '從其他伺服器復製表情!（需要nitro）',
     },
+    options: [
+        {
+            name: 'emoji',
+            description: {
+                'en_US': 'Emoji to copy(nitro needed)',
+                'zh_CN': '要复制的表情（需要nitro）',
+                'zh_TW': '要複製的表情（需要nitro）',
+            },
+            type: 'STRING',
+            required: true,
+        },
+    ],
     async execute(message, _args, language) {
         await addEmoji(message, message.content, language);
     },
     slashCommand: {
-        data: new SlashCommandBuilder()
-            .addStringOption((option) => option.setName('emoji').setDescription('Emoji').setRequired(true)),
         async execute(interaction, language) {
             await addEmoji(interaction, interaction.options.getString('emoji'), language);
         },

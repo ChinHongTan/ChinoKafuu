@@ -1,4 +1,3 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply, edit } = require('../../functions/commandReply.js');
 const { MessageEmbed } = require('discord.js');
 const Pixiv = require('pixiv.ts');
@@ -88,7 +87,6 @@ module.exports = {
         await loli(repliedMessage);
     },
     slashCommand: {
-        data: new SlashCommandBuilder(),
         async execute(interaction, language) {
             if (!refreshToken) return reply(interaction, language.noToken, 'RED');
             await interaction.deferReply();

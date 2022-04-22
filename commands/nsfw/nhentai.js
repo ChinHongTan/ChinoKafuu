@@ -3,7 +3,6 @@ const NanaApi = require('nana-api');
 const nana = new NanaApi();
 const DynamicEmbed = require('../../functions/dynamicEmbed');
 const dynamicEmbed = new DynamicEmbed();
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply } = require('../../functions/commandReply.js');
 const { MessageEmbed } = require('discord.js');
 
@@ -108,17 +107,29 @@ module.exports = {
         'zh_CN': '在nhentai上搜寻本本',
         'zh_TW': '在nhentai上搜尋本本',
     },
+    options: [
+        {
+            name: 'id',
+            description: {
+                'en_US': '6 digit Nhentai ID',
+                'zh_CN': '6位数N网号码',
+                'zh_TW': '6位數N網號碼',
+            },
+            type: 'INTEGER',
+        },
+        {
+            name: 'keyword',
+            description: {
+                'en_US': 'Keyword to search on Nhentai',
+                'zh_CN': '在N网上搜索的关键词',
+                'zh_TW': '在N網上搜索的關鍵詞',
+            },
+        },
+    ],
     async execute(message, args, language) {
         await nhentaiFunc(message, args, language);
     },
     slashCommand: {
-        data: new SlashCommandBuilder()
-            .addIntegerOption((option) =>
-                option.setName('id')
-                    .setDescription('Nhentai ID'))
-            .addStringOption((option) =>
-                option.setName('keyword')
-                    .setDescription('Keyword to search in nhentai')),
         async execute(interaction, language) {
             await nhentaiFunc(interaction, [interaction.options.getInteger('id')], language);
         },

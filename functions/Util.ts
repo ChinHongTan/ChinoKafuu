@@ -7,7 +7,6 @@ import {
 } from "@discordjs/builders";
 
 interface SlashCommand {
-    data: SlashCommandBuilder,
     execute(interaction, language): any;
     autoComplete?(interaction): Promise<void>,
 }

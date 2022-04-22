@@ -1,4 +1,3 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply } = require('../../functions/commandReply.js');
 
 async function ban(command, taggedUser, language) {
@@ -16,6 +15,18 @@ module.exports = {
         'zh_CN': '对群组成员停权',
         'zh_TW': '對群組成員停權',
     },
+    options: [
+        {
+            name: 'member',
+            description: {
+                'en_US': 'Member to ban',
+                'zh_CN': '要停权的群员',
+                'zh_TW': '要停權的群員',
+            },
+            type: 'USER',
+            required: true,
+        },
+    ],
     guildOnly: true,
     usage: '[mention]',
     permissions: 'ADMINISTRATOR',
@@ -23,11 +34,6 @@ module.exports = {
         await ban(message, message.mentions.members.first(), language);
     },
     slashCommand: {
-        data: new SlashCommandBuilder()
-            .addUserOption((option) =>
-                option.setName('member')
-                    .setDescription('member to ban')
-                    .setRequired(true)),
         async execute(interaction, language) {
             await ban(interaction, interaction.options.getUser('member'), language);
         },

@@ -1,5 +1,3 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-
 module.exports = {
     name: 'ping',
     description: {
@@ -14,9 +12,6 @@ module.exports = {
         sent.edit({ embeds: [{ description: `${language.latency} ${sent.createdTimestamp - message.createdTimestamp}ms`, color: 'BLUE' }] });
     },
     slashCommand: {
-        data: new SlashCommandBuilder()
-            .setName('ping')
-            .setDescription('Ping!'),
         async execute(interaction, language) {
             const sent = await interaction.reply({
                 embeds: [

@@ -1,4 +1,3 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply } = require('../../functions/commandReply.js');
 const { format, checkStats } = require('../../functions/musicFunctions');
 const { MessageEmbed } = require('discord.js');
@@ -55,7 +54,6 @@ module.exports = {
         await queueFunc(message, language);
     },
     slashCommand: {
-        data: new SlashCommandBuilder(),
         async execute(interaction, language) {
             await queueFunc(interaction, language);
         },

@@ -1,4 +1,3 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply } = require('../../functions/commandReply.js');
 const { MessageEmbed } = require('discord.js');
 const fs = require('fs');
@@ -44,12 +43,22 @@ module.exports = {
         'zh_CN': '狙击一条讯息',
         'zh_TW': '狙擊一條訊息',
     },
+    options: [
+        {
+            name: 'number',
+            description: {
+                'en_US': 'message to snipe, default to 1',
+                'zh_CN': '要狙击的讯息，默認為1',
+                'zh_TW': '要狙擊的訊息，默認為1',
+            },
+            type: 'INTEGER',
+            required: true,
+        },
+    ],
     async execute(message, args, language) {
         await snipe(message, args, language);
     },
     slashCommand: {
-        data: new SlashCommandBuilder()
-            .addIntegerOption((option) => option.setName('number').setDescription('message to snipe')),
         async execute(interaction, language) {
             await snipe(interaction, [interaction.options.getInteger('number') ?? 1], language);
         },

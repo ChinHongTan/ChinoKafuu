@@ -1,4 +1,3 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply } = require('../../functions/commandReply.js');
 
 const solenolyrics = require('solenolyrics');
@@ -88,12 +87,21 @@ module.exports = {
         'zh_CN': '搜索歌词！',
         'zh_TW': '搜索歌詞！',
     },
+    options: [
+        {
+            name: 'keyword',
+            description: {
+                'en_US': 'Song title to search for lyrics, will search for the lyrics of the currently played song if no args was given.',
+                'zh_CN': '要搜索歌词的歌名，如果没有提供歌名将会搜索目前正在播放的歌曲的歌词',
+                'zh_TW': '要搜索歌詞的歌名，如果沒有提供歌名將會搜索目前正在播放的歌曲的歌詞',
+            },
+            type: 'STRING',
+        },
+    ],
     async execute(message, args, language) {
         await lyric(message, [message.content.substring(message.content.indexOf(' ') + 1)], language);
     },
     slashCommand: {
-        data: new SlashCommandBuilder()
-            .addStringOption((option) => option.setName('keyword').setDescription('Song title to search for lyrics')),
         async execute(interaction, args, language) {
             await lyric(interaction, [interaction.options.getString('keyword')], language);
         },

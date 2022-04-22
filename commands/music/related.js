@@ -1,4 +1,3 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const { reply } = require('../../functions/commandReply.js');
 const ytsr = require('youtube-sr').default;
 const { handleVideo, checkStats } = require('../../functions/musicFunctions');
@@ -105,7 +104,6 @@ module.exports = {
         await related(message, language);
     },
     slashCommand: {
-        data: new SlashCommandBuilder(),
         async execute(interaction, language) {
             await related(interaction, language);
         },
