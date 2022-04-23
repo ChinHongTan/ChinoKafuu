@@ -4,6 +4,7 @@ const { MessageEmbed } = require('discord.js');
 module.exports = {
     name: 'messageUpdate',
     async execute(oldMessage, newMessage) {
+        if (!newMessage.guild) return;
         if (oldMessage.partial) oldMessage.fetch();
         if (newMessage.partial) newMessage.fetch();
         const collection = newMessage.client.editSnipeCollection;
