@@ -64,7 +64,6 @@ async function help(interaction, args, language) {
             .setThumbnail(interaction.client.user.displayAvatarURL());
 
         const row = createSelectMenu();
-        if (interaction.author) return sendHelp(interaction.author, interaction, language, embed);
         return sendHelp(interaction, language, embed, row);
     }
 
