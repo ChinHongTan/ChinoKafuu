@@ -3,10 +3,19 @@ const { format, checkStats } = require('../../functions/musicFunctions');
 const { MessageEmbed } = require('discord.js');
 const DynamicEmbed = require('../../functions/dynamicEmbed');
 const dynamicEmbed = new DynamicEmbed();
+
+function arrayChunks(array, chunkSize) {
+    const resultArray = [];
+    for (let i = 0; i < array.length; i += chunkSize) {
+        const chunk = array.slice(i, i + chunkSize);
+        resultArray.push(chunk);
+    }
+    return resultArray;
+}
+
 async function queueFunc(command, language) {
     const serverQueue = await checkStats(command, language);
     if (serverQueue === 'error') return;
-    const array_chunks = (array, chunkSize) => Array(Math.ceil(array.length / chunkSize)).fill().map((_, index) => index * chunkSize).map((begin) => array.slice(begin, begin + chunkSize));
 
     /**
      * Create a Discord embed message
@@ -32,7 +41,7 @@ async function queueFunc(command, language) {
         songQueue.forEach((item, index) => {
             item.index = index + 1;
         });
-        const arrayChunk = array_chunks(songQueue, 10);
+        const arrayChunk = arrayChunks(songQueue, 10);
         if (songQueue.length > 10) {
             await dynamicEmbed.createEmbedFlip(command, arrayChunk, ['⬅️', '➡️'], createEmbed);
         } else {
