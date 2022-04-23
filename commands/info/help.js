@@ -1,10 +1,49 @@
 const { reply } = require('../../functions/commandReply.js');
 const { MessageEmbed } = require('discord.js');
 const fs = require('fs');
+const { MessageActionRow, MessageSelectMenu } = require('discord.js');
+const prefix = process.env.PREFIX || require('../../config/config.json').prefix;
 
-function sendHelp(user, interaction, language, embed) {
+function createSelectMenu() {
+    const commandCategories = fs.readdirSync('./commands');
+    const component = new MessageSelectMenu()
+        .setCustomId('help')
+        .setPlaceholder('Browse Commands');
+    const selectMenuOptions = [];
+    for (const name of commandCategories) {
+        selectMenuOptions.push({
+            label: name,
+            description: name,
+            value: name,
+        });
+    }
+    component.addOptions(selectMenuOptions);
+    return new MessageActionRow()
+        .addComponents(component);
+}
+
+function createHelpEmbed(interaction, language, folder) {
+    const embed = new MessageEmbed()
+        .setTitle(language.helpTitle)
+        .setDescription(`${language.helpPrompt}\n${language.helpPrompt2.replace('${prefix}', prefix)}`)
+        .setColor('BLUE')
+        .setThumbnail(interaction.client.user.displayAvatarURL());
+    const commands = getCommands(folder);
+    commands.forEach(command => {
+        embed.addField(command.name ?? 'none', command.description?.[language] ?? 'none', true);
+    });
+    return embed;
+}
+
+function getCommands(folder) {
+    const commandFiles = fs.readdirSync(`./commands/${folder}`).filter((file) => file.endsWith('.js'));
+    return commandFiles.map(file => require(`./commands/${folder}/${file}`));
+}
+
+function sendHelp(interaction, language, embed, row) {
+    const user = interaction?.user ?? interaction?.author;
     return user
-        .send({ split: true, embeds: [embed] })
+        .send({ split: true, embeds: [embed], components: [row] })
         .then(() => {
             if (interaction.channel.type === 'dm') return;
             return reply(interaction, language.helpSend, 'GREEN');
@@ -16,21 +55,6 @@ function sendHelp(user, interaction, language, embed) {
 }
 
 async function help(interaction, args, language) {
-    const collection = interaction.client.guildOptions;
-    let rawData;
-    const id = interaction.guildId;
-    if (collection) {rawData = await collection.findOne({ id });} else {
-        const buffer = fs.readFileSync('./data/guildOption.json', 'utf-8');
-        const parsedJSON = JSON.parse(buffer);
-        rawData = parsedJSON[id];
-    }
-    const guildOption = rawData ?? {
-        id,
-        options: { language: 'en_US' },
-    };
-    const language_test = guildOption.options.language;
-
-    const prefix = process.env.PREFIX || require('../../config/config.json').prefix;
     const { commands } = interaction.client;
     if (!args.length) {
         const embed = new MessageEmbed()
@@ -38,11 +62,10 @@ async function help(interaction, args, language) {
             .setDescription(`${language.helpPrompt}\n${language.helpPrompt2.replace('${prefix}', prefix)}`)
             .setColor('BLUE')
             .setThumbnail(interaction.client.user.displayAvatarURL());
-        commands.forEach((command) => {
-            embed.addField(command.name ?? 'none', command.description?.[language_test] ?? 'none', true);
-        });
+
+        const row = createSelectMenu();
         if (interaction.author) return sendHelp(interaction.author, interaction, language, embed);
-        return sendHelp(interaction.user, interaction, language, embed);
+        return sendHelp(interaction, language, embed, row);
     }
 
     const name = args[0].toLowerCase();
@@ -88,6 +111,12 @@ module.exports = {
         execute(interaction, language) {
             const optionContent = interaction.options.getString('command');
             return help(interaction, optionContent ? [optionContent] : [], language);
+        },
+        selectMenu(interaction, language) {
+            if (interaction.customId !== 'help') return;
+            const row = createSelectMenu();
+            const embed = createHelpEmbed(interaction, language, interaction.values[0]);
+            interaction.update({ embeds: [embed], components: [row] });
         },
     },
 };
