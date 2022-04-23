@@ -22,21 +22,7 @@ function createSelectMenu() {
         .addComponents(component);
 }
 
-async function createHelpEmbed(interaction, language, folder) {
-    const collection = interaction.client.guildOptions;
-    let rawData;
-    if (collection) {
-        rawData = await collection.findOne({ id: interaction?.guild?.id });
-    } else {
-        const buffer = fs.readFileSync('./data/guildOption.json', 'utf-8');
-        const parsedJSON = JSON.parse(buffer);
-        rawData = parsedJSON[interaction?.guild?.id];
-    }
-    const guildOption = rawData ?? {
-        id: interaction?.guild?.id,
-        options: { language: 'en_US' },
-    };
-
+async function createHelpEmbed(interaction, language, folder, languageStr) {
     const embed = new MessageEmbed()
         .setTitle(language.helpTitle)
         .setDescription(`${language.helpPrompt}\n${language.helpPrompt2.replace('${prefix}', prefix)}`)
@@ -44,7 +30,7 @@ async function createHelpEmbed(interaction, language, folder) {
         .setThumbnail(interaction.client.user.displayAvatarURL());
     const commands = getCommands(folder);
     commands.forEach(command => {
-        embed.addField(command.name ?? 'none', command.description?.[guildOption.options.language] ?? 'none', true);
+        embed.addField(command.name ?? 'none', command.description?.[languageStr] ?? 'none', true);
     });
     return embed;
 }
@@ -55,17 +41,7 @@ function getCommands(folder) {
 }
 
 function sendHelp(interaction, language, embed, row) {
-    const user = interaction?.user ?? interaction?.author;
-    return user
-        .send({ split: true, embeds: [embed], components: [row] })
-        .then(() => {
-            if (interaction.channel.type === 'dm') return;
-            return reply(interaction, language.helpSend, 'GREEN');
-        })
-        .catch((error) => {
-            console.error(`Could not send help DM to ${user.tag}.\n`, error);
-            return reply(interaction, language.cantDM, 'RED');
-        });
+    return interaction.reply({ split: true, embeds: [embed], components: [row] });
 }
 
 async function help(interaction, args, language) {
@@ -125,10 +101,10 @@ module.exports = {
             const optionContent = interaction.options.getString('command');
             return help(interaction, optionContent ? [optionContent] : [], language);
         },
-        async selectMenu(interaction, language) {
+        async selectMenu(interaction, language, languageStr) {
             if (interaction.customId !== 'help') return;
             const row = createSelectMenu();
-            const embed = await createHelpEmbed(interaction, language, interaction.values[0]);
+            const embed = await createHelpEmbed(interaction, language, interaction.values[0], languageStr);
             interaction.update({ embeds: [embed], components: [row] });
         },
     },

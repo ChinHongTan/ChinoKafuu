@@ -110,7 +110,6 @@ module.exports = {
         "helpPrompt": "Here's a list of all my commands:",
         "helpPrompt2": "\nYou can send \\`${prefix}help [command name]\\` to get info on a specific command!",
         "helpSend": "✅ | I've sent you a DM with all my commands!",
-        "cantDM": "❌ | It seems like I can't DM you! Do you have DMs disabled?",
         "invalidCmd": "❌ | That's not a valid command!",
         "cmdName": "**Name:**",
         "cmdAliases": "**Aliases:**",

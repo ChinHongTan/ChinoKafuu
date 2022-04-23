@@ -95,7 +95,9 @@ module.exports = {
 
         try {
             const language = client.language[guildOption.options.language][command.name];
-            await command.execute(message, args, language);
+            // language provides the translated string, while guildOption.options.language provides the language
+            // the 4th param is not needed in most of the files
+            await command.execute(message, args, language, guildOption.options.language);
         } catch (error) {
             console.error(error);
             message.reply('There was an error trying to execute that command!');

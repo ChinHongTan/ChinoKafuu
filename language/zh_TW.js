@@ -110,7 +110,6 @@ module.exports = {
         "helpPrompt": "這是我所有的指令:",
         "helpPrompt2": "\n你可以發送 \\`${prefix}help [command name]\\` 來查詢指令詳情!",
         "helpSend": "✅ | 我已經把我的指令列表私訊給你了！",
-        "cantDM": "❌ | 看起來我不能私訊你，檢查一下你的設定?",
         "invalidCmd": "❌ | 該指令不存在!",
         "cmdName": "**名字:**",
         "cmdAliases": "**別名:**",

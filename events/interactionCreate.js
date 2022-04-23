@@ -27,7 +27,9 @@ module.exports = {
             await command.slashCommand.autoComplete(interaction);
         }
         if (interaction.isSelectMenu()) {
-            await command.slashCommand.selectMenu(interaction, language);
+            // language provides the translated string, while guildOption.options.language provides the language
+            // the 3rd param is not needed in most of the files
+            await command.slashCommand.selectMenu(interaction, language, guildOption.options.language);
         }
         if (!interaction.isCommand()) return;
         if (command.ownerOnly) {
@@ -49,7 +51,8 @@ module.exports = {
         if (!command) return;
 
         try {
-            await command.slashCommand.execute(interaction, language);
+            // language provides the translated string, while guildOption.options.language provides the language
+            await command.slashCommand.execute(interaction, language, guildOption.options.language);
         } catch (error) {
             console.error(error);
             await reply(interaction, { content: 'There was an error while executing this command!', ephemeral: true });
