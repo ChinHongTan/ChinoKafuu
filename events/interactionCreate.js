@@ -10,6 +10,9 @@ module.exports = {
         if (interaction.isAutocomplete()) {
             await command.slashCommand.autoComplete(interaction);
         }
+        if (interaction.isSelectMenu()) {
+            await command.slashCommand.selectMenu(interaction, language);
+        }
         if (!interaction.isCommand()) return;
         if (command.ownerOnly) {
             if (interaction.author.id !== owner_id) {
