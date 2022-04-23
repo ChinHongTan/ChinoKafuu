@@ -6,6 +6,15 @@ import {
     SlashCommandSubcommandGroupBuilder
 } from "@discordjs/builders";
 
+import {
+    Message,
+    MessageEmbed,
+    CommandInteraction,
+    ColorResolvable,
+    MessageOptions,
+    InteractionReplyOptions
+} from "discord.js";
+
 interface SlashCommand {
     execute(interaction, language): any;
     autoComplete?(interaction): Promise<void>,
@@ -53,6 +62,7 @@ interface Command {
 type language = 'en_US' | 'zh_CN' | 'zh_TW';
 
 class Util {
+    // process command objects
     public static processCommand(command: Command, language: language) {
         if (command.slashCommand) {
             const data = new SlashCommandBuilder();
@@ -163,6 +173,46 @@ class Util {
                 this.processOpt(data, opt, language);
             });
         }
+    }
+
+    // reply with embeds, combine interaction and message commands together
+    private static isString(x: any): x is string {
+        return typeof x === "string";
+    }
+
+    // reply to a user command
+    public static async reply(command: Message | CommandInteraction, response: string | MessageOptions | InteractionReplyOptions, color?: ColorResolvable) {
+        if (this.isString(response)) {
+            if (command instanceof Message) {
+                return command.reply({ embeds: [{ description: response, color: color }] });
+            }
+            if (command.deferred) {
+                await command.editReply({ embeds: [{ description: response, color: color }] });
+                return await command.fetchReply();
+            }
+            await command.reply({ embeds: [{ description: response, color: color }] });
+            return await command.fetchReply();
+        }
+        if (command instanceof Message) return command.reply(response);
+        if (command.deferred) return await command.editReply(response);
+        await command.reply(response);
+        return await command.fetchReply();
+    }
+
+    // edit a message or interaction
+    public static async edit(command: Message | CommandInteraction, response?: MessageEmbed | string | MessageOptions | InteractionReplyOptions, color?: ColorResolvable) {
+        if (command instanceof Message) {
+            if (response instanceof MessageEmbed) return await command.edit({ embeds: [response], components: [], content: '\u200b' });
+            else if (this.isString(response)) return await command.edit({ embeds: [{ description: response, color: color }], components: [], content: '\u200b' });
+            return await command.edit(response);
+        }
+        if (response instanceof MessageEmbed) return await command.editReply({ embeds: [response], components: [], content: '\u200b' });
+        else if (this.isString(response)) return await command.editReply( { embeds: [{ description: response, color: color }], components: [], content: '\u200b' });
+        return await command.editReply(response);
+    }
+
+    public static async error(command: Message | CommandInteraction, response: string | MessageOptions | InteractionReplyOptions) {
+        return this.reply(command, `❌ | ${response}`, 'RED');
     }
 }
 
