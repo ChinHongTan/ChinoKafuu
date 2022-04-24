@@ -1,16 +1,16 @@
-const { reply } = require('../../functions/commandReply.js');
+const { warn, error, success } = require('../../functions/Util.js');
 
 async function mute(command, [taggedUser, reason]) {
-    if (!command.member.permissions.has('MANAGE_ROLES')) return reply(command, '**You Dont Have Permissions To Mute Someone! - [MANAGE_GUILD]**', 'RED');
-    if (!command.guild.me.permissions.has('MANAGE_ROLES')) return reply(command, '**I Don\'t Have Permissions To Mute Someone! - [MANAGE_GUILD]**', 'RED');
+    if (!command.member.permissions.has('MANAGE_ROLES')) return error(command, '**You Dont Have Permissions To Mute Someone! - [MANAGE_GUILD]**');
+    if (!command.guild.me.permissions.has('MANAGE_ROLES')) return error(command, '**I Don\'t Have Permissions To Mute Someone! - [MANAGE_GUILD]**');
     const collection = command.client.guildOptions;
 
-    if (!taggedUser) return reply(command, ':warning: | You need to tag a user in order to mute them!', 'YELLOW');
-    if (taggedUser.user.bot) return reply(command, ':warning: | You can\'t mute bots!', 'YELLOW');
-    if (taggedUser.id === command.member.user.id) return reply(command, ':x: | You Cannot Mute Yourself!', 'RED');
-    if (taggedUser.permissions.has('ADMINISTRATOR')) return reply(command, ':x: | You cannot mute an admin!', 'RED');
+    if (!taggedUser) return warn(command, 'You need to tag a user in order to mute them!');
+    if (taggedUser.user.bot) return warn(command, 'You can\'t mute bots!');
+    if (taggedUser.id === command.member.user.id) return error(command, 'You Cannot Mute Yourself!');
+    if (taggedUser.permissions.has('ADMINISTRATOR')) return error(command, 'You cannot mute an admin!');
     if (taggedUser.roles.highest.comparePositionTo(command.guild.me.roles.highest) >= 0 && (taggedUser.roles)) {
-        return reply(command, 'Cannot Mute This User!', 'RED');
+        return error(command, 'Cannot Mute This User!');
     }
 
     const guildOption = await collection.findOne({ id: command.guild.id }) ?? { id: command.guild.id, options: {} };
@@ -35,12 +35,12 @@ async function mute(command, [taggedUser, reason]) {
         }
     }
     guildOption.options['muteRole'] = muteRole;
-    if (taggedUser.roles.cache.has(muteRole.id)) return reply(command, ':x: | User is already muted!', 'RED');
+    if (taggedUser.roles.cache.has(muteRole.id)) return error(command, 'User is already muted!');
     await taggedUser.roles.set([muteRole]);
     const query = { id: command.guild.id };
     const options = { upsert: true };
     await collection.replaceOne(query, guildOption, options);
-    return reply(command, `Successfully Muted: ${taggedUser.user.username}! Reason: ${reason}`, 'GREEN');
+    return success(command, `Successfully Muted: ${taggedUser.user.username}! Reason: ${reason}`);
 }
 module.exports = {
     name: 'mute',

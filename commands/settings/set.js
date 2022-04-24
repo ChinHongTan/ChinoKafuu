@@ -1,10 +1,10 @@
-const { reply } = require('../../functions/commandReply.js');
+const { error, success } = require('../../functions/Util.js');
 const fs = require('fs');
 const { GuildChannel } = require('discord.js');
 
 async function setLanguage(command, args, language) {
-    if (!args.length > 0) return reply(command, language.noArgs, 'RED');
-    if (args[0] !== 'en_US' && args[0] !== 'zh_CN' && args[0] !== 'zh_TW') return reply(command, language.languageNotSupported, 'RED');
+    if (!args.length > 0) return error(command, language.noArgs);
+    if (args[0] !== 'en_US' && args[0] !== 'zh_CN' && args[0] !== 'zh_TW') return error(command, language.languageNotSupported);
 
     const collection = command.client.guildOptions;
     if (collection) {
@@ -14,7 +14,7 @@ async function setLanguage(command, args, language) {
         const query = { id: command.guild.id };
         const options = { upsert: true };
         await collection.replaceOne(query, guildOption, options);
-        return reply(command, language.changeSuccess.replace('${args[0]}', args[0]), 'GREEN');
+        return success(command, language.changeSuccess.replace('${args[0]}', args[0]));
     } else {
         const rawData = fs.readFileSync('./data/guildOption.json', 'utf-8');
         const guildCollection = JSON.parse(rawData);
@@ -23,13 +23,13 @@ async function setLanguage(command, args, language) {
         guildCollection[command.guild.id] = guildOption;
 
         fs.writeFileSync('./data/guildOption.json', JSON.stringify(guildCollection));
-        return reply(command, language.changeSuccess.replace('${args[0]}', args[0]), 'GREEN');
+        return success(command, language.changeSuccess.replace('${args[0]}', args[0]));
     }
 }
 
 async function setChannel(command, args, language) {
-    if (!args.length > 0) return reply(command, language.noArgs, 'RED');
-    if (!(args[0] instanceof GuildChannel)) return reply(command, language.argsNotChannel, 'RED');
+    if (!args.length > 0) return error(command, language.noArgs);
+    if (!(args[0] instanceof GuildChannel)) return error(command, language.argsNotChannel);
 
     const collection = command.client.guildOptions;
     if (collection) {
@@ -39,7 +39,7 @@ async function setChannel(command, args, language) {
         const query = { id: command.guild.id };
         const options = { upsert: true };
         await collection.replaceOne(query, guildOption, options);
-        return reply(command, language.channelChanged.replace('${args[0]}', args[0]), 'GREEN');
+        return success(command, language.channelChanged.replace('${args[0]}', args[0]));
     } else {
         const rawData = fs.readFileSync('./data/guildOption.json', 'utf-8');
         const guildCollection = JSON.parse(rawData);
@@ -48,7 +48,7 @@ async function setChannel(command, args, language) {
         guildCollection[command.guild.id] = guildOption;
 
         fs.writeFileSync('./data/guildOption.json', JSON.stringify(guildCollection));
-        return reply(command, language.channelChanged.replace('${args[0]}', args[0]), 'GREEN');
+        return success(command, language.channelChanged.replace('${args[0]}', args[0]));
     }
 }
 module.exports = {

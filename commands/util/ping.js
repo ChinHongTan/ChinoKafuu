@@ -5,7 +5,7 @@ module.exports = {
         'zh_CN': '取得我的网络延迟~',
         'zh_TW': ' 取得我的網絡延遲~',
     },
-    cooldown: 5,
+    coolDown: 5,
     async execute(message, _, language) {
         message.channel.send({ embeds: [{ description: `${language.heartbeat} ${message.client.ws.ping}ms.`, color: 'BLUE' }] });
         const sent = await message.channel.send({ embeds: [{ description: language.pinging }] });

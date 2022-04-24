@@ -1,8 +1,8 @@
-const { reply } = require('../../functions/commandReply.js');
+const { info } = require('../../functions/Util.js');
 
 const inviteLink = 'https://discord.com/api/oauth2/authorize?client_id=958201832528838706&permissions=8&scope=bot%20applications.commands';
 async function sendLink(command, language) {
-    return reply(command, `${language.invite}\n${inviteLink}`, 'BLUE');
+    return info(command, `${language.invite}\n${inviteLink}`);
 }
 module.exports = {
     name: 'invite',

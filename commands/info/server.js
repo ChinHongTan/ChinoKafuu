@@ -1,4 +1,4 @@
-const { reply } = require('../../functions/commandReply.js');
+const { reply } = require('../../functions/Util.js');
 const { MessageEmbed } = require('discord.js');
 function server(command, language) {
     const embed = new MessageEmbed()
@@ -28,7 +28,7 @@ module.exports = {
         'zh_TW': '取得伺服器的基本資料',
     },
     guildOnly: true,
-    cooldown: 5,
+    coolDown: 5,
     async execute(message, _, language) {
         await server(message, language);
     },

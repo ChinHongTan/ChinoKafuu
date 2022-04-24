@@ -1,4 +1,4 @@
-const { reply } = require('../../functions/commandReply.js');
+const { error, reply } = require('../../functions/Util.js');
 const { MessageEmbed } = require('discord.js');
 const fs = require('fs');
 
@@ -16,9 +16,9 @@ async function editSnipe(command, args, language) {
 
     if (editSnipesWithGuild) {
         const editsnipes = editSnipesWithGuild.editSnipe;
-        if (Number(arg) > 10) return reply(command, language.exceed10, 'RED');
+        if (Number(arg) > 10) return error(command, language.exceed10);
         const msg = editsnipes?.[Number(arg) - 1];
-        if (!msg) return reply(command, language.invalidSnipe, 'RED');
+        if (!msg) return error(command, language.invalidSnipe);
         const embed = new MessageEmbed()
             .setColor('RANDOM')
             .setAuthor({ name: msg.author, iconURL: msg.authorAvatar })
@@ -26,7 +26,7 @@ async function editSnipe(command, args, language) {
             .setTimestamp(msg.timestamp);
         return reply(command, { embeds: [embed] });
     }
-    return reply(command, language.noSnipe, 'RED');
+    return error(command, language.noSnipe);
 }
 module.exports = {
     name: 'edit-snipe',

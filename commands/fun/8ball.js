@@ -1,7 +1,7 @@
-const { reply } = require('../../functions/commandReply.js');
+const { reply } = require('../../functions/Util.js');
 
 function eightBall(command, args, language) {
-    if (!args[0]) return reply(command, 'Psst. You need to ask the 8ball a question, ya\'know?', 'YELLOW');
+    if (!args[0]) return reply(command, language.noQuestion, 'YELLOW');
     const question = args[0];
     const answers = [
         { reply1: 'GREEN' },

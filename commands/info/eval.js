@@ -40,7 +40,7 @@ module.exports = {
     ],
     guildOnly: true,
     ownerOnly: true,
-    cooldown: 5,
+    coolDown: 5,
     execute(message, args, language) {
         evalFunc(message, args, language);
     },

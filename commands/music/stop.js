@@ -1,4 +1,4 @@
-const { reply } = require('../../functions/commandReply.js');
+const { success } = require('../../functions/Util.js');
 const { checkStats } = require('../../functions/musicFunctions');
 async function stop(command, language) {
     const serverQueue = await checkStats(command, language);
@@ -6,7 +6,7 @@ async function stop(command, language) {
 
     serverQueue.songs = [];
     serverQueue.player.stop();
-    return reply(command, language.stopped, 'BLUE');
+    return success(command, language.stopped);
 }
 module.exports = {
     name: 'stop',

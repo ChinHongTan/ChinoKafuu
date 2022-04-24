@@ -1,4 +1,4 @@
-const { edit } = require('../../functions/commandReply.js');
+const { edit } = require('../../functions/Util.js');
 const { MessageEmbed } = require('discord.js');
 const google = require('googlethis');
 
@@ -54,9 +54,8 @@ module.exports = {
         'zh_CN': '在谷歌上搜索关键字',
         'zh_TW': '在谷歌上搜索關鍵字',
     },
-    async execute(message, _args, language) {
-        const repliedMsg = await message.channel.send(language.wait);
-        await googleFunc(repliedMsg, message.content.substring(message.content.indexOf(' ') + 1));
+    async execute(message) {
+        await googleFunc(message, message.content.substring(message.content.indexOf(' ') + 1));
     },
     options: [
         {

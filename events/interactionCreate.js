@@ -1,5 +1,6 @@
 const fs = require('fs');
 const { reply } = require('../functions/commandReply.js');
+const Discord = require('discord.js');
 const owner_id = process.env.OWNERID || require('../config/config.json').owner_id;
 
 module.exports = {
@@ -49,6 +50,29 @@ module.exports = {
         }
 
         if (!command) return;
+
+        // command cool down
+        const { coolDowns } = client;
+
+        if (!coolDowns.has(command.name)) {
+            coolDowns.set(command.name, new Discord.Collection());
+        }
+
+        const now = Date.now();
+        const timestamps = coolDowns.get(command.name);
+        const coolDownAmount = (command.coolDown || 3) * 1000;
+
+        if (timestamps.has(interaction.author.id)) {
+            const expirationTime = timestamps.get(interaction.author.id) + coolDownAmount;
+
+            if (now < expirationTime) {
+                const timeLeft = (expirationTime - now) / 1000;
+                return interaction.reply(`please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${command.name}\` command.`);
+            }
+
+            timestamps.set(interaction.user.id, now);
+            setTimeout(() => timestamps.delete(interaction.user.id), coolDownAmount);
+        }
 
         try {
             // language provides the translated string, while guildOption.options.language provides the language

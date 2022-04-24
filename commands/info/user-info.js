@@ -1,4 +1,4 @@
-const { reply } = require('../../functions/commandReply.js');
+const { reply } = require('../../functions/Util.js');
 const { MessageEmbed } = require('discord.js');
 
 function getUserInfo(author, language) {

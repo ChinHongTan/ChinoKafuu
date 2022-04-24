@@ -1,4 +1,4 @@
-const { reply } = require('../../functions/commandReply.js');
+const { reply, error } = require('../../functions/Util.js');
 
 const solenolyrics = require('solenolyrics');
 const Genius = require('genius-lyrics');
@@ -76,7 +76,7 @@ async function lyric(command, args, language) {
         return await searchLyrics(keyword);
     }
     if (args[0]) return await searchLyrics(args[0]);
-    return reply(command, language.noKeyword, 'RED');
+    return error(command, language.noKeyword);
 }
 module.exports = {
     name: 'lyric',

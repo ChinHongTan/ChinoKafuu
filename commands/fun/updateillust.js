@@ -1,19 +1,19 @@
-const { reply } = require('../../functions/commandReply.js');
+const { info } = require('../../functions/Util.js');
 const refreshToken = process.env.PIXIV_REFRESH_TOKEN || require('../../config/config.json').PixivRefreshToken;
 
 const updateIllust = require('../../functions/updateIllust');
 async function update(command) {
     if (refreshToken) {
-        await reply(command, 'Updating pixiv illust list...', 'YELLOW');
+        await info(command, 'Updating pixiv illust list...');
         await updateIllust('Chino Kafuu');
-        await reply(command, 'Done!', 'BLUE');
+        await info(command, 'Done!');
     }
 }
 
 module.exports = {
     name: 'update_illust',
     aliases: ['ui', 'update', 'refresh', 'ri'],
-    cooldown: 3,
+    coolDown: 3,
     ownerOnly: true,
     description: {
         'en_US': 'Update the illust list used in loli command.',
@@ -22,8 +22,7 @@ module.exports = {
     },
     async execute(message, _, language) {
         if (!refreshToken) return message.reply(language.noToken);
-        const repliedMessage = await message.reply(language.wait);
-        await update(repliedMessage);
+        await update(message);
     },
     slashCommand: {
         async execute(interaction, language) {

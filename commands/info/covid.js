@@ -1,4 +1,4 @@
-const { reply } = require('../../functions/commandReply.js');
+const { reply, error } = require('../../functions/Util.js');
 const { MessageEmbed } = require('discord.js');
 const api = require('novelcovid');
 api.settings({
@@ -80,8 +80,8 @@ async function covid(command, args, language) {
 
     if (args.length < 1) {
         // no arguments were provided
-        await reply(command, language.invalidArgument, 'RED');
-        return reply(command, language.covidExample, 'RED');
+        await error(command, language.invalidArgument);
+        return error(command, language.covidExample);
     }
     if (args[0] === 'global') {
         // get global covid data

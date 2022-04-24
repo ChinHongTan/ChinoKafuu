@@ -1,11 +1,11 @@
-const { reply } = require('../../functions/commandReply.js');
+const { error } = require('../../functions/Util.js');
 const { checkStats } = require('../../functions/musicFunctions');
 async function clear(command, language) {
     const serverQueue = await checkStats(command, language);
     if (serverQueue === 'error') return;
 
     serverQueue.songs.splice(1);
-    return reply(command, language.cleared, 'RED');
+    return error(command, language.cleared);
 }
 module.exports = {
     name: 'clear',

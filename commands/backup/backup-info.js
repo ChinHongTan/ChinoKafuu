@@ -1,14 +1,14 @@
-const { reply } = require('../../functions/commandReply.js');
+const { error, reply } = require('../../functions/Util.js');
 const { MessageEmbed } = require('discord.js');
 const fs = require('fs');
 
 async function bi(command, args, language) {
     const backupID = args[0];
 
-    if (!backupID) return reply(command, language.invalidBackupID);
+    if (!backupID) return error(command, language.invalidBackupID);
 
     if (!fs.existsSync(`./my-backups/${backupID}.json`)) {// if the backup wasn't found
-        return reply(command, language.noBackupFound.replace('${backupID}', backupID));
+        return error(command, language.noBackupFound.replace('${backupID}', backupID));
     }
 
     // Fetch the backup
@@ -40,7 +40,7 @@ async function bi(command, args, language) {
 
 module.exports = {
     name: 'backup-info',
-    cooldown: 10,
+    coolDown: 10,
     aliases: ['bi'],
     description: {
         'en_US': 'Load a backup info.',

@@ -1,11 +1,11 @@
-const { reply } = require('../../functions/commandReply.js');
+const { error, success } = require('../../functions/Util.js');
 
 async function kick(command, taggedUser, language) {
-    if (!taggedUser) return reply(command, language.noMention, 'YELLOW');
-    if (taggedUser.id === command.author.id) return reply(command, language.cantKickSelf, 'RED');
-    if (!taggedUser.kickable) return reply(command, language.cannotKick, 'RED');
+    if (!taggedUser) return error(command, language.noMention);
+    if (taggedUser.id === command.author.id) return error(command, language.cantKickSelf);
+    if (!taggedUser.kickable) return error(command, language.cannotKick);
     await taggedUser.kick();
-    return reply(command, command.kickSuccess.replace('${taggedUser.user.username}', taggedUser.user.username), 'GREEN');
+    return success(command, command.kickSuccess.replace('${taggedUser.user.username}', taggedUser.user.username));
 }
 
 module.exports = {

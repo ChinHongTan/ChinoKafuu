@@ -1,4 +1,4 @@
-const { reply } = require('../../functions/commandReply.js');
+const { reply, error } = require('../../functions/Util.js');
 const { MessageEmbed } = require('discord.js');
 const fs = require('fs');
 
@@ -17,13 +17,13 @@ async function snipe(command, args, language) {
     if (snipeWithGuild) {
         snipes = snipeWithGuild.snipes;
     } else {
-        return reply(command, language.noSnipe, 'RED');
+        return error(command, language.noSnipe);
     }
     const arg = args[0] ?? 1;
 
-    if (Number(arg) > 10) return reply(command, language.exceed10, 'RED');
+    if (Number(arg) > 10) return error(command, language.exceed10);
     const msg = snipes?.[Number(arg) - 1];
-    if (!msg) return reply(command, language.invalidSnipe, 'RED');
+    if (!msg) return error(command, language.invalidSnipe);
 
     const image = msg.attachments;
 

@@ -1,4 +1,4 @@
-const { reply } = require('../../functions/commandReply.js');
+const { reply } = require('../../functions/Util.js');
 const { format, checkStats } = require('../../functions/musicFunctions');
 const { MessageEmbed } = require('discord.js');
 const DynamicEmbed = require('../../functions/dynamicEmbed');

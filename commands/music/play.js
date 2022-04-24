@@ -1,4 +1,4 @@
-const { reply, edit } = require('../../functions/commandReply.js');
+const { reply, edit, error } = require('../../functions/Util.js');
 
 const ytsr = require('youtube-sr').default;
 const ytpl = require('ytpl');
@@ -13,14 +13,14 @@ const { MessageActionRow, MessageSelectMenu, Message } = require('discord.js');
 const { waitImport, handleVideo } = require('../../functions/musicFunctions');
 const queueData = require('../../data/queueData');
 const { queue } = queueData;
-const ytrx = /(?:youtube\.com.*[?|&](?:v|list)=|youtube\.com.*embed\/|youtube\.com.*v\/|youtu\.be\/)((?!videoseries)[a-zA-Z0-9_-]*)/;
-const scrxt = new RegExp('^(?<track>https://soundcloud.com/(?!sets|stats|groups|upload|you|mobile|stream|messages|discover|notifications|terms-of-use|people|pages|jobs|settings|logout|charts|imprint|popular[a-z0-9-_]{1,25})/(?!sets|playlist|stats|settings|logout|notifications|you|messages[a-z0-9-_]{1,100}(?:/s-[a-zA-Z0-9-_]{1,10})?))[a-z0-9-?=/]*$');
+const ytrx = /(?:youtube\.com.*[?|&](?:v|list)=|youtube\.com.*embed\/|youtube\.com.*v\/|youtu\.be\/)((?!videoseries)[a-zA-Z\d_-]*)/;
+const scrxt = new RegExp('^(?<track>https://soundcloud.com/(?!sets|stats|groups|upload|you|mobile|stream|messages|discover|notifications|terms-of-use|people|pages|jobs|settings|logout|charts|imprint|popular[a-z\\d-_]{1,25})/(?!sets|playlist|stats|settings|logout|notifications|you|messages[a-z\\d-_]{1,100}(?:/s-[a-zA-Z\\d-_]{1,10})?))[a-z\\d-?=/]*$');
 const sprxtrack = /(http[s]?:\/\/)?(open\.spotify\.com)\//;
 
 async function play(command, args, language) {
     let serverQueue = queue.get(command.guild.id);
     if (!command.member.voice.channel) {
-        return await reply(command, language.notInVC, 'RED');
+        return await error(command, language.notInVC);
     }
 
     const url = args[0];
@@ -29,7 +29,7 @@ async function play(command, args, language) {
 
     const permissions = voiceChannel.permissionsFor(command.client.user);
     if (!permissions.has('CONNECT') || !permissions.has('SPEAK')) {
-        return reply(command, language.cantJoinVC, 'RED');
+        return error(command, language.cantJoinVC);
     }
 
     if (!serverQueue) {
@@ -75,7 +75,7 @@ async function play(command, args, language) {
             result = await spotify.getTrack(Id);
             const videos = await ytsr.search(
                 `${result.artists[0].name} ${result.name}`,
-                { limit: 1 },
+                { limit: 1, type: 'video' },
             );
             return await handleVideo(videos, voiceChannel, false, serverQueue, 'yt', command);
         }
@@ -87,7 +87,7 @@ async function play(command, args, language) {
             for (const i in result.tracks.items) {
                 const videos = await ytsr.search(
                     `${result.artists[0].name} ${result.tracks.items[i].name}`,
-                    { limit: 1 },
+                    { limit: 1, type: 'video' },
                 );
                 await handleVideo(videos, voiceChannel, true, serverQueue, 'yt', command);
                 await m.edit(language.importAlbum2.replace('${videos[0].title}', videos[0].title).replace('${i}', i));
@@ -105,7 +105,7 @@ async function play(command, args, language) {
             if (!wait) {
                 const videos = await ytsr.search(
                     `${result.tracks.items[0].track.artists[0].name} ${result.tracks.items[0].track.name}`,
-                    { limit: 1 },
+                    { limit: 1, type: 'video' },
                 );
                 return await handleVideo(videos, voiceChannel, false, serverQueue, 'yt', command);
             }
@@ -116,7 +116,7 @@ async function play(command, args, language) {
                 for (const i in result.tracks.items) {
                     const videos = await ytsr.search(
                         `${result.tracks.items[i].track.artists[0].name} ${result.tracks.items[i].track.name}`,
-                        { limit: 1 },
+                        { limit: 1, type: 'video' },
                     );
                     await handleVideo(videos, voiceChannel, true, serverQueue, 'yt', command);
                     await m.edit(language.importPlaylist2.replace('${videos[0].title}', videos[0].title).replace('${i}', i));
@@ -157,16 +157,16 @@ async function play(command, args, language) {
         }
     }
 
-    if (!args[0]) return reply(command, language.noArgs, 'RED');
+    if (!args[0]) return error(command, language.noArgs);
     if (url.match(ytrx)) return processYoutubeLink(url);
     if (url.startsWith('https://open.spotify.com/')) {
-        if (!SpotifyClientID || !SpotifyClientSecret) return reply(command, 'Spotify songs cannot be processed!', 'RED');
+        if (!SpotifyClientID || !SpotifyClientSecret) return error(command, 'Spotify songs cannot be processed!');
         return processSpotifyLink(url);
     }
     if (url.startsWith('https://soundcloud.com/')) return processSoundcloudLink(url);
 
     const keyword = command instanceof Message ? command.content.substring(command.content.indexOf(' ') + 1) : args[0];
-    let msg = await reply(command, language.searching.replace('${keyword}', keyword), 'YELLOW');
+    let msg = await reply(command, language.searching.replace('${keyword}', keyword), 'BLUE');
     const videos = await ytsr.search(keyword);
     const options = videos.map((video) => ({
         label: video.channel.name.length > 20 ? `${video.channel.name.slice(0, 20)}...` : video.channel.name,

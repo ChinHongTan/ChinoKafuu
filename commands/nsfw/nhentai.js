@@ -3,7 +3,7 @@ const NanaApi = require('nana-api');
 const nana = new NanaApi();
 const DynamicEmbed = require('../../functions/dynamicEmbed');
 const dynamicEmbed = new DynamicEmbed();
-const { reply } = require('../../functions/commandReply.js');
+const { error } = require('../../functions/Util.js');
 const { MessageEmbed } = require('discord.js');
 
 async function nhentaiFunc(command, args, language) {
@@ -38,7 +38,6 @@ async function nhentaiFunc(command, args, language) {
      * An embed with the doujin search result.
      * @param {object} result - The result from the search. Consist of an array of doujins.
      * @param {array} result.results - An array of doujins.
-     * @param {number} page - The position of displayed doujin in the array.
      * @return {object} Discord embed.
      */
     function createSearchEmbed(result) {
@@ -53,7 +52,6 @@ async function nhentaiFunc(command, args, language) {
     /**
      * An embed with the doujin object.
      * @param {array} pages - The list of pages of the doujin.
-     * @param {number} page - The page number of the doujin being displayed.
      * @return {object} Discord embed.
      */
     function createBookEmbed(pages) {
@@ -63,17 +61,16 @@ async function nhentaiFunc(command, args, language) {
     }
 
     /**
-     * Generate and display an reactable message of a doujin. React with emojis to change the message content.
+     * Generate and display a reactable message of a doujin. React with emojis to change the message content.
      * @param {object} doujin - The doujin to be displayed.
      * @param {array} doujin.pages - The list of pages of the doujin.
-     * @param {number} [page = 0] - The page number of the doujin being displayed.
      */
     async function generateContent(doujin) {
         return await dynamicEmbed.createEmbedFlip(command, doujin.pages, ['⬅️', '➡️'], createBookEmbed);
     }
 
     /**
-     * Generate and display an reactable message of a doujin cover. React with emojis to change the message content.
+     * Generate and display a reactable message of a doujin cover. React with emojis to change the message content.
      * @param {object} result - The result from the search. Consist of an array of doujins.
      * @param {array} result.results - An array of doujins.
      * @param {number} page - The position of displayed doujin in the array.
@@ -89,7 +86,7 @@ async function nhentaiFunc(command, args, language) {
             const doujin = await nhentai.getDoujin(args[0]);
             await dynamicEmbed.createEmbedFlip(command, [doujin], ['▶️'], createDoujinEmbed, generateContent, [doujin]);
         } else {
-            return reply(command, language.invalidBookID, 'RED');
+            return error(command, language.invalidBookID);
         }
     } else {
         // search the keyword given
@@ -101,7 +98,7 @@ async function nhentaiFunc(command, args, language) {
 
 module.exports = {
     name: 'nhentai',
-    cooldown: 10,
+    coolDown: 10,
     description: {
         'en_US': 'Search for a doujin on nhentai.',
         'zh_CN': '在nhentai上搜寻本本',

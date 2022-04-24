@@ -1,4 +1,4 @@
-const { reply, edit } = require('../../functions/commandReply.js');
+const { edit, warn, error } = require('../../functions/Util.js');
 const prefix = process.env.PREFIX || require('../../config/config.json').prefix;
 const default_langs = require('../../data/default_langs.json');
 const { tio, getLanguages } = require('../../functions/tio.js');
@@ -44,16 +44,16 @@ async function getAndReturnResponse(lang, code, command, language) {
 }
 
 async function run(command, args, language) {
-    if (!args) return reply(command, language.usage, 'YELLOW');
+    if (!args) return warn(command, language.usage);
 
     const codeLanguage = args.shift();
     let code = args[0].trim().replace(/^`+|`+$/g, '');
     const lang = codeLanguage.replace(/^`+|`+$/g, '');
-    if (!lang) return reply(command, language.invalidUsage, 'RED');
+    if (!lang) return error(command, language.invalidUsage);
     if (/(^ $|^[\dA-z]*$)/g.test(code.split('\n')[0])) {
         code = code.slice(code.split('\n')[0].length + 1);
     }
-    if (!code) return reply(command, language.invalidUsage, 'RED');
+    if (!code) return error(command, language.invalidUsage);
     if (command instanceof MessageEmbed) await command.deferReply();
     else command = await command.channel.send(language.wait);
     await getAndReturnResponse(lang, code, command, language);
@@ -89,7 +89,7 @@ module.exports = {
         },
     ],
 
-    cooldown: 5,
+    coolDown: 5,
     async execute(message, args, language) {
         const codeLanguage = args.shift();
         await run(message, [codeLanguage, message.content.substring(prefix.length + 3 + codeLanguage.length + 1)], language);

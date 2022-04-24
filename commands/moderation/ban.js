@@ -1,11 +1,11 @@
-const { reply } = require('../../functions/commandReply.js');
+const { error, success } = require('../../functions/Util.js');
 
 async function ban(command, taggedUser, language) {
-    if (!taggedUser) return reply(command, language.noMention, 'RED');
-    if (taggedUser.id === command.author.id) return reply(command, language.cantBanSelf, 'RED');
-    if (!taggedUser.bannable) return reply(command, language.cannotBan, 'RED');
+    if (!taggedUser) return error(command, language.noMention);
+    if (taggedUser.id === command.author.id) return error(command, language.cantBanSelf);
+    if (!taggedUser.bannable) return error(command, language.cannotBan);
     await command.guild.members.ban(taggedUser);
-    return reply(command, language.banSuccess.replace('${taggedUser.user.username}', taggedUser.user.username), 'GREEN');
+    return success(command, language.banSuccess.replace('${taggedUser.user.username}', taggedUser.user.username));
 }
 
 module.exports = {

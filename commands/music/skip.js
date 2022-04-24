@@ -1,11 +1,11 @@
-const { reply } = require('../../functions/commandReply.js');
+const { success } = require('../../functions/Util.js');
 const { checkStats } = require('../../functions/musicFunctions');
 async function skip(command, language) {
     const serverQueue = await checkStats(command, language);
     if (serverQueue === 'error') return;
 
     serverQueue.player.stop();
-    return reply(command, language.skipped, 'BLUE');
+    return success(command, language.skipped);
 }
 module.exports = {
     name: 'skip',

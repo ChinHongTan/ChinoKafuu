@@ -1,4 +1,4 @@
-const { reply } = require('../../functions/commandReply.js');
+const { success, error } = require('../../functions/Util.js');
 const { checkStats } = require('../../functions/musicFunctions');
 async function remove(command, args, language) {
     const serverQueue = await checkStats(command, language);
@@ -9,9 +9,9 @@ async function remove(command, args, language) {
             const queuenum = Number(number);
             if (Number.isInteger(queuenum) && queuenum <= serverQueue.songs.length && queuenum > 0) {
                 serverQueue.songs.splice(queuenum, 1);
-                return reply(command, language.removed.replace('${serverQueue.songs[queuenum].title}', serverQueue.songs[queuenum].title), 'GREEN');
+                return success(command, language.removed.replace('${serverQueue.songs[queuenum].title}', serverQueue.songs[queuenum].title));
             } else {
-                return reply(command, language.invalidInt, 'RED');
+                return error(command, language.invalidInt);
             }
         });
     }

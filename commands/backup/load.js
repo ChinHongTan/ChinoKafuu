@@ -1,22 +1,22 @@
-const { reply } = require('../../functions/commandReply.js');
+const { error, warn } = require('../../functions/Util.js');
 const fs = require('fs');
 const backup = require('discord-backup');
 
 async function load(command, args, language) {
     const author = command?.user || command?.author;
     // Check member permissions
-    if (!command.member.permissions.has('ADMINISTRATOR')) return reply(command, language.notAdmin, 'RED');
+    if (!command.member.permissions.has('ADMINISTRATOR')) return error(command, language.notAdmin);
 
     const backupID = args[0];
-    if (!backupID) return reply(command, language.invalidBackupID, 'RED');
+    if (!backupID) return error(command, language.invalidBackupID);
     // If backup doesn't exist
-    if (!fs.existsSync(`./my-backups/${backupID}.json`)) return reply(command, language.noBackupFound.replace('${backupID}', backupID), 'RED');
+    if (!fs.existsSync(`./my-backups/${backupID}.json`)) return error(command, language.noBackupFound.replace('${backupID}', backupID));
     // Fetching the backup
     const backupData = JSON.parse(fs.readFileSync(`./my-backups/${backupID}.json`, 'utf-8'));
     // If the backup exists, request for confirmation
-    await reply(command, language.warningBackup, 'YELLOW');
+    await warn(command, language.warningBackup);
     const filter = (m) => m.author.id === author.id && m.content === '-confirm';
-    let confirm = false;
+    let confirm;
     await command.channel
         .awaitMessages(
             {
@@ -27,7 +27,7 @@ async function load(command, args, language) {
             })
         .catch((collected) => {
             // if the author of the commands does not confirm the backup loading
-            if (collected.size < 1) return reply(command, language.timesUpBackup, 'RED');
+            if (collected.size < 1) return error(command, language.timesUpBackup);
             confirm = true;
         });
     if (confirm) {
@@ -49,7 +49,7 @@ async function load(command, args, language) {
 
 module.exports = {
     name: 'load',
-    cooldown: 10,
+    coolDown: 10,
     guildOnly: true,
     permissions: 'ADMINISTRATOR',
     description: {

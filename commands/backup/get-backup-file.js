@@ -1,16 +1,16 @@
-const { reply } = require('../../functions/commandReply.js');
+const { reply, error } = require('../../functions/Util.js');
 const fs = require('fs');
 
 async function getBackupFile(command, args, language) {
     const backupID = args[0];
-    if (!backupID) return reply(command, language.invalidBackupID, 'RED');
-    if (!fs.existsSync(`./my-backups/${backupID}.json`)) return reply(command, language.noBackupFound.replace('${backupID}', backupID), 'RED');
+    if (!backupID) return error(command, language.invalidBackupID);
+    if (!fs.existsSync(`./my-backups/${backupID}.json`)) return error(command, language.noBackupFound.replace('${backupID}', backupID));
     return reply(command, { content: `Backup file ID: \`${backupID}\``, files: ['./my-backups/${backupID}.json'] });
 }
 
 module.exports = {
     name: 'get-backup-file',
-    cooldown: 10,
+    coolDown: 10,
     guildOnly: true,
     permissions: 'ADMINISTRATOR',
     description: {

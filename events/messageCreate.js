@@ -71,18 +71,18 @@ module.exports = {
         }
 
         // command cool down
-        const { cooldowns } = client;
+        const { coolDowns } = client;
 
-        if (!cooldowns.has(command.name)) {
-            cooldowns.set(command.name, new Discord.Collection());
+        if (!coolDowns.has(command.name)) {
+            coolDowns.set(command.name, new Discord.Collection());
         }
 
         const now = Date.now();
-        const timestamps = cooldowns.get(command.name);
-        const cooldownAmount = (command.cooldown || 3) * 1000;
+        const timestamps = coolDowns.get(command.name);
+        const coolDownAmount = (command.coolDown || 3) * 1000;
 
         if (timestamps.has(message.author.id)) {
-            const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
+            const expirationTime = timestamps.get(message.author.id) + coolDownAmount;
 
             if (now < expirationTime) {
                 const timeLeft = (expirationTime - now) / 1000;
@@ -90,7 +90,7 @@ module.exports = {
             }
 
             timestamps.set(message.author.id, now);
-            setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+            setTimeout(() => timestamps.delete(message.author.id), coolDownAmount);
         }
 
         try {

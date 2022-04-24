@@ -1,4 +1,4 @@
-const { reply } = require('../../functions/commandReply.js');
+const { error, success } = require('../../functions/Util.js');
 const backup = require('discord-backup');
 const prefix = process.env.PREFIX || require('../../config/config.json').prefix;
 
@@ -8,10 +8,10 @@ async function create(command, args, language) {
     backup.setStorageFolder('./my-backups');
     // Check member permissions
     if (!command.member.permissions.has('ADMINISTRATOR')) {
-        return reply(command, language.notAdmin, 'RED');
+        return error(command, language.notAdmin);
     }
     // Create the backup
-    await reply(command, language.startBackup.replace('${max}', max), 'GREEN');
+    await success(command, language.startBackup.replace('${max}', max));
     const backupData = await backup
         .create(command.guild, {
             maxMessagesPerChannel: max,
@@ -27,12 +27,12 @@ async function create(command, args, language) {
             color: 'GREEN',
         }],
     });
-    await reply(command, language.doneBackupGuild, 'GREEN');
+    await success(command, language.doneBackupGuild);
 }
 
 module.exports = {
     name: 'create',
-    cooldown: 10,
+    coolDown: 10,
     aliases: ['backup'],
     guildOnly: true,
     permissions: 'ADMINISTRATOR',

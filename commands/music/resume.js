@@ -1,14 +1,14 @@
-const { reply } = require('../../functions/commandReply.js');
+const { error, success } = require('../../functions/Util.js');
 const { checkStats } = require('../../functions/musicFunctions');
 async function resume(command, language) {
     const serverQueue = await checkStats(command, language);
     if (serverQueue === 'error') return;
 
     if (serverQueue) {
-        if (serverQueue.playing) return reply(command, language.playing, 'RED');
+        if (serverQueue.playing) return error(command, language.playing);
         serverQueue.player.unpause();
         serverQueue.playing = true;
-        return reply(command, language.resume, 'GREEN');
+        return success(command, language.resume);
     }
 }
 module.exports = {

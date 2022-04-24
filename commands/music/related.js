@@ -1,4 +1,4 @@
-const { reply } = require('../../functions/commandReply.js');
+const { reply, warn } = require('../../functions/Util.js');
 const ytsr = require('youtube-sr').default;
 const { handleVideo, checkStats } = require('../../functions/musicFunctions');
 const ytdl = require('ytdl-core');
@@ -59,7 +59,7 @@ async function related(command, language) {
         return relatedVidsInfo;
     }
 
-    await reply(command, language.relatedSearch, 'YELLOW');
+    await reply(command, language.relatedSearch, 'BLUE');
     let data, url, result, relatedVideos, urlList, relatedVidsInfo = [];
     let videos, authorId, bestTrack;
 
@@ -71,7 +71,7 @@ async function related(command, language) {
         url = avoidRepeatedSongs(urlList);
         result = await scdl.getInfo(url).catch((err) => {
             console.log(err);
-            throw reply(command, language.noResult, 'RED');
+            throw warn(command, language.noResult);
         });
         await handleVideo(result, voiceChannel, false, serverQueue, 'sc', command);
         break;

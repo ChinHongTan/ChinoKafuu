@@ -1,4 +1,4 @@
-const { reply } = require('../../functions/commandReply.js');
+const { reply, error } = require('../../functions/Util.js');
 const { MessageEmbed } = require('discord.js');
 const Pixiv = require('pixiv.ts');
 const refreshToken = process.env.PIXIV_REFRESH_TOKEN || require('../../config/config.json').PixivRefreshToken;
@@ -62,8 +62,8 @@ async function pixivFunc(command, subcommand, language) {
             illust = await pixiv.search.illusts({
                 illust_id: command.options.getInteger('illust_id'),
             });
-        } catch (error) {
-            return reply(command, language.noIllust, 'RED');
+        } catch (err) {
+            return error(command, language.noIllust);
         }
         break;
     case 'author':
@@ -71,8 +71,8 @@ async function pixivFunc(command, subcommand, language) {
             illusts = await pixiv.user.illusts({
                 user_id: command.options.getInteger('author_id'),
             });
-        } catch (error) {
-            return reply(command, language.noUser, 'RED');
+        } catch (err) {
+            return error(command, language.noUser);
         }
         illust = illusts[Math.floor(Math.random() * illusts.length)];
         break;
@@ -82,7 +82,7 @@ async function pixivFunc(command, subcommand, language) {
             r18: false,
             bookmarks: command.options.getString('bookmarks') || '1000',
         });
-        if (illusts.length === 0) return reply(command, language.noResult, 'RED');
+        if (illusts.length === 0) return error(command, language.noResult);
         if (pixiv.search.nextURL && command.options?.getInteger('pages') !== 1) {
             illusts = await pixiv.util.multiCall({
                 next_url: pixiv.search.nextURL, illusts,
@@ -98,7 +98,7 @@ async function pixivFunc(command, subcommand, language) {
 
 module.exports = {
     name: 'pixiv',
-    cooldown: 3,
+    coolDown: 3,
     description: {
         'en_US': 'Search and get an illust on pixiv',
         'zh_CN': '在pixiv网站上搜索图片',
@@ -202,9 +202,8 @@ module.exports = {
         },
     ],
     async execute(message, args, language) {
-        if (!refreshToken) return reply(message, language.noToken, 'RED');
-        const repliedMessage = await reply(message, language.wait, 'YELLOW');
-        if (args[0] === 'search') return await pixivFunc(repliedMessage, args[1], language);
+        if (!refreshToken) return error(message, language.noToken);
+        if (args[0] === 'search') return await pixivFunc(message, args[1], language);
     },
     slashCommand: {
         async execute(interaction, language) {

@@ -3,7 +3,7 @@ const { PassThrough } = require('stream');
 const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 const Ffmpeg = require('fluent-ffmpeg');
 
-const { reply, edit } = require('./commandReply.js');
+const { reply, edit, error } = require('./Util.js');
 
 Ffmpeg.setFfmpegPath(ffmpegPath);
 const { Util, MessageEmbed } = require('discord.js');
@@ -70,9 +70,9 @@ async function play(guild, song, message) {
             stream.destroy();
             play(guild, serverQueue.songs[0], message);
         })
-        .on('error', (error => {
+        .on('error', (err => {
             message.channel.send('An error happened!');
-            console.log(error);
+            console.log(err);
         }));
     resource.volume.setVolume(serverQueue.volume / 5);
     const embed = new MessageEmbed()
@@ -82,7 +82,7 @@ async function play(guild, song, message) {
         .setTitle(song.title)
         .setURL(song.url)
         .setTimestamp(Date.now())
-        .addField('播放者', `<@!${serverQueue.songs[0].requseter}>`)
+        .addField('播放者', `<@!${serverQueue.songs[0].requester}>`)
         .setFooter({ text: '音樂系統', iconURL: message.client.user.displayAvatarURL() });
     if (serverQueue.playMessage) {
         await serverQueue.playMessage.delete();
@@ -154,7 +154,7 @@ module.exports = {
                 id: videos.id,
                 title: Util.escapeMarkdown(videos.title),
                 url: `https://www.youtube.com/watch?v=${videos.id}`,
-                requseter: message.member.id,
+                requester: message.member.id,
                 duration: hmsToSecondsOnly(videos.duration),
                 thumb: videos.thumbnails[0].url,
                 source: 'yt',
@@ -165,7 +165,7 @@ module.exports = {
                 id: videos[0].id,
                 title: Util.escapeMarkdown(videos[0].title),
                 url: videos[0].url,
-                requseter: message.member.id,
+                requester: message.member.id,
                 duration: videos[0].duration / 1000,
                 thumb: videos[0].thumbnail.url,
                 source: 'yt',
@@ -176,7 +176,7 @@ module.exports = {
                 id: videos.id,
                 title: Util.escapeMarkdown(videos.title),
                 url: videos.permalink_url,
-                requseter: message.member.id,
+                requester: message.member.id,
                 duration: videos.duration / 1000,
                 thumb: videos.artwork_url,
                 source: 'sc',
@@ -192,7 +192,7 @@ module.exports = {
             .setTitle(song.title)
             .setURL(song.url)
             .setTimestamp(Date.now())
-            .addField('播放者', `<@!${song.requseter}>`)
+            .addField('播放者', `<@!${song.requester}>`)
             .setFooter({ text:'音樂系統', iconURL: message.client.user.displayAvatarURL() });
 
         if (!serverQueue.songs[0]) {
@@ -205,10 +205,10 @@ module.exports = {
                 });
                 await reply(message, { embeds: [embed] });
                 await play(message.guild, serverQueue.songs[0], message);
-            } catch (error) {
-                console.error(error);
+            } catch (err) {
+                console.error(err);
                 serverQueue.songs.length = 0;
-                return message.channel.send(`I could not join the voice channel: ${error}`);
+                return message.channel.send(`I could not join the voice channel: ${err}`);
             }
             return;
         }
@@ -240,15 +240,15 @@ module.exports = {
         const serverQueue = queue.get(command.guild.id);
 
         if (!command.member.voice.channel) {
-            await reply(command, language.notInVC, 'RED');
+            await error(command, language.notInVC);
             return 'error';
         }
         if (!serverQueue) {
-            await reply(command, language.noSong, 'RED');
+            await error(command, language.noSong);
             return 'error';
         }
         if (checkPlaying && !serverQueue.playing) {
-            await reply(command, language.notPlayingMusic, 'RED');
+            await error(command, language.notPlayingMusic);
             return 'error';
         }
         return serverQueue;

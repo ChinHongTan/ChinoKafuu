@@ -1,4 +1,4 @@
-const { reply } = require('../../functions/commandReply.js');
+const { success } = require('../../functions/Util.js');
 const { checkStats } = require('../../functions/musicFunctions');
 async function loopQueue(command, language) {
     const serverQueue = await checkStats(command, language);
@@ -7,7 +7,7 @@ async function loopQueue(command, language) {
     if (serverQueue) {
         serverQueue.loopQueue = !serverQueue.loopQueue;
         if (serverQueue.loop) serverQueue.loop = false;
-        return reply(command, serverQueue.loopQueue ? language.on : language.off, 'GREEN');
+        return success(command, serverQueue.loopQueue ? language.on : language.off);
     }
 }
 module.exports = {

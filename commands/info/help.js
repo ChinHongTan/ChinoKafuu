@@ -1,4 +1,4 @@
-const { reply } = require('../../functions/commandReply.js');
+const { error } = require('../../functions/Util.js');
 const { MessageEmbed } = require('discord.js');
 const fs = require('fs');
 const { MessageActionRow, MessageSelectMenu } = require('discord.js');
@@ -60,7 +60,7 @@ async function help(interaction, args, language) {
     const name = args[0].toLowerCase();
     const command = commands.get(name) || commands.find((c) => c.aliases && c.aliases.includes(name));
 
-    if (!command) return reply(interaction, language.invalidCmd, 'RED');
+    if (!command) return error(interaction, language.invalidCmd);
     const embed = new MessageEmbed()
         .setTitle(`**${command.name}**`)
         .setThumbnail(interaction.client.user.displayAvatarURL())
@@ -69,7 +69,7 @@ async function help(interaction, args, language) {
         .addField(language.cmdAliases, command?.aliases?.join(', ') || 'None', true)
         .addField(language.cmdDescription, language[command.name])
         .addField(language.cmdUsage, `${prefix}${command.name} ${command.usage || ''}`, true)
-        .addField(language.cmdCooldown, `${command.cooldown || 3}`, true);
+        .addField(language.cmdCooldown, `${command.coolDown || 3}`, true);
     return interaction.reply({ split: true, embeds: [embed] });
 }
 module.exports = {
@@ -92,7 +92,7 @@ module.exports = {
     ],
     aliases: ['commands'],
     usage: '[command name]',
-    cooldown: 5,
+    coolDown: 5,
     execute(message, args, language) {
         return help(message, args, language);
     },

@@ -1,4 +1,4 @@
-const { reply } = require('../../functions/commandReply.js');
+const { reply, error } = require('../../functions/Util.js');
 const { MessageEmbed, Message, CommandInteraction } = require('discord.js');
 
 async function connect4(command, language) {
@@ -113,7 +113,7 @@ async function connect4(command, language) {
         }
         // if a new piece can’t be placed in this column
         if (!placed) {
-            return reply(command, language.invalidMove, 'RED');
+            return error(command, language.invalidMove);
         }
         const directions = [11, 1, 9, 10, -11, -1, -9, -10];
         for (const direction of directions) {
@@ -201,7 +201,7 @@ async function connect4(command, language) {
 }
 module.exports = {
     name: 'connect4',
-    cooldown: 3,
+    coolDown: 3,
     description: {
         'en_US': 'A little Connect 4 game!',
         'zh_CN': '四子棋小游戏！',

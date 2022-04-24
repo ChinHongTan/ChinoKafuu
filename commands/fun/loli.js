@@ -1,4 +1,4 @@
-const { reply, edit } = require('../../functions/commandReply.js');
+const { edit, error } = require('../../functions/Util.js');
 const { MessageEmbed } = require('discord.js');
 const Pixiv = require('pixiv.ts');
 const refreshToken = process.env.PIXIV_REFRESH_TOKEN || require('../../config/config.json').PixivRefreshToken;
@@ -75,20 +75,19 @@ async function loli(command) {
 }
 module.exports = {
     name: 'loli',
-    cooldown: 3,
+    coolDown: 3,
     description: {
         'en_US': 'Get a picture of a loli',
         'zh_CN': '萝莉图',
         'zh_TW': '蘿莉圖',
     },
     async execute(message, _, language) {
-        if (!refreshToken) return reply(message, language.noToken, 'RED');
-        const repliedMessage = await reply(message, language.wait, 'YELLOW');
-        await loli(repliedMessage);
+        if (!refreshToken) return error(message, language.noToken);
+        await loli(message);
     },
     slashCommand: {
         async execute(interaction, language) {
-            if (!refreshToken) return reply(interaction, language.noToken, 'RED');
+            if (!refreshToken) return error(interaction, language.noToken);
             await interaction.deferReply();
             await loli(interaction);
         },

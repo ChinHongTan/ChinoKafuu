@@ -1,4 +1,4 @@
-const { reply } = require('../../functions/commandReply.js');
+const { error, info } = require('../../functions/Util.js');
 const { MessageEmbed } = require('discord.js');
 const { searchByUrl } = require('../../functions/ascii2d.js');
 const sagiriToken = process.env.SAGIRI || require('../../config/config.json').sagiri_token;
@@ -16,10 +16,10 @@ async function sauce(command, args, language) {
      */
     function createEmbed(response) {
         const sourceURL = response.url;
-        let info = '';
+        let information = '';
         for (const [key, value] of Object.entries(response.raw.data)) {
             if (key === 'ext_urls') continue;
-            info += `\`${key} : ${value}\`\n`;
+            information += `\`${key} : ${value}\`\n`;
         }
         // .setFooter(`page ${response.page + 1}/${response.total}`);
         return new MessageEmbed()
@@ -29,7 +29,7 @@ async function sauce(command, args, language) {
             .setImage(response.thumbnail)
             .addFields(
                 { name: language.sourceURL, value: sourceURL },
-                { name: language.additionalInfo, value: info },
+                { name: language.additionalInfo, value: information },
             );
     }
 
@@ -87,8 +87,8 @@ async function sauce(command, args, language) {
         }
         // search with ascii2d
         const result2 = await searchByUrl(searchImage, 'bovw');
-        if (!result2 || result2.length < 1) {
-            return reply(command, language.noResult, 'RED');
+        if (!result2.items || result2.items.length < 1) {
+            return error(command, language.noResult);
         }
         // const response2 = result2.items.filter((r2) => r2.source !== 0);
         mode = 2;
@@ -111,9 +111,9 @@ async function sauce(command, args, language) {
         }
     }
     if (!searchImage) {
-        return reply(command, language.noImage, 'RED');
+        return error(command, language.noImage);
     }
-    await reply(command, language.searchingSauce, 'YELLOW');
+    await info(command, language.searchingSauce);
     await searchForImage(searchImage);
 }
 
@@ -135,7 +135,7 @@ module.exports = {
             type: 'STRING',
         },
     ],
-    cooldown: 5,
+    coolDown: 5,
     async execute(message, args, language) {
         if (!sagiriToken) return message.reply('This command can\'t be used without SauceNAO token!');
         await sauce(message, args, language);

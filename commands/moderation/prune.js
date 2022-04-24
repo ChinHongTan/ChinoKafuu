@@ -1,16 +1,16 @@
-const { reply } = require('../../functions/commandReply.js');
+const { error } = require('../../functions/Util.js');
 function prune(command, args, language) {
     const amount = parseInt(args[0]) + 1;
 
     if (isNaN(amount)) {
-        return reply(command, language.invalidNum, 'RED');
+        return error(command, language.invalidNum);
     } if (amount <= 2 || amount > 100) {
-        return reply(command, language.notInRange, 'RED');
+        return error(command, language.notInRange);
     }
 
     command.channel.bulkDelete(amount, true).catch((err) => {
         console.error(err);
-        return reply(command, language.pruneError, 'RED');
+        return error(command, language.pruneError);
     });
 }
 module.exports = {

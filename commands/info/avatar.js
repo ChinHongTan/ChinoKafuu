@@ -1,4 +1,4 @@
-const { reply } = require('../../functions/commandReply.js');
+const { reply, error } = require('../../functions/Util.js');
 const FuzzySort = require('../../functions/fuzzysort.js');
 const { MessageEmbed } = require('discord.js');
 
@@ -36,7 +36,7 @@ function avatar(command, args, language) {
     const keyword = command.content.substring(command.content.indexOf(' ') + 1);
     const member = fuzzySort.search(keyword);
     if (!member) {
-        return reply(command, language.noMember.replace('${keyword}', keyword), 'RED');
+        return error(command, language.noMember.replace('${keyword}', keyword));
     }
 
     const embed = new MessageEmbed()
@@ -51,7 +51,7 @@ function avatar(command, args, language) {
 }
 module.exports = {
     name: 'avatar',
-    cooldown: 10,
+    coolDown: 10,
     aliases: ['icon', 'pfp', 'av'],
     guildOnly: true,
     description: {

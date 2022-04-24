@@ -51,7 +51,7 @@ interface SubcommandGroup {
 
 interface Command {
     name: string,
-    cooldown: number,
+    coolDown: number,
     slashCommand: SlashCommand,
     description: Description,
     subcommandGroups?: SubcommandGroup[],
@@ -213,6 +213,18 @@ class Util {
 
     public static async error(command: Message | CommandInteraction, response: string | MessageOptions | InteractionReplyOptions) {
         return this.reply(command, `❌ | ${response}`, 'RED');
+    }
+
+    public static async warn(command: Message | CommandInteraction, response: string | MessageOptions | InteractionReplyOptions) {
+        return this.reply(command, `⚠ | ${response}`, 'YELLOW');
+    }
+
+    public static async success(command: Message | CommandInteraction, response: string | MessageOptions | InteractionReplyOptions) {
+        return this.reply(command, `✅ | ${response}`, 'GREEN');
+    }
+
+    public static async info(command: Message | CommandInteraction, response: string | MessageOptions | InteractionReplyOptions) {
+        return this.reply(command, `ℹ | ${response}`, 'BLUE')
     }
 }
 

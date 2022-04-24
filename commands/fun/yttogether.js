@@ -1,17 +1,17 @@
-const { reply } = require('../../functions/commandReply.js');
+const { info, error } = require('../../functions/Util.js');
 const { DiscordTogether } = require('discord-together');
 async function ytTogether(command, language) {
     const { client } = command;
     client.discordTogether = new DiscordTogether(client);
     if (command.member.voice.channel) {
         const invite = await client.discordTogether.createTogetherCode(command.member.voice.channel.id, 'youtube');
-        return reply(command, invite.code, 'BLUE');
+        return info(command, invite.code);
     }
-    await reply(command, language.notInVC, 'RED');
+    await error(command, language.notInVC);
 }
 module.exports = {
     name: 'yt-together',
-    cooldown: 3,
+    coolDown: 3,
     aliases: ['yt', 'youtube'],
     description: {
         'en_US': 'Watch YouTube videos together!',
