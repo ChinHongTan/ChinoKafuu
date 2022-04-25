@@ -2,8 +2,8 @@ const { reply } = require('../../functions/Util.js');
 const { format, checkStats } = require('../../functions/musicFunctions');
 const { MessageEmbed } = require('discord.js');
 const progressbar = require('string-progressbar');
-async function nowPlaying(command, language) {
-    const serverQueue = await checkStats(command, language, true);
+async function nowPlaying(command, language, languageStr) {
+    const serverQueue = await checkStats(command, languageStr, true);
     if (serverQueue === 'error') return;
     const resource = serverQueue?.resource;
 
@@ -15,7 +15,7 @@ async function nowPlaying(command, language) {
             .setTitle(language.npTitle)
             .setDescription(`[${song.title}](${song.url})\n\`[${format(resource.playbackDuration / 1000)}/${format(song.duration)}]\`\n${progressbar.splitBar(song.duration, resource.playbackDuration / 1000, 15)[0]}`)
             .setThumbnail(song.thumb)
-            .addField(language.requester, `<@!${song.requseter}>`)
+            .addField(language.requester, `<@!${song.requester}>`)
             .setFooter({ text: language.musicFooter, iconURL: command.client.user.displayAvatarURL() });
         return reply(command, { embeds: [embed] });
     }
@@ -29,12 +29,12 @@ module.exports = {
         'zh_CN': '查看目前正在播放的歌曲',
         'zh_TW': '查看目前正在播放的歌曲',
     },
-    execute(message, _args, language) {
-        return nowPlaying(message, language);
+    execute(message, _args, language, languageStr) {
+        return nowPlaying(message, language, languageStr);
     },
     slashCommand: {
-        execute(interaction, language) {
-            return nowPlaying(interaction, language);
+        execute(interaction, language, languageStr) {
+            return nowPlaying(interaction, language, languageStr);
         },
     },
 };

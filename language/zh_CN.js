@@ -187,20 +187,14 @@ module.exports = {
     },
     "clear": {
         "cleared": "播放清单已清除！",
-        "notInVC": "加入语音频道后才能使用此指令！",
-        "noSong":"播放清单里没有歌曲!",
     },
     "loop": {
         "on": "循环模式开启！",
         "off": "循环模式关闭！",
-        "notInVC": "加入语音频道后才能使用此指令！",
-        "noSong":"播放清单里没有歌曲!",
     },
     "loop-queue": {
         "on": "清单循环模式开启！",
         "off": "清单循环模式关闭！",
-        "notInVC": "加入语音频道后才能使用此指令！",
-        "noSong":"播放清单里没有歌曲!",
     },
     "lyric": {
         "searching": ":mag: | 正在搜寻 ${keyword}...",
@@ -212,15 +206,9 @@ module.exports = {
         "npTitle": "**正在播放 ♪**",
         "requester": "请求者:",
         "musicFooter": "音乐系统",
-        "notInVC": "加入语音频道后才能使用此指令！",
-        "noSong":"播放清单里没有歌曲!",
-        "notPlayingMusic":"目前我没有播放任何歌曲!",
     },
     "pause": {
         "pause": "已暂停！",
-        "notInVC": "加入语音频道后才能使用此指令！",
-        "noSong":"播放清单里没有歌曲!",
-        "notPlayingMusic":"目前我没有播放任何歌曲!",
     },
     "play": {
         "notInVC": "加入语音频道后才能使用此指令！",
@@ -240,36 +228,24 @@ module.exports = {
     "queue": {
         "queueTitle": "播放清单",
         "queueBody": "**正在播放**\n[${serverQueue.songs[0].title}](${serverQueue.songs[0].url})\n\n**在清单中**\n${printQueue}\n${serverQueue.songs.length - 1} 首歌",
-        "notInVC": "加入语音频道后才能使用此指令！",
-        "noSong":"播放清单里没有歌曲!",
     },
     "related": {
         "relatedSearch": "🔍 | 正在搜寻相关歌曲...",
         "noResult": "我找不到任何搜寻结果！",
-        "notInVC": "加入语音频道后才能使用此指令！",
-        "noSong":"播放清单里没有歌曲!",
     },
     "remove": {
         "removed": "已移除 ${serverQueue.songs[queuenum].title}!",
         "invalidInt": "请输入有效的数字!",
-        "notInVC": "加入语音频道后才能使用此指令！",
-        "noSong":"播放清单里没有歌曲!",
     },
     "resume": {
         "playing": "我已经在播放了！",
         "resume": "继续播放！",
-        "notInVC": "加入语音频道后才能使用此指令！",
-        "noSong":"播放清单里没有歌曲!",
     },
     "skip": {
         "skipped": "已跳过歌曲",
-        "notInVC": "加入语音频道后才能使用此指令！",
-        "noSong":"播放清单里没有歌曲!",
     },
     "stop": {
         "stopped": "已停止播放",
-        "notInVC": "加入语音频道后才能使用此指令！",
-        "noSong":"播放清单里没有歌曲!",
     },
     "n": {
         "notNSFW": "这里不是NSFW频道!",

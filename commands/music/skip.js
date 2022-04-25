@@ -1,7 +1,7 @@
 const { success } = require('../../functions/Util.js');
 const { checkStats } = require('../../functions/musicFunctions');
-async function skip(command, language) {
-    const serverQueue = await checkStats(command, language);
+async function skip(command, language, languageStr) {
+    const serverQueue = await checkStats(command, languageStr);
     if (serverQueue === 'error') return;
 
     serverQueue.player.stop();
@@ -16,12 +16,12 @@ module.exports = {
         'zh_CN': '跳过歌曲',
         'zh_TW': '跳過歌曲',
     },
-    execute(message, _args, language) {
-        return skip(message, language);
+    execute(message, _args, language, languageStr) {
+        return skip(message, language, languageStr);
     },
     slashCommand: {
-        execute(interaction, language) {
-            return skip(interaction, language);
+        execute(interaction, language, languageStr) {
+            return skip(interaction, language, languageStr);
         },
     },
 };

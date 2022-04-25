@@ -1,7 +1,7 @@
 const { success } = require('../../functions/Util.js');
 const { checkStats } = require('../../functions/musicFunctions');
-async function stop(command, language) {
-    const serverQueue = await checkStats(command, language);
+async function stop(command, language, languageStr) {
+    const serverQueue = await checkStats(command, languageStr);
     if (serverQueue === 'error') return;
 
     serverQueue.songs = [];
@@ -16,12 +16,12 @@ module.exports = {
         'zh_CN': '停止播放歌曲',
         'zh_TW': '停止播放歌曲',
     },
-    async execute(message, _args, language) {
-        await stop(message, language);
+    async execute(message, _args, language, languageStr) {
+        await stop(message, language, languageStr);
     },
     slashCommand: {
-        async execute(interaction, language) {
-            await stop(interaction, language);
+        async execute(interaction, language, languageStr) {
+            await stop(interaction, language, languageStr);
         },
     },
 };

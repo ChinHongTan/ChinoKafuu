@@ -1,10 +1,11 @@
+const { getEditDistance } = require('../functions/eventFunctions');
+const prefix = process.env.PREFIX || require('../config/config.json').prefix;
+const owner_id = process.env.OWNERID || require('../config/config.json').owner_id;
+const Discord = require('discord.js');
+
 module.exports = {
     name: 'messageCreate',
     async execute(message, client) {
-        const { getEditDistance } = require('../functions/eventFunctions');
-        const prefix = process.env.PREFIX || require('../config/config.json').prefix;
-        const owner_id = process.env.OWNERID || require('../config/config.json').owner_id;
-        const Discord = require('discord.js');
         const collection = message.client.guildOptions;
         const rawData = collection ? await collection.findOne({ id: message?.guild?.id }) : undefined;
 

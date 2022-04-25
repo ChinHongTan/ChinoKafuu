@@ -237,18 +237,35 @@ module.exports = {
         return ret;
     },
     async checkStats(command, language, checkPlaying = false) {
+        const translate = {
+            'notInVC': {
+                'en_US': 'You have to join a voice channel before using this command!',
+                'zh_CN': '加入语音频道后才能使用此指令！',
+                'zh_TW': '加入语音频道后才能使用此指令！',
+            },
+            'noSong': {
+                'en_US': 'There is no song in the queue!',
+                'zh_CN': '播放清单里没有歌曲！',
+                'zh_TW': '播放清單裏沒有歌曲！',
+            },
+            'notPlayingMusic': {
+                'en_US': 'I\'m not playing any songs right now!',
+                'zh_CN': '目前我没有播放任何歌曲！',
+                'zh_TW': '目前我沒有播放任何歌曲！',
+            },
+        };
         const serverQueue = queue.get(command.guild.id);
 
         if (!command.member.voice.channel) {
-            await error(command, language.notInVC);
+            await error(command, translate[language].notInVC);
             return 'error';
         }
         if (!serverQueue) {
-            await error(command, language.noSong);
+            await error(command, translate[language].noSong);
             return 'error';
         }
         if (checkPlaying && !serverQueue.playing) {
-            await error(command, language.notPlayingMusic);
+            await error(command, translate[language].notPlayingMusic);
             return 'error';
         }
         return serverQueue;

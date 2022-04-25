@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { reply } = require('../functions/commandReply.js');
+const { reply } = require('../functions/Util.js');
 const Discord = require('discord.js');
 const owner_id = process.env.OWNERID || require('../config/config.json').owner_id;
 

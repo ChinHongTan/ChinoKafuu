@@ -187,20 +187,14 @@ module.exports = {
     },
     "clear": {
         "cleared": "Song queue cleared!",
-        "notInVC": "You have to join a voice channel before using this command!",
-        "noSong": "There is no song in the queue!",
     },
     "loop": {
         "on": "Loop mode on!",
         "off": "Loop mode off!",
-        "notInVC": "You have to join a voice channel before using this command!",
-        "noSong": "There is no song in the queue!",
     },
     "loop-queue": {
         "on": "Loop queue mode on!",
         "off": "Loop queue mode off!",
-        "notInVC": "You have to join a voice channel before using this command!",
-        "noSong": "There is no song in the queue!",
     },
     "lyric": {
         "searching": ":mag: | Searching lyrics for ${keyword}...",
@@ -214,15 +208,9 @@ module.exports = {
         "requester": "Requested by:",
         "musicFooter": "Music system",
         "pause": "Paused!",
-        "notInVC": "You have to join a voice channel before using this command!",
-        "noSong": "There is no song in the queue!",
-        "notPlayingMusic":"I'm not playing any songs right now!",
     },
     "pause": {
         "pause": "Paused!",
-        "notInVC": "You have to join a voice channel before using this command!",
-        "noSong": "There is no song in the queue!",
-        "notPlayingMusic":"I'm not playing any songs right now!",
     },
     "play": {
         "notInVC": "You have to join a voice channel before using this command!",
@@ -242,36 +230,24 @@ module.exports = {
     "queue": {
         "queueTitle": "Song Queue",
         "queueBody": "**Now playing**\n[${serverQueue.songs[0].title}](${serverQueue.songs[0].url})\n\n**Queued Songs**\n${printQueue}\n${serverQueue.songs.length - 1} songs in queue",
-        "notInVC": "You have to join a voice channel before using this command!",
-        "noSong": "There is no song in the queue!",
     },
     "related": {
         "relatedSearch": "🔍 | Searching for related tracks...",
         "noResult": "I could not obtain any search results.",
-        "notInVC": "You have to join a voice channel before using this command!",
-        "noSong": "There is no song in the queue!",
     },
     "remove": {
         "removed": "Removed ${serverQueue.songs[queuenum].title}!",
         "invalidInt": "You have to enter a valid integer!",
-        "notInVC": "You have to join a voice channel before using this command!",
-        "noSong": "There is no song in the queue!",
     },
     "resume": {
         "playing": "I'm already playing!",
         "resume": "Resumed!",
-        "notInVC": "You have to join a voice channel before using this command!",
-        "noSong": "There is no song in the queue!",
     },
     "skip": {
         "skipped": "Skipped the song.",
-        "notInVC": "You have to join a voice channel before using this command!",
-        "noSong": "There is no song in the queue!",
     },
     "stop": {
         "stopped": "Stopped playing songs.",
-        "notInVC": "You have to join a voice channel before using this command!",
-        "noSong": "There is no song in the queue!",
     },
     "n": {
         "notNSFW": "This is not a nsfw channel!",

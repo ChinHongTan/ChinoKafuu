@@ -187,20 +187,14 @@ module.exports = {
     },
     "clear": {
         "cleared": "播放清單已清除！",
-        "notInVC": "加入語音頻道後才能使用此指令！",
-        "noSong":"播放清單裏沒有歌曲!",
     },
     "loop": {
         "on": "循環模式開啟！",
         "off": "循環模式關閉！",
-        "notInVC": "加入語音頻道後才能使用此指令！",
-        "noSong":"播放清單裏沒有歌曲!",
     },
     "loop-queue": {
         "on": "清單循環模式開啟！",
         "off": "清單循環模式關閉！",
-        "notInVC": "加入語音頻道後才能使用此指令！",
-        "noSong":"播放清單裏沒有歌曲!",
     },
     "lyric": {
         "searching": ":mag: | 正在搜尋 ${keyword}...",
@@ -212,15 +206,9 @@ module.exports = {
         "npTitle": "**正在播放 ♪**",
         "requester": "請求者:",
         "musicFooter": "音樂系統",
-        "notInVC": "加入語音頻道後才能使用此指令！",
-        "noSong":"播放清單裏沒有歌曲!",
-        "notPlayingMusic":"目前我沒有播放任何歌曲!",
     },
     "pause": {
         "pause": "已暫停！",
-        "notInVC": "加入語音頻道後才能使用此指令！",
-        "noSong":"播放清單裏沒有歌曲!",
-        "notPlayingMusic":"目前我沒有播放任何歌曲!",
     },
     "play": {
         "notInVC": "加入語音頻道後才能使用此指令！",
@@ -240,40 +228,28 @@ module.exports = {
     "queue": {
         "queueTitle": "播放清單",
         "queueBody": "**正在播放**\n[${serverQueue.songs[0].title}](${serverQueue.songs[0].url})\n\n**在清單中**\n${printQueue}\n${serverQueue.songs.length - 1} 首歌",
-        "notInVC": "加入語音頻道後才能使用此指令！",
-        "noSong":"播放清單裏沒有歌曲!",
     },
     "related": {
         "relatedSearch": "🔍 | 正在搜尋相關歌曲...",
         "noResult": "我找不到任何搜尋結果！",
-        "notInVC": "加入語音頻道後才能使用此指令！",
-        "noSong":"播放清單裏沒有歌曲!",
     },
     "remove": {
         "removed": "已移除 ${serverQueue.songs[queuenum].title}!",
         "invalidInt": "請輸入有效的數字!",
-        "notInVC": "加入语音频道后才能使用此指令！",
-        "noSong":"播放清单里没有歌曲!",
     },
     "resume": {
         "playing": "我已經在播放了！",
         "resume": "繼續播放！",
-        "notInVC": "加入语音频道后才能使用此指令！",
-        "noSong":"播放清单里没有歌曲!",
     },
     "skip": {
         "skipped": "已跳過歌曲",
-        "notInVC": "加入语音频道后才能使用此指令！",
-        "noSong":"播放清单里没有歌曲!",
     },
     "stop": {
         "stopped": "已停止播放",
-        "notInVC": "加入语音频道后才能使用此指令！",
-        "noSong":"播放清单里没有歌曲!",
     },
     "n": {
-        "notNSFW": "這裏不是NSFW頻道!",
-        "noNum": "請輸入六位數本本號!",
+        "notNSFW": "這裏不是NSFW頻道！",
+        "noNum": "請輸入六位數本本號！",
     },
     "nhentai": {
         "invalidBookID": "本本號不存在！",
@@ -285,8 +261,8 @@ module.exports = {
         "channelChanged": "記錄頻道調整至 ${args[0]}！",
     },
     "cemoji": {
-        "noEmoji": "請告訴我要復製哪個表情!",
-        "addSuccess": "表情 \\`${emoji.name}\\` ${emoji} 已被加入到伺服器中!",
+        "noEmoji": "請告訴我要復製哪個表情！",
+        "addSuccess": "表情 \\`${emoji.name}\\` ${emoji} 已被加入到伺服器中！",
     },
     "edit-snipe": {
         "exceed10": "不能超過10！",
