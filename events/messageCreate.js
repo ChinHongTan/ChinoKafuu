@@ -18,8 +18,8 @@ module.exports = {
         if (message.author.bot) return;
         if (!message.content.startsWith(prefix)) return;
 
-        const args = { args: message.content.slice(prefix.length).trim().split(/\s+/) };
-        const commandName = args.args.shift().toLowerCase();
+        const args = message.content.slice(prefix.length).trim().split(/\s+/);
+        const commandName = args.shift().toLowerCase();
 
         // search for command
         const command = client.commands.get(commandName)
@@ -57,7 +57,7 @@ module.exports = {
             }
         }
 
-        if (command.args && !args.args.length) {
+        if (command.args && !args.length) {
             let reply = `You didn't provide any arguments, ${message.author}!`;
 
             if (command.usage) {
@@ -98,41 +98,6 @@ module.exports = {
             const language = client.language[guildOption.options.language][command.name];
             // language provides the translated string, while guildOption.options.language provides the language
             // the 4th param is not needed in most of the files
-            const commandProperties = { name: command.name };
-            if (command.subcommandGroups) {
-                commandProperties.subCommandGroups = command.subcommandGroups.reduce((previous, current) => {
-                    const subCommandGroupProperties = { name: current.name };
-                    if (current.subcommands) {
-                        subCommandGroupProperties.subCommands = current.subcommands.reduce((pre, cur) => {
-                            const subCommandProperties = { name: cur.name };
-                            if (cur.options) {
-                                subCommandProperties.options = cur.options.reduce((p, c) => {
-                                    return [...p, c.name];
-                                });
-                            }
-                            return [...pre, subCommandProperties];
-                        });
-                    }
-                    return [...previous, commandProperties];
-                }, []);
-            }
-            if (command.subcommands) {
-                commandProperties.subCommands = command.subcommands.reduce((pre, cur) => {
-                    const subCommandProperties = { name: cur.name };
-                    if (cur.options) {
-                        subCommandProperties.options = cur.options.reduce((p, c) => {
-                            return [...p, c.name];
-                        });
-                    }
-                    return [...pre, subCommandProperties];
-                });
-            }
-            if (command.options) {
-                commandProperties.options = command.options.reduce((p, c) => {
-                    return [...p, c.name];
-                });
-            }
-            args.commandProperties = commandProperties;
             await command.execute(message, args, language, guildOption.options.language);
         } catch (error) {
             console.error(error);
