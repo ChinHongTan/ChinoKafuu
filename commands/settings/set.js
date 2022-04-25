@@ -103,7 +103,12 @@ module.exports = {
         },
     ],
     async execute(message, args, language) {
-        await setLanguage(message, args, language);
+        switch (args[0]) {
+        case 'language':
+            return await setLanguage(message, [args[1]], language);
+        case 'logger_channel':
+            return await setChannel(message, [message.mentions.channels.first()], language);
+        }
     },
     slashCommand: {
         async execute(interaction, language) {
