@@ -46,7 +46,7 @@ for (const folder of commandFolders) {
     }
 }
 
-client.cooldowns = new Discord.Collection();
+client.coolDowns = new Discord.Collection();
 
 const eventFiles = fs.readdirSync('./events').filter((file) => file.endsWith('.js'));
 
