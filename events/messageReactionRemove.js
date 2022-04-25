@@ -1,5 +1,5 @@
 const { MessageEmbed } = require('discord.js');
-const { extension } = require('../functions/eventFunctions');
+const { extension } = require('../functions/Util.js');
 
 module.exports = {
     name: 'messageReactionRemove',
@@ -13,7 +13,7 @@ module.exports = {
         const fetchedMessages = await starChannel.messages.fetch({ limit: 100 });
         const stars = fetchedMessages.filter((m) => m.embeds.length !== 0).find(m => m?.embeds[0]?.footer?.text?.startsWith('⭐') && m?.embeds[0]?.footer?.text?.endsWith(message.id));
         if (stars) {
-            const star = /^⭐\s([0-9]{1,3})\s\|\s([0-9]{17,20})/.exec(stars.embeds[0].footer.text);
+            const star = /^⭐\s(\d{1,3})\s\|\s(\d{17,20})/.exec(stars.embeds[0].footer.text);
             const foundStar = stars.embeds[0];
             const image = message.attachments.size > 0 ? await extension(reaction, message.attachments.first().url) : '';
             const embed = new MessageEmbed()

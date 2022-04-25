@@ -1,4 +1,4 @@
-const { getEditDistance } = require('../functions/eventFunctions');
+const { getEditDistance } = require('../functions/Util.js');
 const prefix = process.env.PREFIX || require('../config/config.json').prefix;
 const owner_id = process.env.OWNERID || require('../config/config.json').owner_id;
 const Discord = require('discord.js');

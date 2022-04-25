@@ -12,8 +12,12 @@ import {
     InteractionReplyOptions,
     Message,
     MessageEmbed,
-    MessageOptions
+    MessageOptions, MessageReaction
 } from "discord.js";
+
+import Pixiv from "pixiv.ts";
+import * as fs from "fs";
+const refreshToken = process.env.PIXIV_REFRESH_TOKEN || require('../config/config.json').PixivRefreshToken;
 
 interface SlashCommand {
     execute(interaction, language): any;
@@ -225,4 +229,66 @@ export async function success(command: Message | CommandInteraction, response: s
 
 export async function info(command: Message | CommandInteraction, response: string | MessageOptions | InteractionReplyOptions) {
     return await reply(command, `ℹ | ${response}`, 'BLUE')
+}
+
+export async function updateIllust(query: string) {
+    const pixiv = await Pixiv.refreshLogin(refreshToken);
+    let illusts = await pixiv.search.illusts({ word: query, type: 'illust', bookmarks: '1000', search_target: 'partial_match_for_tags' });
+    if (pixiv.search.nextURL) illusts = await pixiv.util.multiCall({ next_url: pixiv.search.nextURL, illusts });
+
+    // filter out all r18 illusts
+    let clean_illusts = illusts.filter((illust) => {
+        return illust.x_restrict === 0 && illust.total_bookmarks >= 1000;
+    });
+    fs.writeFileSync('./data/illusts.json', JSON.stringify(clean_illusts));
+    return;
+}
+
+export async function extension(reaction: MessageReaction, attachment: string) {
+    const imageLink = attachment.split('.');
+    const typeOfImage = imageLink[imageLink.length - 1];
+    const image = /(jpg|jpeg|png|gif)/gi.test(typeOfImage);
+    if (!image) return '';
+    return attachment;
+}
+
+export function getEditDistance(a: string, b: string) {
+    if (a.length === 0) return b.length;
+    if (b.length === 0) return a.length;
+
+    const matrix = [];
+
+    // increment along the first column of each row
+    let i;
+    for (i = 0; i <= b.length; i++) {
+        matrix[i] = [i];
+    }
+
+    // increment each column in the first row
+    let j;
+    for (j = 0; j <= a.length; j++) {
+        matrix[0][j] = j;
+    }
+
+    // Fill in the rest of the matrix
+    for (i = 1; i <= b.length; i++) {
+        for (j = 1; j <= a.length; j++) {
+            if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                matrix[i][j] = matrix[i - 1][j - 1];
+            } else {
+                matrix[i][j] = Math.min(
+                    // substitution
+                    matrix[i - 1][j - 1] + 1,
+                    Math.min(
+                        matrix[i][j - 1] + 1,
+                        // insertion
+                        matrix[i - 1][j] + 1,
+                    ),
+                    // deletion
+                );
+            }
+        }
+    }
+
+    return matrix[b.length][a.length];
 }

@@ -6,7 +6,7 @@ const mongodbURI = process.env.MONGODB_URI || require('./config/config.json').mo
 
 const CronJob = require('cron').CronJob;
 const pixivRefreshToken = process.env.PIXIV_REFRESH_TOKEN || require('./config/config.json').PixivRefreshToken;
-const updateIllust = require('./functions/updateIllust.js');
+const { updateIllust } = require('./functions/Util.js');
 
 const en_US = require('./language/en_US.js');
 const zh_CN = require('./language/zh_CN.js');

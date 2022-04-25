@@ -1,7 +1,7 @@
 const { info } = require('../../functions/Util.js');
 const refreshToken = process.env.PIXIV_REFRESH_TOKEN || require('../../config/config.json').PixivRefreshToken;
 
-const updateIllust = require('../../functions/updateIllust');
+const { updateIllust } = require('../../functions/Util.js');
 async function update(command) {
     if (refreshToken) {
         await info(command, 'Updating pixiv illust list...');
