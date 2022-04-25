@@ -30,9 +30,12 @@ interface Description {
     'zh_TW': string,
 }
 
-interface SubcommandOptions {
+interface BaseCommand {
     name: string,
     description: Description,
+}
+
+interface SubcommandOptions extends BaseCommand {
     type: 'STRING' | 'INTEGER' | 'BOOLEAN' | 'NUMBER' | 'USER' | 'CHANNEL' | 'ROLE' | 'MENTIONABLE',
     required?: boolean,
     choices?: [name: string, value: string][],
@@ -41,32 +44,28 @@ interface SubcommandOptions {
     autocomplete?: boolean
 }
 
-interface Subcommand {
-    name: string,
-    description: Description,
+interface Subcommand extends BaseCommand {
     options?: SubcommandOptions[],
 }
 
-interface SubcommandGroup {
-    name: string,
-    description: Description,
+interface SubcommandGroup extends BaseCommand {
     subcommands: Subcommand[],
 }
 
-interface Command {
-    name: string,
+interface Command extends BaseCommand {
     coolDown: number,
     slashCommand: SlashCommand,
-    description: Description,
     subcommandGroups?: SubcommandGroup[],
     subcommands?: Subcommand[],
     options?: SubcommandOptions[],
 }
 
-type language = 'en_US' | 'zh_CN' | 'zh_TW';
+type Language = 'en_US' | 'zh_CN' | 'zh_TW';
+type CommandTypes = Message | CommandInteraction;
+type ResponseTypes = string | MessageOptions | InteractionReplyOptions;
 
 // process command objects
-export function processCommand(command: Command, language: language) {
+export function processCommand(command: Command, language: Language) {
     if (command.slashCommand) {
         const data = new SlashCommandBuilder();
         data.setName(command.name);
@@ -76,7 +75,7 @@ export function processCommand(command: Command, language: language) {
     }
 }
 
-function processOpt(commandBuilder: SlashCommandSubcommandBuilder | SlashCommandBuilder, opt: SubcommandOptions, language: language) {
+function processOpt(commandBuilder: SlashCommandSubcommandBuilder | SlashCommandBuilder, opt: SubcommandOptions, language: Language) {
     switch (opt.type) {
         case "STRING":
             const stringOptionBuilder = new SlashCommandStringOption()
@@ -142,7 +141,7 @@ function processOpt(commandBuilder: SlashCommandSubcommandBuilder | SlashCommand
     return;
 }
 
-function processData(data: SlashCommandBuilder, command: Command, language: language) {
+function processData(data: SlashCommandBuilder, command: Command, language: Language) {
     if (command.subcommandGroups) {
         command.subcommandGroups.forEach(group => {
             const subcommandGroupBuilder = new SlashCommandSubcommandGroupBuilder()
@@ -185,7 +184,7 @@ function isString(x: any): x is string {
 }
 
 // reply to a user command
-export async function reply(command: Message | CommandInteraction, response: string | MessageOptions | InteractionReplyOptions, color?: ColorResolvable) {
+export async function reply(command: CommandTypes, response: ResponseTypes, color?: ColorResolvable) {
     if (isString(response)) {
         if (command instanceof Message) {
             return command.reply({ embeds: [{ description: response, color: color }] });
@@ -204,7 +203,7 @@ export async function reply(command: Message | CommandInteraction, response: str
 }
 
 // edit a message or interaction
-export async function edit(command: Message | CommandInteraction, response?: MessageEmbed | string | MessageOptions | InteractionReplyOptions, color?: ColorResolvable) {
+export async function edit(command: CommandTypes, response?: ResponseTypes | MessageEmbed, color?: ColorResolvable) {
     if (command instanceof Message) {
         if (response instanceof MessageEmbed) return await command.edit({ embeds: [response], components: [], content: '\u200b' });
         else if (isString(response)) return await command.edit({ embeds: [{ description: response, color: color }], components: [], content: '\u200b' });
@@ -215,19 +214,19 @@ export async function edit(command: Message | CommandInteraction, response?: Mes
     return await command.editReply(response);
 }
 
-export async function error(command: Message | CommandInteraction, response: string | MessageOptions | InteractionReplyOptions) {
+export async function error(command: CommandTypes, response: ResponseTypes) {
     return await reply(command, `❌ | ${response}`, 'RED');
 }
 
-export async function warn(command: Message | CommandInteraction, response: string | MessageOptions | InteractionReplyOptions) {
+export async function warn(command: CommandTypes, response: ResponseTypes) {
     return await reply(command, `⚠ | ${response}`, 'YELLOW');
 }
 
-export async function success(command: Message | CommandInteraction, response: string | MessageOptions | InteractionReplyOptions) {
+export async function success(command: CommandTypes, response: ResponseTypes) {
     return await reply(command, `✅ | ${response}`, 'GREEN');
 }
 
-export async function info(command: Message | CommandInteraction, response: string | MessageOptions | InteractionReplyOptions) {
+export async function info(command: CommandTypes, response: ResponseTypes) {
     return await reply(command, `ℹ | ${response}`, 'BLUE')
 }
 
