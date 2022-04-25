@@ -1,4 +1,4 @@
-const { reply, error } = require('../../functions/Util.js');
+const { error, reply } = require('../../functions/Util.js');
 const { MessageEmbed } = require('discord.js');
 const Pixiv = require('pixiv.ts');
 const refreshToken = process.env.PIXIV_REFRESH_TOKEN || require('../../config/config.json').PixivRefreshToken;
@@ -93,7 +93,7 @@ async function pixivFunc(command, args, language) {
         illust = illusts[Math.floor(Math.random() * illusts.length)];
         break;
     default:
-        return error(command, language.unknownSubCmd);
+        return error(command, language.unknownSubcommand);
     }
     const illustEmbed = generateIllustDescriptionEmbed(illust);
     return reply(command, { embeds: illustEmbed });

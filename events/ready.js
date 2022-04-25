@@ -5,7 +5,7 @@ const clientId = process.env.CLIENT_ID || require('../config/config.json').clien
 const channelId = process.env.CHANNEL_ID || require('../config/config.json').channelId;
 const token = process.env.TOKEN || require('../config/config.json').token;
 const util = require('util');
-const Util = require('../functions/Util.js');
+const { processCommand } = require('../functions/Util.js');
 
 module.exports = {
     name: 'ready',
@@ -26,7 +26,7 @@ module.exports = {
 
         console.log('Ready!');
         client.user.setPresence({
-            activity: { name: 'c!help', type: 'LISTENING' },
+            activities: [{ name: 'c!help', type: 'LISTENING' }],
         });
         const rest = new REST({ version: '9' }).setToken(token);
 
@@ -52,7 +52,7 @@ module.exports = {
                 const commandFiles = fs.readdirSync(`./commands/${folder}`).filter((file) => file.endsWith('.js'));
                 for (const file of commandFiles) {
                     const command = require(`../commands/${folder}/${file}`);
-                    const data = Util.processCommand(command, language);
+                    const data = processCommand(command, language);
                     commands.push(data.toJSON());
                 }
             }
