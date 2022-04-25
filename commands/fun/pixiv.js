@@ -52,15 +52,16 @@ function generateIllustDescriptionEmbed(illust) {
 }
 
 // search pixiv for illusts
-async function pixivFunc(command, subcommand, language) {
+async function pixivFunc(command, args, language) {
     const pixiv = await Pixiv.default.refreshLogin(refreshToken);
     let illusts = [];
     let illust;
+    const subcommand = args[1];
     switch (subcommand) {
     case 'illust':
         try {
             illust = await pixiv.search.illusts({
-                illust_id: command.options.getInteger('illust_id'),
+                illust_id: command?.options?.getInteger('illust_id') ?? args[2],
             });
         } catch (err) {
             return error(command, language.noIllust);
@@ -69,7 +70,7 @@ async function pixivFunc(command, subcommand, language) {
     case 'author':
         try {
             illusts = await pixiv.user.illusts({
-                user_id: command.options.getInteger('author_id'),
+                user_id: command?.options?.getInteger('author_id') ?? args[2],
             });
         } catch (err) {
             return error(command, language.noUser);
@@ -78,19 +79,21 @@ async function pixivFunc(command, subcommand, language) {
         break;
     case 'query':
         illusts = await pixiv.search.illusts({
-            word: command.options.getString('query'),
+            word: command?.options?.getString('query') ?? args[2],
             r18: false,
-            bookmarks: command.options.getString('bookmarks') || '1000',
+            bookmarks: (command.options.getString('bookmarks') ?? args[3]) || '1000',
         });
         if (illusts.length === 0) return error(command, language.noResult);
-        if (pixiv.search.nextURL && command.options?.getInteger('pages') !== 1) {
+        if (pixiv.search.nextURL && (command?.options?.getInteger('pages') ?? parseInt(args[4], 10)) !== 1) {
             illusts = await pixiv.util.multiCall({
                 next_url: pixiv.search.nextURL, illusts,
             // minus 1 because we had already searched the first page
-            }, command.options.getInteger('pages') - 1 || 0);
+            }, (command.options.getInteger('pages') ?? parseInt(args[4])) - 1 || 0);
         }
         illust = illusts[Math.floor(Math.random() * illusts.length)];
         break;
+    default:
+        return error(command, language.unknownSubCmd);
     }
     const illustEmbed = generateIllustDescriptionEmbed(illust);
     return reply(command, { embeds: illustEmbed });
@@ -203,13 +206,13 @@ module.exports = {
     ],
     async execute(message, args, language) {
         if (!refreshToken) return error(message, language.noToken);
-        if (args[0] === 'search') return await pixivFunc(message, args[1], language);
+        if (args[0] === 'search') return await pixivFunc(message, args, language);
     },
     slashCommand: {
         async execute(interaction, language) {
             if (!refreshToken) return interaction.reply(language.noToken);
             await interaction.deferReply();
-            await pixivFunc(interaction, interaction.options.getSubcommand(), language);
+            await pixivFunc(interaction, [interaction.options.getSubcommandGroup(), interaction.options.getSubcommand()], language);
         },
         async autoComplete(interaction) {
             const pixiv = await Pixiv.default.refreshLogin(refreshToken);
