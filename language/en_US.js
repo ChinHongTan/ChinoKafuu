@@ -58,16 +58,17 @@ module.exports = {
         "win": "${round.name} had won the game!",
     },
     "loli": {
-        "noToken":"This command can't be used without pixiv refreshToken!",
+        "noToken": "This command can't be used without pixiv refreshToken!",
     },
     "pixiv": {
-        "noToken":"This command can't be used without pixiv refreshToken!",
-        "noIllust":"Illust doesn't exist!",
-        "noUser":"User doesn't exist!",
-        "noResult":"No result found!",
+        "noToken": "This command can't be used without pixiv refreshToken!",
+        "noIllust": "Illust doesn't exist!",
+        "noUser": "User doesn't exist!",
+        "noResult": "No result found!",
+        "unknownSubcommand": "Invalid subcommand used!",
     },
     "updateIllust": {
-        "noToken":"This command can't be used without pixiv refreshToken!",
+        "noToken": "This command can't be used without pixiv refreshToken!",
     },
     "yt-together": {
         "notInVC": "You have to join a voice channel before using this command!",
@@ -116,7 +117,7 @@ module.exports = {
         "cmdAliases": "**Aliases:**",
         "cmdDescription": "**Description:**",
         "cmdUsage": "**Usage:**",
-        "cmdCooldown": "**Cool down:**",
+        "cmdCoolDown": "**Cool down:**",
     },
     "invite": {
         "invite": "Invite me!",

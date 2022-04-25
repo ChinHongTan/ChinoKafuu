@@ -69,7 +69,7 @@ async function help(interaction, args, language) {
         .addField(language.cmdAliases, command?.aliases?.join(', ') || 'None', true)
         .addField(language.cmdDescription, language[command.name])
         .addField(language.cmdUsage, `${prefix}${command.name} ${command.usage || ''}`, true)
-        .addField(language.cmdCooldown, `${command.coolDown || 3}`, true);
+        .addField(language.cmdCoolDown, `${command.coolDown || 3}`, true);
     return interaction.reply({ split: true, embeds: [embed] });
 }
 module.exports = {

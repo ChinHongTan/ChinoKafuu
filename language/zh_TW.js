@@ -58,16 +58,17 @@ module.exports = {
         "win": "${round.name} 贏了!",
     },
     "loli": {
-        "noToken":"没有pixiv refreshToken不能使用這個指令！",
+        "noToken": "没有pixiv refreshToken不能使用這個指令！",
     },
     "pixiv": {
-        "noToken":"沒有pixiv refreshToken不能使用這個指令！",
-        "noIllust":"這個畫作不存在！",
-        "noUser":"這個用戶不存在！",
-        "noResult":"沒有找到結果！",
+        "noToken": "沒有pixiv refreshToken不能使用這個指令！",
+        "noIllust": "這個畫作不存在！",
+        "noUser": "這個用戶不存在！",
+        "noResult": "沒有找到結果！",
+        "unknownSubcommand": "無效的子指令！",
     },
     "updateIllust": {
-        "noToken":"沒有pixiv refreshToken不能使用這個指令！",
+        "noToken": "沒有pixiv refreshToken不能使用這個指令！",
     },
     "yt-together": {
         "notInVC": "加入語音頻道後才能使用此指令！",
@@ -116,7 +117,7 @@ module.exports = {
         "cmdAliases": "**別名:**",
         "cmdDescription": "**描述:**",
         "cmdUsage": "**用法:**",
-        "cmdCooldown": "**冷卻:**",
+        "cmdCoolDown": "**冷卻:**",
     },
     "invite": {
         "invite": "邀請我！",
