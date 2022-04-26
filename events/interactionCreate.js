@@ -36,7 +36,7 @@ module.exports = {
         }
         if (!interaction.isCommand()) return;
         if (command.ownerOnly) {
-            if (interaction.author.id !== owner_id) {
+            if (interaction.user.id !== owner_id) {
                 return reply(interaction, { content: 'This command is only available for the bot owner!', ephemeral: true });
             }
         }
