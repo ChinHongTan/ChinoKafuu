@@ -31,6 +31,20 @@ async function createHelpEmbed(interaction, language, folder, languageStr) {
     const commands = getCommands(folder);
     commands.forEach(command => {
         embed.addField(command.name ?? 'none', command.description?.[languageStr] ?? 'none', true);
+        if (command.subcommandGroups) {
+            command.subcommandGroups.forEach(subcommandGroup => {
+                subcommandGroup.subcommands.forEach(subcommand => {
+                    const name = `${command.name} ${subcommandGroup.name} ${subcommand.name}`;
+                    embed.addField(name ?? 'none', subcommand.description?.[languageStr] ?? 'none', true);
+                });
+            });
+        }
+        if (command.subcommands) {
+            command.subcommands.forEach(subcommand => {
+                const name = `${command.name} ${subcommand.name}`;
+                embed.addField(name ?? 'none', subcommand.description?.[languageStr] ?? 'none', true);
+            });
+        }
     });
     return embed;
 }
@@ -105,7 +119,7 @@ module.exports = {
             if (interaction.customId !== 'help') return;
             const row = createSelectMenu();
             const embed = await createHelpEmbed(interaction, language, interaction.values[0], languageStr);
-            interaction.update({ embeds: [embed], components: [row] });
+            return interaction.update({ embeds: [embed], components: [row] });
         },
     },
 };
