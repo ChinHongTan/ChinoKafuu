@@ -25,12 +25,14 @@ module.exports = {
         const language = client.language[guildOption.options.language][command.name];
 
         if (interaction.isAutocomplete()) {
-            await command.slashCommand.autoComplete(interaction);
+            if (interaction.responded) return;
+            return await command.slashCommand.autoComplete(interaction);
         }
         if (interaction.isSelectMenu()) {
+            if (interaction.replied) return;
             // language provides the translated string, while guildOption.options.language provides the language
             // the 3rd param is not needed in most of the files
-            await command.slashCommand.selectMenu(interaction, language, guildOption.options.language);
+            return await command.slashCommand.selectMenu(interaction, language, guildOption.options.language);
         }
         if (!interaction.isCommand()) return;
         if (command.ownerOnly) {
@@ -62,8 +64,8 @@ module.exports = {
         const timestamps = coolDowns.get(command.name);
         const coolDownAmount = (command.coolDown || 3) * 1000;
 
-        if (timestamps.has(interaction.author.id)) {
-            const expirationTime = timestamps.get(interaction.author.id) + coolDownAmount;
+        if (timestamps.has(interaction.user.id)) {
+            const expirationTime = timestamps.get(interaction.user.id) + coolDownAmount;
 
             if (now < expirationTime) {
                 const timeLeft = (expirationTime - now) / 1000;
