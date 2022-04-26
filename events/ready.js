@@ -1,5 +1,6 @@
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
+const { Collection } = require('discord.js');
 const fs = require('fs');
 const clientId = process.env.CLIENT_ID || require('../config/config.json').clientId;
 const channelId = process.env.CHANNEL_ID || require('../config/config.json').channelId;
@@ -32,6 +33,7 @@ module.exports = {
 
         const guilds = [];
         client.guilds.cache.each((guild) => guilds.push(guild.id));
+        client.guildCollection = new Collection();
 
         for (const id of guilds) {
             const collection = client.guildOptions;
@@ -45,6 +47,10 @@ module.exports = {
                 id,
                 options: { language: 'en_US' },
             };
+
+            // save guild options into a collection
+            client.guildCollection.set(id, guildOption.options);
+
             const language = guildOption.options.language;
             const commands = [];
             const commandFolders = fs.readdirSync('./commands');

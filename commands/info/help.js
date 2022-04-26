@@ -58,7 +58,7 @@ function sendHelp(interaction, language, embed, row) {
     return interaction.reply({ split: true, embeds: [embed], components: [row] });
 }
 
-async function help(interaction, args, language) {
+async function help(interaction, args, language, languageStr) {
     const { commands } = interaction.client;
     if (!args.length) {
         const embed = new MessageEmbed()
@@ -71,8 +71,8 @@ async function help(interaction, args, language) {
         return sendHelp(interaction, language, embed, row);
     }
 
-    const name = args[0].toLowerCase();
-    const command = commands.get(name) || commands.find((c) => c.aliases && c.aliases.includes(name));
+    const name = args[0].split(' ')[0].toLowerCase(); // only takes the command name
+    const command = commands.get(name) || commands.find((c) => c?.aliases?.includes(name));
 
     if (!command) return error(interaction, language.invalidCmd);
     const embed = new MessageEmbed()
@@ -81,9 +81,23 @@ async function help(interaction, args, language) {
         .setColor('BLUE')
         .addField(language.cmdName, command.name, true)
         .addField(language.cmdAliases, command?.aliases?.join(', ') || 'None', true)
-        .addField(language.cmdDescription, language[command.name])
+        .addField(language.cmdDescription, command.description?.[languageStr] ?? 'none')
         .addField(language.cmdUsage, `${prefix}${command.name} ${command.usage || ''}`, true)
         .addField(language.cmdCoolDown, `${command.coolDown || 3}`, true);
+    if (command.subcommandGroups) {
+        command.subcommandGroups.forEach(subcommandGroup => {
+            subcommandGroup.subcommands.forEach(subcommand => {
+                const subcommandName = `${command.name} ${subcommandGroup.name} ${subcommand.name}`;
+                embed.addField(subcommandName ?? 'none', subcommand.description?.[languageStr] ?? 'none');
+            });
+        });
+    }
+    if (command.subcommands) {
+        command.subcommands.forEach(subcommand => {
+            const subcommandName = `${command.name} ${subcommand.name}`;
+            embed.addField(subcommandName ?? 'none', subcommand.description?.[languageStr] ?? 'none');
+        });
+    }
     return interaction.reply({ split: true, embeds: [embed] });
 }
 module.exports = {
@@ -108,16 +122,19 @@ module.exports = {
     usage: '[command name]',
     coolDown: 5,
     execute(message, args, language) {
-        return help(message, args, language);
+        const languageStr = message.client.guildCollection.get(message.guild.id).language;
+        return help(message, args, language, languageStr);
     },
     slashCommand: {
         execute(interaction, language) {
             const optionContent = interaction.options.getString('command');
-            return help(interaction, optionContent ? [optionContent] : [], language);
+            const languageStr = interaction.client.guildCollection.get(interaction.guild.id).language;
+            return help(interaction, optionContent ? [optionContent] : [], language, languageStr);
         },
-        async selectMenu(interaction, language, languageStr) {
+        async selectMenu(interaction, language) {
             if (interaction.customId !== 'help') return;
             const row = createSelectMenu();
+            const languageStr = interaction.client.guildCollection.get(interaction.guild.id).language;
             const embed = await createHelpEmbed(interaction, language, interaction.values[0], languageStr);
             return interaction.update({ embeds: [embed], components: [row] });
         },
