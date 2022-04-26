@@ -4,8 +4,8 @@ const { handleVideo, checkStats } = require('../../functions/musicFunctions');
 const ytdl = require('ytdl-core');
 const scdl = require('soundcloud-downloader').default;
 
-async function related(command, language, languageStr) {
-    const serverQueue = await checkStats(command, languageStr);
+async function related(command, language) {
+    const serverQueue = await checkStats(command);
     if (serverQueue === 'error') return;
 
     const { voiceChannel } = serverQueue;
@@ -100,12 +100,12 @@ module.exports = {
         'zh_CN': '播放相关歌曲',
         'zh_TW': '播放相關歌曲',
     },
-    async execute(message, _args, language, languageStr) {
-        await related(message, language, languageStr);
+    async execute(message, _args, language) {
+        await related(message, language);
     },
     slashCommand: {
-        async execute(interaction, language, languageStr) {
-            await related(interaction, language, languageStr);
+        async execute(interaction, language) {
+            await related(interaction, language);
         },
     },
 };

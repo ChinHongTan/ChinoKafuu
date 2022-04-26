@@ -1,7 +1,7 @@
 const { success } = require('../../functions/Util.js');
 const { checkStats } = require('../../functions/musicFunctions');
-async function loopQueue(command, language, languageStr) {
-    const serverQueue = await checkStats(command, languageStr);
+async function loopQueue(command, language) {
+    const serverQueue = await checkStats(command);
     if (serverQueue === 'error') return;
 
     if (serverQueue) {
@@ -19,12 +19,12 @@ module.exports = {
         'zh_CN': '循环播放歌曲清单',
         'zh_TW': '循環播放歌曲清單',
     },
-    execute(message, _args, language, languageStr) {
-        return loopQueue(message, language, languageStr);
+    execute(message, _args, language) {
+        return loopQueue(message, language);
     },
     slashCommand: {
-        execute(interaction, language, languageStr) {
-            return loopQueue(interaction, language, languageStr);
+        execute(interaction, language) {
+            return loopQueue(interaction, language);
         },
     },
 };

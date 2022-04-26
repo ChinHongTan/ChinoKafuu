@@ -13,8 +13,8 @@ function arrayChunks(array, chunkSize) {
     return resultArray;
 }
 
-async function queueFunc(command, language, languageStr) {
-    const serverQueue = await checkStats(command, languageStr);
+async function queueFunc(command, language) {
+    const serverQueue = await checkStats(command);
     if (serverQueue === 'error') return;
 
     /**
@@ -59,12 +59,12 @@ module.exports = {
         'zh_CN': '查询目前的播放清单',
         'zh_TW': '查詢目前的播放清單',
     },
-    async execute(message, _args, language, languageStr) {
-        await queueFunc(message, language, languageStr);
+    async execute(message, _args, language) {
+        await queueFunc(message, language);
     },
     slashCommand: {
-        async execute(interaction, language, languageStr) {
-            await queueFunc(interaction, language, languageStr);
+        async execute(interaction, language) {
+            await queueFunc(interaction, language);
         },
     },
 };

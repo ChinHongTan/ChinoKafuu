@@ -2,8 +2,8 @@ const { reply } = require('../../functions/Util.js');
 const { format, checkStats } = require('../../functions/musicFunctions');
 const { MessageEmbed } = require('discord.js');
 const progressbar = require('string-progressbar');
-async function nowPlaying(command, language, languageStr) {
-    const serverQueue = await checkStats(command, languageStr, true);
+async function nowPlaying(command, language) {
+    const serverQueue = await checkStats(command, true);
     if (serverQueue === 'error') return;
     const resource = serverQueue?.resource;
 
@@ -29,8 +29,8 @@ module.exports = {
         'zh_CN': '查看目前正在播放的歌曲',
         'zh_TW': '查看目前正在播放的歌曲',
     },
-    execute(message, _args, language, languageStr) {
-        return nowPlaying(message, language, languageStr);
+    execute(message, _args, language) {
+        return nowPlaying(message, language);
     },
     slashCommand: {
         execute(interaction, language, languageStr) {

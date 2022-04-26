@@ -1,7 +1,7 @@
 const { success, error } = require('../../functions/Util.js');
 const { checkStats } = require('../../functions/musicFunctions');
-async function remove(command, args, language, languageStr) {
-    const serverQueue = await checkStats(command, languageStr);
+async function remove(command, args, language) {
+    const serverQueue = await checkStats(command);
     if (serverQueue === 'error') return;
 
     if (serverQueue) {
@@ -37,12 +37,12 @@ module.exports = {
             required: true,
         },
     ],
-    execute(message, args, language, languageStr) {
-        return remove(message, args, language, languageStr);
+    execute(message, args, language) {
+        return remove(message, args, language);
     },
     slashCommand: {
-        execute(interaction, language, languageStr) {
-            return remove(interaction, [interaction.options.getInteger('index')], language, languageStr);
+        execute(interaction, language) {
+            return remove(interaction, [interaction.options.getInteger('index')], language);
         },
     },
 };

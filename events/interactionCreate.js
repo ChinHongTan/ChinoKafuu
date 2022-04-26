@@ -1,4 +1,3 @@
-const fs = require('fs');
 const { reply } = require('../functions/Util.js');
 const Discord = require('discord.js');
 const owner_id = process.env.OWNERID || require('../config/config.json').owner_id;
@@ -9,20 +8,8 @@ module.exports = {
         // select menus does not contain command name, so customId is used
         // customId should be same as the name of the command
         const command = client.commands.get(interaction.commandName) ?? client.commands.get(interaction.customId);
-        const collection = interaction.client.guildOptions;
-        let rawData;
-        if (collection) {
-            rawData = await collection.findOne({ id: interaction?.guild?.id });
-        } else {
-            const buffer = fs.readFileSync('./data/guildOption.json', 'utf-8');
-            const parsedJSON = JSON.parse(buffer);
-            rawData = parsedJSON[interaction?.guild?.id];
-        }
-        const guildOption = rawData ?? {
-            id: interaction?.guild?.id,
-            options: { language: 'en_US' },
-        };
-        const language = client.language[guildOption.options.language][command.name];
+        const guildOption = client.guildCollection.get(interaction?.guild.id);
+        const language = client.language[guildOption.options.language ?? 'en_US'][command.name];
 
         if (interaction.isAutocomplete()) {
             if (interaction.responded) return;
@@ -30,9 +17,7 @@ module.exports = {
         }
         if (interaction.isSelectMenu()) {
             if (interaction.replied) return;
-            // language provides the translated string, while guildOption.options.language provides the language
-            // the 3rd param is not needed in most of the files
-            return await command.slashCommand.selectMenu(interaction, language, guildOption.options.language);
+            return await command.slashCommand.selectMenu(interaction, language);
         }
         if (!interaction.isCommand()) return;
         if (command.ownerOnly) {
@@ -77,8 +62,7 @@ module.exports = {
         }
 
         try {
-            // language provides the translated string, while guildOption.options.language provides the language
-            await command.slashCommand.execute(interaction, language, guildOption.options.language);
+            await command.slashCommand.execute(interaction, language);
         } catch (error) {
             console.error(error);
             await reply(interaction, { content: 'There was an error while executing this command!', ephemeral: true });

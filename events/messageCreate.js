@@ -6,14 +6,8 @@ const Discord = require('discord.js');
 module.exports = {
     name: 'messageCreate',
     async execute(message, client) {
-        const collection = message.client.guildOptions;
-        const rawData = collection ? await collection.findOne({ id: message?.guild?.id }) : undefined;
-
-        // set the default language to English
-        const guildOption = rawData ?? {
-            id: message?.guild?.id,
-            options: { language: 'en_US' },
-        };
+        // get options
+        const guildOption = client.guildCollection.get(message.guild.id);
 
         if (message.author.bot) return;
         if (!message.content.startsWith(prefix)) return;
@@ -95,10 +89,9 @@ module.exports = {
         }
 
         try {
-            const language = client.language[guildOption.options.language][command.name];
-            // language provides the translated string, while guildOption.options.language provides the language
-            // the 4th param is not needed in most of the files
-            await command.execute(message, args, language, guildOption.options.language);
+            // set the default language to English
+            const language = client.language[guildOption?.options.language ?? 'en_US'][command.name];
+            await command.execute(message, args, language);
         } catch (error) {
             console.error(error);
             message.reply('There was an error trying to execute that command!');

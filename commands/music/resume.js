@@ -1,7 +1,7 @@
 const { error, success } = require('../../functions/Util.js');
 const { checkStats } = require('../../functions/musicFunctions');
-async function resume(command, language, languageStr) {
-    const serverQueue = await checkStats(command, languageStr);
+async function resume(command, language) {
+    const serverQueue = await checkStats(command);
     if (serverQueue === 'error') return;
 
     if (serverQueue) {
@@ -19,12 +19,12 @@ module.exports = {
         'zh_CN': '继续播放歌曲！',
         'zh_TW': '繼續播放歌曲！',
     },
-    execute(message, _args, language, languageStr) {
-        return resume(message, language, languageStr);
+    execute(message, _args, language) {
+        return resume(message, language);
     },
     slashCommand: {
-        execute(interaction, language, languageStr) {
-            return resume(interaction, language, languageStr);
+        execute(interaction, language) {
+            return resume(interaction, language);
         },
     },
 };
