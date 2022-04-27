@@ -147,7 +147,7 @@ module.exports = {
                         {
                             name: 'author_id',
                             description: {
-                                'en_us': 'ID of the author',
+                                'en_US': 'ID of the author',
                                 'zh_CN': '绘师ID',
                                 'zh_TW': '繪師ID',
                             },

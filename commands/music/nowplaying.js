@@ -25,7 +25,7 @@ module.exports = {
     guildOnly: true,
     aliases: ['np'],
     description: {
-        'en_US': 'Get the song currently being played.',
+        'en_US': 'View currently played song.',
         'zh_CN': '查看目前正在播放的歌曲',
         'zh_TW': '查看目前正在播放的歌曲',
     },

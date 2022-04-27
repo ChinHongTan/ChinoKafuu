@@ -1,24 +1,10 @@
-const { reply, error } = require('../../functions/Util.js');
+const { reply, error, getSnipes } = require('../../functions/Util.js');
 const { MessageEmbed } = require('discord.js');
-const fs = require('fs');
 
 async function snipe(command, args, language) {
-    const collection = command.client.snipeCollection;
-
-    let snipeWithGuild;
-    if (collection) {
-        snipeWithGuild = await collection.findOne({ id: command.guild.id });
-    } else {
-        const rawData = fs.readFileSync('./data/snipes.json', 'utf-8');
-        snipeWithGuild = JSON.parse(rawData);
-    }
-    let snipes;
-
-    if (snipeWithGuild) {
-        snipes = snipeWithGuild.snipes;
-    } else {
-        return error(command, language.noSnipe);
-    }
+    const snipeWithGuild = await getSnipes(command.client, command.guild.id);
+    if (!snipeWithGuild) return error(command, language.noSnipe);
+    const snipes = snipeWithGuild.snipes;
     const arg = args[0] ?? 1;
 
     if (Number(arg) > 10) return error(command, language.exceed10);

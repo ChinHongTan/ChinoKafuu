@@ -1,21 +1,12 @@
-const fs = require('fs');
 const { MessageEmbed } = require('discord.js');
+const { saveSnipes, getSnipes, getGuildOption } = require('../functions/Util');
 
 module.exports = {
     name: 'messageDelete',
     async execute(message) {
         // can't fetch anything
         if (message.partial) return;
-        const collection = message.client.snipeCollection;
-        let rawData;
-        if (collection) {
-            rawData = await collection.findOne({ id: message.guild.id });
-        } else {
-            const buffer = fs.readFileSync('./data/snipes.json', 'utf-8');
-            const parsedJSON = JSON.parse(buffer);
-            rawData = parsedJSON[message.guild.id];
-        }
-        const snipeWithGuild = rawData ?? { id: message.guild.id };
+        const snipeWithGuild = await getSnipes(message.client, message.guild.id);
         if (message.author.bot) return;
         if (!message.guild) return;
 
@@ -33,15 +24,8 @@ module.exports = {
         snipes.unshift(snipe);
         if (snipes.length > 10) snipes.pop();
         snipeWithGuild.snipes = snipes;
-        if (collection) {
-            const query = { id: message.guild.id };
-            const options = { upsert: true };
-            await collection.replaceOne(query, snipeWithGuild, options);
-        } else {
-            fs.writeFileSync('./data/snipes.json', JSON.stringify(snipeWithGuild));
-        }
+        await saveSnipes(message.client, snipeWithGuild, message.guild.id);
 
-        const optionCollection = message.client.guildOptions;
         const logEmbed = new MessageEmbed()
             .setTitle('**Message deleted**')
             .setDescription('A message was deleted.')
@@ -63,13 +47,9 @@ module.exports = {
                 },
             ]);
 
-        let guildOption;
-        if (optionCollection) {
-            guildOption = await optionCollection.findOne({ id: message.guild.id });
-        } else {
-            const guildCollection = JSON.parse(fs.readFileSync('./data/guildOption.json', 'utf-8'));
-            guildOption = guildCollection[message.guild.id];
-        }
+        const guildOption = await getGuildOption(message.client, message.guild.id);
+        const logChannelId = guildOption.options.channel;
+        if (!logChannelId) return; // log channel not set
         const logChannel = await message.guild.channels.fetch(guildOption.options.channel);
         if (!logChannel) return;
         return logChannel.send({ embeds: [logEmbed] });

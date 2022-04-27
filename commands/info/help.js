@@ -122,19 +122,19 @@ module.exports = {
     usage: '[command name]',
     coolDown: 5,
     execute(message, args, language) {
-        const languageStr = message.client.guildCollection.get(message.guild.id).language;
+        const languageStr = message.client.guildCollection.get(message.guild.id).options.language;
         return help(message, args, language, languageStr);
     },
     slashCommand: {
         execute(interaction, language) {
             const optionContent = interaction.options.getString('command');
-            const languageStr = interaction.client.guildCollection.get(interaction.guild.id).language;
+            const languageStr = interaction.client.guildCollection.get(interaction.guild.id).options.language;
             return help(interaction, optionContent ? [optionContent] : [], language, languageStr);
         },
         async selectMenu(interaction, language) {
             if (interaction.customId !== 'help') return;
             const row = createSelectMenu();
-            const languageStr = interaction.client.guildCollection.get(interaction.guild.id).language;
+            const languageStr = interaction.client.guildCollection.get(interaction.guild.id).options.language;
             const embed = await createHelpEmbed(interaction, language, interaction.values[0], languageStr);
             return interaction.update({ embeds: [embed], components: [row] });
         },

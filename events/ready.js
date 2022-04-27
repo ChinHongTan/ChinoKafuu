@@ -6,7 +6,7 @@ const clientId = process.env.CLIENT_ID || require('../config/config.json').clien
 const channelId = process.env.CHANNEL_ID || require('../config/config.json').channelId;
 const token = process.env.TOKEN || require('../config/config.json').token;
 const util = require('util');
-const { processCommand } = require('../functions/Util.js');
+const { processCommand, getGuildOption, saveGuildOption } = require('../functions/Util.js');
 
 module.exports = {
     name: 'ready',
@@ -36,21 +36,12 @@ module.exports = {
         client.guildCollection = new Collection();
 
         for (const id of guilds) {
-            const collection = client.guildOptions;
-            let rawData;
-            if (collection) {rawData = await collection.findOne({ id });} else {
-                const buffer = fs.readFileSync('./data/guildOption.json', 'utf-8');
-                const parsedJSON = JSON.parse(buffer);
-                rawData = parsedJSON[id];
-            }
-            const guildOption = rawData ?? {
-                id,
-                options: { language: 'en_US' },
-            };
+            const guildOption = await getGuildOption(client, id);
 
             // save guild options into a collection
-            client.guildCollection.set(id, guildOption.options);
+            client.guildCollection.set(id, guildOption);
 
+            await saveGuildOption(client, id);
             const language = guildOption.options.language;
             const commands = [];
             const commandFolders = fs.readdirSync('./commands');

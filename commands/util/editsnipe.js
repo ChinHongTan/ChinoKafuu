@@ -1,32 +1,21 @@
-const { error, reply } = require('../../functions/Util.js');
+const { error, reply, getEditSnipes } = require('../../functions/Util.js');
 const { MessageEmbed } = require('discord.js');
-const fs = require('fs');
 
 async function editSnipe(command, args, language) {
-    const collection = command.client.editSnipeCollection;
-
-    let editSnipesWithGuild;
-    if (collection) {
-        editSnipesWithGuild = await collection.findOne({ id: command.guild.id });
-    } else {
-        const rawData = fs.readFileSync('./data/editSnipes.json', 'utf-8');
-        editSnipesWithGuild = JSON.parse(rawData);
-    }
+    const editSnipesWithGuild = await getEditSnipes(command.client, command.guild.id);
     const arg = args[0] ?? 1;
+    if (!editSnipesWithGuild) return error(command, language.noSnipe);
 
-    if (editSnipesWithGuild) {
-        const editsnipes = editSnipesWithGuild.editSnipe;
-        if (Number(arg) > 10) return error(command, language.exceed10);
-        const msg = editsnipes?.[Number(arg) - 1];
-        if (!msg) return error(command, language.invalidSnipe);
-        const embed = new MessageEmbed()
-            .setColor('RANDOM')
-            .setAuthor({ name: msg.author, iconURL: msg.authorAvatar })
-            .setDescription(msg.content)
-            .setTimestamp(msg.timestamp);
-        return reply(command, { embeds: [embed] });
-    }
-    return error(command, language.noSnipe);
+    const editSnipes = editSnipesWithGuild.editSnipe;
+    if (Number(arg) > 10) return error(command, language.exceed10);
+    const msg = editSnipes?.[Number(arg) - 1];
+    if (!msg) return error(command, language.invalidSnipe);
+    const embed = new MessageEmbed()
+        .setColor('RANDOM')
+        .setAuthor({ name: msg.author, iconURL: msg.authorAvatar })
+        .setDescription(msg.content)
+        .setTimestamp(msg.timestamp);
+    return reply(command, { embeds: [embed] });
 }
 module.exports = {
     name: 'edit-snipe',

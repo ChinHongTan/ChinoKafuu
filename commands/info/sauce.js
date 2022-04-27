@@ -128,7 +128,7 @@ module.exports = {
         {
             name: 'url',
             description: {
-                'en_US': 'URL of image you want to search for, , will search the last attachment uploaded in the channel if no url was given',
+                'en_US': 'URL of image, will search the last attachment uploaded in the channel if no url was given',
                 'zh_CN': '要查询的图片的网址，如果没有提供网址将会搜索最后在频道里上传的图片',
                 'zh_TW': '要查詢的圖片的網址，如果沒有提供網址將會搜索最後在頻道里上傳的圖片',
             },

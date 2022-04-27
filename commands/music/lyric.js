@@ -91,7 +91,7 @@ module.exports = {
         {
             name: 'keyword',
             description: {
-                'en_US': 'Song title to search for lyrics, will search for the lyrics of the currently played song if no args was given.',
+                'en_US': 'Song title, will use the title of the currently played song if no title given.',
                 'zh_CN': '要搜索歌词的歌名，如果没有提供歌名将会搜索目前正在播放的歌曲的歌词',
                 'zh_TW': '要搜索歌詞的歌名，如果沒有提供歌名將會搜索目前正在播放的歌曲的歌詞',
             },

@@ -7,20 +7,25 @@ import {
 } from "@discordjs/builders";
 
 import {
+    Client,
+    Collection,
     ColorResolvable,
     CommandInteraction,
     InteractionReplyOptions,
     Message,
     MessageEmbed,
-    MessageOptions, MessageReaction
+    MessageOptions,
+    MessageReaction, Snowflake
 } from "discord.js";
 
 import Pixiv from "pixiv.ts";
 import * as fs from "fs";
+import { Collection as DB } from "mongodb";
+
 const refreshToken = process.env.PIXIV_REFRESH_TOKEN || require('../config/config.json').PixivRefreshToken;
 
 interface SlashCommand {
-    execute(interaction, language): any;
+    execute(interaction, language): Promise<any>;
     autoComplete?(interaction): Promise<void>,
 }
 
@@ -52,12 +57,27 @@ interface SubcommandGroup extends BaseCommand {
     subcommands: Subcommand[],
 }
 
+interface Translation {
+    [message: string]: [translation: string],
+}
+
 interface Command extends BaseCommand {
     coolDown: number,
     slashCommand: SlashCommand,
     subcommandGroups?: SubcommandGroup[],
     subcommands?: Subcommand[],
     options?: SubcommandOptions[],
+    execute(message: Message, args: string[], language: Translation),
+}
+
+interface CustomClient extends Client {
+    commands: Collection<string, Command>,
+    language: { [commandName: string]: Translation },
+    coolDowns: Collection<string, Collection<Snowflake, number>>
+    snipeCollection: DB,
+    editSnipeCollection: DB,
+    guildOptions: DB,
+    guildCollection: Collection<Snowflake, { id: Snowflake, options: { language?: Language, channel?: Snowflake } }>
 }
 
 type Language = 'en_US' | 'zh_CN' | 'zh_TW';
@@ -290,4 +310,87 @@ export function getEditDistance(a: string, b: string) {
     }
 
     return matrix[b.length][a.length];
+}
+
+async function getCollections(client, type, id) {
+    let rawData, collection, defaultData;
+    const path = `./data/${type}.json`;
+    switch (type) {
+        case "guildOptions":
+            collection = client.guildOptions;
+            defaultData = {
+                id,
+                options: {language: 'en_US'},
+            };
+            break;
+        case "editSnipes":
+            collection = client.editSnipeCollection;
+            defaultData = { id };
+            break;
+        case "snipes":
+            collection = client.snipeCollection;
+            defaultData = { id };
+            break;
+    }
+    if (collection) {
+        rawData = await collection.findOne({ id });
+    } else {
+        const buffer = fs.readFileSync(path, 'utf-8');
+        const parsedJSON = JSON.parse(buffer);
+        rawData = parsedJSON[id];
+    }
+    return rawData ?? defaultData;
+}
+
+// get guild option from database or local json file, generate one if none found
+export async function getGuildOption(client: CustomClient, id: Snowflake) {
+    return await getCollections(client, "guildOptions", id);
+}
+
+export async function getEditSnipes(client: CustomClient, id: Snowflake) {
+    return await getCollections(client, "editSnipes", id);
+}
+
+export async function getSnipes(client: CustomClient, id: Snowflake) {
+    return await getCollections(client, "snipes", id);
+}
+
+async function saveCollections(client, targetCollection, type, id) {
+    let collection;
+    switch (type) {
+        case "guildOptions":
+            collection = client.guildOptions;
+            break;
+        case "editSnipes":
+            collection = client.editSnipeCollection;
+            break;
+        case "snipes":
+            collection = client.snipeCollection;
+            break;
+    }
+    if (collection) {
+        const query = { id };
+        const options = { upsert: true };
+        return collection.replaceOne(query, targetCollection, options); // save in mongodb
+    } else {
+        const rawData = fs.readFileSync(`./data/${type}.json`, 'utf-8');
+        const guildCollection = JSON.parse(rawData);
+        guildCollection[id] = targetCollection;
+
+        return fs.writeFileSync(`./data/${type}.json`, JSON.stringify(targetCollection)); // save in json
+    }
+}
+
+// save guild options to database, or local json file
+export async function saveGuildOption(client: CustomClient, id: Snowflake) {
+    const guildOption = client.guildCollection.get(id); // guild options
+    return await saveCollections(client, guildOption, "guildOptions", id);
+}
+
+export async function saveEditSnipes(client: CustomClient, editSnipeWithGuild, id: Snowflake) {
+    return await saveCollections(client, editSnipeWithGuild, "editSnipes", id);
+}
+
+export async function saveSnipes(client: CustomClient, snipeWithGuild, id: Snowflake) {
+    return await saveCollections(client, snipeWithGuild, "snipes", id);
 }

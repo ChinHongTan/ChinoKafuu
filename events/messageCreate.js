@@ -83,10 +83,10 @@ module.exports = {
                 const timeLeft = (expirationTime - now) / 1000;
                 return message.reply(`please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${command.name}\` command.`);
             }
-
-            timestamps.set(message.author.id, now);
-            setTimeout(() => timestamps.delete(message.author.id), coolDownAmount);
         }
+
+        timestamps.set(message.author.id, now);
+        setTimeout(() => timestamps.delete(message.author.id), coolDownAmount);
 
         try {
             // set the default language to English
