@@ -314,13 +314,12 @@ export function getEditDistance(a: string, b: string) {
 
 async function getCollections(client, type, id) {
     let rawData, collection, defaultData;
-    const path = `./data/${type}.json`;
     switch (type) {
         case "guildOptions":
             collection = client.guildOptions;
             defaultData = {
                 id,
-                options: {language: 'en_US'},
+                options: { language: 'en_US' },
             };
             break;
         case "editSnipes":
@@ -335,7 +334,7 @@ async function getCollections(client, type, id) {
     if (collection) {
         rawData = await collection.findOne({ id });
     } else {
-        const buffer = fs.readFileSync(path, 'utf-8');
+        const buffer = fs.readFileSync(`./data/${type}.json`, 'utf-8');
         const parsedJSON = JSON.parse(buffer);
         rawData = parsedJSON[id];
     }
