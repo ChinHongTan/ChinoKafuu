@@ -1,5 +1,5 @@
 <h1 align="center">
-  <a href="https://github.com/ChinHongTan/ChinoKafuu"><img src="https://media.discordapp.net/attachments/761941062842449944/869577832412631060/71102294_p0.png" avtar_c_icon"></a>
+  <a href="https://github.com/ChinHongTan/ChinoKafuu"><img src="https://media.discordapp.net/attachments/761941062842449944/869577832412631060/71102294_p0.png" alt="banner"></a>
   <br>
   ChinoKafuu
   <br>
@@ -8,7 +8,7 @@
 
 A nice little discord bot I make to learn JavaScript and how bots works XD
 
-The bot is not quite done yet but I will keep on updating!
+The bot is not quite done yet, but I will keep on updating!
 
 And yes, Chino is the best girl in the world!
 
@@ -71,7 +71,7 @@ You can get a token by [registering an account](https://saucenao.com/user.php) a
 - genius_token: Needed to search for a song's lyrics.[How do I get it?](https://genius.com/developers)
 - mongodb: uri to connect to the database. This bot uses MongoDB: [Getting started](https://www.mongodb.com/docs/manual/tutorial/getting-started/)
 - SpotifyClientID & SpotifyClientSecret: Needed to get songs from Spotify. [How do I get it?](https://developer.spotify.com/documentation/general/guides/authorization/app-settings/)
-- PixivRefreshToken: Needed to login pixiv. [How do I get it?](https://gist.github.com/ZipFile/c9ebedb224406f4f11845ab700124362)
+- PixivRefreshToken: Needed to log in pixiv. [How do I get it?](https://gist.github.com/ZipFile/c9ebedb224406f4f11845ab700124362)
 
 Note that only `prefix`, `clientId`, `token` and `owner_id` are needed to get the bot online.
 The others are just optional features.
@@ -81,59 +81,7 @@ To start the bot:
 npm start
 ```
 
-## Features
-
 **prefix: `c!`**
 
-Use `c!help` for detailed usage!
-
--   ### Music Commands
-
-    -   play [text / link] -> plays songs from youtube based on text queries/link
-    -   queue -> displays the current song queue
-    -   skip-> skips the current playing song
-    -   stop -> stops playing songs and leaves the channel
-    -   search [text] -> searches youtube based on text queries
-    -   remove [number] -> removes a song from the queue
-
--   ### Images
-
-    -   sauce [image / link] -> search saucenao & ascii2d for an image
-    -   anime [image / link] -> search trace.moe for anime screenshots / scene
-    -   loli -> sends a loli image xD
-
-
-- ### Games
-
-    -   youtube -> watch youtube together (\*Join a channel before using this command!)
-    -   game ->  plays a simple connect four game
-
-- ### Server backup
-
-    As the backup files are huge, I am not storing it in database, so all the data will disappear after restarting the bot
-
-    - create [max] -> creates a server backup with max messages per channel
-    - backup-info [ID] -> checks a backup info based on its ID
-    - load [ID] -> load a backup based on ID **ALL THE CHANGES MADE ARE IRREVERSIBLE**
-
-- ### Utilities
-
-    -   avatar [@user] -> display an user's avatar, do not mention to display self avatar
-    -   beep -> boop
-    -   cemoji -> copies an emoji to the current server
-    -   covid [country] -> check covid status of a country
-    -   editsnipe [number] -> snipe recently edited message [max snipe: 10]
-    -   snipe [snipe] -> snipe recently deleted message [max snipe: 10]
-    -   help -> display help message
-    -   ping -> checks bot latency
-    -   prune [number] -> bulk deletes [number] messages
-    -   reload -> reloads a command
-    -   user-info [@user] -> display user info
-    -   webhook [message]` -> sends a message using webhook
-
-- ### NSFW
-
-    -   n [ID] -> returns nhentai link based on the ID
-    -   nhentai [number] -> searches nhentai and watch it in discord xD
-    -   hentai -> sends a hentai image
+Use `c!help` for detailed usage and information!
 
