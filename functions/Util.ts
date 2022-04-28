@@ -21,8 +21,12 @@ import {
 import Pixiv from "pixiv.ts";
 import * as fs from "fs";
 import { Collection as DB } from "mongodb";
+import { Routes } from "discord-api-types/v9";
+import { REST } from "@discordjs/rest";
 
 const refreshToken = process.env.PIXIV_REFRESH_TOKEN || require('../config/config.json').PixivRefreshToken;
+const clientId = process.env.CLIENT_ID || require('../config/config.json').clientId;
+const token = process.env.TOKEN || require('../config/config.json').token;
 
 interface SlashCommand {
     execute(interaction, language): Promise<any>;
@@ -333,17 +337,54 @@ export async function getGuildData(client: CustomClient, id: Snowflake) {
 
 // save guild options to database, or local json file
 export async function saveGuildData(client: CustomClient, id: Snowflake) {
-    const guildOption = client.guildCollection.get(id); // collection cache
+    const guildData = client.guildCollection.get(id); // collection cache
     const collection = client.guildData; // database or json
     if (collection) {
         const query = { id };
         const options = { upsert: true };
-        return collection.replaceOne(query, guildOption, options); // save in mongodb
+        return collection.replaceOne(query, guildData, options); // save in mongodb
     } else {
         const rawData = fs.readFileSync(`./data/guildData.json`, 'utf-8');
         const guildCollection = JSON.parse(rawData);
-        guildCollection[id] = guildOption;
+        guildCollection[id] = guildData;
+        return fs.writeFileSync(`./data/guildData.json`, JSON.stringify(guildCollection)); // save in json
+    }
+}
 
-        return fs.writeFileSync(`./data/guildData.json`, JSON.stringify(guildOption)); // save in json
+export async function deleteGuildData(client: CustomClient, id: Snowflake) {
+    const collection = client.guildData;
+    client.guildCollection.delete(id);
+    if (collection) {
+        const query = { id };
+        return collection.deleteOne(query)
+    } else {
+        const rawData = fs.readFileSync(`./data/guildData.json`, 'utf-8');
+        const guildCollection = JSON.parse(rawData);
+        delete guildCollection[id];
+        return fs.writeFileSync(`./data/guildData.json`, JSON.stringify(guildCollection)); // save in json
+    }
+}
+
+export async function registerCommand(guildId: Snowflake, language: Language) {
+    const rest = new REST({ version: '9' }).setToken(token);
+    const commands = [];
+    const commandFolders = fs.readdirSync('./commands');
+    for (const folder of commandFolders) {
+        const commandFiles = fs.readdirSync(`./commands/${folder}`).filter((file) => file.endsWith('.js'));
+        for (const file of commandFiles) {
+            const command = require(`../commands/${folder}/${file}`);
+            const data = processCommand(command, language);
+            commands.push(data.toJSON());
+        }
+    }
+    try {
+        await rest.put(
+            Routes.applicationGuildCommands(clientId, guildId),
+            { body: commands },
+        );
+
+        console.log('Successfully registered application commands.');
+    } catch (error) {
+        console.error(`Missing access: ${error} for ID: ${guildId}`);
     }
 }
