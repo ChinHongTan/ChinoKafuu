@@ -1,7 +1,7 @@
 const { getGuildData, saveGuildData } = require('../functions/Util');
 
 module.exports = {
-    name: 'ready',
+    name: 'guildCreate',
     once: true,
     async execute(guild) {
         // initialize guildData and save it into database

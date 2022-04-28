@@ -71,7 +71,7 @@ if (mongodbURI) {
         await mongoClient.connect();
         console.log('Connected successfully to server');
         const db = mongoClient.db(dbName);
-        client.guildData = db.collection('GuildData');
+        client.guildDatabase = db.collection('GuildData');
         await client.login(token);
     })();
 } else {

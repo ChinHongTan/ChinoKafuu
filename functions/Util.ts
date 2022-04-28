@@ -78,7 +78,7 @@ interface CustomClient extends Client {
     commands: Collection<string, Command>,
     language: { [commandName: string]: Translation },
     coolDowns: Collection<string, Collection<Snowflake, number>>
-    guildData: DB,
+    guildDatabase: DB,
     guildCollection: Collection<Snowflake, { id: Snowflake, options: { language?: Language, channel?: Snowflake } }>
 }
 type Language = 'en_US' | 'zh_CN' | 'zh_TW';
@@ -316,7 +316,7 @@ export function getEditDistance(a: string, b: string) {
 // get guild data from database or local json file, generate one if none found
 export async function getGuildData(client: CustomClient, id: Snowflake) {
     let rawData;
-    const collection = client.guildData;
+    const collection = client.guildDatabase;
     const defaultData = {
         id,
         data: {
@@ -338,7 +338,7 @@ export async function getGuildData(client: CustomClient, id: Snowflake) {
 // save guild options to database, or local json file
 export async function saveGuildData(client: CustomClient, id: Snowflake) {
     const guildData = client.guildCollection.get(id); // collection cache
-    const collection = client.guildData; // database or json
+    const collection = client.guildDatabase; // database or json
     if (collection) {
         const query = { id };
         const options = { upsert: true };
@@ -352,7 +352,7 @@ export async function saveGuildData(client: CustomClient, id: Snowflake) {
 }
 
 export async function deleteGuildData(client: CustomClient, id: Snowflake) {
-    const collection = client.guildData;
+    const collection = client.guildDatabase;
     client.guildCollection.delete(id);
     if (collection) {
         const query = { id };
