@@ -237,7 +237,7 @@ module.exports = {
         return ret;
     },
     async checkStats(command, checkPlaying = false) {
-        const language = command.client.guildCollection.get(command.guild.id).options.language;
+        const language = command.client.guildCollection.get(command.guild.id).data.language;
         const translate = {
             'notInVC': {
                 'en_US': 'You have to join a voice channel before using this command!',

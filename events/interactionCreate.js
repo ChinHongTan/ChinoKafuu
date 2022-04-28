@@ -9,7 +9,7 @@ module.exports = {
         // customId should be same as the name of the command
         const command = client.commands.get(interaction.commandName) ?? client.commands.get(interaction.customId);
         const guildOption = client.guildCollection.get(interaction?.guild.id);
-        const language = client.language[guildOption?.options.language ?? 'en_US'][command.name];
+        const language = client.language[guildOption?.data.language ?? 'en_US'][command.name];
 
         if (interaction.isAutocomplete()) {
             if (interaction.responded) return;

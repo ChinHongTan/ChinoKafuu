@@ -1,5 +1,5 @@
 const { MessageEmbed } = require('discord.js');
-const { getGuildOption, getEditSnipes, saveEditSnipes } = require('../functions/Util');
+const { getGuildData, saveGuildData } = require('../functions/Util');
 
 module.exports = {
     name: 'messageUpdate',
@@ -7,27 +7,25 @@ module.exports = {
         if (!newMessage.guild) return;
         if (oldMessage.partial) oldMessage.fetch();
         if (newMessage.partial) newMessage.fetch();
-        const editSnipeWithGuild = await getEditSnipes(newMessage.client, newMessage.guild.id);
+        const guildData = await getGuildData(newMessage.client, newMessage.guild.id);
 
         if (newMessage.author.bot) return;
         if (!newMessage.guild) return;
 
         const editSnipe = {};
-        const editSnipes = editSnipeWithGuild?.editSnipe ?? [];
+        const editSnipes = guildData.data.editSnipes;
 
         editSnipe.author = newMessage.author.tag;
         editSnipe.authorAvatar = newMessage.author.displayAvatarURL({
             format: 'png',
             dynamic: true,
         });
-        editSnipe.content = oldMessage.content ?? 'None';
-        if (newMessage.editedAt) {
-            editSnipe.timestamp = newMessage.editedAt;
-            editSnipes.unshift(editSnipe);
-        }
+        editSnipe.content = oldMessage?.content ?? 'None';
+        editSnipe.timestamp = newMessage?.editedAt ?? Date.now(); // set time stamp to whenever this event is called
+        editSnipe.attachments = oldMessage.attachments.first()?.proxyURL;
+        editSnipes.unshift(editSnipe);
         if (editSnipes.length > 10) editSnipes.pop();
-        editSnipeWithGuild.editSnipe = editSnipes;
-        await saveEditSnipes(newMessage.client, editSnipeWithGuild, newMessage.guild.id);
+        await saveGuildData(newMessage.client, newMessage.guild.id);
 
         const logEmbed = new MessageEmbed()
             .setTitle('**Message deleted**')
@@ -53,9 +51,7 @@ module.exports = {
                     value: `\`\`\`${newMessage.content}\`\`\``,
                 },
             ]);
-
-        const guildOption = await getGuildOption(newMessage.client, newMessage.guild.id);
-        const logChannelId = guildOption.options.channel;
+        const logChannelId = guildData.data.channel;
         if (!logChannelId) return; // log channel not set
         const logChannel = await newMessage.guild.channels.fetch(logChannelId);
         if (!logChannel) return;

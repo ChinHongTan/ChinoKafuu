@@ -72,7 +72,7 @@ async function help(interaction, args, language, languageStr) {
     }
 
     const name = args[0].split(' ')[0].toLowerCase(); // only takes the command name
-    const command = commands.get(name) || commands.find((c) => c?.aliases?.includes(name));
+    const command = commands.get(name) || commands.find((c) => c?.aliases.includes(name));
 
     if (!command) return error(interaction, language.invalidCmd);
     const embed = new MessageEmbed()
@@ -122,19 +122,19 @@ module.exports = {
     usage: '[command name]',
     coolDown: 5,
     execute(message, args, language) {
-        const languageStr = message.client.guildCollection.get(message.guild.id).options.language;
+        const languageStr = message.client.guildCollection.get(message.guild.id).data.language;
         return help(message, args, language, languageStr);
     },
     slashCommand: {
         execute(interaction, language) {
             const optionContent = interaction.options.getString('command');
-            const languageStr = interaction.client.guildCollection.get(interaction.guild.id).options.language;
+            const languageStr = interaction.client.guildCollection.get(interaction.guild.id).data.language;
             return help(interaction, optionContent ? [optionContent] : [], language, languageStr);
         },
         async selectMenu(interaction, language) {
             if (interaction.customId !== 'help') return;
             const row = createSelectMenu();
-            const languageStr = interaction.client.guildCollection.get(interaction.guild.id).options.language;
+            const languageStr = interaction.client.guildCollection.get(interaction.guild.id).data.language;
             const embed = await createHelpEmbed(interaction, language, interaction.values[0], languageStr);
             return interaction.update({ embeds: [embed], components: [row] });
         },

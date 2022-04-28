@@ -90,7 +90,7 @@ module.exports = {
 
         try {
             // set the default language to English
-            const language = client.language[guildOption?.options.language ?? 'en_US'][command.name];
+            const language = client.language[guildOption?.data.language ?? 'en_US'][command.name];
             await command.execute(message, args, language);
         } catch (error) {
             console.error(error);

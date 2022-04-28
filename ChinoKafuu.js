@@ -71,9 +71,7 @@ if (mongodbURI) {
         await mongoClient.connect();
         console.log('Connected successfully to server');
         const db = mongoClient.db(dbName);
-        client.snipeCollection = db.collection('snipes');
-        client.editSnipeCollection = db.collection('editsnipes');
-        client.guildOptions = db.collection('guildoptions');
+        client.guildData = db.collection('GuildData');
         await client.login(token);
     })();
 } else {

@@ -1,12 +1,12 @@
 const { error, success } = require('../../functions/Util.js');
 const { GuildChannel } = require('discord.js');
-const { getGuildOption, saveGuildOption } = require('../../functions/Util');
+const { getGuildData, saveGuildData } = require('../../functions/Util');
 
 async function changeSettings(guildId, client, category, target) {
-    const guildOption = await getGuildOption(client, guildId);
-    guildOption.options[category] = target;
-    client.guildCollection.set(guildId, guildOption);
-    await saveGuildOption(client, guildId);
+    const guildData = await getGuildData(client, guildId);
+    guildData.data[category] = target;
+    client.guildCollection.set(guildId, guildData);
+    await saveGuildData(client, guildId);
 }
 
 async function setLanguage(command, args, language) {
@@ -56,7 +56,7 @@ module.exports = {
             ],
         },
         {
-            name: 'logger_channel',
+            name: 'log_channel',
             description: {
                 'en_US': 'Channel for me to log server events in!',
                 'zh_CN': '让我记录群內事件的频道',

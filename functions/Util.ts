@@ -74,12 +74,9 @@ interface CustomClient extends Client {
     commands: Collection<string, Command>,
     language: { [commandName: string]: Translation },
     coolDowns: Collection<string, Collection<Snowflake, number>>
-    snipeCollection: DB,
-    editSnipeCollection: DB,
-    guildOptions: DB,
+    guildData: DB,
     guildCollection: Collection<Snowflake, { id: Snowflake, options: { language?: Language, channel?: Snowflake } }>
 }
-
 type Language = 'en_US' | 'zh_CN' | 'zh_TW';
 type CommandTypes = Message | CommandInteraction;
 type ResponseTypes = string | MessageOptions | InteractionReplyOptions;
@@ -312,84 +309,41 @@ export function getEditDistance(a: string, b: string) {
     return matrix[b.length][a.length];
 }
 
-async function getCollections(client, type, id) {
-    let rawData, collection, defaultData;
-    switch (type) {
-        case "guildOptions":
-            collection = client.guildOptions;
-            defaultData = {
-                id,
-                options: { language: 'en_US' },
-            };
-            break;
-        case "editSnipes":
-            collection = client.editSnipeCollection;
-            defaultData = { id };
-            break;
-        case "snipes":
-            collection = client.snipeCollection;
-            defaultData = { id };
-            break;
-    }
+// get guild data from database or local json file, generate one if none found
+export async function getGuildData(client: CustomClient, id: Snowflake) {
+    let rawData;
+    const collection = client.guildData;
+    const defaultData = {
+        id,
+        data: {
+            language: 'en_US',
+            snipes: [],
+            editSnipes: [],
+        },
+    };
     if (collection) {
         rawData = await collection.findOne({ id });
     } else {
-        const buffer = fs.readFileSync(`./data/${type}.json`, 'utf-8');
+        const buffer = fs.readFileSync(`./data/guildData.json`, 'utf-8');
         const parsedJSON = JSON.parse(buffer);
         rawData = parsedJSON[id];
     }
     return rawData ?? defaultData;
 }
 
-// get guild option from database or local json file, generate one if none found
-export async function getGuildOption(client: CustomClient, id: Snowflake) {
-    return await getCollections(client, "guildOptions", id);
-}
-
-export async function getEditSnipes(client: CustomClient, id: Snowflake) {
-    return await getCollections(client, "editSnipes", id);
-}
-
-export async function getSnipes(client: CustomClient, id: Snowflake) {
-    return await getCollections(client, "snipes", id);
-}
-
-async function saveCollections(client, targetCollection, type, id) {
-    let collection;
-    switch (type) {
-        case "guildOptions":
-            collection = client.guildOptions;
-            break;
-        case "editSnipes":
-            collection = client.editSnipeCollection;
-            break;
-        case "snipes":
-            collection = client.snipeCollection;
-            break;
-    }
+// save guild options to database, or local json file
+export async function saveGuildData(client: CustomClient, id: Snowflake) {
+    const guildOption = client.guildCollection.get(id); // collection cache
+    const collection = client.guildData; // database or json
     if (collection) {
         const query = { id };
         const options = { upsert: true };
-        return collection.replaceOne(query, targetCollection, options); // save in mongodb
+        return collection.replaceOne(query, guildOption, options); // save in mongodb
     } else {
-        const rawData = fs.readFileSync(`./data/${type}.json`, 'utf-8');
+        const rawData = fs.readFileSync(`./data/guildData.json`, 'utf-8');
         const guildCollection = JSON.parse(rawData);
-        guildCollection[id] = targetCollection;
+        guildCollection[id] = guildOption;
 
-        return fs.writeFileSync(`./data/${type}.json`, JSON.stringify(targetCollection)); // save in json
+        return fs.writeFileSync(`./data/guildData.json`, JSON.stringify(guildOption)); // save in json
     }
-}
-
-// save guild options to database, or local json file
-export async function saveGuildOption(client: CustomClient, id: Snowflake) {
-    const guildOption = client.guildCollection.get(id); // guild options
-    return await saveCollections(client, guildOption, "guildOptions", id);
-}
-
-export async function saveEditSnipes(client: CustomClient, editSnipeWithGuild, id: Snowflake) {
-    return await saveCollections(client, editSnipeWithGuild, "editSnipes", id);
-}
-
-export async function saveSnipes(client: CustomClient, snipeWithGuild, id: Snowflake) {
-    return await saveCollections(client, snipeWithGuild, "snipes", id);
 }
