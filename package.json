@@ -60,7 +60,7 @@
     "ytpl": "^2.2.3"
   },
   "devDependencies": {
-    "@types/node": "16.11.27",
+    "@types/node": "16.11.32",
     "@types/node-fetch": "3.0.3",
     "@typescript-eslint/eslint-plugin": "5.19.0",
     "@typescript-eslint/parser": "5.19.0",
