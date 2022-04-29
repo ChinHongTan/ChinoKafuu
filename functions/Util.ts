@@ -386,6 +386,7 @@ export async function registerCommand(guildId: Snowflake, language: Language) {
 
         console.log('Successfully registered application commands.');
         var date2 = new Date();
+        // @ts-ignore
         var diff = date2 - date1; //milliseconds interval
         console.log(`time: ${diff}ms`);
     } catch (error) {
