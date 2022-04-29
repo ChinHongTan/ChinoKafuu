@@ -1,5 +1,6 @@
 const { reply } = require('../functions/Util.js');
 const Discord = require('discord.js');
+const { addUserExp, getUserData, saveUserData } = require('../functions/Util');
 const owner_id = process.env.OWNERID || require('../config/config.json').owner_id;
 
 module.exports = {
@@ -62,6 +63,14 @@ module.exports = {
         }
 
         try {
+            const userData = await getUserData(interaction.client, interaction.user.id);
+            if (!('expAddTimestamp' in userData.data)) {
+                await addUserExp(client, interaction.user.id);
+                userData.data['expAddTimestamp'] = Date.now();
+                interaction.client.userCollection.set(interaction.user.id, userData);
+                await saveUserData(interaction.client, interaction.user.id);
+                setTimeout(() => delete userData.data['expAddTimestamp'], 1 * 1000);
+            }
             await command.slashCommand.execute(interaction, language);
         } catch (error) {
             console.error(error);

@@ -2,6 +2,7 @@ const { Collection } = require('discord.js');
 const channelId = process.env.CHANNEL_ID || require('../config/config.json').channelId;
 const util = require('util');
 const { registerCommand, getGuildData, saveGuildData } = require('../functions/Util.js');
+const { getUserData, saveUserData } = require('../functions/Util');
 
 module.exports = {
     name: 'ready',
@@ -28,6 +29,13 @@ module.exports = {
         const guilds = [];
         client.guilds.cache.each((guild) => guilds.push(guild.id));
         client.guildCollection = new Collection();
+        client.userCollection = new Collection();
+        const userList = await client.userDatabase.find().toArray();
+        for (const user of userList) {
+            const userData = await getUserData(client, user.id);
+            client.userCollection.set(user.id, userData);
+            await saveUserData(client, user.id);
+        }
 
         for (const id of guilds) {
             const guildData = await getGuildData(client, id);

@@ -57,6 +57,16 @@ function getUserInfo(author, language) {
                 inline: true,
             },
             {
+                name: 'Exp',
+                value: '' + author.client.userCollection.get(author.id).data.exp,
+                inline: true,
+            },
+            {
+                name: 'Level',
+                value: '' + author.client.userCollection.get(author.id).data.level,
+                inline: true,
+            },
+            {
                 name: language.createdAt,
                 value: author.user.createdAt.toLocaleDateString('zh-TW'),
                 inline: true,
@@ -111,7 +121,7 @@ module.exports = {
     ],
     execute(message, _args, language) {
         if (!message.mentions.members.size) {
-            const embed = getUserInfo(message.member);
+            const embed = getUserInfo(message.member, language);
             return reply(message, { embeds: [embed] });
         }
 

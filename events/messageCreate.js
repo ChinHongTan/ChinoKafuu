@@ -2,6 +2,7 @@ const { getEditDistance } = require('../functions/Util.js');
 const prefix = process.env.PREFIX || require('../config/config.json').prefix;
 const owner_id = process.env.OWNERID || require('../config/config.json').owner_id;
 const Discord = require('discord.js');
+const { addUserExp, getUserData, saveUserData } = require('../functions/Util');
 
 module.exports = {
     name: 'messageCreate',
@@ -89,6 +90,15 @@ module.exports = {
         setTimeout(() => timestamps.delete(message.author.id), coolDownAmount);
 
         try {
+            const userData = await getUserData(message.client, message.author.id);
+            console.log(!('expAddTimestamp' in userData.data));
+            if (!('expAddTimestamp' in userData.data)) {
+                await addUserExp(client, message.author.id);
+                userData.data['expAddTimestamp'] = Date.now();
+                message.client.userCollection.set(message.author.id, userData);
+                await saveUserData(message.client, message.author.id);
+                setTimeout(() => delete userData.data['expAddTimestamp'], 1 * 1000);
+            }
             // set the default language to English
             const language = client.language[guildOption?.data.language ?? 'en_US'][command.name];
             await command.execute(message, args, language);

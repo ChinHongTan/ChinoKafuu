@@ -80,6 +80,8 @@ interface CustomClient extends Client {
     coolDowns: Collection<string, Collection<Snowflake, number>>
     guildDatabase: DB,
     guildCollection: Collection<Snowflake, { id: Snowflake, options: { language?: Language, channel?: Snowflake } }>
+    userDatabase:DB,
+    userCollection: Collection<Snowflake, { id: Snowflake, data: { exp?: number, level?: number, expAddTimestamp?: number } }>
 }
 type Language = 'en_US' | 'zh_CN' | 'zh_TW';
 type CommandTypes = Message | CommandInteraction;
@@ -314,11 +316,11 @@ export function getEditDistance(a: string, b: string) {
 }
 
 // get guild data from database or local json file, generate one if none found
-export async function getGuildData(client: CustomClient, id: Snowflake) {
+export async function getGuildData(client: CustomClient, guildId: Snowflake) {
     let rawData;
     const collection = client.guildDatabase;
     const defaultData = {
-        id,
+        id: guildId,
         data: {
             language: 'en_US',
             snipes: [],
@@ -326,43 +328,96 @@ export async function getGuildData(client: CustomClient, id: Snowflake) {
         },
     };
     if (collection) {
-        rawData = await collection.findOne({ id });
+        rawData = await collection.findOne({ id: guildId });
     } else {
         const buffer = fs.readFileSync(`./data/guildData.json`, 'utf-8');
         const parsedJSON = JSON.parse(buffer);
-        rawData = parsedJSON[id];
+        rawData = parsedJSON[guildId];
     }
     return rawData ?? defaultData;
 }
 
 // save guild options to database, or local json file
-export async function saveGuildData(client: CustomClient, id: Snowflake) {
-    const guildData = client.guildCollection.get(id); // collection cache
+export async function saveGuildData(client: CustomClient, guildId: Snowflake) {
+    const guildData = client.guildCollection.get(guildId); // collection cache
     const collection = client.guildDatabase; // database or json
     if (collection) {
-        const query = { id };
+        const query = { id: guildId };
         const options = { upsert: true };
         return collection.replaceOne(query, guildData, options); // save in mongodb
     } else {
         const rawData = fs.readFileSync(`./data/guildData.json`, 'utf-8');
         const guildCollection = JSON.parse(rawData);
-        guildCollection[id] = guildData;
+        guildCollection[guildId] = guildData;
         return fs.writeFileSync(`./data/guildData.json`, JSON.stringify(guildCollection)); // save in json
     }
 }
 
-export async function deleteGuildData(client: CustomClient, id: Snowflake) {
+export async function deleteGuildData(client: CustomClient, guildId: Snowflake) {
     const collection = client.guildDatabase;
-    client.guildCollection.delete(id);
+    client.guildCollection.delete(guildId);
     if (collection) {
-        const query = { id };
+        const query = { id: guildId };
         return collection.deleteOne(query)
     } else {
         const rawData = fs.readFileSync(`./data/guildData.json`, 'utf-8');
         const guildCollection = JSON.parse(rawData);
-        delete guildCollection[id];
+        delete guildCollection[guildId];
         return fs.writeFileSync(`./data/guildData.json`, JSON.stringify(guildCollection)); // save in json
     }
+}
+
+// get guild data from database or local json file, generate one if none found
+export async function getUserData(client: CustomClient, userId: Snowflake) {
+    let rawData;
+    const collection = client.userDatabase;
+    const defaultData = {
+        id: userId,
+        data: {
+            exp: 0,
+            level: 0,
+        },
+    };
+    if (collection) {
+        rawData = await collection.findOne({ id: userId });
+    } else {
+        const buffer = fs.readFileSync(`./data/userData.json`, 'utf-8');
+        const parsedJSON = JSON.parse(buffer);
+        rawData = parsedJSON[userId];
+    }
+    return rawData ?? defaultData;
+}
+
+// save guild options to database, or local json file
+export async function saveUserData(client: CustomClient, userId: Snowflake) {
+    const userData = client.userCollection.get(userId); // collection cache
+    delete userData.data?.expAddTimestamp;
+    const collection = client.userDatabase; // database or json
+    if (collection) {
+        const query = { id: userId };
+        const options = { upsert: true };
+        return collection.replaceOne(query, userData, options); // save in mongodb
+    } else {
+        const rawData = fs.readFileSync(`./data/userData.json`, 'utf-8');
+        const guildCollection = JSON.parse(rawData);
+        guildCollection[userId] = userData;
+        return fs.writeFileSync(`./data/userData.json`, JSON.stringify(guildCollection)); // save in json
+    }
+}
+
+export async function addUserExp(client: CustomClient, userId: Snowflake) {
+    const userData = await client.userCollection.get(userId);
+    let exp = userData.data.exp;
+    let level = userData.data.level;
+    exp ++;
+    console.log(exp);
+    if (userData.data.exp >= level * ((1 + level) / 2) + 4 ) level ++;
+    console.log(level);
+    userData.data.exp = exp;
+    userData.data.level = level;
+    console.log(userData);
+    await saveUserData(client, userId);
+    return client.userCollection.set(userId, userData);
 }
 
 export async function registerCommand(guildId: Snowflake, language: Language) {

@@ -72,6 +72,7 @@ if (mongodbURI) {
         console.log('Connected successfully to server');
         const db = mongoClient.db(dbName);
         client.guildDatabase = db.collection('GuildData');
+        client.userDatabase = db.collection('UserData');
         await client.login(token);
     })();
 } else {
