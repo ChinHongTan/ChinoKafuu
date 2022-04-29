@@ -366,7 +366,6 @@ export async function deleteGuildData(client: CustomClient, id: Snowflake) {
 }
 
 export async function registerCommand(guildId: Snowflake, language: Language) {
-    var date1 = new Date();
     const rest = new REST({ version: '9' }).setToken(token);
     const commands = [];
     const commandFolders = fs.readdirSync('./commands');
@@ -385,10 +384,6 @@ export async function registerCommand(guildId: Snowflake, language: Language) {
         );
 
         console.log('Successfully registered application commands.');
-        var date2 = new Date();
-        // @ts-ignore
-        var diff = date2 - date1; //milliseconds interval
-        console.log(`time: ${diff}ms`);
     } catch (error) {
         console.error(`Missing access: ${error} for ID: ${guildId}`);
     }

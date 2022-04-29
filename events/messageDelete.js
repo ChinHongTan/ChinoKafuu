@@ -1,14 +1,12 @@
 const { MessageEmbed } = require('discord.js');
-const { getGuildData, saveGuildData } = require('../functions/Util');
+const { saveGuildData } = require('../functions/Util');
 
 module.exports = {
     name: 'messageDelete',
     async execute(message) {
         // can't fetch anything
-        if (message.partial) return;
-        const guildData = await getGuildData(message.client, message.guild.id);
-        if (message.author.bot) return;
-        if (!message.guild) return;
+        if (message.partial || message.author.bot || !message.guild) return;
+        const guildData = await message.client.guildCollection.get(message.guild.id);
 
         const snipe = {};
         const snipes = guildData.data.snipes;

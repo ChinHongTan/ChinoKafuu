@@ -1,9 +1,9 @@
 const { error, success } = require('../../functions/Util.js');
 const { GuildChannel } = require('discord.js');
-const { getGuildData, saveGuildData, registerCommand } = require('../../functions/Util');
+const { saveGuildData, registerCommand } = require('../../functions/Util');
 
 async function changeSettings(guildId, client, category, target) {
-    const guildData = await getGuildData(client, guildId);
+    const guildData = client.guildCollection.get(guildId);
     guildData.data[category] = target;
     client.guildCollection.set(guildId, guildData);
     await saveGuildData(client, guildId);
@@ -14,9 +14,9 @@ async function setLanguage(command, args, language) {
     if (args[0] !== 'en_US' && args[0] !== 'zh_CN' && args[0] !== 'zh_TW') return error(command, language.languageNotSupported);
 
     await changeSettings(command.guild.id, command.client, 'language', args[0]);
-    await registerCommand(command.guild.id, args[0]);
     language = command.client.language[args[0]]['set'];
-    return success(command, language.changeSuccess.replace('${args[0]}', args[0]));
+    await success(command, language.changeSuccess.replace('${args[0]}', args[0]));
+    return registerCommand(command.guild.id, args[0]);
 }
 
 async function setChannel(command, args, language) {

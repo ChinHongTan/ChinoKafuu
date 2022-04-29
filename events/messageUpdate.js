@@ -1,16 +1,13 @@
 const { MessageEmbed } = require('discord.js');
-const { getGuildData, saveGuildData } = require('../functions/Util');
+const { saveGuildData } = require('../functions/Util');
 
 module.exports = {
     name: 'messageUpdate',
     async execute(oldMessage, newMessage) {
-        if (!newMessage.guild) return;
-        if (oldMessage.partial) oldMessage.fetch();
-        if (newMessage.partial) newMessage.fetch();
-        const guildData = await getGuildData(newMessage.client, newMessage.guild.id);
-
-        if (newMessage.author.bot) return;
-        if (!newMessage.guild) return;
+        if (!newMessage.guild || newMessage.author.bot) return;
+        if (oldMessage.partial) await oldMessage.fetch();
+        if (newMessage.partial) await newMessage.fetch();
+        const guildData = newMessage.client.guildCollection.get(newMessage.guild.id);
 
         const editSnipe = {};
         const editSnipes = guildData.data.editSnipes;
