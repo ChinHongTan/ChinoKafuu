@@ -337,7 +337,7 @@ export async function getGuildData(client: CustomClient, guildId: Snowflake) {
     return rawData ?? defaultData;
 }
 
-// save guild options to database, or local json file
+// save guild data to database, or local json file
 export async function saveGuildData(client: CustomClient, guildId: Snowflake) {
     const guildData = client.guildCollection.get(guildId); // collection cache
     const collection = client.guildDatabase; // database or json
@@ -367,7 +367,7 @@ export async function deleteGuildData(client: CustomClient, guildId: Snowflake) 
     }
 }
 
-// get guild data from database or local json file, generate one if none found
+// get user data from database or local json file, generate one if none found
 export async function getUserData(client: CustomClient, userId: Snowflake) {
     let rawData;
     const collection = client.userDatabase;
@@ -388,10 +388,10 @@ export async function getUserData(client: CustomClient, userId: Snowflake) {
     return rawData ?? defaultData;
 }
 
-// save guild options to database, or local json file
+// save user data to database, or local json file
 export async function saveUserData(client: CustomClient, userId: Snowflake) {
     const userData = client.userCollection.get(userId); // collection cache
-    delete userData.data?.expAddTimestamp;
+    delete userData.data?.expAddTimestamp; // do not save timestamp in database
     const collection = client.userDatabase; // database or json
     if (collection) {
         const query = { id: userId };
@@ -405,17 +405,19 @@ export async function saveUserData(client: CustomClient, userId: Snowflake) {
     }
 }
 
+// add exp for a user
 export async function addUserExp(client: CustomClient, userId: Snowflake) {
-    const userData = await client.userCollection.get(userId);
+    const userData = client.userCollection.get(userId);
     let exp = userData.data.exp;
     let level = userData.data.level;
     exp ++;
-    console.log(exp);
-    if (userData.data.exp >= level * ((1 + level) / 2) + 4 ) level ++;
-    console.log(level);
+    if (userData.data.exp >= level * ((1 + level) / 2) + 4 ) { // level up
+        level ++;
+        exp = 0
+    }
     userData.data.exp = exp;
     userData.data.level = level;
-    console.log(userData);
+    userData.data['expAddTimestamp'] = Date.now();
     await saveUserData(client, userId);
     return client.userCollection.set(userId, userData);
 }

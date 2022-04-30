@@ -2,16 +2,24 @@ const { getEditDistance } = require('../functions/Util.js');
 const prefix = process.env.PREFIX || require('../config/config.json').prefix;
 const owner_id = process.env.OWNERID || require('../config/config.json').owner_id;
 const Discord = require('discord.js');
-const { addUserExp, getUserData, saveUserData } = require('../functions/Util');
+const { addUserExp, getUserData } = require('../functions/Util');
 
 module.exports = {
     name: 'messageCreate',
     async execute(message, client) {
+        if (message.author.bot) return;
+
+        const userData = await getUserData(message.client, message.author.id);
+        client.userCollection.set(message.author.id, userData); // save in collection cache
+        if (!('expAddTimestamp' in userData.data)) {
+            await addUserExp(client, message.author.id);
+            setTimeout(() => delete userData.data['expAddTimestamp'], 1 * 1000);
+        }
+
+        if (!message.content.startsWith(prefix)) return;
+
         // get options
         const guildOption = client.guildCollection.get(message.guild.id);
-
-        if (message.author.bot) return;
-        if (!message.content.startsWith(prefix)) return;
 
         const args = message.content.slice(prefix.length).trim().split(/\s+/);
         const commandName = args.shift().toLowerCase();
@@ -90,15 +98,6 @@ module.exports = {
         setTimeout(() => timestamps.delete(message.author.id), coolDownAmount);
 
         try {
-            const userData = await getUserData(message.client, message.author.id);
-            console.log(!('expAddTimestamp' in userData.data));
-            if (!('expAddTimestamp' in userData.data)) {
-                await addUserExp(client, message.author.id);
-                userData.data['expAddTimestamp'] = Date.now();
-                message.client.userCollection.set(message.author.id, userData);
-                await saveUserData(message.client, message.author.id);
-                setTimeout(() => delete userData.data['expAddTimestamp'], 1 * 1000);
-            }
             // set the default language to English
             const language = client.language[guildOption?.data.language ?? 'en_US'][command.name];
             await command.execute(message, args, language);
