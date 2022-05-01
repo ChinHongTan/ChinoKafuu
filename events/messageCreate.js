@@ -10,11 +10,11 @@ module.exports = {
         if (message.author.bot) return;
 
         if (message.guild) {
-            const userData = await getUserData(message.client, message.member);
+            let userData = client.guildCollection.get(message.member.guild.id).data.users.find((user) => user.id === message.member.id);
+            if (!userData) userData = await getUserData(message.client, message.member);
             await saveUserData(client, message.member); // save in collection cache
-            if (!('expAddTimestamp' in userData)) {
+            if (!('expAddTimestamp' in userData) || userData.expAddTimestamp + 60 * 1000 <= Date.now()) {
                 await addUserExp(client, message.member);
-                setTimeout(() => delete userData['expAddTimestamp'], 60 * 1000);
             }
         }
 

@@ -424,10 +424,6 @@ export async function getUserData(client: CustomClient, member: GuildMember) {
 // save user data to database, or local json file, and update guildData
 export async function saveUserData(client: CustomClient, member: GuildMember) {
     const guildData = client.guildCollection.get(member.guild.id);
-    const userData = guildData.data.users.find(user => user.id === member.id); // collection cache
-    delete userData?.expAddTimestamp; // do not save timestamp in database
-    const userIndex = guildData.data.users.findIndex((user) => user.id === member.id);
-    guildData.data.users[userIndex] = userData; // save in guild collection cache
     const collection = client.guildDatabase; // database or json
     if (collection) {
         const query = { id: member.guild.id };
@@ -436,7 +432,7 @@ export async function saveUserData(client: CustomClient, member: GuildMember) {
     } else {
         const rawData = fs.readFileSync(`./data/guildData.json`, 'utf-8');
         const guildCollection = JSON.parse(rawData);
-        guildCollection[member.guild.id] = userData;
+        guildCollection[member.guild.id] = guildData;
         return fs.writeFileSync(`./data/guildData.json`, JSON.stringify(guildCollection)); // save in json
     }
 }
@@ -458,7 +454,6 @@ export async function addUserExp(client: CustomClient, member: GuildMember) {
     const userIndex = guildData.data.users.findIndex((user) => user.id === member.id);
     guildData.data.users[userIndex] = userData; // save in guild collection cache
     await saveUserData(client, member);
-    return client.guildCollection.set(member.guild.id, guildData);
 }
 
 export async function registerCommand(guildId: Snowflake, language: Language) {
