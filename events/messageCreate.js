@@ -14,7 +14,7 @@ module.exports = {
             await saveUserData(client, message.member); // save in collection cache
             if (!('expAddTimestamp' in userData)) {
                 await addUserExp(client, message.member);
-                setTimeout(() => delete userData['expAddTimestamp'], 1 * 1000);
+                setTimeout(() => delete userData['expAddTimestamp'], 60 * 1000);
             }
         }
 

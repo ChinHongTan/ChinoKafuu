@@ -412,7 +412,6 @@ export async function getUserData(client: CustomClient, member: GuildMember) {
         rawData = parsedJSON[member.guild.id];
     }
     const userList = rawData.data.users;
-    console.log(userList);
     const userData = userList?.find((user) => user.id === member.id);
     if (!userData) {
         client.guildCollection.get(member.guild.id).data.users.push(defaultData); // create a new profile
