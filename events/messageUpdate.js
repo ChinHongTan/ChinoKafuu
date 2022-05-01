@@ -19,7 +19,7 @@ module.exports = {
         });
         editSnipe.content = oldMessage?.content ?? 'None';
         editSnipe.timestamp = newMessage?.editedAt ?? Date.now(); // set time stamp to whenever this event is called
-        editSnipe.attachments = oldMessage.attachments.first()?.proxyURL;
+        editSnipe.attachment = oldMessage.attachments.first()?.proxyURL;
         editSnipes.unshift(editSnipe);
         if (editSnipes.length > 10) editSnipes.pop();
         await saveGuildData(newMessage.client, newMessage.guild.id);

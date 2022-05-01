@@ -2,18 +2,20 @@ const { getEditDistance } = require('../functions/Util.js');
 const prefix = process.env.PREFIX || require('../config/config.json').prefix;
 const owner_id = process.env.OWNERID || require('../config/config.json').owner_id;
 const Discord = require('discord.js');
-const { addUserExp, getUserData } = require('../functions/Util');
+const { addUserExp, getUserData, saveUserData } = require('../functions/Util');
 
 module.exports = {
     name: 'messageCreate',
     async execute(message, client) {
         if (message.author.bot) return;
 
-        const userData = await getUserData(message.client, message.author.id);
-        client.userCollection.set(message.author.id, userData); // save in collection cache
-        if (!('expAddTimestamp' in userData.data)) {
-            await addUserExp(client, message.author.id);
-            setTimeout(() => delete userData.data['expAddTimestamp'], 1 * 1000);
+        if (message.guild) {
+            const userData = await getUserData(message.client, message.member);
+            await saveUserData(client, message.member); // save in collection cache
+            if (!('expAddTimestamp' in userData)) {
+                await addUserExp(client, message.member);
+                setTimeout(() => delete userData['expAddTimestamp'], 1 * 1000);
+            }
         }
 
         if (!message.content.startsWith(prefix)) return;

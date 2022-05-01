@@ -10,7 +10,7 @@ import {
     Client,
     Collection,
     ColorResolvable,
-    CommandInteraction,
+    CommandInteraction, GuildMember,
     InteractionReplyOptions,
     Message,
     MessageEmbed,
@@ -74,14 +74,41 @@ interface Command extends BaseCommand {
     execute(message: Message, args: string[], language: Translation),
 }
 
+interface Snipe {
+    author: string,
+    authorAvatar: string,
+    content: string,
+    timeStamp: Date,
+    attachment?: string,
+}
+
+interface EditSnipe {
+    author: string,
+    authorAvatar: string,
+    content: string,
+    timeStamp: Date,
+    attachment?: string,
+}
+
 interface CustomClient extends Client {
     commands: Collection<string, Command>,
     language: { [commandName: string]: Translation },
     coolDowns: Collection<string, Collection<Snowflake, number>>
     guildDatabase: DB,
-    guildCollection: Collection<Snowflake, { id: Snowflake, options: { language?: Language, channel?: Snowflake } }>
+    guildCollection: Collection<Snowflake, { id: Snowflake,
+        data: {
+            language: Language,
+            channel?: Snowflake,
+            snipes: Snipe[],
+            editSnipes: EditSnipe[],
+            users: {
+                id: Snowflake,
+                exp: number,
+                level: number,
+                expAddTimestamp?: number,
+            }[],
+    } }>
     userDatabase:DB,
-    userCollection: Collection<Snowflake, { id: Snowflake, data: { exp?: number, level?: number, expAddTimestamp?: number } }>
 }
 type Language = 'en_US' | 'zh_CN' | 'zh_TW';
 type CommandTypes = Message | CommandInteraction;
@@ -325,6 +352,7 @@ export async function getGuildData(client: CustomClient, guildId: Snowflake) {
             language: 'en_US',
             snipes: [],
             editSnipes: [],
+            users: [],
         },
     };
     if (collection) {
@@ -368,58 +396,70 @@ export async function deleteGuildData(client: CustomClient, guildId: Snowflake) 
 }
 
 // get user data from database or local json file, generate one if none found
-export async function getUserData(client: CustomClient, userId: Snowflake) {
+export async function getUserData(client: CustomClient, member: GuildMember) {
     let rawData;
-    const collection = client.userDatabase;
+    const collection = client.guildDatabase;
     const defaultData = {
-        id: userId,
-        data: {
-            exp: 0,
-            level: 0,
-        },
+        id: member.id,
+        exp: 0,
+        level: 1,
     };
     if (collection) {
-        rawData = await collection.findOne({ id: userId });
+        rawData = await collection.findOne({ id: member.guild.id });
     } else {
-        const buffer = fs.readFileSync(`./data/userData.json`, 'utf-8');
+        const buffer = fs.readFileSync(`./data/guildData.json`, 'utf-8');
         const parsedJSON = JSON.parse(buffer);
-        rawData = parsedJSON[userId];
+        rawData = parsedJSON[member.guild.id];
     }
-    return rawData ?? defaultData;
+    const userList = rawData.data.users;
+    console.log(userList);
+    const userData = userList?.find((user) => user.id === member.id);
+    if (!userData) {
+        client.guildCollection.get(member.guild.id).data.users.push(defaultData); // create a new profile
+    } else {
+        client.guildCollection.get(member.guild.id).data.users.push(userData); // save in collection cache
+    }
+    return userList?.find(user => user.id === member.id) ?? defaultData;
 }
 
-// save user data to database, or local json file
-export async function saveUserData(client: CustomClient, userId: Snowflake) {
-    const userData = client.userCollection.get(userId); // collection cache
-    delete userData.data?.expAddTimestamp; // do not save timestamp in database
-    const collection = client.userDatabase; // database or json
+// save user data to database, or local json file, and update guildData
+export async function saveUserData(client: CustomClient, member: GuildMember) {
+    const guildData = client.guildCollection.get(member.guild.id);
+    const userData = guildData.data.users.find(user => user.id === member.id); // collection cache
+    delete userData?.expAddTimestamp; // do not save timestamp in database
+    const userIndex = guildData.data.users.findIndex((user) => user.id === member.id);
+    guildData.data.users[userIndex] = userData; // save in guild collection cache
+    const collection = client.guildDatabase; // database or json
     if (collection) {
-        const query = { id: userId };
+        const query = { id: member.guild.id };
         const options = { upsert: true };
-        return collection.replaceOne(query, userData, options); // save in mongodb
+        return collection.replaceOne(query, guildData, options); // save in mongodb
     } else {
-        const rawData = fs.readFileSync(`./data/userData.json`, 'utf-8');
+        const rawData = fs.readFileSync(`./data/guildData.json`, 'utf-8');
         const guildCollection = JSON.parse(rawData);
-        guildCollection[userId] = userData;
-        return fs.writeFileSync(`./data/userData.json`, JSON.stringify(guildCollection)); // save in json
+        guildCollection[member.guild.id] = userData;
+        return fs.writeFileSync(`./data/guildData.json`, JSON.stringify(guildCollection)); // save in json
     }
 }
 
 // add exp for a user
-export async function addUserExp(client: CustomClient, userId: Snowflake) {
-    const userData = client.userCollection.get(userId);
-    let exp = userData.data.exp;
-    let level = userData.data.level;
+export async function addUserExp(client: CustomClient, member: GuildMember) {
+    const guildData = client.guildCollection.get(member.guild.id);
+    const userData = guildData.data.users.find(user => user.id === member.id); // collection cache
+    let exp = userData.exp;
+    let level = userData.level;
     exp ++;
-    if (userData.data.exp >= level * ((1 + level) / 2) + 4 ) { // level up
+    if (userData.exp >= level * ((1 + level) / 2) + 4 ) { // level up
         level ++;
         exp = 0
     }
-    userData.data.exp = exp;
-    userData.data.level = level;
-    userData.data['expAddTimestamp'] = Date.now();
-    await saveUserData(client, userId);
-    return client.userCollection.set(userId, userData);
+    userData.exp = exp;
+    userData.level = level;
+    userData['expAddTimestamp'] = Date.now();
+    const userIndex = guildData.data.users.findIndex((user) => user.id === member.id);
+    guildData.data.users[userIndex] = userData; // save in guild collection cache
+    await saveUserData(client, member);
+    return client.guildCollection.set(member.guild.id, guildData);
 }
 
 export async function registerCommand(guildId: Snowflake, language: Language) {

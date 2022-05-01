@@ -57,16 +57,6 @@ function getUserInfo(author, language) {
                 inline: true,
             },
             {
-                name: 'Exp',
-                value: '' + author.client.userCollection.get(author.id).data.exp,
-                inline: true,
-            },
-            {
-                name: 'Level',
-                value: '' + author.client.userCollection.get(author.id).data.level,
-                inline: true,
-            },
-            {
                 name: language.createdAt,
                 value: author.user.createdAt.toLocaleDateString('zh-TW'),
                 inline: true,

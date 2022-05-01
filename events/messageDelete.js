@@ -17,7 +17,7 @@ module.exports = {
         });
         snipe.content = message?.content ?? 'None';
         snipe.timestamp = message.createdAt;
-        snipe.attachments = message.attachments.first()?.proxyURL;
+        snipe.attachment = message.attachments.first()?.proxyURL;
 
         snipes.unshift(snipe);
         if (snipes.length > 10) snipes.pop();

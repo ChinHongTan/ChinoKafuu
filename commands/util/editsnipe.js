@@ -14,7 +14,8 @@ async function editSnipe(command, args, language) {
         .setColor('RANDOM')
         .setAuthor({ name: msg.author, iconURL: msg.authorAvatar })
         .setDescription(msg.content)
-        .setTimestamp(msg.timestamp);
+        .setTimestamp(msg.timestamp)
+        .setImage(msg.attachment);
     return reply(command, { embeds: [embed] });
 }
 module.exports = {

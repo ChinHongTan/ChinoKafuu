@@ -11,14 +11,12 @@ async function snipe(command, args, language) {
     const msg = snipes?.[Number(arg) - 1];
     if (!msg) return error(command, language.invalidSnipe);
 
-    const image = msg.attachments;
-
     const embed = new MessageEmbed()
         .setColor('RANDOM')
         .setAuthor({ name: msg.author, iconURL: msg.authorAvatar })
         .setDescription(msg.content)
         .setTimestamp(msg.timestamp)
-        .setImage(image);
+        .setImage(msg.attachment);
     return reply(command, { embeds: [embed] });
 }
 module.exports = {
