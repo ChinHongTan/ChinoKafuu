@@ -15,10 +15,10 @@ import {
     Message,
     MessageEmbed,
     MessageOptions,
-    MessageReaction, Snowflake
+    MessageReaction, Snowflake, TextChannel
 } from "discord.js";
 
-import Pixiv from "pixiv.ts";
+import Pixiv, {PixivIllust} from "pixiv.ts";
 import * as fs from "fs";
 import { Collection as DB } from "mongodb";
 import { Routes } from "discord-api-types/v9";
@@ -293,7 +293,7 @@ export async function updateIllust(query: string) {
     return;
 }
 
-function processIllustURL(illust) {
+function processIllustURL(illust: PixivIllust): string[] {
     const targetURL = [];
     if (illust.meta_pages.length === 0) {
         targetURL.push(illust.image_urls.medium.replace('pximg.net', 'pixiv.cat'));
@@ -308,7 +308,7 @@ function processIllustURL(illust) {
     return targetURL;
 }
 
-export function generateIllustEmbed(illust) {
+export function generateIllustEmbed(illust: PixivIllust): MessageEmbed[] {
     const multipleIllusts = [];
 
     const targetURL = processIllustURL(illust);
@@ -340,7 +340,7 @@ export function generateIllustEmbed(illust) {
     return multipleIllusts;
 }
 
-export async function sendSuggestedIllust(channel) {
+export async function sendSuggestedIllust(channel: TextChannel) {
     const pixiv = await Pixiv.refreshLogin(refreshToken);
     let following = await pixiv.user.following({ user_id: 43790997 });
     let authors = following.user_previews
