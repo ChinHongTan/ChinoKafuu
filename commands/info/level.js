@@ -2,7 +2,8 @@ const { reply, getUserData } = require('../../functions/Util');
 const { MessageEmbed } = require('discord.js');
 
 async function level(command, member) {
-    let userData = command.client.guildCollection.get(member.guild.id).data.users.find((user) => user.id === member.id);
+    const userList = command.client.guildCollection.get(member.guild.id).data.users;
+    let userData = userList.find((user) => user.id === member.id);
     if (!userData) userData = await getUserData(command.client, member);
     const userExp = userData.exp;
     const userLevel = userData.level;
@@ -13,6 +14,7 @@ async function level(command, member) {
             iconURL: member.user.displayAvatarURL({ format: 'png', dynamic: true }),
         })
         .setColor('BLURPLE')
+        .addField('Rank', '' + (userList.findIndex((user) => user.id === member.id) + 1) + '/' + '' + member.guild.memberCount)
         .addField('Level', '' + userLevel, true)
         .addField('Exp', '' + userExp + '/' + '' + expNeeded, true);
 }

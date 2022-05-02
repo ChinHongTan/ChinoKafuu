@@ -401,6 +401,7 @@ export async function getUserData(client: CustomClient, member: GuildMember) {
     const collection = client.guildDatabase;
     const defaultData = {
         id: member.id,
+        name: member.user.tag,
         exp: 0,
         level: 1,
     };
@@ -415,13 +416,11 @@ export async function getUserData(client: CustomClient, member: GuildMember) {
     const userData = userList?.find((user) => user.id === member.id);
     if (!userData) {
         client.guildCollection.get(member.guild.id).data.users.push(defaultData); // create a new profile
-    } else {
-        client.guildCollection.get(member.guild.id).data.users.push(userData); // save in collection cache
     }
     return userList?.find(user => user.id === member.id) ?? defaultData;
 }
 
-// save user data to database, or local json file, and update guildData
+// save user data to database, or local json file
 export async function saveUserData(client: CustomClient, member: GuildMember) {
     const guildData = client.guildCollection.get(member.guild.id);
     const collection = client.guildDatabase; // database or json
@@ -451,8 +450,10 @@ export async function addUserExp(client: CustomClient, member: GuildMember) {
     userData.exp = exp;
     userData.level = level;
     userData['expAddTimestamp'] = Date.now();
-    const userIndex = guildData.data.users.findIndex((user) => user.id === member.id);
-    guildData.data.users[userIndex] = userData; // save in guild collection cache
+    guildData.data.users.sort((a, b) => {
+        if (a.level === b.level) return (b.exp - a.exp);
+        return (a.level - b.level);
+    })
     await saveUserData(client, member);
 }
 

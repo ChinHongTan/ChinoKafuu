@@ -8,3 +8,4 @@ functions/updateIllust.js
 functions/ascii2d.js
 my-backups
 functions/Util.js
+data/illusts.json
