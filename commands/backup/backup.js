@@ -5,7 +5,7 @@ const { MessageEmbed } = require('discord.js');
 const prefix = process.env.PREFIX || require('../../config/config.json').prefix;
 
 function fetchData(command, args, language) {
-    const backupID = command.options.getInteger('id') ?? args[1];
+    const backupID = command.options?.getInteger('id') ?? args[1];
     if (!backupID) return error(command, language.invalidBackupID);
     // If backup doesn't exist
     if (!fs.existsSync(`./my-backups/${backupID}.json`)) return error(command, language.noBackupFound.replace('${backupID}', backupID));
@@ -15,7 +15,7 @@ function fetchData(command, args, language) {
 
 async function create(command, args, language) {
     const user = command?.user || command?.author;
-    const max = command.options.getInteger('max') ?? args[1] ?? 10;
+    const max = command.options?.getInteger('max') ?? args[1] ?? 10;
     if (max < 0 || max > 1000) return error(command, 'Cannot exceed 1000 or lower than 0!');
     backup.setStorageFolder('./my-backups');
     // Create the backup
@@ -77,7 +77,7 @@ async function load(command, args, language) {
 }
 
 async function bi(command, args, language) {
-    const backupID = command.options.getInteger('id') ?? args[1];
+    const backupID = command.options?.getInteger('id') ?? args[1];
     const backupData = fetchData(command, args, language);
     const backupInfo = {
         data: backupData,
