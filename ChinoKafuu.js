@@ -6,7 +6,7 @@ const mongodbURI = process.env.MONGODB_URI || require('./config/config.json').mo
 
 const CronJob = require('cron').CronJob;
 const pixivRefreshToken = process.env.PIXIV_REFRESH_TOKEN || require('./config/config.json').PixivRefreshToken;
-const { updateIllust } = require('./functions/Util.js');
+const { updateIllust, sendSuggestedIllust } = require('./functions/Util.js');
 
 const en_US = require('./language/en_US.js');
 const zh_CN = require('./language/zh_CN.js');
@@ -85,6 +85,7 @@ if (pixivRefreshToken) {
     const job = new CronJob('00 12 * * *', async function() {
         console.log('Updating pixiv illust list...');
         await updateIllust('Chino Kafuu');
+        await sendSuggestedIllust(await client.channels.fetch('970590759944335361'));
         console.log('Done!');
     }, null, false, 'Asia/Kuala_Lumpur');
     job.start();

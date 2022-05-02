@@ -293,6 +293,66 @@ export async function updateIllust(query: string) {
     return;
 }
 
+function processIllustURL(illust) {
+    const targetURL = [];
+    if (illust.meta_pages.length === 0) {
+        targetURL.push(illust.image_urls.medium.replace('pximg.net', 'pixiv.cat'));
+    }
+    if (illust.meta_pages.length > 5) {
+        targetURL.push(illust.meta_pages[0].image_urls.medium.replace('pximg.net', 'pixiv.cat'));
+    } else {
+        for (let i = 0; i < illust.meta_pages.length; i++) {
+            targetURL.push(illust.meta_pages[i].image_urls.medium.replace('pximg.net', 'pixiv.cat'));
+        }
+    }
+    return targetURL;
+}
+
+export function generateIllustEmbed(illust) {
+    const multipleIllusts = [];
+
+    const targetURL = processIllustURL(illust);
+
+    targetURL.forEach((URL) => {
+        const imageEmbed = new MessageEmbed()
+            .setURL('https://www.pixiv.net')
+            .setImage(URL)
+            .setColor('RANDOM');
+        multipleIllusts.push(imageEmbed);
+    });
+
+    const descriptionEmbed = new MessageEmbed()
+        .setTitle(illust.title)
+        .setURL(`https://www.pixiv.net/en/artworks/${illust.id}`)
+        .setColor('RANDOM')
+        // remove html tags
+        .setDescription(illust?.caption
+            .replace(/\n/ig, '')
+            .replace(/<style[^>]*>[\s\S]*?<\/style[^>]*>/ig, '')
+            .replace(/<head[^>]*>[\s\S]*?<\/head[^>]*>/ig, '')
+            .replace(/<script[^>]*>[\s\S]*?<\/script[^>]*>/ig, '')
+            .replace(/<\/\s*(?:p|div)>/ig, '\n')
+            .replace(/<br[^>]*\/?>/ig, '\n')
+            .replace(/<[^>]*>/ig, '')
+            .replace('&nbsp;', ' ')
+            .replace(/[^\S\r\n][^\S\r\n]+/ig, ' '));
+    multipleIllusts.push(descriptionEmbed);
+    return multipleIllusts;
+}
+
+export async function sendSuggestedIllust(channel) {
+    const pixiv = await Pixiv.refreshLogin(refreshToken);
+    let following = await pixiv.user.following({ user_id: 43790997 });
+    let authors = following.user_previews
+    if (pixiv.user.nextURL) authors = await pixiv.util.multiCall( { next_url: pixiv.user.nextURL, user_previews: authors });
+    const randomAuthor = authors[Math.floor(Math.random() * authors.length)];
+    let illusts = randomAuthor.illusts;
+    if (pixiv.illust.nextURL) illusts = await pixiv.util.multiCall({ next_url: pixiv.search.nextURL, illusts });
+    const randomIllust = illusts[Math.floor(Math.random() * illusts.length)];
+    const illustEmbed = generateIllustEmbed(randomIllust);
+    return channel.send({ embeds: illustEmbed })
+}
+
 export async function extension(reaction: MessageReaction, attachment: string) {
     const imageLink = attachment.split('.');
     const typeOfImage = imageLink[imageLink.length - 1];
@@ -452,7 +512,7 @@ export async function addUserExp(client: CustomClient, member: GuildMember) {
     userData['expAddTimestamp'] = Date.now();
     guildData.data.users.sort((a, b) => {
         if (a.level === b.level) return (b.exp - a.exp);
-        return (a.level - b.level);
+        return (b.level - a.level);
     })
     await saveUserData(client, member);
 }

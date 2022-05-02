@@ -1,5 +1,4 @@
-const { edit, error } = require('../../functions/Util.js');
-const { MessageEmbed } = require('discord.js');
+const { edit, error, generateIllustEmbed } = require('../../functions/Util.js');
 const Pixiv = require('pixiv.ts');
 const refreshToken = process.env.PIXIV_REFRESH_TOKEN || require('../../config/config.json').PixivRefreshToken;
 const fs = require('fs');
@@ -29,49 +28,11 @@ async function loli(command) {
         });
     }
 
-    const multipleIllusts = [];
-    const targetURL = [];
-
     // choose an illust randomly and send it
     const randomIllust = illusts[Math.floor(Math.random() * illusts.length)];
-    if (randomIllust.meta_pages.length === 0) {
-        targetURL.push(randomIllust.meta_single_page.original_image_url.replace('pximg.net', 'pixiv.cat'));
-    }
-    if (randomIllust.meta_pages.length > 5) {
-        targetURL.push(randomIllust.meta_pages[0].image_urls.original.replace('pximg.net', 'pixiv.cat'));
-    } else {
-        for (let i = 0; i < randomIllust.meta_pages.length; i++) {
-            targetURL.push(randomIllust.meta_pages[i].image_urls.original.replace('pximg.net', 'pixiv.cat'));
-        }
-    }
+    const illustEmbed = generateIllustEmbed(randomIllust);
 
-    targetURL.forEach((URL) => {
-        const multipleIllust = new MessageEmbed()
-            .setURL('https://www.pixiv.net')
-            .setImage(URL)
-            .setColor('RANDOM');
-        multipleIllusts.push(multipleIllust);
-    });
-
-    const descriptionEmbed = new MessageEmbed()
-        .setTitle(randomIllust.title)
-        .setURL(`https://www.pixiv.net/en/artworks/${randomIllust.id}`)
-        .setColor('RANDOM')
-        // remove html tags
-        .setDescription(randomIllust
-            ?.caption
-            .replace(/\n/ig, '')
-            .replace(/<style[^>]*>[\s\S]*?<\/style[^>]*>/ig, '')
-            .replace(/<head[^>]*>[\s\S]*?<\/head[^>]*>/ig, '')
-            .replace(/<script[^>]*>[\s\S]*?<\/script[^>]*>/ig, '')
-            .replace(/<\/\s*(?:p|div)>/ig, '\n')
-            .replace(/<br[^>]*\/?>/ig, '\n')
-            .replace(/<[^>]*>/ig, '')
-            .replace('&nbsp;', ' ')
-            .replace(/[^\S\r\n][^\S\r\n]+/ig, ' '));
-    multipleIllusts.push(descriptionEmbed);
-
-    return await edit(command, { embeds: multipleIllusts, components: [], content: '\u200b' });
+    return await edit(command, { embeds: illustEmbed, components: [], content: '\u200b' });
 }
 module.exports = {
     name: 'loli',

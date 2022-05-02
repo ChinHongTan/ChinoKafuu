@@ -1,55 +1,6 @@
-const { error, reply } = require('../../functions/Util.js');
-const { MessageEmbed } = require('discord.js');
+const { error, reply, generateIllustEmbed } = require('../../functions/Util.js');
 const Pixiv = require('pixiv.ts');
 const refreshToken = process.env.PIXIV_REFRESH_TOKEN || require('../../config/config.json').PixivRefreshToken;
-
-function processIllustURL(illust) {
-    const targetURL = [];
-    if (illust.meta_pages.length === 0) {
-        targetURL.push(illust.image_urls.medium.replace('pximg.net', 'pixiv.cat'));
-    }
-    if (illust.meta_pages.length > 5) {
-        targetURL.push(illust.meta_pages[0].image_urls.medium.replace('pximg.net', 'pixiv.cat'));
-    } else {
-        for (let i = 0; i < illust.meta_pages.length; i++) {
-            targetURL.push(illust.meta_pages[i].image_urls.medium.replace('pximg.net', 'pixiv.cat'));
-        }
-    }
-    return targetURL;
-}
-
-function generateIllustDescriptionEmbed(illust) {
-    const multipleIllusts = [];
-
-    const targetURL = processIllustURL(illust);
-
-    targetURL.forEach((URL) => {
-        const imageEmbed = new MessageEmbed()
-            .setURL('https://www.pixiv.net')
-            .setImage(URL)
-            .setColor('RANDOM');
-        multipleIllusts.push(imageEmbed);
-    });
-
-    const descriptionEmbed = new MessageEmbed()
-        .setTitle(illust.title)
-        .setURL(`https://www.pixiv.net/en/artworks/${illust.id}`)
-        .setColor('RANDOM')
-        // remove html tags
-        .setDescription(illust
-            ?.caption
-            .replace(/\n/ig, '')
-            .replace(/<style[^>]*>[\s\S]*?<\/style[^>]*>/ig, '')
-            .replace(/<head[^>]*>[\s\S]*?<\/head[^>]*>/ig, '')
-            .replace(/<script[^>]*>[\s\S]*?<\/script[^>]*>/ig, '')
-            .replace(/<\/\s*(?:p|div)>/ig, '\n')
-            .replace(/<br[^>]*\/?>/ig, '\n')
-            .replace(/<[^>]*>/ig, '')
-            .replace('&nbsp;', ' ')
-            .replace(/[^\S\r\n][^\S\r\n]+/ig, ' '));
-    multipleIllusts.push(descriptionEmbed);
-    return multipleIllusts;
-}
 
 // search pixiv for illusts
 async function pixivFunc(command, args, language) {
@@ -95,7 +46,7 @@ async function pixivFunc(command, args, language) {
     default:
         return error(command, language.unknownSubcommand);
     }
-    const illustEmbed = generateIllustDescriptionEmbed(illust);
+    const illustEmbed = generateIllustEmbed(illust);
     return reply(command, { embeds: illustEmbed });
 }
 
