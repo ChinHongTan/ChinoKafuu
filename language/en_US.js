@@ -1,6 +1,6 @@
 /* eslint quotes: 0 */
 module.exports = {
-    "backup-info": {
+    "backup": {
         "invalidBackupID":"You must specify a valid backup ID!",
         "backupInformation":"Backup Information",
         "backupID":"Backup ID",
@@ -8,25 +8,15 @@ module.exports = {
         "backupSize":"Size",
         "backupCreatedAt":"Created at",
         "noBackupFound":"No backup found for \\`${backupID}\\` !",
-    },
-    "create": {
         "notAdmin":"You must be an administrator of this server to request a backup!",
         "startBackup":"Start creating backup...\nMax Messages per Channel: ${max}\nSave Images: base64",
         "doneBackupDM":"✅ | The backup has been created! To load it, type this command on the server of your choice: \\`${prefix}load ${backupData.id}\\`!",
         "doneBackupGuild":"Backup successfully created. The backup ID was sent in dm!",
-    },
-    "get-backup-file": {
-        "invalidBackupID":"You must specify a valid backup ID!",
-        "noBackupFound":"No backup found for \\`${backupID}\\` !",
-    },
-    "load": {
-        "invalidBackupID":"You must specify a valid backup ID!",
-        "notAdmin": "You must be an administrator of this server to load a backup!",
         "warningBackup": "When the backup is loaded, all the channels, roles, etc. will be replaced! Type `-confirm` to confirm!",
         "timesUpBackup": "Time's up! Cancelled backup loading!",
         "startLoadingBackup": "✅ | Start loading the backup!",
         "backupError": "🆘 | Sorry, an error occurred... Please check that I have administrator permissions!",
-        "noBackupFound":"No backup found for \\`${backupID}\\` !",
+        "outOfRange": "Max messages per channel cannot exceed 1000 or lower than 0!",
     },
     "8ball": {
         "noQuestion": "Psst. You need to ask the 8ball a question, you know?",

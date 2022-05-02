@@ -1,6 +1,6 @@
 /* eslint quotes: 0 */
 module.exports = {
-    "backup-info": {
+    "backup": {
         "invalidBackupID": "您必须输入有效的备份文件ID！",
         "backupInformation": "备份信息",
         "backupID": "备份文件ID",
@@ -8,25 +8,15 @@ module.exports = {
         "backupSize": "文件大小",
         "backupCreatedAt": "创建于",
         "noBackupFound": "找不到\\`${backupID}\\`这个ID！",
-    },
-    "create": {
         "notAdmin": "你必须是伺服器管理员才能请求备份！",
         "startBackup": "开始备份...\n频道最大备份讯息量: ${max}\n图片格式: base64",
         "doneBackupDM": "✅ | 备份已创建! 要加载备份, 请在目标伺服器中输入此指令: \\`${prefix}load ${backupData.id}\\`!",
         "doneBackupGuild": "备份已创建。备份ID已发送至私讯！",
-    },
-    "get-backup-file": {
-        "invalidBackupID":"您必须输入有效的备份文件ID！",
-        "noBackupFound":"找不到\\`${backupID}\\`这个ID！",
-    },
-    "load": {
-        "invalidBackupID": "您必须输入有效的备份文件ID！",
-        "notAdmin": "只有管理员才能加载备份！",
         "warningBackup": "加载备份后, 所有的原本的频道，身分组等将无法复原！ 输入 `-confirm` 确认!",
         "timesUpBackup": "时间到! 已取消备份加载!",
         "startLoadingBackup": "✅ | 开始加载备份!",
         "backupError": "🆘 | 很抱歉，出了点问题... 请检查我有没有管理员权限!",
-        "noBackupFound": "找不到\\`${backupID}\\`这个ID！",
+        "outOfRange": "频道最大备份讯息数不能小于0或大于1000！",
     },
     "8ball": {
         "noQuestion": "你要问问题啦干",

@@ -1,6 +1,6 @@
 /* eslint quotes: 0 */
 module.exports = {
-    "backup-info": {
+    "backup": {
         "invalidBackupID": "您必須輸入有效的備份文件ID！",
         "backupInformation": "備份信息",
         "backupID": "備份文件ID",
@@ -8,25 +8,15 @@ module.exports = {
         "backupSize": "文件大小",
         "backupCreatedAt": "創建於",
         "noBackupFound": "找不到\\`${backupID}\\`這個ID！",
-    },
-    "create": {
         "notAdmin": "你必須是伺服器管理員才能請求備份！",
         "startBackup": "開始備份...\n頻道最大備份訊息量: ${max}\n圖片格式: base64",
         "doneBackupDM": "✅ | 備份已創建! 要加載備份, 請在目標伺服器中輸入此指令: \\`${prefix}load ${backupData.id}\\`!",
         "doneBackupGuild": "備份已創建。備份ID已發送至私訊！",
-    },
-    "get-backup-file": {
-        "invalidBackupID":"您必須輸入有效的備份文件ID！",
-        "noBackupFound":"找不到\\`${backupID}\\`這個ID！",
-    },
-    "load": {
-        "invalidBackupID": "您必須輸入有效的備份文件ID！",
-        "notAdmin": "只有管理員才能加載備份！",
         "warningBackup": "加載備份後, 所有的原本的頻道，身分組等將無法復原！ 輸入 `-confirm` 確認!",
         "timesUpBackup": "時間到! 已取消備份加載!",
         "startLoadingBackup": "✅ | 開始加載備份!",
         "backupError": "🆘 | 很抱歉，出了點問題... 請檢查我有沒有管理員權限!",
-        "noBackupFound": "找不到\\`${backupID}\\`这个ID！",
+        "outOfRange": "頻道最大備份訊息數不能小於0或大於1000！",
     },
     "8ball": {
         "noQuestion": "你要問問題啦幹",
