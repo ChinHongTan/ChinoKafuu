@@ -123,9 +123,8 @@ async function backupFunc(command, args, language) {
 }
 
 module.exports = {
-    name: 'create',
+    name: 'backup',
     coolDown: 10,
-    aliases: ['backup'],
     guildOnly: true,
     permissions: 'ADMINISTRATOR',
     description: {
