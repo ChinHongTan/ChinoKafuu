@@ -348,7 +348,10 @@ export async function sendSuggestedIllust(channel: TextChannel) {
     const randomAuthor = authors[Math.floor(Math.random() * authors.length)];
     let illusts = randomAuthor.illusts;
     if (pixiv.illust.nextURL) illusts = await pixiv.util.multiCall({ next_url: pixiv.search.nextURL, illusts });
-    const randomIllust = illusts[Math.floor(Math.random() * illusts.length)];
+    let clean_illusts = illusts.filter((illust) => {
+        return illust.x_restrict === 0 && illust.total_bookmarks >= 1000;
+    });
+    const randomIllust = clean_illusts[Math.floor(Math.random() * illusts.length)];
     const illustEmbed = generateIllustEmbed(randomIllust);
     return channel.send({ embeds: illustEmbed })
 }
