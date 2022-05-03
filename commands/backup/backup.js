@@ -174,6 +174,7 @@ module.exports = {
                 },
             ],
         },
+        /*
         {
             name: 'info',
             description: {
@@ -194,6 +195,7 @@ module.exports = {
                 },
             ],
         },
+         */
     ],
     async execute(message, args, language) {
         await backupFunc(message, args, language);

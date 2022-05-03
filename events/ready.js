@@ -1,7 +1,7 @@
 const { Collection } = require('discord.js');
 const channelId = process.env.CHANNEL_ID || require('../config/config.json').channelId;
 const util = require('util');
-const { registerCommand, getGuildData, saveGuildData } = require('../functions/Util.js');
+const { getGuildData, saveGuildData } = require('../functions/Util.js');
 
 module.exports = {
     name: 'ready',
@@ -36,8 +36,6 @@ module.exports = {
             client.guildCollection.set(id, guildData);
 
             await saveGuildData(client, id);
-            const language = guildData.data.language;
-            await registerCommand(id, language);
         }
     },
 };

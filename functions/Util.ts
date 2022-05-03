@@ -21,12 +21,9 @@ import {
 import Pixiv, {PixivIllust} from "pixiv.ts";
 import * as fs from "fs";
 import { Collection as DB } from "mongodb";
-import { Routes } from "discord-api-types/v9";
-import { REST } from "@discordjs/rest";
 
 const refreshToken = process.env.PIXIV_REFRESH_TOKEN || require('../config/config.json').PixivRefreshToken;
-const clientId = process.env.CLIENT_ID || require('../config/config.json').clientId;
-const token = process.env.TOKEN || require('../config/config.json').token;
+
 
 interface SlashCommand {
     execute(interaction, language): Promise<any>;
@@ -412,7 +409,7 @@ export async function getGuildData(client: CustomClient, guildId: Snowflake) {
     const defaultData = {
         id: guildId,
         data: {
-            language: 'en_US',
+            language: 'zh_TW',
             snipes: [],
             editSnipes: [],
             users: [],
@@ -518,28 +515,4 @@ export async function addUserExp(client: CustomClient, member: GuildMember) {
         return (b.level - a.level);
     })
     await saveUserData(client, member);
-}
-
-export async function registerCommand(guildId: Snowflake, language: Language) {
-    const rest = new REST({ version: '9' }).setToken(token);
-    const commands = [];
-    const commandFolders = fs.readdirSync('./commands');
-    for (const folder of commandFolders) {
-        const commandFiles = fs.readdirSync(`./commands/${folder}`).filter((file) => file.endsWith('.js'));
-        for (const file of commandFiles) {
-            const command = require(`../commands/${folder}/${file}`);
-            const data = processCommand(command, language);
-            commands.push(data.toJSON());
-        }
-    }
-    try {
-        await rest.put(
-            Routes.applicationGuildCommands(clientId, guildId),
-            { body: commands },
-        );
-
-        console.log('Successfully registered application commands.');
-    } catch (error) {
-        console.error(`Missing access: ${error} for ID: ${guildId}`);
-    }
 }
