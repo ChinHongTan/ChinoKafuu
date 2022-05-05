@@ -3,10 +3,8 @@ const { GuildChannel, Role } = require('discord.js');
 const { saveGuildData } = require('../../functions/Util');
 
 async function changeSettings(guildId, client, category, target) {
-    console.log(category, target);
     const guildData = client.guildCollection.get(guildId);
     guildData.data[category] = target;
-    console.log(guildData);
     client.guildCollection.set(guildId, guildData);
     await saveGuildData(client, guildId);
 }
@@ -43,7 +41,6 @@ async function addLevelReward(command, args, language) {
 
     const rewards = command.client.guildCollection.get(command.guild.id).data.levelReward ?? {};
     rewards[args[0]] = args[1].id;
-    console.log(rewards);
     await changeSettings(command.guild.id, command.client, 'levelReward', rewards);
     return success(command, language.levelRewardAdded.replace('${args[0]}', args[0]).replace('${args[1]}', args[1]));
 }
