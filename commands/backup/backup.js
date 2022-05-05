@@ -45,8 +45,7 @@ async function load(command, args, language) {
     // If the backup exists, request for confirmation
     await warn(command, language.warningBackup);
     const filter = (m) => m.author.id === user.id && m.content === '-confirm';
-    let confirm;
-    await command.channel
+    const confirm = await command.channel
         .awaitMessages(
             {
                 filter,
@@ -57,7 +56,6 @@ async function load(command, args, language) {
         .catch((collected) => {
             // if the author of the commands does not confirm the backup loading
             if (collected.size < 1) return error(command, language.timesUpBackup);
-            confirm = true;
         });
     if (confirm) {
         // When the author of the command has confirmed that he wants to load the backup on his server

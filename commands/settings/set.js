@@ -10,7 +10,7 @@ async function changeSettings(guildId, client, category, target) {
 }
 
 async function setLanguage(command, args, language) {
-    if (!args.length > 0) return error(command, language.noArgs);
+    if (args.length < 1) return error(command, language.noArgs);
     if (args[0] !== 'en_US' && args[0] !== 'zh_CN' && args[0] !== 'zh_TW') return error(command, language.languageNotSupported);
 
     await changeSettings(command.guild.id, command.client, 'language', args[0]);
@@ -18,11 +18,19 @@ async function setLanguage(command, args, language) {
     await success(command, language.changeSuccess.replace('${args[0]}', args[0]));
 }
 
-async function setChannel(command, args, language) {
-    if (!args.length > 0) return error(command, language.noArgs);
+async function setLogChannel(command, args, language) {
+    if (args.length < 1) return error(command, language.noArgs);
     if (!(args[0] instanceof GuildChannel)) return error(command, language.argsNotChannel);
 
     await changeSettings(command.guild.id, command.client, 'channel', args[0].id);
+    return success(command, language.channelChanged.replace('${args[0]}', args[0]));
+}
+
+async function setStarboardChannel(command, args, language) {
+    if (args.length < 1) return error(command, language.noArgs);
+    if (!(args[0] instanceof GuildChannel)) return error(command, language.argsNotChannel);
+
+    await changeSettings(command.guild.id, command.client, 'starboard', args[0].id);
     return success(command, language.channelChanged.replace('${args[0]}', args[0]));
 }
 
@@ -76,13 +84,35 @@ module.exports = {
                 },
             ],
         },
+        {
+            name: 'starboard',
+            description: {
+                'en_US': 'Set starboard channel!',
+                'zh_CN': '设置名句精华频道',
+                'zh_TW': '設置名句精華頻道',
+            },
+            options: [
+                {
+                    name: 'channel',
+                    description: {
+                        'en_US': 'Starboard channel',
+                        'zh_CN': '名句精华频道',
+                        'zh_TW': '名句精華頻道',
+                    },
+                    type: 'CHANNEL',
+                    required: true,
+                },
+            ],
+        },
     ],
     async execute(message, args, language) {
         switch (args[0]) {
         case 'language':
             return await setLanguage(message, [args[1]], language);
         case 'logger_channel':
-            return await setChannel(message, [message.mentions.channels.first()], language);
+            return await setLogChannel(message, [message.mentions.channels.first()], language);
+        case 'starboard':
+            return await setStarboardChannel(message, [message.mentions.channels.first()], language);
         }
     },
     slashCommand: {
@@ -91,7 +121,9 @@ module.exports = {
             case 'language':
                 return await setLanguage(interaction, [interaction.options.getString('language')], language);
             case 'logger_channel':
-                return await setChannel(interaction, [interaction.options.getChannel('channel')], language);
+                return await setLogChannel(interaction, [interaction.options.getChannel('channel')], language);
+            case 'starboard':
+                return await setStarboardChannel(interaction, [interaction.options.getChannel('starboard')], language);
             }
         },
     },

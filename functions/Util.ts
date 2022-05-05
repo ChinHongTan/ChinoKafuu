@@ -262,7 +262,10 @@ export async function edit(command: CommandTypes, response?: ResponseTypes | Mes
 }
 
 export async function error(command: CommandTypes, response: ResponseTypes) {
-    return await reply(command, `❌ | ${response}`, 'RED');
+    const message = await reply(command, `❌ | ${response}`, 'RED');
+    if (message instanceof Message) {
+        setTimeout(() => message.delete(), 10000);
+    }
 }
 
 export async function warn(command: CommandTypes, response: ResponseTypes) {

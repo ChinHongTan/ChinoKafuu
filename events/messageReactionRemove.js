@@ -8,8 +8,8 @@ module.exports = {
         const { message } = reaction;
         if (message.author.id === user.id) return;
         if (reaction.emoji.name !== '⭐') return;
-        const starChannel = message.guild.channels.cache.find(channel => channel.name === 'starboard-channel');
-        if (!starChannel) message.channel.send('It appears that you do not have a starboard channel.');
+        const starChannel = message.guild.channels.cache.find(channel => channel.id === reaction.client.guildCollection.get(reaction.guild.id).data.starboard);
+        if (!starChannel) message.channel.send('你還沒有設置starboard喲小可愛');
         const fetchedMessages = await starChannel.messages.fetch({ limit: 100 });
         const stars = fetchedMessages.filter((m) => m.embeds.length !== 0).find(m => m?.embeds[0]?.footer?.text?.startsWith('⭐') && m?.embeds[0]?.footer?.text?.endsWith(message.id));
         if (stars) {

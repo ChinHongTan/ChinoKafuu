@@ -7,10 +7,10 @@ module.exports = {
         if (reaction.partial) await reaction.fetch();
         const { message } = reaction;
         if (reaction.emoji.name !== '⭐') return;
-        if (message.author.id === user.id) return message.channel.send(`${user}, you cannot star your own messages.`);
-        if (message.author.bot) return message.channel.send(`${user}, you cannot star bot messages.`);
-        const starChannel = message.guild.channels.cache.find(channel => channel.name === 'starboard-channel');
-        if (!starChannel) message.channel.send('It appears that you do not have a starboard channel.');
+        if (message.author.id === user.id) return message.channel.send(`${user}不要自己給自己打星啦笑死`);
+        if (message.author.bot) return message.channel.send(`${user}不能給機器人打星啦`);
+        const starChannel = message.guild.channels.cache.find(channel => channel.id === reaction.client.guildCollection.get(reaction.guild.id).data.starboard);
+        if (!starChannel) message.channel.send('你還沒有設置starboard喲小可愛');
         const fetchedMessages = await starChannel.messages.fetch({ limit: 100 });
         const stars = fetchedMessages.filter((m) => m.embeds.length !== 0).find(m => m?.embeds[0]?.footer?.text?.startsWith('⭐') && m?.embeds[0]?.footer?.text?.endsWith(message.id));
         if (stars) {
@@ -32,7 +32,7 @@ module.exports = {
             if (image === '' && message.cleanContent.length < 1) return message.channel.send(`${user}, you cannot star an empty message.`);
             const embed = new MessageEmbed()
                 .setColor(15844367)
-                .setDescription(`${message.cleanContent}\n\n[Jump to message!](${message.url})`)
+                .setDescription(`${message.cleanContent}\n\n[訊息鏈接](${message.url})`)
                 .setAuthor({ name: message.author.tag, iconURL: message.author.displayAvatarURL() })
                 .setTimestamp(new Date())
                 .setFooter({ text: `⭐ 1 | ${message.id}` })
