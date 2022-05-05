@@ -16,6 +16,7 @@ module.exports = {
         "timesUpBackup": "Time's up! Cancelled backup loading!",
         "startLoadingBackup": "✅ | Start loading the backup!",
         "backupError": "🆘 | Sorry, an error occurred... Please check that I have administrator permissions!",
+        "doneLoading": "✅ | Backup loaded successfully!",
         "outOfRange": "Max messages per channel cannot exceed 1000 or lower than 0!",
     },
     "8ball": {

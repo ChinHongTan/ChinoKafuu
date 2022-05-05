@@ -16,6 +16,7 @@ module.exports = {
         "timesUpBackup": "時間到! 已取消備份加載!",
         "startLoadingBackup": "✅ | 開始加載備份!",
         "backupError": "🆘 | 很抱歉，出了點問題... 請檢查我有沒有管理員權限!",
+        "doneLoading": "✅ | 群組備份完成！",
         "outOfRange": "頻道最大備份訊息數不能小於0或大於1000！",
     },
     "8ball": {

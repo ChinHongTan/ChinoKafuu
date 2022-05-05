@@ -66,6 +66,7 @@ async function load(command, args, language) {
                 clearGuildBeforeRestore: true,
                 maxMessagesPerChannel: 100000,
             })
+            .then(user.send(language.doneLoading))
             .catch((err) => {
                 console.error(err);
                 // If an error occurred
