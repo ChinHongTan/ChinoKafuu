@@ -252,7 +252,11 @@ module.exports = {
         "languageNotSupported": "Language not supported!",
         "changeSuccess": "Language changed successfully to `${args[0]}`!",
         "argsNotChannel": "Argument not a channel!",
+        "argsNotRole": "Argument not a role!",
+        "argsNotNumber": "Argument not a number!",
+        "noRole": "No role provided!",
         "channelChanged": "Changed my log channel to ${args[0]}!",
+        "levelRewardAdded": "Added level reward: ${args[0]} => ${args[1]}!",
     },
     "cemoji": {
         "noEmoji": "Please specify an emoji to add!",

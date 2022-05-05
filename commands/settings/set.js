@@ -1,10 +1,12 @@
 const { error, success } = require('../../functions/Util.js');
-const { GuildChannel } = require('discord.js');
+const { GuildChannel, Role } = require('discord.js');
 const { saveGuildData } = require('../../functions/Util');
 
 async function changeSettings(guildId, client, category, target) {
+    console.log(category, target);
     const guildData = client.guildCollection.get(guildId);
     guildData.data[category] = target;
+    console.log(guildData);
     client.guildCollection.set(guildId, guildData);
     await saveGuildData(client, guildId);
 }
@@ -32,6 +34,18 @@ async function setStarboardChannel(command, args, language) {
 
     await changeSettings(command.guild.id, command.client, 'starboard', args[0].id);
     return success(command, language.channelChanged.replace('${args[0]}', args[0]));
+}
+
+async function addLevelReward(command, args, language) {
+    if (args.length < 1) return error(command, language.noArgs);
+    if (isNaN(args[0])) return error(command, language.argsNotNumber);
+    if (!(args[1] instanceof Role) || !args[1]) return error(command, language.noRole);
+
+    const rewards = command.client.guildCollection.get(command.guild.id).data.levelReward ?? {};
+    rewards[args[0]] = args[1].id;
+    console.log(rewards);
+    await changeSettings(command.guild.id, command.client, 'levelReward', rewards);
+    return success(command, language.levelRewardAdded.replace('${args[0]}', args[0]).replace('${args[1]}', args[1]));
 }
 
 module.exports = {
@@ -104,6 +118,37 @@ module.exports = {
                 },
             ],
         },
+        {
+            name: 'add_level_reward',
+            description: {
+                'en_US': 'Set reward given when a user levels up.',
+                'zh_CN': '设置用户升级时给予的奖励',
+                'zh_TW': '設置用戶升級時給予的獎勵',
+            },
+            options: [
+                {
+                    name: 'level',
+                    description: {
+                        'en_US': 'Level',
+                        'zh_CN': '等级',
+                        'zh_TW': '等級',
+                    },
+                    type: 'INTEGER',
+                    required: true,
+                    min: 0,
+                },
+                {
+                    name: 'role',
+                    description: {
+                        'en_US': 'Role to give',
+                        'zh_CN': '给予的身份组',
+                        'zh_TW': '給予的身份組',
+                    },
+                    type: 'ROLE',
+                    required: true,
+                },
+            ],
+        },
     ],
     async execute(message, args, language) {
         switch (args[0]) {
@@ -113,6 +158,8 @@ module.exports = {
             return await setLogChannel(message, [message.mentions.channels.first()], language);
         case 'starboard':
             return await setStarboardChannel(message, [message.mentions.channels.first()], language);
+        case 'add_level_reward':
+            return await addLevelReward(message, [args[1], message.mentions.roles.first()], language);
         }
     },
     slashCommand: {
@@ -124,6 +171,8 @@ module.exports = {
                 return await setLogChannel(interaction, [interaction.options.getChannel('channel')], language);
             case 'starboard':
                 return await setStarboardChannel(interaction, [interaction.options.getChannel('starboard')], language);
+            case 'add_level_reward':
+                return await addLevelReward(interaction, [interaction.options.getInteger('level'), interaction.options.getRole('role')], language);
             }
         },
     },

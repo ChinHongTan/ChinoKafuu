@@ -250,7 +250,11 @@ module.exports = {
         "languageNotSupported": "不支持该语言！",
         "changeSuccess": "成功更换语言至`${args[0]}`！",
         "argsNotChannel": "没有提供频道！",
+        "argsNotRole": "没有提供身份组！",
+        "argsNotNumber": "没有提供数字！",
+        "noRole": "没有提供身份组！",
         "channelChanged": "纪录频道调整至 ${args[0]}！",
+        "levelRewardAdded": "成功添加身份组奖励: ${args[0]} => ${args[1]}！",
     },
     "cemoji": {
         "noEmoji": "请告诉我要复制哪个表情！",

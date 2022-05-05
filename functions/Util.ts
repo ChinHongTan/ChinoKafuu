@@ -79,12 +79,9 @@ interface Snipe {
     attachment?: string,
 }
 
-interface EditSnipe {
-    author: string,
-    authorAvatar: string,
-    content: string,
-    timeStamp: Date,
-    attachment?: string,
+interface LevelReward {
+    level: number,
+    role: Snowflake
 }
 
 interface CustomClient extends Client {
@@ -96,8 +93,9 @@ interface CustomClient extends Client {
         data: {
             language: Language,
             channel?: Snowflake,
+            levelReward?: LevelReward,
             snipes: Snipe[],
-            editSnipes: EditSnipe[],
+            editSnipes: Snipe[],
             users: {
                 id: Snowflake,
                 exp: number,
