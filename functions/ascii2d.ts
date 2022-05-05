@@ -61,10 +61,9 @@ async function fetchDOM(endpoint: string): Promise<Document> {
 
 async function getAuthToken(): Promise<string> {
     const document = await fetchDOM(baseURL);
-    const token = document.querySelector<HTMLMetaElement>(
+    return document.querySelector<HTMLMetaElement>(
         'meta[name="csrf-token"]',
     )!.content;
-    return token;
 }
 
 function parseExternalSource(externalBox: Element): Source {
@@ -159,10 +158,9 @@ function parseItem(itemBox: Element): Item {
 
 function parseSearchResult(htmlString: string): Item[] {
     const document = getDocument(htmlString);
-    const items = Array.from(document.querySelectorAll('.item-box'))
+    return Array.from(document.querySelectorAll('.item-box'))
         .slice(1)
         .map(parseItem);
-    return items;
 }
 
 async function getSearchHash(query: string | fs.ReadStream) {

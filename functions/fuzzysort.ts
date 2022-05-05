@@ -39,8 +39,7 @@ class FuzzySort{
             limit,
         });
         if (!result[0]) return;
-        let member = this.message.guild.members.cache.find((m) => m.user.tag === result[0].obj["tag"]);
-        return member;
+        return this.message.guild.members.cache.find((m) => m.user.tag === result[0].obj["tag"]);
     }
 }
 module.exports = FuzzySort;
