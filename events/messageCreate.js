@@ -14,7 +14,7 @@ module.exports = {
             if (!userData) userData = await getUserData(message.client, message.member);
             await saveUserData(client, message.member); // save in collection cache
             if (!('expAddTimestamp' in userData) || userData.expAddTimestamp + 60 * 1000 <= Date.now()) {
-                await addUserExp(client, message.member);
+                await addUserExp(client, message.member, message.channel);
             }
         }
 

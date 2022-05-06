@@ -79,11 +79,6 @@ interface Snipe {
     attachment?: string,
 }
 
-interface LevelReward {
-    level: number,
-    role: Snowflake
-}
-
 interface CustomClient extends Client {
     commands: Collection<string, Command>,
     language: { [commandName: string]: Translation },
@@ -93,7 +88,7 @@ interface CustomClient extends Client {
         data: {
             language: Language,
             channel?: Snowflake,
-            levelReward?: LevelReward,
+            levelReward?: { [level: number]: Snowflake },
             snipes: Snipe[],
             editSnipes: Snipe[],
             users: {
@@ -498,14 +493,20 @@ export async function saveUserData(client: CustomClient, member: GuildMember) {
 }
 
 // add exp for a user
-export async function addUserExp(client: CustomClient, member: GuildMember) {
+export async function addUserExp(client: CustomClient, member: GuildMember, channel: TextChannel) {
     const guildData = client.guildCollection.get(member.guild.id);
     const userData = guildData.data.users.find(user => user.id === member.id); // collection cache
+    const levelRewards = guildData.data.levelReward;
     let exp = userData.exp;
     let level = userData.level;
     exp ++;
     if (userData.exp >= level * ((1 + level) / 2) + 4 ) { // level up
         level ++;
+        const message = await channel.send(`好耶${member}, 你升到第${level}級了！`);
+        setTimeout(() => message.delete(), 5000);
+        for (const [rewardLevel, reward] of Object.entries(levelRewards)) {
+            if (level >= parseInt(rewardLevel) && !member.roles.cache.has(reward)) await member.roles.add(reward);
+        }
         exp = 0
     }
     userData.exp = exp;
