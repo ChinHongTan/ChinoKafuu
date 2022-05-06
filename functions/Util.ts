@@ -130,6 +130,7 @@ function processOpt(commandBuilder: SlashCommandSubcommandBuilder | SlashCommand
             const integerOptionBuilder = new SlashCommandIntegerOption()
                 .setName(opt.name)
                 .setDescription(opt.description[language])
+                .setRequired(opt.required ?? false);
             if (opt.min) integerOptionBuilder.setMinValue(opt.min)
             if (opt.max) integerOptionBuilder.setMaxValue(opt.max)
             commandBuilder.addIntegerOption(integerOptionBuilder);
@@ -502,8 +503,10 @@ export async function addUserExp(client: CustomClient, member: GuildMember) {
     exp ++;
     if (userData.exp >= level * ((1 + level) / 2) + 4 ) { // level up
         level ++;
-        for (const [rewardLevel, reward] of Object.entries(levelRewards)) {
-            if (level >= parseInt(rewardLevel) && !member.roles.cache.has(reward)) await member.roles.add(reward);
+        if (levelRewards) {
+            for (const [rewardLevel, reward] of Object.entries(levelRewards)) {
+                if (level >= parseInt(rewardLevel) && !member.roles.cache.has(reward)) await member.roles.add(reward);
+            }
         }
         exp = 0
     }
