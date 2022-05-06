@@ -253,8 +253,10 @@ module.exports = {
         "argsNotRole": "沒有提供身份組！",
         "argsNotNumber": "沒有提供數字！",
         "noRole": "沒有提供身份組！",
-        "channelChanged": "記錄頻道調整至 ${args[0]}！",
+        "logChannelChanged": "記錄頻道調整至 ${args[0]}！",
+        "starboardChanged": "名句精華調整至 ${args[0]}！",
         "levelRewardAdded": "成功添加身份組獎勵: ${args[0]} => ${args[1]}！",
+        "levelRewardRemoved": "成功移除身份組獎勵: ${args[0]} => ${args[1]}！",
     },
     "cemoji": {
         "noEmoji": "請告訴我要復製哪個表情！",

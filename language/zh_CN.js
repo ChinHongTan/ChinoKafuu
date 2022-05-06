@@ -253,8 +253,10 @@ module.exports = {
         "argsNotRole": "没有提供身份组！",
         "argsNotNumber": "没有提供数字！",
         "noRole": "没有提供身份组！",
-        "channelChanged": "纪录频道调整至 ${args[0]}！",
+        "logChannelChanged": "记录频道调整至 ${args[0]}！",
+        "starboardChanged": "名句精华调整至 ${args[0]}！",
         "levelRewardAdded": "成功添加身份组奖励: ${args[0]} => ${args[1]}！",
+        "levelRewardRemoved": "成功移除身份组奖励: ${args[0]} => ${args[1]}！",
     },
     "cemoji": {
         "noEmoji": "请告诉我要复制哪个表情！",

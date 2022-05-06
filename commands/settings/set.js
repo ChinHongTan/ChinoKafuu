@@ -23,7 +23,7 @@ async function setLogChannel(command, args, language) {
     if (!(args[0] instanceof GuildChannel)) return error(command, language.argsNotChannel);
 
     await changeSettings(command.guild.id, command.client, 'channel', args[0].id);
-    return success(command, language.channelChanged.replace('${args[0]}', args[0]));
+    return success(command, language.logChannelChanged.replace('${args[0]}', args[0]));
 }
 
 async function setStarboardChannel(command, args, language) {
@@ -31,7 +31,7 @@ async function setStarboardChannel(command, args, language) {
     if (!(args[0] instanceof GuildChannel)) return error(command, language.argsNotChannel);
 
     await changeSettings(command.guild.id, command.client, 'starboard', args[0].id);
-    return success(command, language.channelChanged.replace('${args[0]}', args[0]));
+    return success(command, language.starboardChanged.replace('${args[0]}', args[0]));
 }
 
 async function addLevelReward(command, args, language) {
@@ -43,6 +43,21 @@ async function addLevelReward(command, args, language) {
     rewards[args[0]] = args[1].id;
     await changeSettings(command.guild.id, command.client, 'levelReward', rewards);
     return success(command, language.levelRewardAdded.replace('${args[0]}', args[0]).replace('${args[1]}', args[1]));
+}
+
+async function removeLevelReward(command, args, language) {
+    if (args.length < 1) return error(command, language.noArgs);
+    if (!(args[0] instanceof Role)) return error(command, language.noRole);
+
+    const rewards = command.client.guildCollection.get(command.guild.id).data.levelReward;
+    if (!rewards) return error(command, '你還沒有設置等級獎勵！');
+    for (const r in rewards) {
+        if (rewards[r] === args[1].id) {
+            delete rewards[r];
+        }
+    }
+    await changeSettings(command.guild.id, command.client, 'levelReward', rewards);
+    return success(command, language.levelRewardRemoved.replace('${args[0]}', args[0]).replace('${args[1]}', args[1]));
 }
 
 module.exports = {
@@ -146,6 +161,16 @@ module.exports = {
                 },
             ],
         },
+        {
+            name: 'remove_level_reward',
+            description: {
+                'en_US': 'Reward role to remove',
+                'zh_CN': '要移除的奖励身份组',
+                'zh_TW': '要移除的獎勵身份組',
+            },
+            type: 'ROLE',
+            required: true,
+        },
     ],
     async execute(message, args, language) {
         switch (args[0]) {
@@ -157,6 +182,8 @@ module.exports = {
             return await setStarboardChannel(message, [message.mentions.channels.first()], language);
         case 'add_level_reward':
             return await addLevelReward(message, [args[1], message.mentions.roles.first()], language);
+        case 'remove_level_reward':
+            return await removeLevelReward(message, [message.mentions.roles.first()], language);
         }
     },
     slashCommand: {
@@ -167,9 +194,11 @@ module.exports = {
             case 'logger_channel':
                 return await setLogChannel(interaction, [interaction.options.getChannel('channel')], language);
             case 'starboard':
-                return await setStarboardChannel(interaction, [interaction.options.getChannel('starboard')], language);
+                return await setStarboardChannel(interaction, [interaction.options.getChannel('channel')], language);
             case 'add_level_reward':
                 return await addLevelReward(interaction, [interaction.options.getInteger('level'), interaction.options.getRole('role')], language);
+            case 'remove_level_reward':
+                return await removeLevelReward(interaction, [interaction.options.getRole('role')], language);
             }
         },
     },

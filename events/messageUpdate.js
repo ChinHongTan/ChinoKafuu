@@ -4,7 +4,7 @@ const { saveGuildData } = require('../functions/Util');
 module.exports = {
     name: 'messageUpdate',
     async execute(oldMessage, newMessage) {
-        if (!newMessage.guild || newMessage.author.bot) return;
+        if (!newMessage.guild || newMessage.author?.bot) return;
         if (oldMessage.partial) await oldMessage.fetch();
         if (newMessage.partial) await newMessage.fetch();
         const guildData = newMessage.client.guildCollection.get(newMessage.guild.id);
