@@ -493,7 +493,7 @@ export async function saveUserData(client: CustomClient, member: GuildMember) {
 }
 
 // add exp for a user
-export async function addUserExp(client: CustomClient, member: GuildMember, channel: TextChannel) {
+export async function addUserExp(client: CustomClient, member: GuildMember) {
     const guildData = client.guildCollection.get(member.guild.id);
     const userData = guildData.data.users.find(user => user.id === member.id); // collection cache
     const levelRewards = guildData.data.levelReward;
@@ -502,8 +502,6 @@ export async function addUserExp(client: CustomClient, member: GuildMember, chan
     exp ++;
     if (userData.exp >= level * ((1 + level) / 2) + 4 ) { // level up
         level ++;
-        const message = await channel.send(`好耶${member}, 你升到第${level}級了！`);
-        setTimeout(() => message.delete(), 5000);
         for (const [rewardLevel, reward] of Object.entries(levelRewards)) {
             if (level >= parseInt(rewardLevel) && !member.roles.cache.has(reward)) await member.roles.add(reward);
         }
