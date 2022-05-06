@@ -176,7 +176,7 @@ module.exports = {
         switch (args[0]) {
         case 'language':
             return await setLanguage(message, [args[1]], language);
-        case 'logger_channel':
+        case 'log_channel':
             return await setLogChannel(message, [message.mentions.channels.first()], language);
         case 'starboard':
             return await setStarboardChannel(message, [message.mentions.channels.first()], language);
@@ -191,7 +191,7 @@ module.exports = {
             switch (interaction.options.getSubcommand()) {
             case 'language':
                 return await setLanguage(interaction, [interaction.options.getString('language')], language);
-            case 'logger_channel':
+            case 'log_channel':
                 return await setLogChannel(interaction, [interaction.options.getChannel('channel')], language);
             case 'starboard':
                 return await setStarboardChannel(interaction, [interaction.options.getChannel('channel')], language);
