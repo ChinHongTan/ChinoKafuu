@@ -9,3 +9,6 @@ functions/ascii2d.js
 my-backups
 functions/Util.js
 data/illusts.json
+language/zh_TW.js
+language/en_US.js
+language/zh_CN.js

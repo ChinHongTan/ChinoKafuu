@@ -8,8 +8,6 @@ module.exports = {
         // select menus does not contain command name, so customId is used
         // customId should be same as the name of the command
         const command = client.commands.get(interaction.commandName) ?? client.commands.get(interaction.customId);
-        const guildOption = client.guildCollection.get(interaction?.guild.id);
-        const language = client.language[guildOption?.data.language ?? 'en_US'][command.name];
 
         if (interaction.isAutocomplete()) {
             if (interaction.responded) return;
@@ -17,7 +15,7 @@ module.exports = {
         }
         if (interaction.isSelectMenu()) {
             if (interaction.replied) return;
-            return await command.slashCommand.selectMenu(interaction, language);
+            return await command.slashCommand.selectMenu(interaction);
         }
         if (!interaction.isCommand()) return;
         if (command.ownerOnly) {
@@ -62,7 +60,7 @@ module.exports = {
         }
 
         try {
-            await command.slashCommand.execute(interaction, language);
+            await command.slashCommand.execute(interaction);
         } catch (error) {
             console.error(error);
             await reply(interaction, { content: 'There was an error while executing this command!', ephemeral: true });
