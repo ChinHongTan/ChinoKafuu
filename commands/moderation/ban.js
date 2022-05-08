@@ -1,7 +1,7 @@
 const { error, success } = require('../../functions/Util.js');
 
 async function ban(command, taggedUser, language) {
-    if (!taggedUser) return error(command, language.noMentionBan);
+    if (!taggedUser) return error(command, language.noMention);
     if (taggedUser.id === command.author.id) return error(command, language.cantBanSelf);
     if (!taggedUser.bannable) return error(command, language.cannotBan);
     await command.guild.members.ban(taggedUser);
