@@ -1,25 +1,25 @@
-const { error, success, warn, reply, translate } = require('../../functions/Util.js');
+const { error, success, warn, reply } = require('../../functions/Util.js');
 const fs = require('fs');
 const backup = require('discord-backup');
 const { MessageEmbed } = require('discord.js');
 const prefix = process.env.PREFIX || require('../../config/config.json').prefix;
 
-function fetchData(command, args) {
+function fetchData(command, args, language) {
     const backupID = command.options?.getInteger('id') ?? args[1];
-    if (!backupID) return error(command, translate('invalidBackupID', command.guild));
+    if (!backupID) return error(command, language.invalidBackupID);
     // If backup doesn't exist
-    if (!fs.existsSync(`./my-backups/${backupID}.json`)) return error(command, translate('noBackupFound', command.guild, backupID));
+    if (!fs.existsSync(`./my-backups/${backupID}.json`)) return error(command, language.noBackupFound.replace('${backupID}', backupID));
     // Fetching the backup
     return JSON.parse(fs.readFileSync(`./my-backups/${backupID}.json`, 'utf-8'));
 }
 
-async function create(command, args) {
+async function create(command, args, language) {
     const user = command?.user || command?.author;
     const max = command.options?.getInteger('max') ?? args[1] ?? 10;
-    if (max < 0 || max > 1000) return error(command, translate('backupOutOfRange', command.guild));
+    if (max < 0 || max > 1000) return error(command, 'Cannot exceed 1000 or lower than 0!');
     backup.setStorageFolder('./my-backups');
     // Create the backup
-    await success(command, translate('startBackup', command.guild, max));
+    await success(command, language.startBackup.replace('${max}', max));
     const backupData = await backup
         .create(command.guild, {
             maxMessagesPerChannel: max,
@@ -29,19 +29,21 @@ async function create(command, args) {
     // And send information to the backup owner
     await user.send({
         embeds: [{
-            description: translate('doneBackupDM', command.guild, prefix, backupData.id),
+            description: language.doneBackupDM
+                .replace('${prefix}', prefix)
+                .replace('${backupData.id}', backupData.id),
             color: 'GREEN',
         }],
     });
-    await success(command, translate('doneBackupGuild', command.guild));
+    await success(command, language.doneBackupGuild);
 }
 
-async function load(command, args) {
+async function load(command, args, language) {
     const user = command?.user || command?.author;
-    const backupData = fetchData(command, args);
+    const backupData = fetchData(command, args, language);
 
     // If the backup exists, request for confirmation
-    await warn(command, translate('warningBackup', command.guild));
+    await warn(command, language.warningBackup);
     const filter = (m) => m.author.id === user.id && m.content === '-confirm';
     const confirm = await command.channel
         .awaitMessages(
@@ -53,29 +55,29 @@ async function load(command, args) {
             })
         .catch((collected) => {
             // if the author of the commands does not confirm the backup loading
-            if (collected.size < 1) return error(command, translate('timesUpBackup', command.guild));
+            if (collected.size < 1) return error(command, language.timesUpBackup);
         });
     if (confirm) {
         // When the author of the command has confirmed that he wants to load the backup on his server
-        await user.send(translate('startLoadingBackup', command.guild));
+        await user.send(language.startLoadingBackup);
         // Load the backup
         backup
             .load(backupData, command.guild, {
                 clearGuildBeforeRestore: true,
                 maxMessagesPerChannel: 100000,
             })
-            .then(user.send(translate('doneLoading', command.guild)))
+            .then(user.send(language.doneLoading))
             .catch((err) => {
                 console.error(err);
                 // If an error occurred
-                return user.send(translate('backupError', command.guild));
+                return user.send(language.backupError);
             });
     }
 }
 
-async function bi(command, args) {
+async function bi(command, args, language) {
     const backupID = command.options?.getInteger('id') ?? args[1];
-    const backupData = fetchData(command, args);
+    const backupData = fetchData(command, args, language);
     const backupInfo = {
         data: backupData,
         id: backupID,
@@ -88,26 +90,34 @@ async function bi(command, args) {
     const dd = date.getDate().toString();
     const formattedDate = `${yyyy}/${mm[1] ? mm : `0${mm[0]}`}/${dd[1] ? dd : `0${dd[0]}`}`;
     const embed = new MessageEmbed()
-        .setAuthor({ name: translate('backupInformation', command.guild) })
+        .setAuthor({ name: language.backupInformation })
         // Display the backup ID
-        .addField(translate('backupID', command.guild), backupInfo.id, false)
+        .addField(language.backupID, backupInfo.id, false)
         // Displays the server from which this backup comes
-        .addField(translate('serverID', command.guild), backupInfo.data.guildID, false)
+        .addField(language.serverID, backupInfo.data.guildID, false)
         // Display the size (in kb) of the backup
-        .addField(translate('backupSize', command.guild), `${backupInfo.size} MB`, false)
+        .addField(language.backupSize, `${backupInfo.size} MB`, false)
         // Display when the backup was created
-        .addField(translate('backupCreatedAt', command.guild), formattedDate, false)
+        .addField(language.backupCreatedAt, formattedDate, false)
         .setColor('#FF0000');
     return reply(command, { embeds: [embed] });
 }
 
-async function backupFunc(command, args) {
+async function backupFunc(command, args, language) {
     // Check member permissions
-    if (!command.member.permissions.has('ADMINISTRATOR')) return error(command, translate('backupNotAdmin', command.guild));
+    if (!command.member.permissions.has('ADMINISTRATOR')) return error(command, language.notAdmin);
     switch (args[0]) {
-    case 'create': return create(command, args);
-    case 'load': return load(command, args);
-    case 'info': return bi(command, args);
+    case 'create': {
+        await create(command, args, language);
+        break;
+    }
+    case 'load': {
+        await load(command, args, language);
+        break;
+    }
+    case 'info': {
+        await bi(command, args, language);
+    }
     }
 }
 
@@ -184,12 +194,12 @@ module.exports = {
             ],
         },
     ],
-    async execute(message, args) {
-        await backupFunc(message, args);
+    async execute(message, args, language) {
+        await backupFunc(message, args, language);
     },
     slashCommand: {
-        async execute(interaction) {
-            await backupFunc(interaction, [interaction.options.getSubcommand()]);
+        async execute(interaction, language) {
+            await backupFunc(interaction, [interaction.options.getSubcommand()], language);
         },
     },
 };
