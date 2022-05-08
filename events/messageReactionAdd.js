@@ -9,7 +9,7 @@ module.exports = {
         if (reaction.emoji.name !== '⭐') return;
         if (message.author.id === user.id) return message.channel.send(`${user}不要自己給自己打星啦笑死`);
         if (message.author.bot) return message.channel.send(`${user}不能給機器人打星啦`);
-        const starChannel = message.guild.channels.cache.find(channel => channel.id === reaction.client.guildCollection.get(reaction.guild.id).data.starboard);
+        const starChannel = message.guild.channels.cache.find(channel => channel.id === reaction.client.guildCollection.get(reaction.message.guild.id).data.starboard);
         if (!starChannel) message.channel.send('你還沒有設置starboard喲小可愛');
         const fetchedMessages = await starChannel.messages.fetch({ limit: 100 });
         const stars = fetchedMessages.filter((m) => m.embeds.length !== 0).find(m => m?.embeds[0]?.footer?.text?.startsWith('⭐') && m?.embeds[0]?.footer?.text?.endsWith(message.id));
