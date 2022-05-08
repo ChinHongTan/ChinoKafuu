@@ -1,8 +1,7 @@
-const { getEditDistance } = require('../functions/Util.js');
+const { getEditDistance, addUserExp, getUserData, saveGuildData } = require('../functions/Util.js');
 const prefix = process.env.PREFIX || require('../config/config.json').prefix;
 const owner_id = process.env.OWNERID || require('../config/config.json').owner_id;
 const Discord = require('discord.js');
-const { addUserExp, getUserData, saveUserData } = require('../functions/Util');
 
 module.exports = {
     name: 'messageCreate',
@@ -12,9 +11,9 @@ module.exports = {
         if (message.guild) {
             let userData = client.guildCollection.get(message.member.guild.id).data.users.find((user) => user.id === message.member.id);
             if (!userData) userData = await getUserData(message.client, message.member);
-            await saveUserData(client, message.member); // save in collection cache
+            await saveGuildData(client, message.guild.id); // save in collection cache
             if (!('expAddTimestamp' in userData) || userData.expAddTimestamp + 60 * 1000 <= Date.now()) {
-                await addUserExp(client, message.member, message.channel);
+                await addUserExp(client, message.member);
             }
         }
 

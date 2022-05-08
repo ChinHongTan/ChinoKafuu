@@ -197,16 +197,3 @@ export async function searchByUrl(
 
     return {url, items};
 }
-
-export async function searchByFile(
-    filePath: string,
-    mode: SearchMode = 'color',
-): Promise<SearchResult> {
-    const readStream = fs.createReadStream(filePath);
-    const hash = await getSearchHash(readStream);
-    const url = `${baseURL}search/${mode}/${hash}`;
-    const result = await fetch(url).then((res) => res.text());
-    const items = parseSearchResult(result);
-
-    return {url, items};
-}

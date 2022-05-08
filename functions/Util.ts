@@ -477,22 +477,6 @@ export async function getUserData(client: CustomClient, member: GuildMember) {
     return userList?.find(user => user.id === member.id) ?? defaultData;
 }
 
-// save user data to database, or local json file
-export async function saveUserData(client: CustomClient, member: GuildMember) {
-    const guildData = client.guildCollection.get(member.guild.id);
-    const collection = client.guildDatabase; // database or json
-    if (collection) {
-        const query = { id: member.guild.id };
-        const options = { upsert: true };
-        return collection.replaceOne(query, guildData, options); // save in mongodb
-    } else {
-        const rawData = fs.readFileSync(`./data/guildData.json`, 'utf-8');
-        const guildCollection = JSON.parse(rawData);
-        guildCollection[member.guild.id] = guildData;
-        return fs.writeFileSync(`./data/guildData.json`, JSON.stringify(guildCollection)); // save in json
-    }
-}
-
 // add exp for a user
 export async function addUserExp(client: CustomClient, member: GuildMember) {
     const guildData = client.guildCollection.get(member.guild.id);
@@ -517,5 +501,5 @@ export async function addUserExp(client: CustomClient, member: GuildMember) {
         if (a.level === b.level) return (b.exp - a.exp);
         return (b.level - a.level);
     })
-    await saveUserData(client, member);
+    await saveGuildData(client, member.guild.id);
 }

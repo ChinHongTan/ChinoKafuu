@@ -1,5 +1,5 @@
 const { error, success } = require('../../functions/Util.js');
-const { GuildChannel, Role } = require('discord.js');
+const { Role, TextChannel } = require('discord.js');
 const { saveGuildData } = require('../../functions/Util');
 
 async function changeSettings(guildId, client, category, target) {
@@ -18,20 +18,12 @@ async function setLanguage(command, args, language) {
     await success(command, language.changeSuccess.replace('${args[0]}', args[0]));
 }
 
-async function setLogChannel(command, args, language) {
+async function setChannel(command, args, language, target) {
     if (args.length < 1) return error(command, language.noArgs);
-    if (!(args[0] instanceof GuildChannel)) return error(command, language.argsNotChannel);
-
-    await changeSettings(command.guild.id, command.client, 'channel', args[0].id);
-    return success(command, language.logChannelChanged.replace('${args[0]}', args[0]));
-}
-
-async function setStarboardChannel(command, args, language) {
-    if (args.length < 1) return error(command, language.noArgs);
-    if (!(args[0] instanceof GuildChannel)) return error(command, language.argsNotChannel);
-
-    await changeSettings(command.guild.id, command.client, 'starboard', args[0].id);
-    return success(command, language.starboardChanged.replace('${args[0]}', args[0]));
+    if (!(args[0] instanceof TextChannel)) return error(command, language.argsNotChannel);
+    await changeSettings(command.guild.id, command.client, target, args[0].id);
+    if (target === 'starboard') return success(command, language.logChannelChanged.replace('${args[0]}', args[0]));
+    if (target === 'channel') return success(command, language.starboardChanged.replace('${args[0]}', args[0]));
 }
 
 async function addLevelReward(command, args, language) {
@@ -177,9 +169,9 @@ module.exports = {
         case 'language':
             return await setLanguage(message, [args[1]], language);
         case 'log_channel':
-            return await setLogChannel(message, [message.mentions.channels.first()], language);
+            return await setChannel(message, [message.mentions.channels.first()], language, 'channel');
         case 'starboard':
-            return await setStarboardChannel(message, [message.mentions.channels.first()], language);
+            return await setChannel(message, [message.mentions.channels.first()], language, 'starboard');
         case 'add_level_reward':
             return await addLevelReward(message, [args[1], message.mentions.roles.first()], language);
         case 'remove_level_reward':
@@ -192,9 +184,9 @@ module.exports = {
             case 'language':
                 return await setLanguage(interaction, [interaction.options.getString('language')], language);
             case 'log_channel':
-                return await setLogChannel(interaction, [interaction.options.getChannel('channel')], language);
+                return await setChannel(interaction, [interaction.options.getChannel('channel')], language, 'channel');
             case 'starboard':
-                return await setStarboardChannel(interaction, [interaction.options.getChannel('channel')], language);
+                return await setChannel(interaction, [interaction.options.getChannel('channel')], language, 'starboard');
             case 'add_level_reward':
                 return await addLevelReward(interaction, [interaction.options.getInteger('level'), interaction.options.getRole('role')], language);
             case 'remove_level_reward':
