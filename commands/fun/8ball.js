@@ -1,5 +1,4 @@
-const { reply } = require('../../functions/Util.js');
-const { translate } = require('../../functions/Util');
+const { reply, translate } = require('../../functions/Util.js');
 
 function eightBall(command, args) {
     if (!args[0]) return reply(command, translate('noQuestion', command.guild), 'YELLOW');
@@ -27,7 +26,11 @@ function eightBall(command, args) {
         { reply20: 'RED' },
     ];
     const choice = answers[Math.floor(Math.random() * answers.length)];
-    return reply(command, `${translate('reply', command.guild)} \`\`\`css\nQ: ${question}\nA: ${language[Object.keys(choice)[0]]}\`\`\``, Object.values(choice)[0]);
+    return reply(command,
+        `${translate('reply', command.guild)}
+         \`\`\`css\nQ: ${question}\nA: ${translate(Object.keys(choice)[0], command.guild)}\`\`\``,
+        Object.values(choice)[0],
+    );
 }
 module.exports = {
     name: '8ball',
@@ -36,8 +39,8 @@ module.exports = {
         'zh_CN': '问问神奇八号球~',
         'zh_TW': '問問神奇八號球~',
     },
-    async execute(message, args, language) {
-        await eightBall(message, [args.join(' ')], language);
+    async execute(message, args) {
+        await eightBall(message, [args.join(' ')]);
     },
     options: [
         {
@@ -52,8 +55,8 @@ module.exports = {
         },
     ],
     slashCommand: {
-        async execute(interaction, language) {
-            await eightBall(interaction, [interaction.options.getString('question')], language);
+        async execute(interaction) {
+            await eightBall(interaction, [interaction.options.getString('question')]);
         },
     },
 };

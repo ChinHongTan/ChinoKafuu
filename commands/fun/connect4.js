@@ -1,7 +1,34 @@
-const { reply, error } = require('../../functions/Util.js');
+const { reply, error, translate } = require('../../functions/Util.js');
 const { MessageEmbed, Message, CommandInteraction } = require('discord.js');
 
-async function connect4(command, language) {
+// a class of a single square on the board
+class Square {
+    // occupied can be blue, red or null (not occupied)
+    // coordinate refers to A1, B2, C3, etc.
+    constructor(occupied, coordinate) {
+        this.occupied = occupied;
+        this.coordinate = coordinate;
+    }
+
+    // calculate where to draw the piece
+    pixel() {
+        const array = this.coordinate.split('');
+        const x = array[0];
+        const y = array[1];
+        return [x, y];
+    }
+
+    // whether this square had been occupied
+    get isOccupied() {
+        return this.occupied;
+    }
+
+    set isOccupied(name) {
+        this.occupied = name;
+    }
+}
+
+async function connect4(command) {
     const coordinates = setCoordinates(7, 6);
     const squares = {};
 
@@ -14,33 +41,6 @@ async function connect4(command, language) {
         '6️⃣': 6,
         '7️⃣': 7,
     };
-
-    // a class of a single square on the board
-    class Square {
-        // occupied can be blue, red or null (not occupied)
-        // coordinate refers to A1, B2, C3, etc.
-        constructor(occupied, coordinate) {
-            this.occupied = occupied;
-            this.coordinate = coordinate;
-        }
-
-        // calculate where to draw the piece
-        pixel() {
-            const array = this.coordinate.split('');
-            const x = array[0];
-            const y = array[1];
-            return [x, y];
-        }
-
-        // whether this square had been occupied
-        get isOccupied() {
-            return this.occupied;
-        }
-
-        set isOccupied(name) {
-            this.occupied = name;
-        }
-    }
 
     coordinates.forEach((coordinate) => {
         squares[coordinate] = new Square('white', coordinate);
@@ -69,7 +69,7 @@ async function connect4(command, language) {
         const boardStr = stringify(board);
         return new MessageEmbed()
             .setTitle('**CONNECT FOUR**')
-            .setDescription(language.board.replace('${round.name}', round.emoji).replace('${boardStr}', boardStr))
+            .setDescription(translate('board', command.guild, round.emoji, boardStr))
             .setColor('#ff0000');
     }
 
@@ -113,7 +113,7 @@ async function connect4(command, language) {
         }
         // if a new piece can’t be placed in this column
         if (!placed) {
-            return error(command, language.invalidMove);
+            return error(command, translate('invalidMove', command.guild));
         }
         const directions = [11, 1, 9, 10, -11, -1, -9, -10];
         for (const direction of directions) {
@@ -133,8 +133,8 @@ async function connect4(command, language) {
         board = draw(squares, coordinate, round, board);
         if (win) {
             collector.stop();
-            if (command instanceof CommandInteraction) return command.followUp({ embeds: [{ description: language.win.replace('${round.name}', round.emoji), color: 'GREEN' }] });
-            if (command instanceof Message) return reply(command, language.win.replace('${round.name}', round.emoji), 'GREEN');
+            if (command instanceof CommandInteraction) return command.followUp({ embeds: [{ description: translate('win', command.guild, round.emoji), color: 'GREEN' }] });
+            if (command instanceof Message) return reply(command, translate('win', command.guild, round.emoji), 'GREEN');
         }
         if (round.name === 'red') {
             round.name = 'yellow';
@@ -207,12 +207,12 @@ module.exports = {
         'zh_CN': '四子棋小游戏！',
         'zh_TW': '四子棋小遊戲！',
     },
-    async execute(message, _args, language) {
-        await connect4(message, language);
+    async execute(message) {
+        await connect4(message);
     },
     slashCommand: {
-        async execute(interaction, language) {
-            await connect4(interaction, language);
+        async execute(interaction) {
+            await connect4(interaction);
         },
     },
 };
