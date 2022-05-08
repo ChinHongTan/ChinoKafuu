@@ -14,14 +14,11 @@ module.exports = {
             if (!userData) userData = await getUserData(message.client, message.member);
             await saveUserData(client, message.member); // save in collection cache
             if (!('expAddTimestamp' in userData) || userData.expAddTimestamp + 60 * 1000 <= Date.now()) {
-                await addUserExp(client, message.member, message.channel);
+                await addUserExp(client, message.member);
             }
         }
 
         if (!message.content.startsWith(prefix)) return;
-
-        // get options
-        const guildOption = client.guildCollection.get(message.guild.id);
 
         const args = message.content.slice(prefix.length).trim().split(/\s+/);
         const commandName = args.shift().toLowerCase();
@@ -99,9 +96,7 @@ module.exports = {
         setTimeout(() => timestamps.delete(message.author.id), coolDownAmount);
 
         try {
-            // set the default language to English
-            const language = client.language[guildOption?.data.language ?? 'en_US'][command.name];
-            await command.execute(message, args, language);
+            await command.execute(message, args);
         } catch (error) {
             console.error(error);
             message.reply('There was an error trying to execute that command!');
