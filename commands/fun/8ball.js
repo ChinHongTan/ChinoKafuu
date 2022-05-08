@@ -1,7 +1,7 @@
-const { reply, translate } = require('../../functions/Util.js');
+const { reply } = require('../../functions/Util.js');
 
-function eightBall(command, args) {
-    if (!args[0]) return reply(command, translate('noQuestion', command.guild), 'YELLOW');
+function eightBall(command, args, language) {
+    if (!args[0]) return reply(command, language.noQuestion, 'YELLOW');
     const question = args[0];
     const answers = [
         { reply1: 'GREEN' },
@@ -26,11 +26,8 @@ function eightBall(command, args) {
         { reply20: 'RED' },
     ];
     const choice = answers[Math.floor(Math.random() * answers.length)];
-    return reply(command,
-        `${translate('reply', command.guild)}
-         \`\`\`css\nQ: ${question}\nA: ${translate(Object.keys(choice)[0], command.guild)}\`\`\``,
-        Object.values(choice)[0],
-    );
+
+    return reply(command, `${language.reply} \`\`\`css\nQ: ${question}\nA: ${language[Object.keys(choice)[0]]}\`\`\``, Object.values(choice)[0]);
 }
 module.exports = {
     name: '8ball',

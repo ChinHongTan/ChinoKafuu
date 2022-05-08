@@ -1,4 +1,4 @@
-const { edit, error, generateIllustEmbed } = require('../../functions/Util.js');
+const { edit, error, generateIllustEmbed, translate } = require('../../functions/Util.js');
 const Pixiv = require('pixiv.ts');
 const refreshToken = process.env.PIXIV_REFRESH_TOKEN || require('../../config/config.json').PixivRefreshToken;
 const fs = require('fs');
@@ -42,13 +42,13 @@ module.exports = {
         'zh_CN': '萝莉图',
         'zh_TW': '蘿莉圖',
     },
-    async execute(message, _, language) {
-        if (!refreshToken) return error(message, language.noToken);
+    async execute(message) {
+        if (!refreshToken) return error(message, translate('noToken', message.guild));
         await loli(message);
     },
     slashCommand: {
-        async execute(interaction, language) {
-            if (!refreshToken) return error(interaction, language.noToken);
+        async execute(interaction) {
+            if (!refreshToken) return error(interaction, translate('noToken', interaction.guild));
             await interaction.deferReply();
             await loli(interaction);
         },

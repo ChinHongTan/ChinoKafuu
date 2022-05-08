@@ -1,7 +1,7 @@
 const { error, success } = require('../../functions/Util.js');
 
 async function kick(command, taggedUser, language) {
-    if (!taggedUser) return error(command, language.noMentionKick);
+    if (!taggedUser) return error(command, language.noMention);
     if (taggedUser.id === command.author.id) return error(command, language.cantKickSelf);
     if (!taggedUser.kickable) return error(command, language.cannotKick);
     await taggedUser.kick();

@@ -8,9 +8,9 @@ const CronJob = require('cron').CronJob;
 const pixivRefreshToken = process.env.PIXIV_REFRESH_TOKEN || require('./config/config.json').PixivRefreshToken;
 const { updateIllust, sendSuggestedIllust } = require('./functions/Util.js');
 
-const en_US = require('./language/en_US.ts');
-const zh_CN = require('./language/zh_CN.ts');
-const zh_TW = require('./language/zh_TW.ts');
+const en_US = require('./language/en_US.js');
+const zh_CN = require('./language/zh_CN.js');
+const zh_TW = require('./language/zh_TW.js');
 
 const client = new Discord.Client({
     intents: [
