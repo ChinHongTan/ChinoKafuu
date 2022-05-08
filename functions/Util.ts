@@ -10,7 +10,7 @@ import {
     Client,
     Collection,
     ColorResolvable,
-    CommandInteraction, GuildMember,
+    CommandInteraction, Guild, GuildMember,
     InteractionReplyOptions,
     Message,
     MessageEmbed,
@@ -24,6 +24,10 @@ import { Collection as DB } from "mongodb";
 
 const refreshToken = process.env.PIXIV_REFRESH_TOKEN || require('../config/config.json').PixivRefreshToken;
 
+import { translation as en_US } from "../language/en_US"
+import { translation as zh_CN } from "../language/zh_CN";
+import { translation as zh_TW } from "../language/zh_TW";
+const translations = { en_US, zh_CN, zh_TW };
 
 interface SlashCommand {
     execute(interaction, language): Promise<any>;
@@ -100,6 +104,11 @@ interface CustomClient extends Client {
     } }>
     userDatabase:DB,
 }
+
+interface CustomGuild extends Guild {
+    client: CustomClient,
+}
+
 type Language = 'en_US' | 'zh_CN' | 'zh_TW';
 type CommandTypes = Message | CommandInteraction;
 type ResponseTypes = string | MessageOptions | InteractionReplyOptions;
@@ -272,6 +281,15 @@ export async function success(command: CommandTypes, response: ResponseTypes) {
 
 export async function info(command: CommandTypes, response: ResponseTypes) {
     return await reply(command, `ℹ | ${response}`, 'BLUE')
+}
+
+export function translate(targetString: string, guild: CustomGuild | undefined, ...vars): string {
+    const language = guild.client.guildCollection.get(guild.id).data.language ?? 'zh_TW';
+    let locale = translations[language][targetString];
+    let count = 0;
+    locale = locale.replace(/%VAR%/g, () => vars[count] !== null ? vars[count] : "%VAR%");
+
+    return locale;
 }
 
 export async function updateIllust(query: string) {
