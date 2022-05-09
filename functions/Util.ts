@@ -89,6 +89,7 @@ interface CustomClient extends Client {
             language: Language,
             channel?: Snowflake,
             levelReward?: { [level: number]: Snowflake },
+            autoResponse?: { [message: string]: string[] },
             snipes: Snipe[],
             editSnipes: Snipe[],
             users: {
