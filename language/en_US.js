@@ -81,21 +81,6 @@ module.exports = {
         "memberAvatar": "__${user.displayName}'s avatar__",
         "noMember": "Can't find a member matching \\`${keyword}\\`!",
     },
-    "covid": {
-        "covidTitle": "**${result.country} COVID-19 data**",
-        "totalCases": "Total cases",
-        "confirmedToday": "Confirmed today",
-        "totalDeaths": "Total deaths",
-        "deathsToday": "Deaths today",
-        "totalRecovered": "Total recovered",
-        "recoveredToday": "Recovered today",
-        "activeCases": "Active cases",
-        "criticalCases": "Critical cases",
-        "population": "Population",
-        "covidFooter": "Requested by: ${message.author.tag}\nData updated: ${date.toUTCString()}",
-        "invalidArgument": "Please provide a valid argument!",
-        "covidExample": "eg: `c!covid global` or `c!covid countries`",
-    },
     "google": {
     },
     "help": {
@@ -240,13 +225,6 @@ module.exports = {
     },
     "stop": {
         "stopped": "Stopped playing songs.",
-    },
-    "n": {
-        "notNSFW": "This is not a nsfw channel!",
-        "noNum": "You need to provide a 6 digit number!",
-    },
-    "nhentai": {
-        "invalidBookID": "The book ID doesn't exist!",
     },
     "set": {
         "languageNotSupported": "Language not supported!",

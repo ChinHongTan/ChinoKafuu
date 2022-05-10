@@ -81,21 +81,6 @@ module.exports = {
         "memberAvatar": "__${user.displayName}的头像__",
         "noMember": "找不到匹配 \\`${keyword}\\` 的用户!",
     },
-    "covid": {
-        "covidTitle": "**${result.country} COVID-19 数据**",
-        "totalCases": "总病例",
-        "confirmedToday": "今日确诊",
-        "totalDeaths": "总死亡案例",
-        "deathsToday": "今日死亡",
-        "totalRecovered": "总康复病例",
-        "recoveredToday": "今日康复",
-        "activeCases": "活跃病例",
-        "criticalCases": "严重病例",
-        "population": "人口数",
-        "covidFooter": "请求者: ${message.author.tag}\n更新于: ${date.toUTCString()}",
-        "invalidArgument": "请输入正确的参数!",
-        "covidExample": "例如: `c!covid global` 或 `c!covid countries`",
-    },
     "google": {
     },
     "help": {
@@ -238,13 +223,6 @@ module.exports = {
     },
     "stop": {
         "stopped": "已停止播放",
-    },
-    "n": {
-        "notNSFW": "这里不是NSFW频道!",
-        "noNum": "请输入六位数本本号!",
-    },
-    "nhentai": {
-        "invalidBookID": "本本号不存在！",
     },
     "set": {
         "languageNotSupported": "不支持该语言！",

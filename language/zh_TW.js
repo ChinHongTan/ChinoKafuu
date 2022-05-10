@@ -81,21 +81,6 @@ module.exports = {
         "memberAvatar": "__${user.displayName}的頭像__",
         "noMember": "找不到匹配 \\`${keyword}\\` 的用戶!",
     },
-    "covid": {
-        "covidTitle": "**${result.country} COVID-19 數據**",
-        "totalCases": "總病例",
-        "confirmedToday": "今日確診",
-        "totalDeaths": "總死亡案例",
-        "deathsToday": "今日死亡",
-        "totalRecovered": "總康復病例",
-        "recoveredToday": "今日康復",
-        "activeCases": "活躍病例",
-        "criticalCases": "嚴重病例",
-        "population": "人口數",
-        "covidFooter": "請求者: ${message.author.tag}\n更新於: ${date.toUTCString()}",
-        "invalidArgument": "請輸入正確的參數!",
-        "covidExample": "例如: `c!covid global` 或 `c!covid countries`",
-    },
     "google": {
     },
     "help": {
@@ -238,13 +223,6 @@ module.exports = {
     },
     "stop": {
         "stopped": "已停止播放",
-    },
-    "n": {
-        "notNSFW": "這裏不是NSFW頻道！",
-        "noNum": "請輸入六位數本本號！",
-    },
-    "nhentai": {
-        "invalidBookID": "本本號不存在！",
     },
     "set": {
         "languageNotSupported": "不支持該語言！",
