@@ -20,14 +20,15 @@ async function ar(command, args) {
         break;
     }
     case 'respond': {
-        const autoResponse = guildData.autoResponse;
+        const autoResponse = guildData.autoResponse ?? {};
         switch (subcommand) {
         case 'add': {
             const message = command.options?.getString('message') ?? options[0];
             const reply = command.options?.getString('reply') ?? options[1];
             if (!(message in autoResponse)) autoResponse[message] = [reply];
             if (!autoResponse[message].includes(reply)) autoResponse[message].push(reply);
-            await success(command, `已添加${reply}!`);
+            guildData.autoResponse = autoResponse;
+            await success(command, `已添加自動回復！\n觸發詞：${message}\n回復：${reply}`);
             return await saveGuildData(command.client, command.guild.id);
         }
         case 'remove': {
@@ -36,7 +37,7 @@ async function ar(command, args) {
             const index = autoResponse[message].indexOf(reply);
             if (index > -1) autoResponse[message].splice(index, 1);
             if (!autoResponse[message].length) delete autoResponse[message];
-            await success(command, `已移除${reply}!`);
+            await success(command, `已移除自動回復！\n觸發詞：${message}\n回復：${reply}`);
             return await saveGuildData(command.client, command.guild.id);
         }
         case 'list': {

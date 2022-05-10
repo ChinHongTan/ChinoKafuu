@@ -25,17 +25,15 @@ module.exports = {
             activities: [{ name: 'c!help', type: 'LISTENING' }],
         });
 
-        const guilds = [];
-        client.guilds.cache.each((guild) => guilds.push(guild.id));
         client.guildCollection = new Collection();
 
-        for (const id of guilds) {
-            const guildData = await getGuildData(client, id);
+        await Promise.all(client.guilds.cache.map(async (guild) => {
+            const guildData = await getGuildData(client, guild.id);
 
             // save guild options into a collection
-            client.guildCollection.set(id, guildData);
+            client.guildCollection.set(guild.id, guildData);
 
-            await saveGuildData(client, id);
-        }
+            await saveGuildData(client, guild.id);
+        }));
     },
 };
