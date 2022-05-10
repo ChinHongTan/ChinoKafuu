@@ -160,8 +160,18 @@ module.exports = {
                 'zh_CN': '要移除的奖励身份组',
                 'zh_TW': '要移除的獎勵身份組',
             },
-            type: 'ROLE',
-            required: true,
+            options: [
+                {
+                    name: 'role',
+                    description: {
+                        'en_US': 'Role to give',
+                        'zh_CN': '要删除的身份组',
+                        'zh_TW': '要刪除的身份組',
+                    },
+                    type: 'ROLE',
+                    required: true,
+                },
+            ],
         },
     ],
     async execute(message, args, language) {

@@ -68,25 +68,25 @@ module.exports = {
         {
             name: 'character',
             description: {
-                'en_US': '',
-                'zh_CN': '',
-                'zh_TW': '',
+                'en_US': '.',
+                'zh_CN': '.',
+                'zh_TW': '.',
             },
             subcommands: [
                 {
                     name: 'add',
                     description: {
-                        'en_US': '',
-                        'zh_CN': '',
-                        'zh_TW': '',
+                        'en_US': '.',
+                        'zh_CN': '.',
+                        'zh_TW': '.',
                     },
                     options: [
                         {
                             name: 'avatar',
                             description: {
-                                'en_US': '',
-                                'zh_CN': '',
-                                'zh_TW': '',
+                                'en_US': '.',
+                                'zh_CN': '.',
+                                'zh_TW': '.',
                             },
                             type: 'STRING',
                             required: true,
@@ -94,9 +94,9 @@ module.exports = {
                         {
                             name: 'name',
                             description: {
-                                'en_US': '',
-                                'zh_CN': '',
-                                'zh_TW': '',
+                                'en_US': '.',
+                                'zh_CN': '.',
+                                'zh_TW': '.',
                             },
                             type: 'STRING',
                         },
@@ -105,17 +105,17 @@ module.exports = {
                 {
                     name: 'remove',
                     description: {
-                        'en_US': '',
-                        'zh_CN': '',
-                        'zh_TW': '',
+                        'en_US': '.',
+                        'zh_CN': '.',
+                        'zh_TW': '.',
                     },
                     options: [
                         {
                             name: 'name',
                             description: {
-                                'en_US': '',
-                                'zh_CN': '',
-                                'zh_TW': '',
+                                'en_US': '.',
+                                'zh_CN': '.',
+                                'zh_TW': '.',
                             },
                             type: 'STRING',
                         },
@@ -124,35 +124,46 @@ module.exports = {
                 {
                     name: 'list',
                     description: {
-                        'en_US': '',
-                        'zh_CN': '',
-                        'zh_TW': '',
+                        'en_US': '.',
+                        'zh_CN': '.',
+                        'zh_TW': '.',
                     },
+                    options: [
+                        {
+                            name: 'name',
+                            description: {
+                                'en_US': '.',
+                                'zh_CN': '.',
+                                'zh_TW': '.',
+                            },
+                            type: 'STRING',
+                        },
+                    ],
                 },
             ],
         },
         {
             name: 'respond',
             description: {
-                'en_US': '',
-                'zh_CN': '',
-                'zh_TW': '',
+                'en_US': '.',
+                'zh_CN': '.',
+                'zh_TW': '.',
             },
             subcommands: [
                 {
                     name: 'add',
                     description: {
-                        'en_US': '',
-                        'zh_CN': '',
-                        'zh_TW': '',
+                        'en_US': '.',
+                        'zh_CN': '.',
+                        'zh_TW': '.',
                     },
                     options: [
                         {
                             name: 'message',
                             description: {
-                                'en_US': '',
-                                'zh_CN': '',
-                                'zh_TW': '',
+                                'en_US': '.',
+                                'zh_CN': '.',
+                                'zh_TW': '.',
                             },
                             type: 'STRING',
                             required: true,
@@ -160,9 +171,9 @@ module.exports = {
                         {
                             name: 'reply',
                             description: {
-                                'en_US': '',
-                                'zh_CN': '',
-                                'zh_TW': '',
+                                'en_US': '.',
+                                'zh_CN': '.',
+                                'zh_TW': '.',
                             },
                             type: 'STRING',
                             required: true,
@@ -172,17 +183,17 @@ module.exports = {
                 {
                     name: 'remove',
                     description: {
-                        'en_US': '',
-                        'zh_CN': '',
-                        'zh_TW': '',
+                        'en_US': '.',
+                        'zh_CN': '.',
+                        'zh_TW': '.',
                     },
                     options: [
                         {
                             name: 'message',
                             description: {
-                                'en_US': '',
-                                'zh_CN': '',
-                                'zh_TW': '',
+                                'en_US': '.',
+                                'zh_CN': '.',
+                                'zh_TW': '.',
                             },
                             type: 'STRING',
                             required: true,
@@ -190,9 +201,9 @@ module.exports = {
                         {
                             name: 'reply',
                             description: {
-                                'en_US': '',
-                                'zh_CN': '',
-                                'zh_TW': '',
+                                'en_US': '.',
+                                'zh_CN': '.',
+                                'zh_TW': '.',
                             },
                             type: 'STRING',
                             required: true,
@@ -202,17 +213,17 @@ module.exports = {
                 {
                     name: 'list',
                     description: {
-                        'en_US': '',
-                        'zh_CN': '',
-                        'zh_TW': '',
+                        'en_US': '.',
+                        'zh_CN': '.',
+                        'zh_TW': '.',
                     },
                     options: [
                         {
                             name: 'message',
                             description: {
-                                'en_US': '',
-                                'zh_CN': '',
-                                'zh_TW': '',
+                                'en_US': '.',
+                                'zh_CN': '.',
+                                'zh_TW': '.',
                             },
                             type: 'STRING',
                             required: true,
