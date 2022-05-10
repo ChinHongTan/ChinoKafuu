@@ -23,7 +23,7 @@ module.exports = {
                     .find(webhook => webhook.name === 'autoResponse' && webhook.owner === client.user) ??
                     await message.channel.createWebhook('autoResponse', { avatar: client.user.avatarURL });
                 return responseWebhook.send({
-                    content: autoResponse[message.cleanContent][0],
+                    content: autoResponse[message.cleanContent][Math.floor(Math.random() * autoResponse[message.cleanContent].length)],
                     username: client.user.username,
                     avatarURL: client.user.avatarURL({ format: 'png', dynamic: true }),
                 });
