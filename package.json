@@ -44,10 +44,7 @@
     "html-to-text": "^8.2.0",
     "jsdom": "^19.0.0",
     "mongodb": "^4.1.0",
-    "nana-api": "^1.1.4",
-    "nhentai-js": "^4.0.0",
     "node-fetch": "^2.6.2",
-    "novelcovid": "^3.0.2",
     "pixiv.ts": "^0.5.7",
     "sagiri": "^3.1.1",
     "sodium": "^3.0.2",
@@ -62,8 +59,6 @@
   "devDependencies": {
     "@types/node": "16.11.27",
     "@types/node-fetch": "3.0.3",
-    "@typescript-eslint/eslint-plugin": "5.19.0",
-    "@typescript-eslint/parser": "5.19.0",
     "eslint": "7.32.0",
     "eslint-plugin-import": "2.26.0",
     "eslint-plugin-promise": "5.2.0"
