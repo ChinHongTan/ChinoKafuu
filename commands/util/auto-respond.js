@@ -217,18 +217,6 @@ module.exports = {
                         'zh_CN': '.',
                         'zh_TW': '.',
                     },
-                    options: [
-                        {
-                            name: 'message',
-                            description: {
-                                'en_US': '.',
-                                'zh_CN': '.',
-                                'zh_TW': '.',
-                            },
-                            type: 'STRING',
-                            required: true,
-                        },
-                    ],
                 },
             ],
         },

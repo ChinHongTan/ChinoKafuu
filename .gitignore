@@ -2,7 +2,6 @@ node_modules
 config.json
 functions/commandReply.js
 functions/fuzzysort.js
-functions/dynamicEmbed.js
 functions/updateIllust.js
 *.map
 functions/ascii2d.js

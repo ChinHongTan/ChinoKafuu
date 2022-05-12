@@ -193,9 +193,11 @@ function processData(data: SlashCommandBuilder, command: Command, language: Lang
                 let subcommandBuilder = new SlashCommandSubcommandBuilder()
                     .setName(sub.name)
                     .setDescription(sub.description[language]);
-                sub.options.forEach(opt => {
-                    subcommandBuilder = processOpt(subcommandBuilder, opt, language);
-                });
+                if (sub.options) {
+                    sub.options.forEach(opt => {
+                        subcommandBuilder = processOpt(subcommandBuilder, opt, language);
+                    });
+                }
                 subcommandGroupBuilder.addSubcommand(subcommandBuilder);
             });
             data.addSubcommandGroup(subcommandGroupBuilder);
@@ -206,9 +208,11 @@ function processData(data: SlashCommandBuilder, command: Command, language: Lang
             let subcommandBuilder = new SlashCommandSubcommandBuilder()
                 .setName(sub.name)
                 .setDescription(sub.description[language]);
-            sub.options.forEach(opt => {
-                subcommandBuilder = processOpt(subcommandBuilder, opt, language);
-            });
+            if (sub.options) {
+                sub.options.forEach(opt => {
+                    subcommandBuilder = processOpt(subcommandBuilder, opt, language);
+                });
+            }
             data.addSubcommand(subcommandBuilder)
         });
     }
