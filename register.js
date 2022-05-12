@@ -4,7 +4,6 @@ const { Routes } = require('discord-api-types/v9');
 const { processCommand } = require('./functions/Util');
 const clientId = process.env.CLIENT_ID || require('./config/config.json').clientId;
 const token = process.env.TOKEN || require('./config/config.json').token;
-const guildId = process.env.GUILD_ID || require('./config/config.json').guildId;
 
 const rest = new REST({ version: '9' }).setToken(token);
 const commands = [];
@@ -21,13 +20,6 @@ for (const folder of commandFolders) {
 (async () => {
     try {
         console.log('Started refreshing application (/) commands.');
-
-        if (guildId) {
-            await rest.put(
-                Routes.applicationGuildCommands(clientId, guildId),
-                { body: commands },
-            );
-        }
 
         await rest.put(
             Routes.applicationCommands(clientId),
