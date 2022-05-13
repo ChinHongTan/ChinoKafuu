@@ -12,10 +12,10 @@ import {
     ColorResolvable,
     CommandInteraction, GuildMember,
     InteractionReplyOptions,
-    Message,
+    Message, MessageActionRow,
     MessageEmbed,
     MessageOptions,
-    MessageReaction, Snowflake, TextChannel
+    MessageReaction, MessageSelectMenu, Snowflake, TextChannel
 } from "discord.js";
 
 import Pixiv, {PixivIllust} from "pixiv.ts";
