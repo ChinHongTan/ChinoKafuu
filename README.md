@@ -90,3 +90,4 @@ npm start
 
 Use `c!help` for detailed usage and information!
 
+Have fun playing the bot! >w<
