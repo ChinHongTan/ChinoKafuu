@@ -42,7 +42,7 @@
     "genius-lyrics": "^4.2.9",
     "googlethis": "^1.1.6",
     "html-to-text": "^8.2.0",
-    "jsdom": "^19.0.0",
+    "jsdom": "^20.0.0",
     "mongodb": "^4.1.0",
     "node-fetch": "^2.6.2",
     "pixiv.ts": "^0.5.7",
