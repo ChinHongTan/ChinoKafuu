@@ -21,6 +21,7 @@ import {
 import Pixiv, {PixivIllust} from "pixiv.ts";
 import * as fs from "fs";
 import { Collection as DB } from "mongodb";
+import { InteractionTypes } from "discord.js/typings/enums";
 
 const refreshToken = process.env.PIXIV_REFRESH_TOKEN || require('../config/config.json').PixivRefreshToken;
 
@@ -102,180 +103,45 @@ interface CustomClient extends Client {
     userDatabase:DB,
 }
 type Language = 'en_US' | 'zh_CN' | 'zh_TW';
-type CommandTypes = Message | CommandInteraction;
-type ResponseTypes = string | MessageOptions | InteractionReplyOptions;
 
-// process command objects
-export function processCommand(command: Command, language: Language) {
-    if (command.slashCommand) {
-        const data = new SlashCommandBuilder();
-        data.setName(command.name);
-        data.setDescription(command.description[language] ?? 'none');
-        processData(data, command, language);
-        return data;
-    }
-}
+// reply with embeds
 
-function processOpt(commandBuilder: SlashCommandSubcommandBuilder | SlashCommandBuilder, opt: SubcommandOptions, language: Language) {
-    switch (opt.type) {
-        case "STRING":
-            const stringOptionBuilder = new SlashCommandStringOption()
-                .setName(opt.name)
-                .setDescription(opt.description[language])
-                .setRequired(opt.required ?? false)
-            if (opt.autocomplete) stringOptionBuilder.setAutocomplete(opt.autocomplete);
-            if (opt.choices) stringOptionBuilder.setChoices(opt.choices);
-            commandBuilder.addStringOption(stringOptionBuilder);
-            break;
-        case "INTEGER":
-            const integerOptionBuilder = new SlashCommandIntegerOption()
-                .setName(opt.name)
-                .setDescription(opt.description[language])
-                .setRequired(opt.required ?? false);
-            if (opt.min) integerOptionBuilder.setMinValue(opt.min)
-            if (opt.max) integerOptionBuilder.setMaxValue(opt.max)
-            commandBuilder.addIntegerOption(integerOptionBuilder);
-            break;
-        case "BOOLEAN":
-            commandBuilder.addBooleanOption(option =>
-                option.setName(opt.name)
-                    .setDescription(opt.description[language])
-                    .setRequired(opt.required ?? false)
-            )
-            break;
-        case "NUMBER":
-            commandBuilder.addNumberOption(option =>
-                option.setName(opt.name)
-                    .setDescription(opt.description[language])
-                    .setRequired(opt.required ?? false)
-            )
-            break;
-        case "USER":
-            commandBuilder.addUserOption(option =>
-                option.setName(opt.name)
-                    .setDescription(opt.description[language])
-                    .setRequired(opt.required ?? false)
-            )
-            break;
-        case "CHANNEL":
-            commandBuilder.addChannelOption(option =>
-                option.setName(opt.name)
-                    .setDescription(opt.description[language])
-                    .setRequired(opt.required ?? false)
-            )
-            break;
-        case "ROLE":
-            commandBuilder.addRoleOption(option =>
-                option.setName(opt.name)
-                    .setDescription(opt.description[language])
-                    .setRequired(opt.required ?? false)
-            )
-            break;
-        case "MENTIONABLE":
-            commandBuilder.addMentionableOption(option =>
-                option.setName(opt.name)
-                    .setDescription(opt.description[language])
-                    .setRequired(opt.required ?? false)
-            )
-            break;
-    }
-    if (commandBuilder instanceof SlashCommandSubcommandBuilder) return commandBuilder;
-    return;
-}
-
-function processData(data: SlashCommandBuilder, command: Command, language: Language) {
-    if (command.subcommandGroups) {
-        command.subcommandGroups.forEach(group => {
-            const subcommandGroupBuilder = new SlashCommandSubcommandGroupBuilder()
-                .setName(group.name)
-                .setDescription(group.description[language]);
-            group.subcommands.forEach(sub => {
-                let subcommandBuilder = new SlashCommandSubcommandBuilder()
-                    .setName(sub.name)
-                    .setDescription(sub.description[language]);
-                if (sub.options) {
-                    sub.options.forEach(opt => {
-                        subcommandBuilder = processOpt(subcommandBuilder, opt, language);
-                    });
-                }
-                subcommandGroupBuilder.addSubcommand(subcommandBuilder);
-            });
-            data.addSubcommandGroup(subcommandGroupBuilder);
-        });
-    }
-    if (command.subcommands) {
-        command.subcommands.forEach(sub => {
-            let subcommandBuilder = new SlashCommandSubcommandBuilder()
-                .setName(sub.name)
-                .setDescription(sub.description[language]);
-            if (sub.options) {
-                sub.options.forEach(opt => {
-                    subcommandBuilder = processOpt(subcommandBuilder, opt, language);
-                });
-            }
-            data.addSubcommand(subcommandBuilder)
-        });
-    }
-    if (command.options) {
-        command.options.forEach(opt => {
-            processOpt(data, opt, language);
-        });
-    }
-}
-
-// reply with embeds, combine interaction and message commands together
 // check if something is string
 function isString(x: any): x is string {
     return typeof x === "string";
 }
 
 // reply to a user command
-export async function reply(command: CommandTypes, response: ResponseTypes, color?: ColorResolvable) {
-    if (isString(response)) {
-        if (command instanceof Message) {
-            return command.reply({ embeds: [{ description: response, color: color }] });
-        }
-        if (command.deferred) {
-            await command.editReply({ embeds: [{ description: response, color: color }] });
-            return await command.fetchReply();
-        }
-        await command.reply({ embeds: [{ description: response, color: color }] });
-        return await command.fetchReply();
-    }
-    if (command instanceof Message) return command.reply(response);
+export async function reply(command: CommandInteraction, response: string | InteractionReplyOptions, color?: ColorResolvable) {
+    if (isString(response)) return command.reply({ embeds: [{ description: response, color: color }] });
+    command.reply(response);
     if (command.deferred) return await command.editReply(response);
-    await command.reply(response);
     return await command.fetchReply();
 }
 
 // edit a message or interaction
-export async function edit(command: CommandTypes, response?: ResponseTypes | MessageEmbed, color?: ColorResolvable) {
-    if (command instanceof Message) {
-        if (response instanceof MessageEmbed) return await command.edit({ embeds: [response], components: [], content: '\u200b' });
-        else if (isString(response)) return await command.edit({ embeds: [{ description: response, color: color }], components: [], content: '\u200b' });
-        return await command.edit(response);
-    }
+export async function edit(command: CommandInteraction, response?: string | InteractionReplyOptions | MessageEmbed, color?: ColorResolvable) {
+    if (isString(response)) return await command.editReply({ embeds: [{ description: response, color: color }], components: [], content: '\u200b' });
     if (response instanceof MessageEmbed) return await command.editReply({ embeds: [response], components: [], content: '\u200b' });
-    else if (isString(response)) return await command.editReply( { embeds: [{ description: response, color: color }], components: [], content: '\u200b' });
     return await command.editReply(response);
 }
 
-export async function error(command: CommandTypes, response: ResponseTypes) {
+export async function error(command: CommandInteraction, response: InteractionReplyOptions) {
     const message = await reply(command, `❌ | ${response}`, 'RED');
     if (message instanceof Message) {
         setTimeout(() => message.delete(), 10000);
     }
 }
 
-export async function warn(command: CommandTypes, response: ResponseTypes) {
+export async function warn(command: CommandInteraction, response: InteractionReplyOptions) {
     return await reply(command, `⚠ | ${response}`, 'YELLOW');
 }
 
-export async function success(command: CommandTypes, response: ResponseTypes) {
+export async function success(command: CommandInteraction, response: InteractionReplyOptions) {
     return await reply(command, `✅ | ${response}`, 'GREEN');
 }
 
-export async function info(command: CommandTypes, response: ResponseTypes) {
+export async function info(command: CommandInteraction, response: InteractionReplyOptions) {
     return await reply(command, `ℹ | ${response}`, 'BLUE')
 }
 
