@@ -1,5 +1,6 @@
 const { reply, error, getSnipes } = require('../../functions/Util.js');
 const { MessageEmbed } = require('discord.js');
+const { SlashCommandBuilder } = require('@discordjs/builders');
 
 async function snipe(command, args, language) {
     const snipeWithGuild = await getSnipes(command.client, command.guild.id);
@@ -22,29 +23,23 @@ async function snipe(command, args, language) {
 module.exports = {
     name: 'snipe',
     guildOnly: true,
-    description: {
-        'en_US': 'Snipe a message.',
-        'zh_CN': '狙击一条讯息',
-        'zh_TW': '狙擊一條訊息',
-    },
-    options: [
-        {
-            name: 'number',
-            description: {
-                'en_US': 'message to snipe, default to 1',
-                'zh_CN': '要狙击的讯息，默認為1',
-                'zh_TW': '要狙擊的訊息，默認為1',
-            },
-            type: 'INTEGER',
-            required: true,
-        },
-    ],
-    async execute(message, args, language) {
-        await snipe(message, args, language);
-    },
-    slashCommand: {
-        async execute(interaction, language) {
-            await snipe(interaction, [interaction.options.getInteger('number') ?? 1], language);
-        },
+    data: new SlashCommandBuilder()
+        .setName('snipe')
+        .setDescriptionLocalizations({
+            'en_US': 'Snipe a message.',
+            'zh_CN': '狙击一条讯息',
+            'zh_TW': '狙擊一條訊息',
+        })
+        .addIntegerOption(option => option
+            .setName('number')
+            .setDescriptionLocalizations({
+                'en_US':'message to snipe, default to 1',
+                'zh_CN': '要狙击的讯息,默認為1',
+                'zh_TW': '要狙擊的訊息,默認為1',
+            })
+            .setRequired(true),
+        ),
+    async execute(interaction, language) {
+        await snipe(interaction, [interaction.options.getInteger('number') ?? 1], language);
     },
 };

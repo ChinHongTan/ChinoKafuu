@@ -1,5 +1,6 @@
 const { success, error } = require('../../functions/Util.js');
 const fs = require('fs');
+const { SlashCommandBuilder } = require('@discordjs/builders');
 
 async function reload(interaction, args, user) {
     if (!args.length) return error(interaction, `You didn't pass any command to reload, ${user}!`);
@@ -24,31 +25,25 @@ async function reload(interaction, args, user) {
 }
 module.exports = {
     name: 'reload',
-    description: {
-        'en_US': 'Reloads a command',
-        'zh_CN': '重新加载指令',
-        'zh_TW': '重新加載指令',
-    },
-    options: [
-        {
-            name: 'command',
-            description: {
+    data: new SlashCommandBuilder()
+        .setName('reload')
+        .setDescriptionLocalizations({
+            'en_US': 'Reloads a command',
+            'zh_CN': '重新加载指令',
+            'zh_TW': '重新加載指令',
+        })
+        .addStringOption((option) => option
+            .setName('command')
+            .setDescriptionLocalizations({
                 'en_US': 'Command to reload',
                 'zh_CN': '重新加载的指令',
                 'zh_TW': '重新加載的指令',
-            },
-            type: 'STRING',
-            required: true,
-        },
-    ],
+            })
+            .setRequired(true),
+        ),
     args: true,
     ownerOnly: true,
-    async execute(message, args) {
-        await reload(message, args, message.author);
-    },
-    slashCommand: {
-        async execute(interaction) {
-            await reload(interaction, [interaction.options.getString('command')], interaction.user);
-        },
+    async execute(interaction) {
+        await reload(interaction, [interaction.options.getString('command')], interaction.user);
     },
 };

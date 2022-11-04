@@ -12,6 +12,7 @@ const { MessageActionRow, MessageSelectMenu, Message } = require('discord.js');
 
 const { waitImport, handleVideo } = require('../../functions/musicFunctions');
 const queueData = require('../../data/queueData');
+const { SlashCommandBuilder } = require('@discordjs/builders');
 const { queue } = queueData;
 const ytrx = /(?:youtube\.com.*[?|&](?:v|list)=|youtube\.com.*embed\/|youtube\.com.*v\/|youtu\.be\/)((?!videoseries)[a-zA-Z\d_-]*)/;
 const scrxt = new RegExp('^(?<track>https://soundcloud.com/(?!sets|stats|groups|upload|you|mobile|stream|messages|discover|notifications|terms-of-use|people|pages|jobs|settings|logout|charts|imprint|popular[a-z\\d-_]{1,25})/(?!sets|playlist|stats|settings|logout|notifications|you|messages[a-z\\d-_]{1,100}(?:/s-[a-zA-Z\\d-_]{1,10})?))[a-z\\d-?=/]*$');
@@ -197,33 +198,28 @@ async function play(command, args, language) {
         }
     });
 }
+
 module.exports = {
     name: 'play',
     guildOnly: true,
     aliases: ['p'],
-    description: {
-        'en_US': 'Play a song based on a given url or a keyword',
-        'zh_CN': '根据关键字或链接播放歌曲',
-        'zh_TW': '根據關鍵字或鏈接播放歌曲',
-    },
-    options: [
-        {
-            name: 'song',
-            description: {
+    data: new SlashCommandBuilder()
+        .setName('play')
+        .setDescriptionLocalizations({
+            'en_US': 'Play a song based on a given url or a keyword',
+            'zh_CN': '根据关键字或链接播放歌曲',
+            'zh_TW': '根據關鍵字或鏈接播放歌曲',
+        })
+        .addStringOption((option) => option
+            .setName('song')
+            .setDescriptionLocalizations({
                 'en_US': 'YouTube/SoundCloud/Spotify Link / keyword to search on YouTube',
                 'zh_CN': 'YouTube/SoundCloud/Spotify链接/在YouTube上搜索的关键词',
                 'zh_TW': 'YouTube/SoundCloud/Spotify鏈接/在YouTube上搜索的關鍵詞',
-            },
-            type: 'STRING',
-        },
-    ],
-    async execute(message, args, language) {
-        await play(message, args, language);
-    },
-    slashCommand: {
-        async execute(interaction, language) {
-            await interaction.deferReply();
-            await play(interaction, [interaction.options.getString('song')], language);
-        },
+            }),
+        ),
+    async execute(interaction, language) {
+        await interaction.deferReply();
+        await play(interaction, [interaction.options.getString('song')], language);
     },
 };

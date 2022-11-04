@@ -1,3 +1,5 @@
+/*
+
 const { saveGuildData, error, success } = require('../../functions/Util');
 const { MessageEmbed, Util } = require('discord.js');
 
@@ -230,3 +232,7 @@ module.exports = {
         },
     },
 };
+
+*/
+
+// will work on this later

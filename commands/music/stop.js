@@ -1,5 +1,6 @@
 const { success } = require('../../functions/Util.js');
 const { checkStats } = require('../../functions/musicFunctions');
+const { SlashCommandBuilder } = require('@discordjs/builders');
 async function stop(command, language) {
     const serverQueue = await checkStats(command);
     if (serverQueue === 'error') return;
@@ -11,17 +12,14 @@ async function stop(command, language) {
 module.exports = {
     name: 'stop',
     guildOnly: true,
-    description: {
-        'en_US': 'Stops playing songs.',
-        'zh_CN': '停止播放歌曲',
-        'zh_TW': '停止播放歌曲',
-    },
-    async execute(message, _args, language) {
-        await stop(message, language);
-    },
-    slashCommand: {
-        async execute(interaction, language) {
-            await stop(interaction, language);
-        },
+    data: new SlashCommandBuilder()
+        .setName('stop')
+        .setDescriptionLocalizations({
+            'en_US': 'Stops playing songs.',
+            'zh_CN': '停止播放歌曲',
+            'zh_TW': '停止播放歌曲',
+        }),
+    async execute(interaction, language) {
+        await stop(interaction, language);
     },
 };

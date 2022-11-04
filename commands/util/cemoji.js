@@ -1,3 +1,4 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
 const { success, error } = require('../../functions/Util.js');
 
 async function addEmoji(command, string, language) {
@@ -25,29 +26,23 @@ async function addEmoji(command, string, language) {
 module.exports = {
     name: 'cemoji',
     coolDown: 3,
-    description: {
-        'en_US': 'Copy emoji from other guilds! (nitro needed)',
-        'zh_CN': '从其他伺服器复制表情!（需要nitro）',
-        'zh_TW': '從其他伺服器復製表情!（需要nitro）',
-    },
-    options: [
-        {
-            name: 'emoji',
-            description: {
+    data: new SlashCommandBuilder()
+        .setName('cemoji')
+        .setDescription({
+            'en_US': 'Copy emoji from other guilds! (nitro needed)',
+            'zh_CN': '从其他伺服器复制表情!(需要nitro)',
+            'zh_TW': '從其他伺服器復製表情!(需要nitro)',
+        })
+        .addStringOption(option => option
+            .setName('emoji')
+            .setDescriptionLocalizations({
                 'en_US': 'Emoji to copy(nitro needed)',
                 'zh_CN': '要复制的表情（需要nitro）',
                 'zh_TW': '要複製的表情（需要nitro）',
-            },
-            type: 'STRING',
-            required: true,
-        },
-    ],
-    async execute(message, _args, language) {
-        await addEmoji(message, message.content, language);
-    },
-    slashCommand: {
-        async execute(interaction, language) {
-            await addEmoji(interaction, interaction.options.getString('emoji'), language);
-        },
+            })
+            .setRequired(true),
+        ),
+    async execute(interaction, language) {
+        await addEmoji(interaction, interaction.options.getString('emoji'), language);
     },
 };

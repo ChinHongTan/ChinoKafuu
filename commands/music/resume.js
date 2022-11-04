@@ -1,5 +1,6 @@
 const { error, success } = require('../../functions/Util.js');
 const { checkStats } = require('../../functions/musicFunctions');
+const { SlashCommandBuilder } = require('@discordjs/builders');
 async function resume(command, language) {
     const serverQueue = await checkStats(command);
     if (serverQueue === 'error') return;
@@ -14,17 +15,14 @@ async function resume(command, language) {
 module.exports = {
     name: 'resume',
     guildOnly: true,
-    description: {
-        'en_US': 'Resume the song!',
-        'zh_CN': '继续播放歌曲！',
-        'zh_TW': '繼續播放歌曲！',
-    },
-    execute(message, _args, language) {
-        return resume(message, language);
-    },
-    slashCommand: {
-        execute(interaction, language) {
-            return resume(interaction, language);
-        },
+    data: new SlashCommandBuilder()
+        .setName('resume')
+        .setDescriptionLocalizations({
+            'en_US': 'Resume the song!',
+            'zh_CN': '继续播放歌曲！',
+            'zh_TW': '繼續播放歌曲！',
+        }),
+    execute(interaction, language) {
+        return resume(interaction, language);
     },
 };

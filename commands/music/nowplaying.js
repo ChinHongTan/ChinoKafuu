@@ -2,6 +2,7 @@ const { reply } = require('../../functions/Util.js');
 const { format, checkStats } = require('../../functions/musicFunctions');
 const { MessageEmbed } = require('discord.js');
 const progressbar = require('string-progressbar');
+const { SlashCommandBuilder } = require('@discordjs/builders');
 async function nowPlaying(command, language) {
     const serverQueue = await checkStats(command, true);
     if (serverQueue === 'error') return;
@@ -24,17 +25,14 @@ module.exports = {
     name: 'now-playing',
     guildOnly: true,
     aliases: ['np'],
-    description: {
-        'en_US': 'View currently played song.',
-        'zh_CN': '查看目前正在播放的歌曲',
-        'zh_TW': '查看目前正在播放的歌曲',
-    },
-    execute(message, _args, language) {
-        return nowPlaying(message, language);
-    },
-    slashCommand: {
-        execute(interaction, language, languageStr) {
-            return nowPlaying(interaction, language, languageStr);
-        },
+    data: new SlashCommandBuilder()
+        .setName('now-playing')
+        .setDescriptionLocalizations({
+            'en_US': 'View currently played song.',
+            'zh_CN': '查看目前正在播放的歌曲',
+            'zh_TW': '查看目前正在播放的歌曲',
+        }),
+    execute(interaction, language, languageStr) {
+        return nowPlaying(interaction, language, languageStr);
     },
 };
