@@ -1,5 +1,6 @@
 const { reply } = require('../../functions/Util');
 const { MessageEmbed, Util } = require('discord.js');
+const { SlashCommandBuilder } = require('@discordjs/builders');
 
 function getLeaderboard(command, guild) {
     const userList = command.client.guildCollection.get(guild.id).data.users;
@@ -17,17 +18,15 @@ function getLeaderboard(command, guild) {
 module.exports = {
     name: 'leaderboard',
     coolDown: 3,
-    description: {
-        'en_US': 'Get server\'s leaderboard',
-        'zh_CN': '显示伺服器排行榜',
-        'zh_TW': '顯示伺服器排行榜',
-    },
-    async execute(message) {
-        return reply(message, { embeds: [getLeaderboard(message, message.guild)] });
-    },
-    slashCommand: {
-        async execute(interaction) {
-            return reply(interaction, { embeds: [getLeaderboard(interaction, interaction.guild)] });
-        },
+    data: new SlashCommandBuilder()
+        .setName('leaderboard')
+        .setDescriptionLocalizations({
+            'en_US': 'Get server\'s leaderboard',
+            'zh_CN': '显示伺服器排行榜',
+            'zh_TW': '顯示伺服器排行榜',
+        }),
+
+    async execute(interaction) {
+        return reply(interaction, { embeds: [getLeaderboard(interaction, interaction.guild)] });
     },
 };
