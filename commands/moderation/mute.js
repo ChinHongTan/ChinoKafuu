@@ -1,3 +1,4 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
 const { warn, error, success } = require('../../functions/Util.js');
 
 async function mute(command, [taggedUser, reason]) {
@@ -44,44 +45,35 @@ async function mute(command, [taggedUser, reason]) {
 }
 module.exports = {
     name: 'mute',
-    description: {
-        'en_US': 'Mute a server member',
-        'zh_CN': '禁言群组成员',
-        'zh_TW': '禁言群組成員',
-    },
-    options: [
-        {
-            name: 'member',
-            description: {
-                'en_US': 'Member to mute',
-                'zh_CN': '要禁言的群员',
-                'zh_TW': '要禁言的群員',
-            },
-            type: 'USER',
-            required: true,
-        },
-        {
-            name: 'reason',
-            description: {
-                'en_US': 'Mute reason',
-                'zh_CN': '禁言的原因',
-                'zh_TW': '禁言的原因',
-            },
-            type: 'STRING',
-        },
-    ],
     guildOnly: true,
     usage: '[mention] [reason(optional)]',
     permissions: 'ADMINISTRATOR',
-    async execute(message, args) {
-        args.shift();
-        const reason = args[0] ? args.join(' ') : 'None';
-        await mute(message, [message.mentions.members.first(), reason]);
-    },
-    slashCommand: {
-        async execute(interaction) {
-            await interaction.deferReply();
-            await mute(interaction, [interaction.options.getMember('member'), interaction.options.getString('reason')]);
-        },
+    data: new SlashCommandBuilder()
+        .setName('mute')
+        .setDescriptionLocalizations({
+            'en_US': 'Mute a server member',
+            'zh_CN': '禁言群组成员',
+            'zh_TW': '禁言群組成員',
+        })
+        .addUserOption((option) => option
+            .setName('member')
+            .setDescriptionLocalizations({
+                'en_US': 'Member to mute',
+                'zh_CN': '要禁言的群员',
+                'zh_TW': '要禁言的群員',
+            })
+            .setRequired(true),
+        )
+        .addStringOption((option) => option
+            .setName('reason')
+            .setDescriptionLocalizations({
+                'en_US': 'Mute reason',
+                'zh_CN': '禁言的原因',
+                'zh_TW': '禁言的原因',
+            }),
+        ),
+    async execute(interaction) {
+        await interaction.deferReply();
+        await mute(interaction, [interaction.options.getMember('member'), interaction.options.getString('reason')]);
     },
 };

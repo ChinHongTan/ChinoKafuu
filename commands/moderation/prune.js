@@ -1,3 +1,4 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
 const { error } = require('../../functions/Util.js');
 function prune(command, args, language) {
     const amount = parseInt(args[0]) + 1;
@@ -18,29 +19,23 @@ module.exports = {
     aliases: ['cut', 'delete', 'del'],
     guildOnly: true,
     permissions: 'MANAGE_MESSAGES',
-    description: {
-        'en_US': 'Bulk delete messages.',
-        'zh_CN': '删除多条讯息',
-        'zh_TW': '刪除多條訊息',
-    },
-    async execute(message, args, language) {
-        await prune(message, args, language);
-    },
-    options: [
-        {
-            name: 'number',
-            description: {
-                'en_US': 'Number of messages to prune',
+    data: new SlashCommandBuilder()
+        .setName('prune')
+        .setDescriptionLocalizations({
+            'en_US': 'Bulk delete messages.',
+            'zh_CN': '删除多条讯息',
+            'zh_TW': '刪除多條訊息',
+        })
+        .addIntegerOption((option) => option
+            .setName('number')
+            .setDescriptionLocalizations({
+                'en_US': 'Number of messages to prune.',
                 'zh_CN': '批量删除的讯息数量',
                 'zh_TW': '批量刪除的訊息數量',
-            },
-            type: 'INTEGER',
-            required: true,
-        },
-    ],
-    slashCommand: {
-        async execute(interaction, language) {
-            await prune(interaction, [interaction.options.getInteger('number')], language);
-        },
+            })
+            .setRequired(true),
+        ),
+    async execute(interaction, language) {
+        await prune(interaction, [interaction.options.getInteger('number')], language);
     },
 };
