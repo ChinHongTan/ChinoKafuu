@@ -22,16 +22,16 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('prune')
         .setDescriptionLocalizations({
-            'en_US': 'Bulk delete messages.',
-            'zh_CN': '删除多条讯息',
-            'zh_TW': '刪除多條訊息',
+            'en-US': 'Bulk delete messages.',
+            'zh-CN': '删除多条讯息',
+            'zh-TW': '刪除多條訊息',
         })
         .addIntegerOption((option) => option
             .setName('number')
             .setDescriptionLocalizations({
-                'en_US': 'Number of messages to prune.',
-                'zh_CN': '批量删除的讯息数量',
-                'zh_TW': '批量刪除的訊息數量',
+                'en-US': 'Number of messages to prune.',
+                'zh-CN': '批量删除的讯息数量',
+                'zh-TW': '批量刪除的訊息數量',
             })
             .setRequired(true),
         ),

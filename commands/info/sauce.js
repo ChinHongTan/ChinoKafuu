@@ -123,16 +123,16 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('sauce')
         .setDescriptionLocalizations({
-            'en_US': 'Search SauceNao/Ascii2d for an image source.',
-            'zh_CN': '在SauceNao/Ascii2d网站上搜索图源',
-            'zh_TW': '在SauceNao/Ascii2d網站上搜索圖源',
+            'en-US': 'Search SauceNao/Ascii2d for an image source.',
+            'zh-CN': '在SauceNao/Ascii2d网站上搜索图源',
+            'zh-TW': '在SauceNao/Ascii2d網站上搜索圖源',
         })
         .addStringOption((option) => option
             .setName('url')
             .setDescriptionLocalizations({
-                'en_US': 'URL of image, will search the last attachment uploaded in the channel if no url was given',
-                'zh_CN': '要查询的图片的网址，如果没有提供网址将会搜索最后在频道里上传的图片',
-                'zh_TW': '要查詢的圖片的網址，如果沒有提供網址將會搜索最後在頻道里上傳的圖片',
+                'en-US': 'URL of image, will search the last attachment uploaded in the channel if no url was given',
+                'zh-CN': '要查询的图片的网址，如果没有提供网址将会搜索最后在频道里上传的图片',
+                'zh-TW': '要查詢的圖片的網址，如果沒有提供網址將會搜索最後在頻道里上傳的圖片',
             }),
         ),
     coolDown: 5,

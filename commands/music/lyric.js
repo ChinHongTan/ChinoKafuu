@@ -86,16 +86,16 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('lyric')
         .setDescriptionLocalizations({
-            'en_US': 'Search for lyrics of a song!!',
-            'zh_CN': '搜索歌词！',
-            'zh_TW': '搜索歌詞！',
+            'en-US': 'Search for lyrics of a song!!',
+            'zh-CN': '搜索歌词！',
+            'zh-TW': '搜索歌詞！',
         })
         .addStringOption((option) => option
             .setName('keyword')
             .setDescriptionLocalizations({
-                'en_US': 'Song title, will use the title of the currently played song if no title given.',
-                'zh_CN': '要搜索歌词的歌名，如果没有提供歌名将会搜索目前正在播放的歌曲的歌词',
-                'zh_TW': '要搜索歌詞的歌名，如果沒有提供歌名將會搜索目前正在播放的歌曲的歌詞',
+                'en-US': 'Song title, will use the title of the currently played song if no title given.',
+                'zh-CN': '要搜索歌词的歌名，如果没有提供歌名将会搜索目前正在播放的歌曲的歌词',
+                'zh-TW': '要搜索歌詞的歌名，如果沒有提供歌名將會搜索目前正在播放的歌曲的歌詞',
             }),
         ),
     async execute(interaction, args, language) {

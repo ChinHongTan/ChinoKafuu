@@ -28,9 +28,9 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('server')
         .setDescriptionLocalizations({
-            'en_US': 'Get information about server.',
-            'zh_CN': '取得伺服器的基本资料',
-            'zh_TW': '取得伺服器的基本資料',
+            'en-US': 'Get information about server.',
+            'zh-CN': '取得伺服器的基本资料',
+            'zh-TW': '取得伺服器的基本資料',
         }),
     async execute(interaction, language) {
         await server(interaction, language);

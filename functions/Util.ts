@@ -32,9 +32,9 @@ interface SlashCommand {
 }
 
 interface Description {
-    'en_US': string,
-    'zh_CN': string,
-    'zh_TW': string,
+    'en-US': string,
+    'zh-CN': string,
+    'zh-TW': string,
 }
 
 interface BaseCommand {
@@ -102,7 +102,7 @@ interface CustomClient extends Client {
     } }>
     userDatabase:DB,
 }
-type Language = 'en_US' | 'zh_CN' | 'zh_TW';
+type Language = 'en-US' | 'zh-CN' | 'zh-TW';
 
 // reply with embeds
 
@@ -277,7 +277,7 @@ export async function getGuildData(client: CustomClient, guildId: Snowflake) {
     const defaultData = {
         id: guildId,
         data: {
-            language: 'zh_TW',
+            language: 'zh-TW',
             snipes: [],
             editSnipes: [],
             users: [],

@@ -26,16 +26,16 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('level')
         .setDescriptionLocalizations({
-            'en_US': 'Get a member\'s level',
-            'zh_CN': '显示成员的等级',
-            'zh_TW': '顯示成員的等級',
+            'en-US': 'Get a member\'s level',
+            'zh-CN': '显示成员的等级',
+            'zh-TW': '顯示成員的等級',
         })
         .addUserOption((option) => option
             .setName('member')
             .setDescriptionLocalizations({
-                'en_US': 'member\'s level, will send your level if no arguments given',
-                'zh_CN': '群员的等级，如果没有指明群员，我将会发送你的等级',
-                'zh_TW': '群員的等級，如果没有指明群员，我将会发送你的等級',
+                'en-US': 'member\'s level, will send your level if no arguments given',
+                'zh-CN': '群员的等级，如果没有指明群员，我将会发送你的等级',
+                'zh-TW': '群員的等級，如果没有指明群员，我将会发送你的等級',
             }),
         ),
     async execute(interaction) {

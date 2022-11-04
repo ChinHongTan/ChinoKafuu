@@ -57,48 +57,52 @@ module.exports = {
     name: 'set',
     guildOnly: true,
     description: {
-        'en_US': 'Adjust my settings in this server',
-        'zh_CN': '调整我的伺服器设定',
-        'zh_TW': '调整我的伺服器設定',
+        'en-US': 'Adjust my settings in this server',
+        'zh-CN': '调整我的伺服器设定',
+        'zh-TW': '调整我的伺服器設定',
     },
     data: new SlashCommandBuilder()
         .setName('set')
         .setDescriptionLocalizations({
-            'en_US': 'Adjust my settings in this server',
-            'zh_CN': '调整我的伺服器设定',
-            'zh_TW': '调整我的伺服器設定',
+            'en-US': 'Adjust my settings in this server',
+            'zh-CN': '调整我的伺服器设定',
+            'zh-TW': '调整我的伺服器設定',
         })
         .addSubcommand((subcommand) => subcommand
             .setName('language')
             .setDescriptionLocalizations({
-                'en_US': 'Set the language I use',
-                'zh_CN': '设定我使用的语言',
-                'zh_TW': '設定我使用的語言',
+                'en-US': 'Set the language I use',
+                'zh-CN': '设定我使用的语言',
+                'zh-TW': '設定我使用的語言',
             })
             .addStringOption((option) => option
                 .setName('language')
                 .setDescriptionLocalizations({
-                    'en_US': 'Set the language I use',
-                    'zh_CN': '设定我使用的语言',
-                    'zh_TW': '設定我使用的語言',
+                    'en-US': 'Set the language I use',
+                    'zh-CN': '设定我使用的语言',
+                    'zh-TW': '設定我使用的語言',
                 })
-                .addChoices([['en_US', 'en_US'], ['zh_CN', 'zh_CN'], ['zh_TW', 'zh_TW']])
+                .addChoices(
+                    { name: 'en-US', value: 'en_US' },
+                    { name: 'zh-CN', value: 'zh_CN' },
+                    { name: 'zh-TW', value: 'zh_TW' },
+                )
                 .setRequired(true),
             ),
         )
         .addSubcommand((subcommand) => subcommand
             .setName('log_channel')
             .setDescriptionLocalizations({
-                'en_US': 'Channel for me to log server events in!',
-                'zh_CN': '让我记录群內事件的频道',
-                'zh_TW': '讓我記錄群內事件的頻道',
+                'en-US': 'Channel for me to log server events in!',
+                'zh-CN': '让我记录群內事件的频道',
+                'zh-TW': '讓我記錄群內事件的頻道',
             })
             .addChannelOption((option) => option
                 .setName('channel')
                 .setDescriptionLocalizations({
-                    'en_US': 'Channel for me to log server events in!',
-                    'zh_CN': '让我记录群內事件的频道',
-                    'zh_TW': '讓我記錄群內事件的頻道',
+                    'en-US': 'Channel for me to log server events in!',
+                    'zh-CN': '让我记录群內事件的频道',
+                    'zh-TW': '讓我記錄群內事件的頻道',
                 })
                 .setRequired(true),
             ),
@@ -106,16 +110,16 @@ module.exports = {
         .addSubcommand((subcommand) => subcommand
             .setName('starboard')
             .setDescriptionLocalizations({
-                'en_US': 'Set starboard channel!',
-                'zh_CN': '设置名句精华频道',
-                'zh_TW': '設置名句精華頻道',
+                'en-US': 'Set starboard channel!',
+                'zh-CN': '设置名句精华频道',
+                'zh-TW': '設置名句精華頻道',
             })
             .addChannelOption((option) => option
                 .setName('channel')
                 .setDescriptionLocalizations({
-                    'en_US': 'Starboard channel',
-                    'zh_CN': '名句精华频道',
-                    'zh_TW': '名句精華頻道',
+                    'en-US': 'Starboard channel',
+                    'zh-CN': '名句精华频道',
+                    'zh-TW': '名句精華頻道',
                 })
                 .setRequired(true),
             ),
@@ -123,25 +127,25 @@ module.exports = {
         .addSubcommand((subcommand) => subcommand
             .setName('add_level_reward')
             .setDescriptionLocalizations({
-                'en_US': 'Set reward given when a user levels up.',
-                'zh_CN': '设置用户升级时给予的奖励',
-                'zh_TW': '設置用戶升級時給予的獎勵',
+                'en-US': 'Set reward given when a user levels up.',
+                'zh-CN': '设置用户升级时给予的奖励',
+                'zh-TW': '設置用戶升級時給予的獎勵',
             })
             .addIntegerOption((option) => option
                 .setName('level')
                 .setDescriptionLocalizations({
-                    'en_US': 'Level',
-                    'zh_CN': '等级',
-                    'zh_TW': '等級',
+                    'en-US': 'Level',
+                    'zh-CN': '等级',
+                    'zh-TW': '等級',
                 })
                 .setRequired(true),
             )
             .addRoleOption((option) => option
                 .setName('role')
                 .setDescriptionLocalizations({
-                    'en_US': 'Role to give',
-                    'zh_CN': '给予的身份组',
-                    'zh_TW': '給予的身份組',
+                    'en-US': 'Role to give',
+                    'zh-CN': '给予的身份组',
+                    'zh-TW': '給予的身份組',
                 })
                 .setRequired(true),
             ),
@@ -149,16 +153,16 @@ module.exports = {
         .addSubcommand((subcommand) => subcommand
             .setName('remove_level_reward')
             .setDescriptionLocalizations({
-                'en_US': 'Remove reward role',
-                'zh_CN': '移除奖励身份组',
-                'zh_TW': '移除獎勵身份組',
+                'en-US': 'Remove reward role',
+                'zh-CN': '移除奖励身份组',
+                'zh-TW': '移除獎勵身份組',
             })
             .addRoleOption((option) => option
                 .setName('channel')
                 .setDescriptionLocalizations({
-                    'en_US': 'Role to remove',
-                    'zh_CN': '要删除的身份组',
-                    'zh_TW': '要刪除的身份組',
+                    'en-US': 'Role to remove',
+                    'zh-CN': '要删除的身份组',
+                    'zh-TW': '要刪除的身份組',
                 })
                 .setRequired(true),
             ),

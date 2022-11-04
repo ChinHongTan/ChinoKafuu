@@ -14,9 +14,9 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('clear')
         .setDescriptionLocalizations({
-            'en_US': 'Clear the song queue',
-            'zh_CN': '清除播放行列',
-            'zh_TW': '清除播放佇列',
+            'en-US': 'Clear the song queue',
+            'zh-CN': '清除播放行列',
+            'zh-TW': '清除播放佇列',
         }),
     execute(interaction, language) {
         return clear(interaction, language);

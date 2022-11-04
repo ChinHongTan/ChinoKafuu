@@ -97,16 +97,16 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('user-info')
         .setDescriptionLocalizations({
-            'en_US': 'Get a user\'s information',
-            'zh_CN': '取得群组成员的基本资料',
-            'zh_TW': '取得群組成員的基本資料',
+            'en-US': 'Get a user\'s information',
+            'zh-CN': '取得群组成员的基本资料',
+            'zh-TW': '取得群組成員的基本資料',
         })
         .addUserOption((option) => option
             .setName('member')
             .setDescriptionLocalizations({
-                'en_US': 'member\'s info, will send info about you if no arguments given',
-                'zh_CN': '群员的资料，如果没有指明群员，我将会发送你的资料',
-                'zh_TW': '群員的資料，如果没有指明群员，我将会发送你的資料',
+                'en-US': 'member\'s info, will send info about you if no arguments given',
+                'zh-CN': '群员的资料，如果没有指明群员，我将会发送你的资料',
+                'zh-TW': '群員的資料，如果没有指明群员，我将会发送你的資料',
             }),
         ),
     execute(interaction, language) {

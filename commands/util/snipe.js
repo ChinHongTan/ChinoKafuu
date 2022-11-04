@@ -26,16 +26,16 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('snipe')
         .setDescriptionLocalizations({
-            'en_US': 'Snipe a message.',
-            'zh_CN': '狙击一条讯息',
-            'zh_TW': '狙擊一條訊息',
+            'en-US': 'Snipe a message.',
+            'zh-CN': '狙击一条讯息',
+            'zh-TW': '狙擊一條訊息',
         })
         .addIntegerOption(option => option
             .setName('number')
             .setDescriptionLocalizations({
-                'en_US':'message to snipe, default to 1',
-                'zh_CN': '要狙击的讯息,默認為1',
-                'zh_TW': '要狙擊的訊息,默認為1',
+                'en-US':'message to snipe, default to 1',
+                'zh-CN': '要狙击的讯息,默認為1',
+                'zh-TW': '要狙擊的訊息,默認為1',
             })
             .setRequired(true),
         ),

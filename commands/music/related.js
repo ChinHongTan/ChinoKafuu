@@ -99,9 +99,9 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('related')
         .setDescriptionLocalizations({
-            'en_US': 'Play a related song',
-            'zh_CN': '播放相关歌曲',
-            'zh_TW': '播放相關歌曲',
+            'en-US': 'Play a related song',
+            'zh-CN': '播放相关歌曲',
+            'zh-TW': '播放相關歌曲',
         }),
     async execute(interaction, language) {
         await related(interaction, language);

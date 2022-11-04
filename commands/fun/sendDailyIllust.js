@@ -18,9 +18,9 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('send_daily')
         .setDescriptionLocalizations({
-            'en_US': 'Send daily illust manually',
-            'zh_CN': '发送每日图',
-            'zh_TW': '發送每日圖',
+            'en-US': 'Send daily illust manually',
+            'zh-CN': '发送每日图',
+            'zh-TW': '發送每日圖',
         }),
     async execute(interaction) {
         if (!refreshToken) return interaction.reply('沒token啦幹');

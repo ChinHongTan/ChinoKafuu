@@ -5,9 +5,9 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('ping')
         .setDescriptionLocalizations({
-            'en_US': 'Get my latency~',
-            'zh_CN': '取得我的网络延迟~',
-            'zh_TW': ' 取得我的網絡延遲~',
+            'en-US': 'Get my latency~',
+            'zh-CN': '取得我的网络延迟~',
+            'zh-TW': ' 取得我的網絡延遲~',
         }),
     coolDown: 5,
     async execute(interaction, language) {

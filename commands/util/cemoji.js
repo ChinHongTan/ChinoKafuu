@@ -28,17 +28,17 @@ module.exports = {
     coolDown: 3,
     data: new SlashCommandBuilder()
         .setName('cemoji')
-        .setDescription({
-            'en_US': 'Copy emoji from other guilds! (nitro needed)',
-            'zh_CN': '从其他伺服器复制表情!(需要nitro)',
-            'zh_TW': '從其他伺服器復製表情!(需要nitro)',
+        .setDescriptionLocalizations({
+            'en-US': 'Copy emoji from other guilds! (nitro needed)',
+            'zh-CN': '从其他伺服器复制表情!(需要nitro)',
+            'zh-TW': '從其他伺服器復製表情!(需要nitro)',
         })
         .addStringOption(option => option
             .setName('emoji')
             .setDescriptionLocalizations({
-                'en_US': 'Emoji to copy(nitro needed)',
-                'zh_CN': '要复制的表情（需要nitro）',
-                'zh_TW': '要複製的表情（需要nitro）',
+                'en-US': 'Emoji to copy(nitro needed)',
+                'zh-CN': '要复制的表情(需要nitro)',
+                'zh-TW': '要複製的表情(需要nitro)',
             })
             .setRequired(true),
         ),

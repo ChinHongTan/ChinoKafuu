@@ -17,16 +17,16 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('ban')
         .setDescriptionLocalizations({
-            'en_US': 'Ban a server member',
-            'zh_CN': '对群组成员停权',
-            'zh_TW': '對群組成員停權',
+            'en-US': 'Ban a server member',
+            'zh-CN': '对群组成员停权',
+            'zh-TW': '對群組成員停權',
         })
         .addUserOption((option) => option
             .setName('member')
             .setDescriptionLocalizations({
-                'en_US': 'Member to ban',
-                'zh_CN': '要停权的群员',
-                'zh_TW': '要停權的群員',
+                'en-US': 'Member to ban',
+                'zh-CN': '要停权的群员',
+                'zh-TW': '要停權的群員',
 
             })
             .setRequired(true),

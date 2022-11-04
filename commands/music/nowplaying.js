@@ -28,9 +28,9 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('now-playing')
         .setDescriptionLocalizations({
-            'en_US': 'View currently played song.',
-            'zh_CN': '查看目前正在播放的歌曲',
-            'zh_TW': '查看目前正在播放的歌曲',
+            'en-US': 'View currently played song.',
+            'zh-CN': '查看目前正在播放的歌曲',
+            'zh-TW': '查看目前正在播放的歌曲',
         }),
     execute(interaction, language, languageStr) {
         return nowPlaying(interaction, language, languageStr);

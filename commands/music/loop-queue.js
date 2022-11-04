@@ -18,9 +18,9 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('loop-queue')
         .setDescriptionLocalizations({
-            'en_US': 'Loop the currently played queue!',
-            'zh_CN': '循环播放歌曲清单',
-            'zh_TW': '循環播放歌曲清單',
+            'en-US': 'Loop the currently played queue!',
+            'zh-CN': '循环播放歌曲清单',
+            'zh-TW': '循環播放歌曲清單',
         }),
     execute(interaction, language) {
         return loopQueue(interaction, language);

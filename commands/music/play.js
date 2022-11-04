@@ -206,16 +206,16 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('play')
         .setDescriptionLocalizations({
-            'en_US': 'Play a song based on a given url or a keyword',
-            'zh_CN': '根据关键字或链接播放歌曲',
-            'zh_TW': '根據關鍵字或鏈接播放歌曲',
+            'en-US': 'Play a song based on a given url or a keyword',
+            'zh-CN': '根据关键字或链接播放歌曲',
+            'zh-TW': '根據關鍵字或鏈接播放歌曲',
         })
         .addStringOption((option) => option
             .setName('song')
             .setDescriptionLocalizations({
-                'en_US': 'YouTube/SoundCloud/Spotify Link / keyword to search on YouTube',
-                'zh_CN': 'YouTube/SoundCloud/Spotify链接/在YouTube上搜索的关键词',
-                'zh_TW': 'YouTube/SoundCloud/Spotify鏈接/在YouTube上搜索的關鍵詞',
+                'en-US': 'YouTube/SoundCloud/Spotify Link / keyword to search on YouTube',
+                'zh-CN': 'YouTube/SoundCloud/Spotify链接/在YouTube上搜索的关键词',
+                'zh-TW': 'YouTube/SoundCloud/Spotify鏈接/在YouTube上搜索的關鍵詞',
             }),
         ),
     async execute(interaction, language) {

@@ -15,9 +15,9 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('skip')
         .setDescriptionLocalizations({
-            'en_US': 'Skips a song.',
-            'zh_CN': '跳过歌曲',
-            'zh_TW': '跳過歌曲',
+            'en-US': 'Skips a song.',
+            'zh-CN': '跳过歌曲',
+            'zh-TW': '跳過歌曲',
         }),
     execute(interaction, language) {
         return skip(interaction, language);

@@ -17,16 +17,16 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('kick')
         .setDescriptionLocalizations({
-            'en_US': 'Kick a server member out',
-            'zh_CN': '踢出群组成员',
-            'zh_TW': '踢出群組成員',
+            'en-US': 'Kick a server member out',
+            'zh-CN': '踢出群组成员',
+            'zh-TW': '踢出群組成員',
         })
         .addUserOption((option) => option
             .setName('member')
             .setDescriptionLocalizations({
-                'en_US': 'Member to kick',
-                'zh_CN': '要踢出的群员',
-                'zh_TW': '要踢出的群員',
+                'en-US': 'Member to kick',
+                'zh-CN': '要踢出的群员',
+                'zh-TW': '要踢出的群員',
             })
             .setRequired(true),
         ),

@@ -21,9 +21,9 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('leaderboard')
         .setDescriptionLocalizations({
-            'en_US': 'Get server\'s leaderboard',
-            'zh_CN': '显示伺服器排行榜',
-            'zh_TW': '顯示伺服器排行榜',
+            'en-US': 'Get server\'s leaderboard',
+            'zh-CN': '显示伺服器排行榜',
+            'zh-TW': '顯示伺服器排行榜',
         }),
 
     async execute(interaction) {

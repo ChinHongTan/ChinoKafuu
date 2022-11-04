@@ -10,16 +10,16 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('avatar')
         .setDescriptionLocalizations({
-            'en_US': 'Send user avatar.',
-            'zh_CN': '发送用户头像',
-            'zh_TW': '發送用戶頭像',
+            'en-US': 'Send user avatar.',
+            'zh-CN': '发送用户头像',
+            'zh-TW': '發送用戶頭像',
         })
         .addUserOption((option) => option
             .setName('member')
             .setDescriptionLocalizations({
-                'en_US': 'member\'s avatar, will send your avatar if no arguments given',
-                'zh_CN': '群员的头像，如果没有指明群员，我将会发送你的头像',
-                'zh_TW': '群員的頭像，如果没有指明群员，我将会发送你的头像',
+                'en-US': 'member\'s avatar, will send your avatar if no arguments given',
+                'zh-CN': '群员的头像，如果没有指明群员，我将会发送你的头像',
+                'zh-TW': '群員的頭像，如果没有指明群员，我将会发送你的头像',
             }),
         ),
 

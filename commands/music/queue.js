@@ -58,9 +58,9 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('queue')
         .setDescriptionLocalizations({
-            'en_US': 'Get the current song queue.',
-            'zh_CN': '查询目前的播放清单',
-            'zh_TW': '查詢目前的播放清單',
+            'en-US': 'Get the current song queue.',
+            'zh-CN': '查询目前的播放清单',
+            'zh-TW': '查詢目前的播放清單',
         }),
     async execute(interaction, language) {
         await queueFunc(interaction, language);

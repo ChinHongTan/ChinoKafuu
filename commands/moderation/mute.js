@@ -51,25 +51,25 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('mute')
         .setDescriptionLocalizations({
-            'en_US': 'Mute a server member',
-            'zh_CN': '禁言群组成员',
-            'zh_TW': '禁言群組成員',
+            'en-US': 'Mute a server member',
+            'zh-CN': '禁言群组成员',
+            'zh-TW': '禁言群組成員',
         })
         .addUserOption((option) => option
             .setName('member')
             .setDescriptionLocalizations({
-                'en_US': 'Member to mute',
-                'zh_CN': '要禁言的群员',
-                'zh_TW': '要禁言的群員',
+                'en-US': 'Member to mute',
+                'zh-CN': '要禁言的群员',
+                'zh-TW': '要禁言的群員',
             })
             .setRequired(true),
         )
         .addStringOption((option) => option
             .setName('reason')
             .setDescriptionLocalizations({
-                'en_US': 'Mute reason',
-                'zh_CN': '禁言的原因',
-                'zh_TW': '禁言的原因',
+                'en-US': 'Mute reason',
+                'zh-CN': '禁言的原因',
+                'zh-TW': '禁言的原因',
             }),
         ),
     async execute(interaction) {

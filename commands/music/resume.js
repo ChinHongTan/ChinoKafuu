@@ -18,9 +18,9 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('resume')
         .setDescriptionLocalizations({
-            'en_US': 'Resume the song!',
-            'zh_CN': '继续播放歌曲！',
-            'zh_TW': '繼續播放歌曲！',
+            'en-US': 'Resume the song!',
+            'zh-CN': '继续播放歌曲！',
+            'zh-TW': '繼續播放歌曲！',
         }),
     execute(interaction, language) {
         return resume(interaction, language);

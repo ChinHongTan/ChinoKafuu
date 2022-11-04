@@ -28,16 +28,16 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('reload')
         .setDescriptionLocalizations({
-            'en_US': 'Reloads a command',
-            'zh_CN': '重新加载指令',
-            'zh_TW': '重新加載指令',
+            'en-US': 'Reloads a command',
+            'zh-CN': '重新加载指令',
+            'zh-TW': '重新加載指令',
         })
         .addStringOption((option) => option
             .setName('command')
             .setDescriptionLocalizations({
-                'en_US': 'Command to reload',
-                'zh_CN': '重新加载的指令',
-                'zh_TW': '重新加載的指令',
+                'en-US': 'Command to reload',
+                'zh-CN': '重新加载的指令',
+                'zh-TW': '重新加載的指令',
             })
             .setRequired(true),
         ),

@@ -15,9 +15,9 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('stop')
         .setDescriptionLocalizations({
-            'en_US': 'Stops playing songs.',
-            'zh_CN': '停止播放歌曲',
-            'zh_TW': '停止播放歌曲',
+            'en-US': 'Stops playing songs.',
+            'zh-CN': '停止播放歌曲',
+            'zh-TW': '停止播放歌曲',
         }),
     async execute(interaction, language) {
         await stop(interaction, language);
