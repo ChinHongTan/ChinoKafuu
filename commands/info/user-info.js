@@ -1,5 +1,6 @@
 const { reply } = require('../../functions/Util.js');
 const { MessageEmbed } = require('discord.js');
+const { SlashCommandBuilder } = require('@discordjs/builders');
 
 function getUserInfo(author, language) {
     let activityDescription = '';
@@ -93,40 +94,28 @@ module.exports = {
     name: 'user-info',
     aliases: ['user', 'ui'],
     guildOnly: true,
-    description: {
-        'en_US': 'Get a user\'s information',
-        'zh_CN': '取得群组成员的基本资料',
-        'zh_TW': '取得群組成員的基本資料',
-    },
-    options: [
-        {
-            name: 'member',
-            description: {
-                'en_US': 'member\'s info, will send info about you if no arguments given',
-                'zh_CN': '群员的资料，如果没有指明群员，我将会发送你的资料',
-                'zh_TW': '群員的資料，如果没有指明群员，我将会发送你的資料',
-            },
-            type: 'USER',
-        },
-    ],
-    execute(message, _args, language) {
-        if (!message.mentions.members.size) {
-            const embed = getUserInfo(message.member, language);
-            return reply(message, { embeds: [embed] });
+    data: new SlashCommandBuilder()
+        .setName('user-info')
+        .setDescription('取得群組成員的基本資料')
+        .setDescriptionLocalizations({
+            'en-US': 'Get a user\'s information',
+            'zh-CN': '取得群组成员的基本资料',
+            'zh-TW': '取得群組成員的基本資料',
+        })
+        .addUserOption((option) => option
+            .setName('member')
+            .setDescription('群員的資料，如果没有指明群员，我将会发送你的資料')
+            .setDescriptionLocalizations({
+                'en-US': 'member\'s info, will send info about you if no arguments given',
+                'zh-CN': '群员的资料，如果没有指明群员，我将会发送你的资料',
+                'zh-TW': '群員的資料，如果没有指明群员，我将会发送你的資料',
+            }),
+        ),
+    execute(interaction, language) {
+        const user = interaction.options.getMember('member');
+        if (!user) {
+            return reply(interaction, { embeds: [getUserInfo(interaction.member, language)] });
         }
-
-        const userInfoList = message.mentions.members.map((user) => {
-            return getUserInfo(user, language);
-        });
-        return reply(message, { embeds: userInfoList });
-    },
-    slashCommand: {
-        execute(interaction, language) {
-            const user = interaction.options.getMember('member');
-            if (!user) {
-                return reply(interaction, { embeds: [getUserInfo(interaction.member, language)] });
-            }
-            return reply(interaction, { embeds: [getUserInfo(user, language)] });
-        },
+        return reply(interaction, { embeds: [getUserInfo(user, language)] });
     },
 };

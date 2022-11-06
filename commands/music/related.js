@@ -2,6 +2,7 @@ const { reply, warn } = require('../../functions/Util.js');
 const ytsr = require('youtube-sr').default;
 const { handleVideo, checkStats } = require('../../functions/musicFunctions');
 const ytdl = require('ytdl-core');
+const { SlashCommandBuilder } = require('@discordjs/builders');
 const scdl = require('soundcloud-downloader').default;
 
 async function related(command, language) {
@@ -95,17 +96,15 @@ module.exports = {
     name: 'related',
     guildOnly: true,
     aliases: ['re'],
-    description: {
-        'en_US': 'Play a related song',
-        'zh_CN': '播放相关歌曲',
-        'zh_TW': '播放相關歌曲',
-    },
-    async execute(message, _args, language) {
-        await related(message, language);
-    },
-    slashCommand: {
-        async execute(interaction, language) {
-            await related(interaction, language);
-        },
+    data: new SlashCommandBuilder()
+        .setName('related')
+        .setDescription('播放相關歌曲')
+        .setDescriptionLocalizations({
+            'en-US': 'Play a related song',
+            'zh-CN': '播放相关歌曲',
+            'zh-TW': '播放相關歌曲',
+        }),
+    async execute(interaction, language) {
+        await related(interaction, language);
     },
 };

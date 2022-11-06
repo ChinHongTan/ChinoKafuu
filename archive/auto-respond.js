@@ -1,3 +1,5 @@
+/*
+
 const { saveGuildData, error, success } = require('../../functions/Util');
 const { MessageEmbed, Util } = require('discord.js');
 
@@ -60,33 +62,33 @@ module.exports = {
     aliases: ['ar'],
     guildOnly: true,
     description: {
-        'en_US': 'Auto responding a message',
-        'zh_CN': '自动回复讯息',
-        'zh_TW': '自動回復訊息',
+        'en-US': 'Auto responding a message',
+        'zh-CN': '自动回复讯息',
+        'zh-TW': '自動回復訊息',
     },
     subcommandGroups: [
         {
             name: 'character',
             description: {
-                'en_US': '.',
-                'zh_CN': '.',
-                'zh_TW': '.',
+                'en-US': '.',
+                'zh-CN': '.',
+                'zh-TW': '.',
             },
             subcommands: [
                 {
                     name: 'add',
                     description: {
-                        'en_US': '.',
-                        'zh_CN': '.',
-                        'zh_TW': '.',
+                        'en-US': '.',
+                        'zh-CN': '.',
+                        'zh-TW': '.',
                     },
                     options: [
                         {
                             name: 'avatar',
                             description: {
-                                'en_US': '.',
-                                'zh_CN': '.',
-                                'zh_TW': '.',
+                                'en-US': '.',
+                                'zh-CN': '.',
+                                'zh-TW': '.',
                             },
                             type: 'STRING',
                             required: true,
@@ -94,9 +96,9 @@ module.exports = {
                         {
                             name: 'name',
                             description: {
-                                'en_US': '.',
-                                'zh_CN': '.',
-                                'zh_TW': '.',
+                                'en-US': '.',
+                                'zh-CN': '.',
+                                'zh-TW': '.',
                             },
                             type: 'STRING',
                         },
@@ -105,17 +107,17 @@ module.exports = {
                 {
                     name: 'remove',
                     description: {
-                        'en_US': '.',
-                        'zh_CN': '.',
-                        'zh_TW': '.',
+                        'en-US': '.',
+                        'zh-CN': '.',
+                        'zh-TW': '.',
                     },
                     options: [
                         {
                             name: 'name',
                             description: {
-                                'en_US': '.',
-                                'zh_CN': '.',
-                                'zh_TW': '.',
+                                'en-US': '.',
+                                'zh-CN': '.',
+                                'zh-TW': '.',
                             },
                             type: 'STRING',
                         },
@@ -124,17 +126,17 @@ module.exports = {
                 {
                     name: 'list',
                     description: {
-                        'en_US': '.',
-                        'zh_CN': '.',
-                        'zh_TW': '.',
+                        'en-US': '.',
+                        'zh-CN': '.',
+                        'zh-TW': '.',
                     },
                     options: [
                         {
                             name: 'name',
                             description: {
-                                'en_US': '.',
-                                'zh_CN': '.',
-                                'zh_TW': '.',
+                                'en-US': '.',
+                                'zh-CN': '.',
+                                'zh-TW': '.',
                             },
                             type: 'STRING',
                         },
@@ -145,25 +147,25 @@ module.exports = {
         {
             name: 'respond',
             description: {
-                'en_US': '.',
-                'zh_CN': '.',
-                'zh_TW': '.',
+                'en-US': '.',
+                'zh-CN': '.',
+                'zh-TW': '.',
             },
             subcommands: [
                 {
                     name: 'add',
                     description: {
-                        'en_US': '.',
-                        'zh_CN': '.',
-                        'zh_TW': '.',
+                        'en-US': '.',
+                        'zh-CN': '.',
+                        'zh-TW': '.',
                     },
                     options: [
                         {
                             name: 'message',
                             description: {
-                                'en_US': '.',
-                                'zh_CN': '.',
-                                'zh_TW': '.',
+                                'en-US': '.',
+                                'zh-CN': '.',
+                                'zh-TW': '.',
                             },
                             type: 'STRING',
                             required: true,
@@ -171,9 +173,9 @@ module.exports = {
                         {
                             name: 'reply',
                             description: {
-                                'en_US': '.',
-                                'zh_CN': '.',
-                                'zh_TW': '.',
+                                'en-US': '.',
+                                'zh-CN': '.',
+                                'zh-TW': '.',
                             },
                             type: 'STRING',
                             required: true,
@@ -183,17 +185,17 @@ module.exports = {
                 {
                     name: 'remove',
                     description: {
-                        'en_US': '.',
-                        'zh_CN': '.',
-                        'zh_TW': '.',
+                        'en-US': '.',
+                        'zh-CN': '.',
+                        'zh-TW': '.',
                     },
                     options: [
                         {
                             name: 'message',
                             description: {
-                                'en_US': '.',
-                                'zh_CN': '.',
-                                'zh_TW': '.',
+                                'en-US': '.',
+                                'zh-CN': '.',
+                                'zh-TW': '.',
                             },
                             type: 'STRING',
                             required: true,
@@ -201,9 +203,9 @@ module.exports = {
                         {
                             name: 'reply',
                             description: {
-                                'en_US': '.',
-                                'zh_CN': '.',
-                                'zh_TW': '.',
+                                'en-US': '.',
+                                'zh-CN': '.',
+                                'zh-TW': '.',
                             },
                             type: 'STRING',
                             required: true,
@@ -213,9 +215,9 @@ module.exports = {
                 {
                     name: 'list',
                     description: {
-                        'en_US': '.',
-                        'zh_CN': '.',
-                        'zh_TW': '.',
+                        'en-US': '.',
+                        'zh-CN': '.',
+                        'zh-TW': '.',
                     },
                 },
             ],
@@ -230,3 +232,7 @@ module.exports = {
         },
     },
 };
+
+*/
+
+// will work on this later

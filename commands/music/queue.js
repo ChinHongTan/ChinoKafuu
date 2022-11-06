@@ -2,6 +2,7 @@ const { reply } = require('../../functions/Util.js');
 const { format, checkStats } = require('../../functions/musicFunctions');
 const { MessageEmbed } = require('discord.js');
 const DynamicEmbed = require('../../functions/dynamicEmbed');
+const { SlashCommandBuilder } = require('@discordjs/builders');
 const dynamicEmbed = new DynamicEmbed();
 
 function arrayChunks(array, chunkSize) {
@@ -54,17 +55,15 @@ module.exports = {
     name: 'queue',
     guildOnly: true,
     aliases: ['q'],
-    description: {
-        'en_US': 'Get the current song queue.',
-        'zh_CN': '查询目前的播放清单',
-        'zh_TW': '查詢目前的播放清單',
-    },
-    async execute(message, _args, language) {
-        await queueFunc(message, language);
-    },
-    slashCommand: {
-        async execute(interaction, language) {
-            await queueFunc(interaction, language);
-        },
+    data: new SlashCommandBuilder()
+        .setName('queue')
+        .setDescription('查詢目前的播放清單')
+        .setDescriptionLocalizations({
+            'en-US': 'Get the current song queue.',
+            'zh-CN': '查询目前的播放清单',
+            'zh-TW': '查詢目前的播放清單',
+        }),
+    async execute(interaction, language) {
+        await queueFunc(interaction, language);
     },
 };

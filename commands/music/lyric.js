@@ -10,6 +10,7 @@ const { queue } = queueData;
 const fetch = require('node-fetch');
 const htmlToText = require('html-to-text');
 const encoding = require('encoding');
+const { SlashCommandBuilder } = require('@discordjs/builders');
 
 const delim1 = '</div></div></div></div><div class="hwc"><div class="BNeawe tAd8D AP7Wnd"><div><div class="BNeawe tAd8D AP7Wnd">';
 const delim2 = '</div></div></div></div></div><div><span class="hwc"><div class="BNeawe uEec3 AP7Wnd">';
@@ -82,28 +83,24 @@ module.exports = {
     name: 'lyric',
     guildOnly: true,
     aliases: ['ly'],
-    description: {
-        'en_US': 'Search for lyrics of a song!!',
-        'zh_CN': '搜索歌词！',
-        'zh_TW': '搜索歌詞！',
-    },
-    options: [
-        {
-            name: 'keyword',
-            description: {
-                'en_US': 'Song title, will use the title of the currently played song if no title given.',
-                'zh_CN': '要搜索歌词的歌名，如果没有提供歌名将会搜索目前正在播放的歌曲的歌词',
-                'zh_TW': '要搜索歌詞的歌名，如果沒有提供歌名將會搜索目前正在播放的歌曲的歌詞',
-            },
-            type: 'STRING',
-        },
-    ],
-    async execute(message, args, language) {
-        await lyric(message, [message.content.substring(message.content.indexOf(' ') + 1)], language);
-    },
-    slashCommand: {
-        async execute(interaction, args, language) {
-            await lyric(interaction, [interaction.options.getString('keyword')], language);
-        },
+    data: new SlashCommandBuilder()
+        .setName('lyric')
+        .setDescription('搜索歌詞！')
+        .setDescriptionLocalizations({
+            'en-US': 'Search for lyrics of a song!!',
+            'zh-CN': '搜索歌词！',
+            'zh-TW': '搜索歌詞！',
+        })
+        .addStringOption((option) => option
+            .setName('keyword')
+            .setDescription('要搜索歌詞的歌名，如果沒有提供歌名將會搜索目前正在播放的歌曲的歌詞')
+            .setDescriptionLocalizations({
+                'en-US': 'Song title, will use the title of the currently played song if no title given.',
+                'zh-CN': '要搜索歌词的歌名，如果没有提供歌名将会搜索目前正在播放的歌曲的歌词',
+                'zh-TW': '要搜索歌詞的歌名，如果沒有提供歌名將會搜索目前正在播放的歌曲的歌詞',
+            }),
+        ),
+    async execute(interaction, args, language) {
+        await lyric(interaction, [interaction.options.getString('keyword')], language);
     },
 };

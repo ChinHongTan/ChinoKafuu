@@ -58,30 +58,29 @@ async function anime(command, args, language) {
 module.exports = {
     name: 'anime',
     guildOnly: true,
-    description: {
-        'en_US': 'Search for anime details or search anime with frames.',
-        'zh_CN': '根据动漫截图查找动漫/查询动漫相关信息',
-        'zh_TW': '根據動漫截圖查找動漫/查詢動漫相關信息',
-    },
-    options: [
-        {
-            name: 'url',
-            description: {
-                'en_US': 'URL of image, will search the last attachment uploaded in the channel if no url was given',
-                'zh_CN': '输入图片网址，如果没有网址将会搜索最后在频道里上传图片',
-                'zh_TW': '輸入圖片網址，如果沒有網址將會搜索最後在頻道里上傳圖片',
-            },
-            type: 'STRING',
-        },
-    ],
-    async execute(message, args, language) {
-        await anime(message, args, language);
-    },
-    slashCommand: {
-        data: new SlashCommandBuilder()
-            .addStringOption((option) => option.setName('url').setDescription('Enter image url')),
-        async execute(interaction, language) {
-            await anime(interaction, [interaction.options.getString('url')], language);
-        },
+    data: new SlashCommandBuilder()
+        .setName('anime')
+        .setDescription('根據動漫截圖查找動漫/查詢動漫相關信息')
+        .setDescriptionLocalizations({
+            'en-US': 'Search for anime details or search anime with frames.',
+            'zh-CN': '根据动漫截图查找动漫/查询动漫相关信息',
+            'zh-TW': '根據動漫截圖查找動漫/查詢動漫相關信息',
+        })
+        .addStringOption((option) => option
+            .setName('url')
+            .setNameLocalizations({
+                'en-US': 'url',
+                'zh-CN': '网址',
+                'zh-TW': '網址',
+            })
+            .setDescription('輸入圖片網址，如果沒有網址將會搜索最後在頻道里上傳圖片')
+            .setDescriptionLocalizations({
+                'en-US': 'URL of image, will search the last attachment uploaded in the channel if no url was given',
+                'zh-CN': '输入图片网址，如果没有网址将会搜索最后在频道里上传图片',
+                'zh-TW': '輸入圖片網址，如果沒有網址將會搜索最後在頻道里上傳圖片',
+            }),
+        ),
+    async execute(interaction, language) {
+        await anime(interaction, [interaction.options.getString('url')], language);
     },
 };

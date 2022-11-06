@@ -1,5 +1,6 @@
 const { error } = require('../../functions/Util.js');
 const { checkStats } = require('../../functions/musicFunctions');
+const { SlashCommandBuilder } = require('@discordjs/builders');
 async function clear(command, language) {
     const serverQueue = await checkStats(command);
     if (serverQueue === 'error') return;
@@ -10,17 +11,15 @@ async function clear(command, language) {
 module.exports = {
     name: 'clear',
     guildOnly: true,
-    description: {
-        'en_US': 'Clear the song queue',
-        'zh_CN': '清除播放行列',
-        'zh_TW': '清除播放佇列',
-    },
-    execute(message, _args, language) {
-        return clear(message, language);
-    },
-    slashCommand: {
-        execute(interaction, language) {
-            return clear(interaction, language);
-        },
+    data: new SlashCommandBuilder()
+        .setName('clear')
+        .setDescription('清除播放佇列')
+        .setDescriptionLocalizations({
+            'en-US': 'Clear the song queue',
+            'zh-CN': '清除播放行列',
+            'zh-TW': '清除播放佇列',
+        }),
+    execute(interaction, language) {
+        return clear(interaction, language);
     },
 };

@@ -1,5 +1,6 @@
 const { reply } = require('../../functions/Util.js');
 const { MessageEmbed } = require('discord.js');
+const { SlashCommandBuilder } = require('@discordjs/builders');
 function server(command, language) {
     const embed = new MessageEmbed()
         .setTitle('Server Info')
@@ -22,19 +23,17 @@ function server(command, language) {
 module.exports = {
     name: 'server',
     aliases: ['server-info'],
-    description: {
-        'en_US': 'Get information about server.',
-        'zh_CN': '取得伺服器的基本资料',
-        'zh_TW': '取得伺服器的基本資料',
-    },
     guildOnly: true,
     coolDown: 5,
-    async execute(message, _, language) {
-        await server(message, language);
-    },
-    slashCommand: {
-        async execute(interaction, language) {
-            await server(interaction, language);
-        },
+    data: new SlashCommandBuilder()
+        .setName('server')
+        .setDescription('取得伺服器的基本資料')
+        .setDescriptionLocalizations({
+            'en-US': 'Get information about server.',
+            'zh-CN': '取得伺服器的基本资料',
+            'zh-TW': '取得伺服器的基本資料',
+        }),
+    async execute(interaction, language) {
+        await server(interaction, language);
     },
 };
