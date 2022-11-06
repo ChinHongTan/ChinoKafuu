@@ -14,6 +14,7 @@ module.exports = {
     aliases: ['next'],
     data: new SlashCommandBuilder()
         .setName('skip')
+        .setDescription('跳過歌曲')
         .setDescriptionLocalizations({
             'en-US': 'Skips a song.',
             'zh-CN': '跳过歌曲',

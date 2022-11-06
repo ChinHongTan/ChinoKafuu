@@ -85,6 +85,7 @@ module.exports = {
     aliases: ['ly'],
     data: new SlashCommandBuilder()
         .setName('lyric')
+        .setDescription('搜索歌詞！')
         .setDescriptionLocalizations({
             'en-US': 'Search for lyrics of a song!!',
             'zh-CN': '搜索歌词！',
@@ -92,6 +93,7 @@ module.exports = {
         })
         .addStringOption((option) => option
             .setName('keyword')
+            .setDescription('要搜索歌詞的歌名，如果沒有提供歌名將會搜索目前正在播放的歌曲的歌詞')
             .setDescriptionLocalizations({
                 'en-US': 'Song title, will use the title of the currently played song if no title given.',
                 'zh-CN': '要搜索歌词的歌名，如果没有提供歌名将会搜索目前正在播放的歌曲的歌词',

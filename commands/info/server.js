@@ -27,6 +27,7 @@ module.exports = {
     coolDown: 5,
     data: new SlashCommandBuilder()
         .setName('server')
+        .setDescription('取得伺服器的基本資料')
         .setDescriptionLocalizations({
             'en-US': 'Get information about server.',
             'zh-CN': '取得伺服器的基本资料',

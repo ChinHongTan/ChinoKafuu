@@ -23,6 +23,7 @@ module.exports = {
     aliases: ['r'],
     data: new SlashCommandBuilder()
         .setName('remove')
+        .setDescription('從清單中移除歌曲')
         .setDescriptionLocalizations({
             'en-US': 'Removes a song from the song queue',
             'zh-CN': '从清单中移除歌曲',
@@ -30,6 +31,7 @@ module.exports = {
         })
         .addIntegerOption((option) => option
             .setName('index')
+            .setDescription('要移除的歌曲的序號')
             .setDescriptionLocalizations({
                 'en-US': 'Index of song to remove',
                 'zh-CN': '要移除的歌曲的序号',

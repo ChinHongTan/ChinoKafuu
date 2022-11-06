@@ -17,6 +17,7 @@ module.exports = {
     ownerOnly: true,
     data: new SlashCommandBuilder()
         .setName('send_daily')
+        .setDescription('發送每日圖')
         .setDescriptionLocalizations({
             'en-US': 'Send daily illust manually',
             'zh-CN': '发送每日图',

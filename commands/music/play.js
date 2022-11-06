@@ -205,6 +205,7 @@ module.exports = {
     aliases: ['p'],
     data: new SlashCommandBuilder()
         .setName('play')
+        .setDescription('根據關鍵字或鏈接播放歌曲')
         .setDescriptionLocalizations({
             'en-US': 'Play a song based on a given url or a keyword',
             'zh-CN': '根据关键字或链接播放歌曲',
@@ -212,6 +213,7 @@ module.exports = {
         })
         .addStringOption((option) => option
             .setName('song')
+            .setDescription('YouTube/SoundCloud/Spotify鏈接/在YouTube上搜索的關鍵詞')
             .setDescriptionLocalizations({
                 'en-US': 'YouTube/SoundCloud/Spotify Link / keyword to search on YouTube',
                 'zh-CN': 'YouTube/SoundCloud/Spotify链接/在YouTube上搜索的关键词',

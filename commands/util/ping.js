@@ -4,6 +4,7 @@ module.exports = {
     name: 'ping',
     data: new SlashCommandBuilder()
         .setName('ping')
+        .setDescription('取得我的網絡延遲~')
         .setDescriptionLocalizations({
             'en-US': 'Get my latency~',
             'zh-CN': '取得我的网络延迟~',

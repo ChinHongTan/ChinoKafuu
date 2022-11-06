@@ -56,13 +56,9 @@ async function removeLevelReward(command, args, language) {
 module.exports = {
     name: 'set',
     guildOnly: true,
-    description: {
-        'en-US': 'Adjust my settings in this server',
-        'zh-CN': '调整我的伺服器设定',
-        'zh-TW': '调整我的伺服器設定',
-    },
     data: new SlashCommandBuilder()
         .setName('set')
+        .setDescription('调整我的伺服器設定')
         .setDescriptionLocalizations({
             'en-US': 'Adjust my settings in this server',
             'zh-CN': '调整我的伺服器设定',
@@ -70,6 +66,7 @@ module.exports = {
         })
         .addSubcommand((subcommand) => subcommand
             .setName('language')
+            .setDescription('設定我使用的語言')
             .setDescriptionLocalizations({
                 'en-US': 'Set the language I use',
                 'zh-CN': '设定我使用的语言',
@@ -77,6 +74,7 @@ module.exports = {
             })
             .addStringOption((option) => option
                 .setName('language')
+                .setDescription('設定我使用的語言')
                 .setDescriptionLocalizations({
                     'en-US': 'Set the language I use',
                     'zh-CN': '设定我使用的语言',
@@ -92,6 +90,7 @@ module.exports = {
         )
         .addSubcommand((subcommand) => subcommand
             .setName('log_channel')
+            .setDescription('讓我記錄群內事件的頻道')
             .setDescriptionLocalizations({
                 'en-US': 'Channel for me to log server events in!',
                 'zh-CN': '让我记录群內事件的频道',
@@ -99,6 +98,7 @@ module.exports = {
             })
             .addChannelOption((option) => option
                 .setName('channel')
+                .setDescription('讓我記錄群內事件的頻道')
                 .setDescriptionLocalizations({
                     'en-US': 'Channel for me to log server events in!',
                     'zh-CN': '让我记录群內事件的频道',
@@ -109,6 +109,7 @@ module.exports = {
         )
         .addSubcommand((subcommand) => subcommand
             .setName('starboard')
+            .setDescription('設置名句精華頻道')
             .setDescriptionLocalizations({
                 'en-US': 'Set starboard channel!',
                 'zh-CN': '设置名句精华频道',
@@ -116,6 +117,7 @@ module.exports = {
             })
             .addChannelOption((option) => option
                 .setName('channel')
+                .setDescription('名句精華頻道')
                 .setDescriptionLocalizations({
                     'en-US': 'Starboard channel',
                     'zh-CN': '名句精华频道',
@@ -126,6 +128,7 @@ module.exports = {
         )
         .addSubcommand((subcommand) => subcommand
             .setName('add_level_reward')
+            .setDescription('設置用戶升級時給予的獎勵')
             .setDescriptionLocalizations({
                 'en-US': 'Set reward given when a user levels up.',
                 'zh-CN': '设置用户升级时给予的奖励',
@@ -133,6 +136,7 @@ module.exports = {
             })
             .addIntegerOption((option) => option
                 .setName('level')
+                .setDescription('等級')
                 .setDescriptionLocalizations({
                     'en-US': 'Level',
                     'zh-CN': '等级',
@@ -142,6 +146,7 @@ module.exports = {
             )
             .addRoleOption((option) => option
                 .setName('role')
+                .setDescription('給予的身份組')
                 .setDescriptionLocalizations({
                     'en-US': 'Role to give',
                     'zh-CN': '给予的身份组',
@@ -152,6 +157,7 @@ module.exports = {
         )
         .addSubcommand((subcommand) => subcommand
             .setName('remove_level_reward')
+            .setDescription('移除獎勵身份組')
             .setDescriptionLocalizations({
                 'en-US': 'Remove reward role',
                 'zh-CN': '移除奖励身份组',
@@ -159,6 +165,7 @@ module.exports = {
             })
             .addRoleOption((option) => option
                 .setName('channel')
+                .setDescription('要刪除的身份組')
                 .setDescriptionLocalizations({
                     'en-US': 'Role to remove',
                     'zh-CN': '要删除的身份组',

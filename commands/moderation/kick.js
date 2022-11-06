@@ -16,6 +16,7 @@ module.exports = {
     permissions: 'ADMINISTRATOR',
     data: new SlashCommandBuilder()
         .setName('kick')
+        .setDescription('踢出群組成員')
         .setDescriptionLocalizations({
             'en-US': 'Kick a server member out',
             'zh-CN': '踢出群组成员',
@@ -23,6 +24,7 @@ module.exports = {
         })
         .addUserOption((option) => option
             .setName('member')
+            .setDescription('要踢出的群員')
             .setDescriptionLocalizations({
                 'en-US': 'Member to kick',
                 'zh-CN': '要踢出的群员',

@@ -27,6 +27,7 @@ module.exports = {
     name: 'reload',
     data: new SlashCommandBuilder()
         .setName('reload')
+        .setDescription('重新加載指令')
         .setDescriptionLocalizations({
             'en-US': 'Reloads a command',
             'zh-CN': '重新加载指令',
@@ -34,6 +35,7 @@ module.exports = {
         })
         .addStringOption((option) => option
             .setName('command')
+            .setDescription('重新加載的指令')
             .setDescriptionLocalizations({
                 'en-US': 'Command to reload',
                 'zh-CN': '重新加载的指令',

@@ -25,6 +25,7 @@ module.exports = {
     coolDown: 3,
     data: new SlashCommandBuilder()
         .setName('level')
+        .setDescription('顯示成員的等級')
         .setDescriptionLocalizations({
             'en-US': 'Get a member\'s level',
             'zh-CN': '显示成员的等级',
@@ -32,10 +33,11 @@ module.exports = {
         })
         .addUserOption((option) => option
             .setName('member')
+            .setDescription('選擇群員，如果没有指明群员，我将会发送你的等級')
             .setDescriptionLocalizations({
                 'en-US': 'member\'s level, will send your level if no arguments given',
-                'zh-CN': '群员的等级，如果没有指明群员，我将会发送你的等级',
-                'zh-TW': '群員的等級，如果没有指明群员，我将会发送你的等級',
+                'zh-CN': '选择群员，如果没有指明群员，我将会发送你的等级',
+                'zh-TW': '選擇群員，如果没有指明群员，我将会发送你的等級',
             }),
         ),
     async execute(interaction) {

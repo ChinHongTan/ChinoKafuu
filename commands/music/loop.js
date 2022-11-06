@@ -14,13 +14,9 @@ async function loop(command, language) {
 module.exports = {
     name: 'loop',
     guildOnly: true,
-    description: {
-        'en-US': 'Loop the currently played song!',
-        'zh-CN': '循环播放当前歌曲！',
-        'zh-TW': '循環播放當前歌曲！',
-    },
     data: new SlashCommandBuilder()
         .setName('loop')
+        .setDescription('循環播放當前歌曲！')
         .setDescriptionLocalizations({
             'en-US': 'Loop the currently played song!',
             'zh-CN': '循环播放当前歌曲！',

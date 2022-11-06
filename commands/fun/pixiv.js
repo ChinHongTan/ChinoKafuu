@@ -56,6 +56,7 @@ module.exports = {
     coolDown: 3,
     data: new SlashCommandBuilder()
         .setName('pixiv')
+        .setDescription('在pixiv網站上搜索圖片')
         .setDescriptionLocalizations({
             'en-US': 'Search and get an illust on pixiv',
             'zh-CN': '在pixiv网站上搜索图片',
@@ -63,6 +64,7 @@ module.exports = {
         })
         .addSubcommandGroup((group) => group
             .setName('search')
+            .setDescription('在pixiv上搜索')
             .setDescriptionLocalizations({
                 'en-US': 'Search on pixiv',
                 'zh-CN': '在pixiv上搜索',
@@ -70,6 +72,7 @@ module.exports = {
             })
             .addSubcommand((subcommand) => subcommand
                 .setName('illust')
+                .setDescription('用ID搜索畫作')
                 .setDescriptionLocalizations({
                     'en-US': 'Search an illust with given ID',
                     'zh-CN': '用ID搜索画作',
@@ -77,6 +80,7 @@ module.exports = {
                 })
                 .addIntegerOption((option) => option
                     .setName('illust_id')
+                    .setDescription('畫作ID')
                     .setDescriptionLocalizations({
                         'en-US': 'ID of the illust',
                         'zh-CN': '画作ID',
@@ -87,6 +91,7 @@ module.exports = {
             )
             .addSubcommand((subcommand) => subcommand
                 .setName('author')
+                .setDescription('搜索並取得繪師隨機的一個畫作')
                 .setDescriptionLocalizations({
                     'en-US': 'Search and get a random illust from the author',
                     'zh-CN': '搜索并取得绘师随机的一个画作',
@@ -94,6 +99,7 @@ module.exports = {
                 })
                 .addIntegerOption((option) => option
                     .setName('author_id')
+                    .setDescription('繪師ID')
                     .setDescriptionLocalizations({
                         'en-US': 'ID of the author',
                         'zh-CN': '绘师ID',
@@ -104,6 +110,7 @@ module.exports = {
             )
             .addSubcommand((subcommand) => subcommand
                 .setName('query')
+                .setDescription('在pixiv上搜索關鍵詞')
                 .setDescriptionLocalizations({
                     'en-US': 'query to search illust on pixiv',
                     'zh-CN': '在pixiv上搜索关键词',
@@ -111,6 +118,7 @@ module.exports = {
                 })
                 .addStringOption((option) => option
                     .setName('query')
+                    .setDescription('在pixiv上搜索關鍵詞')
                     .setDescriptionLocalizations({
                         'en-US': 'Query to search illust on pixiv',
                         'zh-CN': '在pixiv上搜索关键词',
@@ -121,10 +129,11 @@ module.exports = {
                 )
                 .addStringOption((option) => option
                     .setName('bookmarks')
+                    .setDescription('用書籤數量過濾畫作, 默認為1000個書籤')
                     .setDescriptionLocalizations({
                         'en-US': 'filter search results with bookmarks, default to 1000 bookmarks',
-                        'zh-CN': '用书签数量过滤画作，默认为1000个书签',
-                        'zh-TW': '用書籤數量過濾畫作，默認為1000個書籤',
+                        'zh-CN': '用书签数量过滤画作, 默认为1000个书签',
+                        'zh-TW': '用書籤數量過濾畫作, 默認為1000個書籤',
                     })
                     .addChoices(
                         { name: '50', value: '50' },
@@ -139,10 +148,11 @@ module.exports = {
                 )
                 .addIntegerOption((option) => option
                     .setName('pages')
+                    .setDescription('搜索頁數(頁數越多搜索時間越長), 默認為1')
                     .setDescriptionLocalizations({
                         'en-US': 'how many pages to search (more pages = longer), default to 1',
-                        'zh-CN': '搜索页数（頁數越多搜索时间越长），默认为1',
-                        'zh-TW': '搜索頁數（頁數越多搜索時間越長），默認為1',
+                        'zh-CN': '搜索页数(頁數越多搜索时间越长), 默认为1',
+                        'zh-TW': '搜索頁數(頁數越多搜索時間越長), 默認為1',
                     })
                     .setMinValue(1)
                     .setMaxValue(10),

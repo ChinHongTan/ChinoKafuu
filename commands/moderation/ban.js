@@ -16,6 +16,7 @@ module.exports = {
     permissions: 'ADMINISTRATOR',
     data: new SlashCommandBuilder()
         .setName('ban')
+        .setDescription('對群組成員停權')
         .setDescriptionLocalizations({
             'en-US': 'Ban a server member',
             'zh-CN': '对群组成员停权',
@@ -23,6 +24,7 @@ module.exports = {
         })
         .addUserOption((option) => option
             .setName('member')
+            .setDescription('要停權的群員')
             .setDescriptionLocalizations({
                 'en-US': 'Member to ban',
                 'zh-CN': '要停权的群员',

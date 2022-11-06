@@ -14,13 +14,9 @@ async function pause(command, language) {
 module.exports = {
     name: 'pause',
     guildOnly: true,
-    description: {
-        'en-US': 'Pause the song!',
-        'zh-CN': '暂停播放歌曲！',
-        'zh-TW': '暫停播放歌曲！',
-    },
     data: new SlashCommandBuilder()
         .setName('pause')
+        .setDescription('暫停播放歌曲！')
         .setDescriptionLocalizations({
             'en-US': 'Pause the song!',
             'zh-CN': '暂停播放歌曲！',

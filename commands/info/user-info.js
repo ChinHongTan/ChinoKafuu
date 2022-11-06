@@ -96,6 +96,7 @@ module.exports = {
     guildOnly: true,
     data: new SlashCommandBuilder()
         .setName('user-info')
+        .setDescription('取得群組成員的基本資料')
         .setDescriptionLocalizations({
             'en-US': 'Get a user\'s information',
             'zh-CN': '取得群组成员的基本资料',
@@ -103,6 +104,7 @@ module.exports = {
         })
         .addUserOption((option) => option
             .setName('member')
+            .setDescription('群員的資料，如果没有指明群员，我将会发送你的資料')
             .setDescriptionLocalizations({
                 'en-US': 'member\'s info, will send info about you if no arguments given',
                 'zh-CN': '群员的资料，如果没有指明群员，我将会发送你的资料',

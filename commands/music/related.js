@@ -98,6 +98,7 @@ module.exports = {
     aliases: ['re'],
     data: new SlashCommandBuilder()
         .setName('related')
+        .setDescription('播放相關歌曲')
         .setDescriptionLocalizations({
             'en-US': 'Play a related song',
             'zh-CN': '播放相关歌曲',

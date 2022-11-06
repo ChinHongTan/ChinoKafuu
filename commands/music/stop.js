@@ -14,6 +14,7 @@ module.exports = {
     guildOnly: true,
     data: new SlashCommandBuilder()
         .setName('stop')
+        .setDescription('停止播放歌曲')
         .setDescriptionLocalizations({
             'en-US': 'Stops playing songs.',
             'zh-CN': '停止播放歌曲',

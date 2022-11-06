@@ -50,6 +50,7 @@ module.exports = {
     permissions: 'ADMINISTRATOR',
     data: new SlashCommandBuilder()
         .setName('mute')
+        .setDescription('禁言群组成员')
         .setDescriptionLocalizations({
             'en-US': 'Mute a server member',
             'zh-CN': '禁言群组成员',
@@ -57,6 +58,7 @@ module.exports = {
         })
         .addUserOption((option) => option
             .setName('member')
+            .setDescription('要禁言的群員')
             .setDescriptionLocalizations({
                 'en-US': 'Member to mute',
                 'zh-CN': '要禁言的群员',
@@ -66,6 +68,7 @@ module.exports = {
         )
         .addStringOption((option) => option
             .setName('reason')
+            .setDescription('禁言的原因')
             .setDescriptionLocalizations({
                 'en-US': 'Mute reason',
                 'zh-CN': '禁言的原因',

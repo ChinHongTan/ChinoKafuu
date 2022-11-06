@@ -13,6 +13,7 @@ module.exports = {
     guildOnly: true,
     data: new SlashCommandBuilder()
         .setName('clear')
+        .setDescription('清除播放佇列')
         .setDescriptionLocalizations({
             'en-US': 'Clear the song queue',
             'zh-CN': '清除播放行列',

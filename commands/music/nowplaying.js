@@ -27,6 +27,7 @@ module.exports = {
     aliases: ['np'],
     data: new SlashCommandBuilder()
         .setName('now-playing')
+        .setDescription('查看目前正在播放的歌曲')
         .setDescriptionLocalizations({
             'en-US': 'View currently played song.',
             'zh-CN': '查看目前正在播放的歌曲',

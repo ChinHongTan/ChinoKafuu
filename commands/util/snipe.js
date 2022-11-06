@@ -25,6 +25,7 @@ module.exports = {
     guildOnly: true,
     data: new SlashCommandBuilder()
         .setName('snipe')
+        .setDescription('狙擊一條訊息')
         .setDescriptionLocalizations({
             'en-US': 'Snipe a message.',
             'zh-CN': '狙击一条讯息',
@@ -32,11 +33,14 @@ module.exports = {
         })
         .addIntegerOption(option => option
             .setName('number')
+            .setDescription('要狙擊的訊息,默認為1')
             .setDescriptionLocalizations({
                 'en-US':'message to snipe, default to 1',
                 'zh-CN': '要狙击的讯息,默認為1',
                 'zh-TW': '要狙擊的訊息,默認為1',
             })
+            .setMinValue(1)
+            .setMaxValue(10)
             .setRequired(true),
         ),
     async execute(interaction, language) {

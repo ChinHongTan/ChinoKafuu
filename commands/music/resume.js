@@ -17,6 +17,7 @@ module.exports = {
     guildOnly: true,
     data: new SlashCommandBuilder()
         .setName('resume')
+        .setDescription('繼續播放歌曲！')
         .setDescriptionLocalizations({
             'en-US': 'Resume the song!',
             'zh-CN': '继续播放歌曲！',

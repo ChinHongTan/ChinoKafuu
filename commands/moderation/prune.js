@@ -21,6 +21,7 @@ module.exports = {
     permissions: 'MANAGE_MESSAGES',
     data: new SlashCommandBuilder()
         .setName('prune')
+        .setDescription('刪除多條訊息')
         .setDescriptionLocalizations({
             'en-US': 'Bulk delete messages.',
             'zh-CN': '删除多条讯息',
@@ -28,6 +29,7 @@ module.exports = {
         })
         .addIntegerOption((option) => option
             .setName('number')
+            .setDescription('批量刪除的訊息數量')
             .setDescriptionLocalizations({
                 'en-US': 'Number of messages to prune.',
                 'zh-CN': '批量删除的讯息数量',

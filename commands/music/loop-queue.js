@@ -17,6 +17,7 @@ module.exports = {
     aliases: ['lq', 'loopqueue'],
     data: new SlashCommandBuilder()
         .setName('loop-queue')
+        .setDescription('循環播放歌曲清單')
         .setDescriptionLocalizations({
             'en-US': 'Loop the currently played queue!',
             'zh-CN': '循环播放歌曲清单',

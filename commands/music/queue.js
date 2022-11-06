@@ -57,6 +57,7 @@ module.exports = {
     aliases: ['q'],
     data: new SlashCommandBuilder()
         .setName('queue')
+        .setDescription('查詢目前的播放清單')
         .setDescriptionLocalizations({
             'en-US': 'Get the current song queue.',
             'zh-CN': '查询目前的播放清单',

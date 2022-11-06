@@ -20,6 +20,7 @@ module.exports = {
     coolDown: 3,
     data: new SlashCommandBuilder()
         .setName('leaderboard')
+        .setDescription('顯示伺服器排行榜')
         .setDescriptionLocalizations({
             'en-US': 'Get server\'s leaderboard',
             'zh-CN': '显示伺服器排行榜',
