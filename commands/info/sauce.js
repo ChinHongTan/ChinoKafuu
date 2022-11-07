@@ -5,9 +5,7 @@ const sagiriToken = process.env.SAGIRI || require('../../config/config.json').sa
 const sagiri = require('sagiri');
 let mySauce;
 if (sagiriToken) mySauce = sagiri(sagiriToken);
-const DynamicEmbed = require('../../functions/dynamicEmbed');
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const dynamicEmbed = new DynamicEmbed();
 
 async function sauce(command, args, language) {
     /**
@@ -15,7 +13,7 @@ async function sauce(command, args, language) {
      * @param {object} response - Response object from sauceNao API call
      * @return {MessageEmbed} Discord embed.
      */
-    function createEmbed(response) {
+    function createsauceNaoEmbed(response) {
         const sourceURL = response.url;
         let information = '';
         for (const [key, value] of Object.entries(response.raw.data)) {
@@ -39,7 +37,7 @@ async function sauce(command, args, language) {
      * @param {object} response - Response object from ascii2d API call
      * @return {MessageEmbed} Discord embed.
      */
-    function createEmbed2(response) {
+    function createascii2dEmbed(response) {
         const sourceURL = response?.source?.url ?? 'None';
         const title = response?.source?.title ?? 'None';
         const author = response?.source?.author ? language.sauceAuthor.replace('${authorInfo.name}', response?.source?.author.name).replace('${authorInfo.url}', response?.source?.author.url) : language.noAuthor;
@@ -56,35 +54,16 @@ async function sauce(command, args, language) {
     }
 
     /**
-     * Function to send embed message
-     * @param {object} response - Response object from the API call
-     * @param {number} mode - Which API to use (whether sauceNao or ascii2d)
-     */
-    function sendEmbed(response, mode) {
-        switch (mode) {
-        case 1:
-            // saucenao
-            dynamicEmbed.createEmbedFlip(command, response, ['⬅️', '➡️'], createEmbed);
-            break;
-        case 2:
-            // ascii2d
-            dynamicEmbed.createEmbedFlip(command, response, ['⬅️', '➡️'], createEmbed2);
-            break;
-        }
-    }
-
-    /**
      * Search for an image from sauceNao or ascii2d
      * @param {string} searchImage - url of the target image to search for.
      */
     async function searchForImage(searchImage) {
-        let mode = 1;
         // start with saucenao
         const result = await mySauce(searchImage, { results: 10 });
         const response = result.filter((r) => r.similarity > 80);
 
         if (response.length > 0) {
-            return sendEmbed(response, mode);
+            return command.reply({ embeds: [ createsauceNaoEmbed(response[0]) ] });
         }
         // search with ascii2d
         const result2 = await searchByUrl(searchImage, 'bovw');
@@ -92,9 +71,8 @@ async function sauce(command, args, language) {
             return error(command, language.noResult);
         }
         // const response2 = result2.items.filter((r2) => r2.source !== 0);
-        mode = 2;
         // sendEmbed(response2, mode);
-        sendEmbed(result2.items, mode);
+        command.reply({ embeds: [ createascii2dEmbed(result2.items[0]) ] });
     }
 
     let searchImage = '';
