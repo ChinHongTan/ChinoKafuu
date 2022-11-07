@@ -19,6 +19,10 @@ module.exports = {
             if (interaction.replied) return;
             return await command.selectMenu(interaction, language);
         }
+        if (interaction.isButton()) {
+            if (interaction.replied) return;
+            return await command.button(interaction, language);
+        }
         if (!interaction.isCommand()) return;
         if (command.ownerOnly) {
             if (interaction.user.id !== owner_id) {
