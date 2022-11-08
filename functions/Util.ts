@@ -114,8 +114,8 @@ function isString(x: any): x is string {
 // reply to a user command
 export async function reply(command: CommandInteraction, response: string | InteractionReplyOptions, color?: ColorResolvable) {
     if (isString(response)) return command.reply({ embeds: [{ description: response, color: color }] });
-    command.reply(response);
     if (command.deferred) return await command.editReply(response);
+    command.reply(response);
     return await command.fetchReply();
 }
 

@@ -2,8 +2,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const { error } = require('../../functions/Util.js');
 const fetch = require('node-fetch');
 const { MessageEmbed } = require('discord.js');
-const DynamicEmbed = require('../../functions/dynamicEmbed');
-const dynamicEmbed = new DynamicEmbed();
+const Paginator = require('../../functions/paginator');
 
 async function anime(command, args, language) {
     function isValidHttpUrl(string) {
@@ -21,7 +20,7 @@ async function anime(command, args, language) {
     function createEmbed(response) {
         return new MessageEmbed()
             .setTitle(response.anilist.title.native)
-            .setDescription(language.similarity.replace('${similarity * 100}', response.similarity * 100))
+            .setDescription(language.similarity.replace('${similarity}', response.similarity * 100))
             .setColor('#008000')
             .setImage(response.image)
             .addField(language.sourceURL, response.video)
@@ -38,7 +37,26 @@ async function anime(command, args, language) {
         }
         const e = await fetch(`https://api.trace.moe/search?cutBorders&anilistInfo&url=${encodeURIComponent(args[0])}`);
         const response = await e.json();
-        return dynamicEmbed.createEmbedFlip(command, response.result, ['⬅️', '➡️'], createEmbed);
+        const embedList = [];
+        for (const responseObject of response.result) {
+            embedList.push(createEmbed(responseObject));
+        }
+        const paginator = new Paginator(embedList, command);
+        const message = paginator.render();
+        const collector = message.createMessageComponentCollector({
+            filter: ({ customId, user }) =>
+                ['button1', 'button2', 'button3', 'button4'].includes(customId) && user.id === command.member.id,
+            idle: 60000,
+        });
+        collector.on('collect', async (button) => {
+            await paginator.paginate(button, 0);
+        });
+        collector.on('end', async (button) => {
+            if (!button.first()) {
+                message.channel.send(language.timeout);
+                await message.delete();
+            }
+        });
     }
     let searchImage;
     const messages = await command.channel.messages.fetch({ limit: 25 });
@@ -53,7 +71,26 @@ async function anime(command, args, language) {
     }
     const e = await fetch(`https://api.trace.moe/search?cutBorders&anilistInfo&url=${encodeURIComponent(searchImage)}`);
     const response = await e.json();
-    return dynamicEmbed.createEmbedFlip(command, response.result, ['⬅️', '➡️'], createEmbed);
+    const embedList = [];
+    for (const responseObject of response.result) {
+        embedList.push(createEmbed(responseObject));
+    }
+    const paginator = new Paginator(embedList, command);
+    const message = paginator.render();
+    const collector = message.createMessageComponentCollector({
+        filter: ({ customId, user }) =>
+            ['button1', 'button2', 'button3', 'button4'].includes(customId) && user.id === command.member.id,
+        idle: 60000,
+    });
+    collector.on('collect', async (button) => {
+        await paginator.paginate(button, 0);
+    });
+    collector.on('end', async (button) => {
+        if (!button.first()) {
+            message.channel.send(language.timeout);
+            await message.delete();
+        }
+    });
 }
 module.exports = {
     name: 'anime',

@@ -1,9 +1,8 @@
 const { reply } = require('../../functions/Util.js');
 const { format, checkStats } = require('../../functions/musicFunctions');
 const { MessageEmbed } = require('discord.js');
-const DynamicEmbed = require('../../functions/dynamicEmbed');
+const Paginator = require('../../functions/paginator');
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const dynamicEmbed = new DynamicEmbed();
 
 function arrayChunks(array, chunkSize) {
     const resultArray = [];
@@ -44,7 +43,22 @@ async function queueFunc(command, language) {
         });
         const arrayChunk = arrayChunks(songQueue, 10);
         if (songQueue.length > 10) {
-            await dynamicEmbed.createEmbedFlip(command, arrayChunk, ['⬅️', '➡️'], createEmbed);
+            const paginator = new Paginator(arrayChunk, command);
+            const message = paginator.render();
+            const collector = message.createMessageComponentCollector({
+                filter: ({ customId, user }) =>
+                    ['button1', 'button2', 'button3', 'button4'].includes(customId) && user.id === command.member.id,
+                idle: 60000,
+            });
+            collector.on('collect', async (button) => {
+                await paginator.paginate(button, 0);
+            });
+            collector.on('end', async (button) => {
+                if (!button.first()) {
+                    message.channel.send(language.timeout);
+                    await message.delete();
+                }
+            });
         } else {
             const embed = createEmbed(songQueue);
             return reply(command, { embeds: [embed] });
