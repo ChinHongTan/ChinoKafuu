@@ -65,7 +65,7 @@ module.exports = {
         "notInVC": "加入语音频道后才能使用此指令！",
     },
     "anime": {
-        "similarity": "相似度: ${similarity * 100}%",
+        "similarity": "相似度: ${similarity}%",
         "sourceURL": "**来源链接**",
         "nativeTitle": "日语标题",
         "romajiTitle": "罗马音标题",
@@ -108,7 +108,7 @@ module.exports = {
         "noOutput": "没有输出！",
     },
     "sauce": {
-        "similarity": "相似度: ${similarity * 100}%",
+        "similarity": "相似度: ${similarity}%",
         "sourceURL": "**来源链接**",
         "searchingSauce": "正在搜索图片...",
         "additionalInfo": "额外信息",

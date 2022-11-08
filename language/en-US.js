@@ -65,7 +65,7 @@ module.exports = {
         "notInVC": "You have to join a voice channel before using this command!",
     },
     "anime": {
-        "similarity": "Similarity: ${similarity * 100}%",
+        "similarity": "Similarity: ${similarity}%",
         "sourceURL": "**Source URL**",
         "nativeTitle": "Native Title",
         "romajiTitle": "Romaji Title",
