@@ -9,3 +9,4 @@ my-backups
 functions/Util.js
 data/illusts.json
 functions/dynamicEmbed.js
+functions/paginator.js
