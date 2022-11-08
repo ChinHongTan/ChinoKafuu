@@ -120,7 +120,7 @@ export async function reply(command: CommandInteraction, response: string | Inte
 }
 
 // edit a message or interaction
-export async function edit(command: CommandInteraction, response?: string | InteractionReplyOptions | MessageEmbed, color?: ColorResolvable) {
+export async function edit(command: CommandInteraction, response: string | InteractionReplyOptions | MessageEmbed, color?: ColorResolvable) {
     if (isString(response)) return await command.editReply({ embeds: [{ description: response, color: color }], components: [], content: '\u200b' });
     if (response instanceof MessageEmbed) return await command.editReply({ embeds: [response], components: [], content: '\u200b' });
     return await command.editReply(response);
@@ -159,7 +159,7 @@ export async function updateIllust(query: string) {
 }
 
 function processIllustURL(illust: PixivIllust): string[] {
-    const targetURL = [];
+    const targetURL: string[] = [];
     if (illust.meta_pages.length === 0) {
         targetURL.push(illust.image_urls.medium.replace('pximg.net', 'pixiv.cat'));
     }
@@ -174,7 +174,7 @@ function processIllustURL(illust: PixivIllust): string[] {
 }
 
 export function generateIllustEmbed(illust: PixivIllust): MessageEmbed[] {
-    const multipleIllusts = [];
+    const multipleIllusts: MessageEmbed[] = [];
 
     const targetURL = processIllustURL(illust);
 
@@ -212,7 +212,7 @@ export async function sendSuggestedIllust(channel: TextChannel) {
     if (pixiv.user.nextURL) authors = await pixiv.util.multiCall( { next_url: pixiv.user.nextURL, user_previews: authors });
     const randomAuthor = authors[Math.floor(Math.random() * authors.length)];
     let illusts = randomAuthor.illusts;
-    if (pixiv.illust.nextURL) illusts = await pixiv.util.multiCall({ next_url: pixiv.search.nextURL, illusts });
+    if (pixiv.illust.nextURL) illusts = await pixiv.util.multiCall({ next_url: pixiv.illust.nextURL, illusts }); // not sure how this works, will remove comment after test
     let clean_illusts = illusts.filter((illust) => {
         return illust.x_restrict === 0 && illust.total_bookmarks >= 1000;
     });
@@ -227,47 +227,6 @@ export async function extension(reaction: MessageReaction, attachment: string) {
     const image = /(jpg|jpeg|png|gif)/gi.test(typeOfImage);
     if (!image) return '';
     return attachment;
-}
-
-export function getEditDistance(a: string, b: string) {
-    if (a.length === 0) return b.length;
-    if (b.length === 0) return a.length;
-
-    const matrix = [];
-
-    // increment along the first column of each row
-    let i;
-    for (i = 0; i <= b.length; i++) {
-        matrix[i] = [i];
-    }
-
-    // increment each column in the first row
-    let j;
-    for (j = 0; j <= a.length; j++) {
-        matrix[0][j] = j;
-    }
-
-    // Fill in the rest of the matrix
-    for (i = 1; i <= b.length; i++) {
-        for (j = 1; j <= a.length; j++) {
-            if (b.charAt(i - 1) === a.charAt(j - 1)) {
-                matrix[i][j] = matrix[i - 1][j - 1];
-            } else {
-                matrix[i][j] = Math.min(
-                    // substitution
-                    matrix[i - 1][j - 1] + 1,
-                    Math.min(
-                        matrix[i][j - 1] + 1,
-                        // insertion
-                        matrix[i - 1][j] + 1,
-                    ),
-                    // deletion
-                );
-            }
-        }
-    }
-
-    return matrix[b.length][a.length];
 }
 
 // get guild data from database or local json file, generate one if none found
@@ -297,7 +256,7 @@ export async function getGuildData(client: CustomClient, guildId: Snowflake) {
 export async function saveGuildData(client: CustomClient, guildId: Snowflake) {
     const guildData = client.guildCollection.get(guildId); // collection cache
     const collection = client.guildDatabase; // database or json
-    if (collection) {
+    if (collection && guildData) {
         const query = { id: guildId };
         const options = { upsert: true };
         return collection.replaceOne(query, guildData, options); // save in mongodb
@@ -343,7 +302,7 @@ export async function getUserData(client: CustomClient, member: GuildMember) {
     const userList = rawData.data.users;
     const userData = userList?.find((user) => user.id === member.id);
     if (!userData) {
-        client.guildCollection.get(member.guild.id).data.users.push(defaultData); // create a new profile
+        client.guildCollection.get(member.guild.id)?.data.users.push(defaultData); // create a new profile
     }
     return userList?.find(user => user.id === member.id) ?? defaultData;
 }
@@ -351,7 +310,9 @@ export async function getUserData(client: CustomClient, member: GuildMember) {
 // add exp for a user
 export async function addUserExp(client: CustomClient, member: GuildMember) {
     const guildData = client.guildCollection.get(member.guild.id);
+    if (!guildData) return; // should be initialised first in getGuildData()
     const userData = guildData.data.users.find(user => user.id === member.id); // collection cache
+    if (!userData) return;  // should be initialised first in getUserData()
     const levelRewards = guildData.data.levelReward;
     let exp = userData.exp;
     let level = userData.level;
