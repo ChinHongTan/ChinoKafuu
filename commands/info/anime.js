@@ -20,7 +20,7 @@ async function anime(command, args, language) {
     function createEmbed(response) {
         return new MessageEmbed()
             .setTitle(response.anilist.title.native)
-            .setDescription(language.similarity.replace('${similarity * 100}', response.similarity * 100))
+            .setDescription(language.similarity.replace('${similarity}', response.similarity * 100))
             .setColor('#008000')
             .setImage(response.image)
             .addField(language.sourceURL, response.video)
