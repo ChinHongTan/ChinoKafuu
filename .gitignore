@@ -1,12 +1,6 @@
 node_modules
 config.json
-functions/commandReply.js
-functions/fuzzysort.js
-functions/updateIllust.js
 *.map
-functions/ascii2d.js
 my-backups
-functions/Util.js
 data/illusts.json
-functions/dynamicEmbed.js
-functions/paginator.js
+dist
