@@ -1,4 +1,4 @@
-const { error, info } = require('../../functions/Util.js');
+const { error, info, edit } = require('../../functions/Util.js');
 const { MessageEmbed } = require('discord.js');
 const { searchByUrl } = require('../../functions/ascii2d.js');
 const sagiriToken = process.env.SAGIRI || require('../../config/config.json').sagiri_token;
@@ -59,11 +59,11 @@ async function sauce(command, args, language) {
      */
     async function searchForImage(searchImage) {
         // start with saucenao
-        const result = await mySauce(searchImage, { results: 10 });
+        const result = await mySauce(searchImage, { results: 5 });
         const response = result.filter((r) => r.similarity > 80);
 
         if (response.length > 0) {
-            return command.reply({ embeds: [ createsauceNaoEmbed(response[0]) ] });
+            return edit(command, { embeds: [ createsauceNaoEmbed(response[0]) ] });
         }
         // search with ascii2d
         const result2 = await searchByUrl(searchImage, 'bovw');
@@ -72,7 +72,7 @@ async function sauce(command, args, language) {
         }
         // const response2 = result2.items.filter((r2) => r2.source !== 0);
         // sendEmbed(response2, mode);
-        command.reply({ embeds: [ createascii2dEmbed(result2.items[0]) ] });
+        edit(command, { embeds: [ createascii2dEmbed(result2.items[0]) ] });
     }
 
     let searchImage = '';
