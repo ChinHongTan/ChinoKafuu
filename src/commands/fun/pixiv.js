@@ -1,7 +1,7 @@
 const { error, reply, generateIllustEmbed } = require('../../functions/Util.js');
 const Pixiv = require('pixiv.ts');
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const refreshToken = process.env.PIXIV_REFRESH_TOKEN || require('../../config/config.json').PixivRefreshToken;
+const refreshToken = process.env.PIXIV_REFRESH_TOKEN || require('../../../../config/config.json').PixivRefreshToken;
 
 // search pixiv for illusts
 async function pixivFunc(command, args, language) {

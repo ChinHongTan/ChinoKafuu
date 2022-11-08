@@ -1,4 +1,4 @@
-const { addUserExp, getUserData, saveGuildData } = require('../functions/Util.js');
+const { addUserExp, getUserData, saveGuildData } = require('../functions/Util.js.js.js');
 
 module.exports = {
     name: 'messageCreate',

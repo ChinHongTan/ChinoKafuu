@@ -6,11 +6,11 @@ const mongodbURI = process.env.MONGODB_URI || require('./config/config.json').mo
 
 const CronJob = require('cron').CronJob;
 const pixivRefreshToken = process.env.PIXIV_REFRESH_TOKEN || require('./config/config.json').PixivRefreshToken;
-const { updateIllust, sendSuggestedIllust } = require('./functions/Util.js');
+const { updateIllust, sendSuggestedIllust } = require('./dist/functions/Util.js');
 
-const en_US = require('./language/en-US.js');
-const zh_CN = require('./language/zh-CN.js');
-const zh_TW = require('./language/zh-TW.js');
+const en_US = require('./dist/language/en-US.js');
+const zh_CN = require('./dist/language/zh-CN.js');
+const zh_TW = require('./dist/language/zh-TW.js');
 
 const client = new Discord.Client({
     intents: [
@@ -36,22 +36,22 @@ const client = new Discord.Client({
 client.commands = new Discord.Collection();
 client.language = { en_US, zh_CN, zh_TW };
 
-const commandFolders = fs.readdirSync('./commands');
+const commandFolders = fs.readdirSync('./dist/commands');
 
 for (const folder of commandFolders) {
-    const commandFiles = fs.readdirSync(`./commands/${folder}`).filter((file) => file.endsWith('.js'));
+    const commandFiles = fs.readdirSync(`./dist/commands/${folder}`).filter((file) => file.endsWith('.js'));
     for (const file of commandFiles) {
-        const command = require(`./commands/${folder}/${file}`);
+        const command = require(`./dist/commands/${folder}/${file}`);
         client.commands.set(command.name, command);
     }
 }
 
 client.coolDowns = new Discord.Collection();
 
-const eventFiles = fs.readdirSync('./events').filter((file) => file.endsWith('.js'));
+const eventFiles = fs.readdirSync('./dist/events').filter((file) => file.endsWith('.js'));
 
 for (const file of eventFiles) {
-    const event = require(`./events/${file}`);
+    const event = require(`./dist/events/${file}`);
     if (event.once) {
         client.once(event.name, async (...args) => await event.execute(...args, client));
     } else {

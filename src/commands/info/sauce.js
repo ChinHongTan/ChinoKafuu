@@ -1,7 +1,7 @@
 const { error, info, edit } = require('../../functions/Util.js');
 const { MessageEmbed } = require('discord.js');
 const { searchByUrl } = require('../../functions/ascii2d.js');
-const sagiriToken = process.env.SAGIRI || require('../../config/config.json').sagiri_token;
+const sagiriToken = process.env.SAGIRI || require('../../../../config/config.json').sagiri_token;
 const sagiri = require('sagiri');
 let mySauce;
 if (sagiriToken) mySauce = sagiri(sagiriToken);
