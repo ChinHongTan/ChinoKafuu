@@ -1,27 +1,32 @@
-const { Collection } = require('discord.js');
+import { Collection, TextChannel } from 'discord.js';
 const channelId = process.env.CHANNEL_ID || require('../config/config.json').channelId;
-const util = require('util');
-const { getGuildData, saveGuildData } = require('../functions/Util.js');
+import util from 'util';
+import { getGuildData, saveGuildData } from '../functions/Util.js';
+import { CustomClient } from '../../typings/index.js';
 
 module.exports = {
     name: 'ready',
     once: true,
-    async execute(client) {
+    async execute(client: CustomClient) {
         // when running on heroku, log to discord channel
         if (process.argv[2] === '-r' && channelId) {
-            console.log = async function(d) {
-                const logChannel = await client.channels.fetch(channelId);
+            const logChannel = await client.channels.fetch(channelId);
+            // check logChannel type
+            if (!(logChannel && logChannel instanceof TextChannel)) {
+                return console.warn('Channel provided is not a text channel or does not exist!');
+            }
+            console.log = async function(d: any) {
                 await logChannel.send(util.format(d) + '\n');
             };
 
-            console.error = async function(d) {
-                const logChannel = await client.channels.fetch(channelId);
+            console.error = async function(d: any) {
                 await logChannel.send(util.format(d) + '\n');
             };
         }
 
         console.log('Ready!');
-        client.user.setPresence({
+        const bot = client.user;
+        if (bot) bot.setPresence({
             activities: [{ name: 'c!help', type: 'LISTENING' }],
         });
 

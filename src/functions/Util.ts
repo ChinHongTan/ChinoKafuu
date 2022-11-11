@@ -1,108 +1,17 @@
 import {
-    SlashCommandBuilder,
-    SlashCommandIntegerOption,
-    SlashCommandStringOption,
-    SlashCommandSubcommandBuilder,
-    SlashCommandSubcommandGroupBuilder
-} from "@discordjs/builders";
-
-import {
-    Client,
-    Collection,
     ColorResolvable,
     CommandInteraction, GuildMember,
     InteractionReplyOptions,
-    Message, MessageActionRow,
+    Message,
     MessageEmbed,
-    MessageOptions,
-    MessageReaction, MessageSelectMenu, Snowflake, TextChannel
+    MessageReaction, Snowflake, TextChannel
 } from "discord.js";
 
-import Pixiv, {PixivIllust} from "pixiv.ts";
+import Pixiv, { PixivIllust } from "pixiv.ts";
 import * as fs from "fs";
-import { Collection as DB } from "mongodb";
-import { InteractionTypes } from "discord.js/typings/enums";
+import { CustomClient } from "../../typings";
 
 const refreshToken = process.env.PIXIV_REFRESH_TOKEN || require('../config/config.json').PixivRefreshToken;
-
-
-interface SlashCommand {
-    execute(interaction, language): Promise<any>;
-    autoComplete?(interaction): Promise<void>,
-}
-
-interface Description {
-    'en-US': string,
-    'zh-CN': string,
-    'zh-TW': string,
-}
-
-interface BaseCommand {
-    name: string,
-    description: Description,
-}
-
-interface SubcommandOptions extends BaseCommand {
-    type: 'STRING' | 'INTEGER' | 'BOOLEAN' | 'NUMBER' | 'USER' | 'CHANNEL' | 'ROLE' | 'MENTIONABLE',
-    required?: boolean,
-    choices?: [name: string, value: string][],
-    min?: number,
-    max?: number,
-    autocomplete?: boolean
-}
-
-interface Subcommand extends BaseCommand {
-    options?: SubcommandOptions[],
-}
-
-interface SubcommandGroup extends BaseCommand {
-    subcommands: Subcommand[],
-}
-
-interface Translation {
-    [message: string]: [translation: string],
-}
-
-interface Command extends BaseCommand {
-    coolDown: number,
-    slashCommand: SlashCommand,
-    subcommandGroups?: SubcommandGroup[],
-    subcommands?: Subcommand[],
-    options?: SubcommandOptions[],
-    execute(message: Message, args: string[], language: Translation),
-}
-
-interface Snipe {
-    author: string,
-    authorAvatar: string,
-    content: string,
-    timeStamp: Date,
-    attachment?: string,
-}
-
-interface CustomClient extends Client {
-    commands: Collection<string, Command>,
-    language: { [commandName: string]: Translation },
-    coolDowns: Collection<string, Collection<Snowflake, number>>
-    guildDatabase: DB,
-    guildCollection: Collection<Snowflake, { id: Snowflake,
-        data: {
-            language: Language,
-            channel?: Snowflake,
-            levelReward?: { [level: number]: Snowflake },
-            autoResponse?: { [message: string]: string[] },
-            snipes: Snipe[],
-            editSnipes: Snipe[],
-            users: {
-                id: Snowflake,
-                exp: number,
-                level: number,
-                expAddTimestamp?: number,
-            }[],
-    } }>
-    userDatabase:DB,
-}
-type Language = 'en-US' | 'zh-CN' | 'zh-TW';
 
 // reply with embeds
 
@@ -231,7 +140,7 @@ export async function extension(reaction: MessageReaction, attachment: string) {
 
 // get guild data from database or local json file, generate one if none found
 export async function getGuildData(client: CustomClient, guildId: Snowflake) {
-    let rawData;
+    let rawData: any;
     const collection = client.guildDatabase;
     const defaultData = {
         id: guildId,

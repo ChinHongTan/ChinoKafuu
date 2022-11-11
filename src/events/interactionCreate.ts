@@ -1,15 +1,30 @@
-const { reply } = require('../functions/Util.js');
-const Discord = require('discord.js');
+import { reply } from '../functions/Util.js';
+import { Collection, Interaction } from 'discord.js';
+import { Command, CustomClient } from '../../typings/index.js';
 const owner_id = process.env.OWNERID || require('../config/config.json').owner_id;
 
 module.exports = {
     name: 'interactionCreate',
-    async execute(interaction, client) {
+    async execute(interaction: Interaction, client: CustomClient) {
         // select menus does not contain command name, so customId is used
         // customId should be same as the name of the command
-        const command = client.commands.get(interaction.commandName) ?? client.commands.get(interaction.customId);
-        const guildOption = client.guildCollection.get(interaction?.guild.id);
-        const language = client.language[guildOption?.data.language ?? 'en-US'][command.name];
+        let command: Command, guildOption: CustomClient["guildCollection"] extends Collection<any, infer I> ? I : never, language: string;
+        if (interaction.isSelectMenu() || interaction.isButton()) {
+            const check = client.commands.get(interaction.customId); // check if command exists
+            if (check) command = check;
+        };
+        if (interaction.isAutocomplete() || interaction.isCommand()) {
+            const check = client.commands.get(interaction.commandName); // check if command exists
+            if (check) command = check;
+        }
+        if (interaction.guild) {
+            const check = client.guildCollection.get(interaction?.guild.id);
+            if (check) {
+                guildOption = check;
+                language = client.language[guildOption?.data.language ?? 'en-US'][command.name];
+            }
+        }
+        language = client.language['en-US'][command.name];
 
         if (interaction.isAutocomplete()) {
             if (interaction.responded) return;
@@ -46,7 +61,7 @@ module.exports = {
         const { coolDowns } = client;
 
         if (!coolDowns.has(command.name)) {
-            coolDowns.set(command.name, new Discord.Collection());
+            coolDowns.set(command.name, new Collection());
         }
 
         const now = Date.now();
