@@ -1,10 +1,8 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { Guild, Client, Collection, Snowflake, Interaction, AutocompleteInteraction, SelectMenuInteraction, ButtonInteraction, PermissionResolvable } from "discord.js";
+import { Guild, Client, Collection, Snowflake, Interaction, AutocompleteInteraction, SelectMenuInteraction, ButtonInteraction, PermissionResolvable, Message } from "discord.js";
 import { Collection as DB } from "mongodb";
 
-export interface Translation {
-    [key: string]: string;
-}
+export type Translation = Record<string, string>;
 
 export interface Command {
     name: string,
@@ -13,7 +11,7 @@ export interface Command {
     ownerOnly: Boolean,
     guildOnly: Boolean,
     permissions: PermissionResolvable,
-    execute(interaction: Interaction, args: string[], language: Translation): Promise<any>,
+    execute(interaction: Interaction, language: Translation): Promise<any>,
     autoComplete?: (interaction: AutocompleteInteraction) => Promise<void>,
     selectMenu?: (interaction: SelectMenuInteraction, language: Translation) => Promise<void>, // should change language to translate
     button?: (interaction: ButtonInteraction, language: Translation) => Promise<void>,
@@ -23,14 +21,14 @@ export interface Snipe {
     author: string,
     authorAvatar: string,
     content: string,
-    timeStamp: Date,
+    timestamp: Date,
     attachment?: string,
 }
 
 export interface CustomClient extends Client {
     commands: Collection<string, Command>,
-    language: { [commandName: string]: Translation },
-    coolDowns: Collection<string, Collection<Snowflake, number>>
+    language: Record<Language, { [commandName: string]: Translation }>,
+    coolDowns: Collection<string, Collection<Snowflake, number>>,
     guildDatabase: DB,
     guildCollection: Collection<Snowflake, { id: Snowflake,
         data: {
@@ -52,5 +50,9 @@ export interface CustomClient extends Client {
 export type Language = 'en-US' | 'zh-CN' | 'zh-TW';
 
 export interface CustomGuild extends Omit<Guild, 'client'> {
-    client: CustomClient
+    client: CustomClient;
+}
+
+export interface CustomMessage extends Omit<Message, 'client'> {
+    client: CustomClient;
 }
