@@ -1,10 +1,10 @@
-const Canvas = require('canvas');
-const { MessageAttachment } = require('discord.js');
+import Canvas = require('canvas');
+import { GuildMember, MessageAttachment, TextChannel } from 'discord.js';
 
 module.exports = {
     name: 'guildMEmberAdd',
-    async execute(member) {
-        const applyText = (canvas, text) => {
+    async execute(member: GuildMember) {
+        const applyText = (canvas: Canvas.Canvas, text: string) => {
             const context = canvas.getContext('2d');
             let fontSize = 70;
 
@@ -17,6 +17,7 @@ module.exports = {
 
         const channel = member.guild.channels.cache.find((ch) => ch.name === '閒聊-chat');
         if (!channel) return;
+        if (!(channel instanceof TextChannel)) return;
 
         const canvas = Canvas.createCanvas(700, 250);
         const context = canvas.getContext('2d');
@@ -49,6 +50,6 @@ module.exports = {
 
         const attachment = new MessageAttachment(canvas.toBuffer(), 'welcome-image.png');
 
-        channel.send(`Welcome to the server, ${member}!`, attachment);
+        channel.send({ content: `Welcome to the server, ${member}!`, attachments: [attachment] });
     },
 };

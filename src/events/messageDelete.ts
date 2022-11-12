@@ -1,14 +1,20 @@
-const { MessageEmbed } = require('discord.js');
-const { saveGuildData } = require('../functions/Util');
+import { BaseGuildTextChannel, MessageEmbed } from 'discord.js';
+import { CustomMessage, Snipe } from '../../typings';
+import { saveGuildData } from '../functions/Util';
 
 module.exports = {
     name: 'messageDelete',
-    async execute(message) {
+    async execute(message: CustomMessage) {
         // can't fetch anything
         if (message.partial || message.author.bot || !message.guild) return;
-        const guildData = await message.client.guildCollection.get(message.guild.id);
+        const guildData = message.client.guildCollection.get(message.guild.id);
 
-        const snipe = {};
+        const snipe: Snipe = {
+            author: '',
+            authorAvatar: '',
+            content: '',
+            timestamp: undefined
+        };
         const snipes = guildData.data.snipes;
         snipe.author = message.author.tag;
         snipe.authorAvatar = message.author.displayAvatarURL({
@@ -46,7 +52,7 @@ module.exports = {
         const logChannelId = guildData.data.channel;
         if (!logChannelId) return; // log channel not set
         const logChannel = await message.guild.channels.fetch(logChannelId);
-        if (!logChannel) return;
+        if (!logChannel || !(logChannel instanceof BaseGuildTextChannel)) return;
         return logChannel.send({ embeds: [logEmbed] });
     },
 };
