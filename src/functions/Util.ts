@@ -4,12 +4,12 @@ import {
     InteractionReplyOptions,
     Message,
     MessageEmbed,
-    MessageReaction, Snowflake, TextChannel
+    Snowflake, TextChannel
 } from "discord.js";
 
 import Pixiv, { PixivIllust } from "pixiv.ts";
 import * as fs from "fs";
-import { CustomClient } from "../../typings";
+import { CustomClient, CustomMessageReaction } from "../../typings";
 
 const refreshToken = process.env.PIXIV_REFRESH_TOKEN || require('../config/config.json').PixivRefreshToken;
 
@@ -130,7 +130,7 @@ export async function sendSuggestedIllust(channel: TextChannel) {
     return channel.send({ embeds: illustEmbed })
 }
 
-export async function extension(reaction: MessageReaction, attachment: string) {
+export async function extension(reaction: CustomMessageReaction, attachment: string) {
     const imageLink = attachment.split('.');
     const typeOfImage = imageLink[imageLink.length - 1];
     const image = /(jpg|jpeg|png|gif)/gi.test(typeOfImage);

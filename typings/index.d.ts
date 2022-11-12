@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { Guild, Client, Collection, Snowflake, Interaction, AutocompleteInteraction, SelectMenuInteraction, ButtonInteraction, PermissionResolvable, Message } from "discord.js";
+import { Guild, Client, Collection, Snowflake, Interaction, AutocompleteInteraction, SelectMenuInteraction, ButtonInteraction, PermissionResolvable, Message, MessageReaction } from "discord.js";
 import { Collection as DB } from "mongodb";
 
 export type Translation = Record<string, string>;
@@ -36,6 +36,7 @@ export interface CustomClient extends Client {
             channel?: Snowflake,
             levelReward?: { [level: number]: Snowflake },
             autoResponse?: { [message: string]: string[] },
+            starboard?: Snowflake,
             snipes: Snipe[],
             editSnipes: Snipe[],
             users: {
@@ -54,5 +55,9 @@ export interface CustomGuild extends Omit<Guild, 'client'> {
 }
 
 export interface CustomMessage extends Omit<Message, 'client'> {
+    client: CustomClient;
+}
+
+export interface CustomMessageReaction extends Omit<MessageReaction, 'client'> {
     client: CustomClient;
 }
