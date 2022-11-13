@@ -35,22 +35,22 @@ export async function edit(command: CommandInteraction, response: string | Inter
     return await command.editReply(response);
 }
 
-export async function error(command: CommandInteraction, response: InteractionReplyOptions) {
+export async function error(command: CommandInteraction, response: string) {
     const message = await reply(command, `❌ | ${response}`, 'RED');
     if (message instanceof Message) {
         setTimeout(() => message.delete(), 10000);
     }
 }
 
-export async function warn(command: CommandInteraction, response: InteractionReplyOptions) {
+export async function warn(command: CommandInteraction, response: string) {
     return await reply(command, `⚠ | ${response}`, 'YELLOW');
 }
 
-export async function success(command: CommandInteraction, response: InteractionReplyOptions) {
+export async function success(command: CommandInteraction, response: string) {
     return await reply(command, `✅ | ${response}`, 'GREEN');
 }
 
-export async function info(command: CommandInteraction, response: InteractionReplyOptions) {
+export async function info(command: CommandInteraction, response: string) {
     return await reply(command, `ℹ | ${response}`, 'BLUE')
 }
 

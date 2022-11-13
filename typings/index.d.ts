@@ -61,3 +61,5 @@ export interface CustomMessage extends Omit<Message, 'client'> {
 export interface CustomMessageReaction extends Omit<MessageReaction, 'client'> {
     client: CustomClient;
 }
+
+export type PixivBookmarks = '50' | '100' | '300' | '500' | '1000' | '3000' | '5000' | '10000';
