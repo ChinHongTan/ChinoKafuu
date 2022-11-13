@@ -1,20 +1,22 @@
-const { error, reply, generateIllustEmbed } = require('../../functions/Util.js');
-const Pixiv = require('pixiv.ts');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+import { error, reply, generateIllustEmbed } from '../../functions/Util.js';
+import Pixiv = require('pixiv.ts');
+import { SlashCommandBuilder } from '@discordjs/builders';
+import { PixivBookmarks, Translation } from '../../../typings/index.js';
+import { CommandInteraction } from 'discord.js';
 const refreshToken = process.env.PIXIV_REFRESH_TOKEN || require('../../../../config/config.json').PixivRefreshToken;
 
 // search pixiv for illusts
-async function pixivFunc(command, args, language) {
+async function pixivFunc(command: CommandInteraction, args: string[], language: Translation) {
     const pixiv = await Pixiv.default.refreshLogin(refreshToken);
     let illusts = [];
-    let illust;
+    let illust: Pixiv.PixivIllust;
     const subcommand = args[1];
     switch (subcommand) {
     case 'illust':
-        try {
+        try {    // get first result from pixiv
             illust = await pixiv.search.illusts({
-                illust_id: command?.options?.getInteger('illust_id') ?? args[2],
-            });
+                illust_id: command?.options?.getInteger('illust_id'),
+            })[0];
         } catch (err) {
             return error(command, language.noIllust);
         }
@@ -22,7 +24,7 @@ async function pixivFunc(command, args, language) {
     case 'author':
         try {
             illusts = await pixiv.user.illusts({
-                user_id: command?.options?.getInteger('author_id') ?? args[2],
+                user_id: command?.options?.getInteger('author_id'),
             });
         } catch (err) {
             return error(command, language.noUser);
@@ -30,10 +32,11 @@ async function pixivFunc(command, args, language) {
         illust = illusts[Math.floor(Math.random() * illusts.length)];
         break;
     case 'query':
+        const bookmarks: PixivBookmarks = command.options.getString('bookmarks');
         illusts = await pixiv.search.illusts({
-            word: command?.options?.getString('query') ?? args[2],
+            word: command?.options?.getString('query'),
             r18: false,
-            bookmarks: (command.options.getString('bookmarks') ?? args[3]) || '1000',
+            bookmarks: bookmarks || '1000',
         });
         if (illusts.length === 0) return error(command, language.noResult);
         if (pixiv.search.nextURL && (command?.options?.getInteger('pages') ?? parseInt(args[4], 10)) !== 1) {
@@ -159,7 +162,7 @@ module.exports = {
                 ),
             ),
         ),
-    async execute(interaction, language) {
+    async execute(interaction: CommandInteraction, language: Translation) {
         if (!refreshToken) return interaction.reply(language.noToken);
         await interaction.deferReply();
         await pixivFunc(interaction, [interaction.options.getSubcommandGroup(), interaction.options.getSubcommand()], language);
