@@ -2,7 +2,7 @@ import { error, reply, generateIllustEmbed } from '../../functions/Util.js';
 import Pixiv = require('pixiv.ts');
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { PixivBookmarks, Translation } from '../../../typings/index.js';
-import { CommandInteraction } from 'discord.js';
+import { AutocompleteInteraction, CommandInteraction } from 'discord.js';
 const refreshToken = process.env.PIXIV_REFRESH_TOKEN || require('../../../../config/config.json').PixivRefreshToken;
 
 // search pixiv for illusts
@@ -169,7 +169,7 @@ module.exports = {
         await interaction.deferReply();
         await pixivFunc(interaction, [interaction.options.getSubcommandGroup(), interaction.options.getSubcommand()], language);
     },
-    async autoComplete(interaction) {
+    async autoComplete(interaction: AutocompleteInteraction) {
         const pixiv = await Pixiv.default.refreshLogin(refreshToken);
         const keyword = interaction.options.getString('query');
         const candidates = await pixiv.web.candidates({ keyword: keyword, lang: 'en' });
