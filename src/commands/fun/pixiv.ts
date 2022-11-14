@@ -32,7 +32,9 @@ async function pixivFunc(command: CommandInteraction, args: string[], language: 
         illust = illusts[Math.floor(Math.random() * illusts.length)];
         break;
     case 'query':
-        const bookmarks: PixivBookmarks = command.options.getString('bookmarks');
+        // I have no other idea how to convince TS that getString will return type exactly same as PixivBookmarks
+        const checkBookmarks: any = command.options.getString('bookmarks');
+        const bookmarks: PixivBookmarks = checkBookmarks;
         illusts = await pixiv.search.illusts({
             word: command?.options?.getString('query'),
             r18: false,
