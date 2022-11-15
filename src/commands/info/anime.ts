@@ -1,12 +1,16 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { error } = require('../../functions/Util.js');
-const fetch = require('node-fetch');
-const { MessageEmbed } = require('discord.js');
-const Paginator = require('../../functions/paginator');
+// This file needs some clean up
 
-async function anime(command, args, language) {
-    function isValidHttpUrl(string) {
-        let url;
+import { SlashCommandBuilder } from '@discordjs/builders';
+import { error } from '../../functions/Util.js';
+import * as fetch from 'node-fetch';
+import { CacheType, CommandInteraction, GuildMember, Message, MessageEmbed } from 'discord.js';
+import Paginator = require('../../functions/paginator');
+import { TraceMoeResponse, TraceMoeResult, Translation } from '../../../typings/index.js';
+
+async function anime(command: CommandInteraction<CacheType>, args: string[], language: Translation) {
+    // check if a given string is a valid URL
+    function isValidHttpUrl(string: string | URL) {
+        let url: URL;
 
         try {
             url = new URL(string);
@@ -17,10 +21,10 @@ async function anime(command, args, language) {
         return url.protocol === 'http:' || url.protocol === 'https:';
     }
 
-    function createEmbed(response) {
+    function createEmbed(response: TraceMoeResult) {
         return new MessageEmbed()
             .setTitle(response.anilist.title.native)
-            .setDescription(language.similarity.replace('${similarity}', response.similarity * 100))
+            .setDescription(language.similarity.replace('${similarity}', (response.similarity * 100).toString()))
             .setColor('#008000')
             .setImage(response.image)
             .addField(language.sourceURL, response.video)
@@ -30,35 +34,7 @@ async function anime(command, args, language) {
             .addField(language.episode, response.episode.toString())
             .addField(language.NSFW, response.anilist.isAdult.toString());
     }
-
-    if (args[0]) {
-        if (!isValidHttpUrl(args[0])) {
-            return error(command, language.invalidURL);
-        }
-        const e = await fetch(`https://api.trace.moe/search?cutBorders&anilistInfo&url=${encodeURIComponent(args[0])}`);
-        const response = await e.json();
-        const embedList = [];
-        for (const responseObject of response.result) {
-            embedList.push(createEmbed(responseObject));
-        }
-        const paginator = new Paginator(embedList, command);
-        const message = paginator.render();
-        const collector = message.createMessageComponentCollector({
-            filter: ({ customId, user }) =>
-                ['button1', 'button2', 'button3', 'button4'].includes(customId) && user.id === command.member.id,
-            idle: 60000,
-        });
-        collector.on('collect', async (button) => {
-            await paginator.paginate(button, 0);
-        });
-        collector.on('end', async (button) => {
-            if (!button.first()) {
-                message.channel.send(language.timeout);
-                await message.delete();
-            }
-        });
-    }
-    let searchImage;
+    let searchImage: string; // url of target search image
     const messages = await command.channel.messages.fetch({ limit: 25 });
     for (const msg of messages.values()) {
         if (msg.attachments.size > 0) {
@@ -67,22 +43,30 @@ async function anime(command, args, language) {
         }
     }
     if (!searchImage) {
+        if (args[0]) {
+            if (!isValidHttpUrl(args[0])) return error(command, language.invalidURL);
+            searchImage = args[0];
+        }
         return error(command, language.noImage);
     }
     const e = await fetch(`https://api.trace.moe/search?cutBorders&anilistInfo&url=${encodeURIComponent(searchImage)}`);
-    const response = await e.json();
+    const response: TraceMoeResponse = await e.json();
     const embedList = [];
     for (const responseObject of response.result) {
         embedList.push(createEmbed(responseObject));
     }
     const paginator = new Paginator(embedList, command);
-    const message = paginator.render();
+    const message = await paginator.render();
+    const member = command.member;
+    if (!(message instanceof Message)) return;
+    if (!(member instanceof GuildMember)) return;
     const collector = message.createMessageComponentCollector({
         filter: ({ customId, user }) =>
-            ['button1', 'button2', 'button3', 'button4'].includes(customId) && user.id === command.member.id,
+            ['button1', 'button2', 'button3', 'button4'].includes(customId) && user.id === member.id,
         idle: 60000,
     });
     collector.on('collect', async (button) => {
+        if (!button.isButton()) return;
         await paginator.paginate(button, 0);
     });
     collector.on('end', async (button) => {
@@ -117,7 +101,7 @@ module.exports = {
                 'zh-TW': '輸入圖片網址，如果沒有網址將會搜索最後在頻道里上傳圖片',
             }),
         ),
-    async execute(interaction, language) {
+    async execute(interaction: CommandInteraction<CacheType>, language: any) {
         await anime(interaction, [interaction.options.getString('url')], language);
     },
 };
