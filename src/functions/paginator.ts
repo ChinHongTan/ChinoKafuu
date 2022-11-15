@@ -1,11 +1,12 @@
-import { CommandInteraction, MessageActionRow, MessageEmbed, MessageButton, ButtonInteraction } from 'discord.js'
+import { MessageActionRow, MessageEmbed, MessageButton, ButtonInteraction } from 'discord.js'
+import { CustomCommandInteraction } from '../../typings';
 
 class Paginator {
     embedArray: MessageEmbed[];
-    interaction: CommandInteraction;
+    interaction: CustomCommandInteraction;
     ephemeral: boolean = false;
     fetchReply: boolean = true;
-    constructor(embedArray: MessageEmbed[], interaction: CommandInteraction, ephemeral?: boolean, fetchReply?: boolean) {
+    constructor(embedArray: MessageEmbed[], interaction: CustomCommandInteraction, ephemeral?: boolean, fetchReply?: boolean) {
         this.embedArray = embedArray;
         this.interaction = interaction;
         if (this.ephemeral !== undefined) this.ephemeral = ephemeral;
