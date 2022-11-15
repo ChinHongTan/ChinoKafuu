@@ -12,7 +12,7 @@ class Paginator {
         if (this.fetchReply !== undefined) this.fetchReply = fetchReply;
     }
 
-    render(page: number = 0) {
+    async render(page: number = 0) {
         const embed = this.embedArray[page];
         const interaction = this.interaction;
         const row = new MessageActionRow()
@@ -40,7 +40,9 @@ class Paginator {
                     .setLabel('⏭')
                     .setStyle('PRIMARY')
             );
-        return interaction.reply({ embeds: [embed], ephemeral: this.ephemeral, fetchReply: this.fetchReply, components: [row] });
+        await interaction.reply({ embeds: [embed], ephemeral: this.ephemeral, fetchReply: this.fetchReply, components: [row] });
+        if (this.fetchReply) return interaction.fetchReply();
+        return;
     }
 
     paginate(interaction: ButtonInteraction, page: number = 0) {
@@ -62,4 +64,4 @@ class Paginator {
     }
 }
 
-module.exports = Paginator;
+export = Paginator;
