@@ -1,6 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { Guild, Client, Collection, Snowflake, Interaction, AutocompleteInteraction, SelectMenuInteraction, ButtonInteraction, PermissionResolvable, Message, MessageReaction } from "discord.js";
 import { Collection as DB } from "mongodb";
+import { Tracing } from "trace_events";
 
 export type Translation = Record<string, string>;
 
@@ -63,3 +64,26 @@ export interface CustomMessageReaction extends Omit<MessageReaction, 'client'> {
 }
 
 export type PixivBookmarks = '50' | '100' | '300' | '500' | '1000' | '3000' | '5000' | '10000';
+
+interface TraceMoeResult {
+    anilist: {
+        id: number,
+        idMal: number,
+        title: { native: string, romaji: string, english?: string },
+        synonyms: string[],
+        isAdult: boolean,
+    },
+    filename: string,
+    episode?: number | number[] | string,
+    from: number,
+    to: number,
+    similarity: number,
+    video: string,
+    image: string,
+}
+
+export interface TraceMoeResponse {
+    frameCound: number,
+    error: string,
+    result: TraceMoeResult[],
+}
