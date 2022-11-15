@@ -3,11 +3,11 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { error } from '../../functions/Util.js';
 import * as fetch from 'node-fetch';
-import { CacheType, CommandInteraction, GuildMember, Message, MessageEmbed } from 'discord.js';
+import { GuildMember, Message, MessageEmbed } from 'discord.js';
 import Paginator = require('../../functions/paginator');
-import { TraceMoeResponse, TraceMoeResult, Translation } from '../../../typings/index.js';
+import { CustomCommandInteraction, TraceMoeResponse, TraceMoeResult, Translation } from '../../../typings/index.js';
 
-async function anime(command: CommandInteraction<CacheType>, args: string[], language: Translation) {
+async function anime(command: CustomCommandInteraction, args: string[], language: Translation) {
     // check if a given string is a valid URL
     function isValidHttpUrl(string: string | URL) {
         let url: URL;
@@ -101,7 +101,7 @@ module.exports = {
                 'zh-TW': '輸入圖片網址，如果沒有網址將會搜索最後在頻道里上傳圖片',
             }),
         ),
-    async execute(interaction: CommandInteraction<CacheType>, language: any) {
+    async execute(interaction: CustomCommandInteraction, language: any) {
         await anime(interaction, [interaction.options.getString('url')], language);
     },
 };

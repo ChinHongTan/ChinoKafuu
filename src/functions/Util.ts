@@ -9,7 +9,7 @@ import {
 
 import Pixiv, { PixivIllust } from "pixiv.ts";
 import * as fs from "fs";
-import { CustomClient, CustomMessageReaction } from "../../typings";
+import { CustomClient, CustomCommandInteraction, CustomMessageReaction } from "../../typings";
 
 const refreshToken = process.env.PIXIV_REFRESH_TOKEN || require('../config/config.json').PixivRefreshToken;
 
@@ -21,7 +21,7 @@ function isString(x: any): x is string {
 }
 
 // reply to a user command
-export async function reply(command: CommandInteraction, response: string | InteractionReplyOptions, color?: ColorResolvable) {
+export async function reply(command: CustomCommandInteraction, response: string | InteractionReplyOptions, color?: ColorResolvable) {
     if (isString(response)) return command.reply({ embeds: [{ description: response, color: color }] });
     if (command.deferred) return await command.editReply(response);
     command.reply(response);
@@ -35,22 +35,22 @@ export async function edit(command: CommandInteraction, response: string | Inter
     return await command.editReply(response);
 }
 
-export async function error(command: CommandInteraction, response: string) {
+export async function error(command: CustomCommandInteraction, response: string) {
     const message = await reply(command, `❌ | ${response}`, 'RED');
     if (message instanceof Message) {
         setTimeout(() => message.delete(), 10000);
     }
 }
 
-export async function warn(command: CommandInteraction, response: string) {
+export async function warn(command: CustomCommandInteraction, response: string) {
     return await reply(command, `⚠ | ${response}`, 'YELLOW');
 }
 
-export async function success(command: CommandInteraction, response: string) {
+export async function success(command: CustomCommandInteraction, response: string) {
     return await reply(command, `✅ | ${response}`, 'GREEN');
 }
 
-export async function info(command: CommandInteraction, response: string) {
+export async function info(command: CustomCommandInteraction, response: string) {
     return await reply(command, `ℹ | ${response}`, 'BLUE')
 }
 

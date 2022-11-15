@@ -42,6 +42,7 @@ export interface CustomClient extends Client {
             editSnipes: Snipe[],
             users: {
                 id: Snowflake,
+                name: string,
                 exp: number,
                 level: number,
                 expAddTimestamp?: number,
@@ -60,6 +61,10 @@ export interface CustomMessage extends Omit<Message, 'client'> {
 }
 
 export interface CustomMessageReaction extends Omit<MessageReaction, 'client'> {
+    client: CustomClient;
+}
+
+export interface CustomCommandInteraction extends Omit<CommandInteraction, 'client'> {
     client: CustomClient;
 }
 

@@ -1,12 +1,12 @@
 import { error, reply, generateIllustEmbed } from '../../functions/Util.js';
 import Pixiv = require('pixiv.ts');
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { PixivBookmarks, Translation } from '../../../typings/index.js';
-import { AutocompleteInteraction, CommandInteraction } from 'discord.js';
+import { CustomCommandInteraction, PixivBookmarks, Translation } from '../../../typings/index.js';
+import { AutocompleteInteraction } from 'discord.js';
 const refreshToken = process.env.PIXIV_REFRESH_TOKEN || require('../../../../config/config.json').PixivRefreshToken;
 
 // search pixiv for illusts
-async function pixivFunc(command: CommandInteraction, args: string[], language: Translation) {
+async function pixivFunc(command: CustomCommandInteraction, args: string[], language: Translation) {
     const pixiv = await Pixiv.default.refreshLogin(refreshToken);
     let illusts = [];
     let illust: Pixiv.PixivIllust;
@@ -164,7 +164,7 @@ module.exports = {
                 ),
             ),
         ),
-    async execute(interaction: CommandInteraction, language: Translation) {
+    async execute(interaction: CustomCommandInteraction, language: Translation) {
         if (!refreshToken) return interaction.reply(language.noToken);
         await interaction.deferReply();
         await pixivFunc(interaction, [interaction.options.getSubcommandGroup(), interaction.options.getSubcommand()], language);
