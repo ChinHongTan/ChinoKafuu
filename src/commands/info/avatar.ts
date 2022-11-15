@@ -1,6 +1,7 @@
-const { reply } = require('../../functions/Util.js');
-const { MessageEmbed } = require('discord.js');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+import { reply } from '../../functions/Util.js';
+import { GuildMember, MessageEmbed } from 'discord.js';
+import { SlashCommandBuilder } from '@discordjs/builders';
+import { CustomCommandInteraction, Translation } from '../../../typings/index.js';
 
 module.exports = {
     name: 'avatar',
@@ -25,8 +26,9 @@ module.exports = {
             }),
         ),
 
-    async execute(interaction, language) {
+    async execute(interaction: CustomCommandInteraction, language: Translation) {
         const user = interaction.options.getMember('member') ?? interaction.member;
+        if (!(user instanceof GuildMember)) return;
         const embed = new MessageEmbed()
             .setTitle(language.memberAvatar.replace('${user.displayName}', user.displayName))
             .setColor(user.displayHexColor)

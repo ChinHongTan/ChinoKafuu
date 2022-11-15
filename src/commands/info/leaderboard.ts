@@ -1,8 +1,9 @@
-const { reply } = require('../../functions/Util');
-const { MessageEmbed, Util } = require('discord.js');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+import { reply } from '../../functions/Util';
+import { Guild, MessageEmbed, Util } from 'discord.js';
+import { SlashCommandBuilder } from '@discordjs/builders';
+import { CustomCommandInteraction } from '../../../typings';
 
-function getLeaderboard(command, guild) {
+function getLeaderboard(command: CustomCommandInteraction, guild: Guild) {
     const userList = command.client.guildCollection.get(guild.id).data.users;
     let leaderboard = '';
     userList.forEach((user, index) => {
@@ -27,7 +28,7 @@ module.exports = {
             'zh-TW': '顯示伺服器排行榜',
         }),
 
-    async execute(interaction) {
+    async execute(interaction: CustomCommandInteraction) {
         return reply(interaction, { embeds: [getLeaderboard(interaction, interaction.guild)] });
     },
 };
