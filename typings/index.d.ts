@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { Guild, Client, Collection, Snowflake, Interaction, AutocompleteInteraction, SelectMenuInteraction, ButtonInteraction, PermissionResolvable, Message, MessageReaction } from "discord.js";
+import { Guild, Client, Collection, Snowflake, Interaction, AutocompleteInteraction, SelectMenuInteraction, ButtonInteraction, PermissionResolvable, Message, MessageReaction, CommandInteraction } from "discord.js";
 import { Collection as DB } from "mongodb";
 import { Tracing } from "trace_events";
 
