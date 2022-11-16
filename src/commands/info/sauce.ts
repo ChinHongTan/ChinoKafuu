@@ -1,11 +1,11 @@
-const { error, info, edit } = require('../../functions/Util.js');
-const { MessageEmbed } = require('discord.js');
-const { searchByUrl } = require('../../functions/ascii2d.js');
+import { error, info, edit } from '../../functions/Util.js';
+import { MessageEmbed } from 'discord.js';
+import { searchByUrl } from '../../functions/ascii2d.js';
 const sagiriToken = process.env.SAGIRI || require('../../../../config/config.json').sagiri_token;
-const sagiri = require('sagiri');
+import sagiri from 'sagiri';
 let mySauce;
 if (sagiriToken) mySauce = sagiri(sagiriToken);
-const { SlashCommandBuilder } = require('@discordjs/builders');
+import { SlashCommandBuilder } from '@discordjs/builders';
 
 async function sauce(command, args, language) {
     /**

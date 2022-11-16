@@ -1,8 +1,9 @@
-const { reply, getUserData } = require('../../functions/Util');
-const { MessageEmbed } = require('discord.js');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+import { reply, getUserData } from '../../functions/Util';
+import { GuildMember, MessageEmbed } from 'discord.js';
+import { SlashCommandBuilder } from '@discordjs/builders';
+import { CustomCommandInteraction } from '../../../typings';
 
-async function level(command, member) {
+async function level(command: CustomCommandInteraction, member: GuildMember) {
     const userList = command.client.guildCollection.get(member.guild.id).data.users;
     let userData = userList.find((user) => user.id === member.id);
     if (!userData) userData = await getUserData(command.client, member);
@@ -40,10 +41,11 @@ module.exports = {
                 'zh-TW': '選擇群員，如果没有指明群员，我将会发送你的等級',
             }),
         ),
-    async execute(interaction) {
-        const user = interaction.options.getMember('member');
+    async execute(interaction: CustomCommandInteraction) {
+        const user = interaction.options.getMember('member') || interaction.member;
+        if (!(user instanceof GuildMember)) return;
         if (!user) {
-            return reply(interaction, { embeds: [await level(interaction, interaction.member)] });
+            return reply(interaction, { embeds: [await level(interaction, user)] });
         }
         return reply(interaction, { embeds: [await level(interaction, user)] });
     },
