@@ -39,7 +39,7 @@
     "fuzzysort": "^1.9.0",
     "genius-lyrics": "^4.4.0",
     "googlethis": "^1.6.0",
-    "html-to-text": "^8.2.1",
+    "html-to-text": "^9.0.0",
     "jsdom": "^19.0.0",
     "mongodb": "^4.11.0",
     "node-fetch": "^2.6.7",
