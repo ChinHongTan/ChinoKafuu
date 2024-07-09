@@ -18,14 +18,14 @@ And yes, Chino is the best girl in the world!
 
 ## Introduction
 
-This bot runs on [`Node.js v16`](https://nodejs.org/) and is built with [`discord.js v13`](https://discord.js.org/#/docs/main/v12/general/welcome).
+This bot runs on [`Node.js v22`](https://nodejs.org/) and is built with [`discord.js v14`](https://discord.js.org/).
 
 ## Invite link
 
-[Click me to invite the bot!](https://discord.com/api/oauth2/authorize?client_id=958201832528838706&permissions=8&scope=bot%20applications.commands)
+Doesn't work for now as Im updating the bot
 
 ## Set up
-This project uses node.js v16 to run, so make sure you set up node.js first.
+This project uses node.js v22 to run, so make sure you set up node.js first.
 
 Also, make sure you give the bot `Administrator` permission and has the `applications.commands` application scope enabled.
 
