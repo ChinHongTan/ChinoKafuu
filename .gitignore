@@ -10,3 +10,5 @@ functions/Util.js
 data/illusts.json
 functions/dynamicEmbed.js
 functions/paginator.js
+.DS_Store
+Brewfile
