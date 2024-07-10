@@ -1,30 +1,24 @@
-const ytdl = require('ytdl-core');
-const { PassThrough } = require('stream');
-const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
-const Ffmpeg = require('fluent-ffmpeg');
+import ytdl from 'ytdl-core';
+import { PassThrough } from 'stream';
+import ffmpegPath from '@ffmpeg-installer/ffmpeg';
+import Ffmpeg from 'fluent-ffmpeg';
 
-const { reply, edit, error } = require('./Util.js');
+import { reply, edit, error } from './Util.js';
 
-Ffmpeg.setFfmpegPath(ffmpegPath);
-const { Util, MessageEmbed } = require('discord.js');
-const scdl = require('soundcloud-downloader').default;
-const queueData = require('../data/queueData');
-const {
-    AudioPlayerStatus,
-    StreamType,
-    createAudioPlayer,
-    createAudioResource,
-    joinVoiceChannel,
-} = require('@discordjs/voice');
+Ffmpeg.setFfmpegPath(ffmpegPath.path);
+import { Utils, Embed, Guild, Message } from 'discord.js';
+import scdl from 'soundcloud-downloader';
+import * as queueData from '../data/queueData';
+import { AudioPlayerStatus, StreamType, createAudioPlayer, createAudioResource, joinVoiceChannel } from '@discordjs/voice';
 
 const { queue } = queueData;
 
-async function play(guild, song, message) {
+async function play(guild: Guild, song, message: Message) {
     const serverQueue = queue.get(message.guild.id);
     const stream = new PassThrough({
         highWaterMark: 50,
     });
-    let proc;
+    let proc: Ffmpeg.FfmpegCommand;
     if (!song) {
         serverQueue.player.stop(true);
         serverQueue.connection.destroy();
@@ -33,13 +27,13 @@ async function play(guild, song, message) {
     }
     switch (song.source) {
     case 'yt':
-        proc = new Ffmpeg(ytdl(song.url, { quality: 'highestaudio', filter: 'audioonly', highWaterMark: 1 << 25 }));
+        proc = Ffmpeg(ytdl(song.url, { quality: 'highestaudio', filter: 'audioonly', highWaterMark: 1 << 25 }));
         break;
     case 'sc':
-        proc = new Ffmpeg(await scdl.download(song.url));
+        proc = Ffmpeg(await scdl.download(song.url));
         break;
     default:
-        proc = new Ffmpeg(ytdl(song.url, { quality: 'highestaudio', filter: 'audioonly', highWaterMark: 1 << 25 }));
+        proc = Ffmpeg(ytdl(song.url, { quality: 'highestaudio', filter: 'audioonly', highWaterMark: 1 << 25 }));
         break;
     }
 

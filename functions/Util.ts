@@ -1,10 +1,3 @@
-import {
-    SlashCommandBuilder,
-    SlashCommandIntegerOption,
-    SlashCommandStringOption,
-    SlashCommandSubcommandBuilder,
-    SlashCommandSubcommandGroupBuilder
-} from "@discordjs/builders";
 
 import {
     Client,
@@ -12,16 +5,14 @@ import {
     ColorResolvable,
     CommandInteraction, GuildMember,
     InteractionReplyOptions,
-    Message, MessageActionRow,
+    Message, 
     MessageEmbed,
-    MessageOptions,
-    MessageReaction, MessageSelectMenu, Snowflake, TextChannel
+    MessageReaction, Snowflake, TextChannel
 } from "discord.js";
 
 import Pixiv, {PixivIllust} from "pixiv.ts";
 import * as fs from "fs";
 import { Collection as DB } from "mongodb";
-import { InteractionTypes } from "discord.js/typings/enums";
 
 const refreshToken = process.env.PIXIV_REFRESH_TOKEN || require('../config/config.json').PixivRefreshToken;
 
@@ -127,22 +118,22 @@ export async function edit(command: CommandInteraction, response?: string | Inte
 }
 
 export async function error(command: CommandInteraction, response: InteractionReplyOptions) {
-    const message = await reply(command, `❌ | ${response}`, 'RED');
+    const message = await reply(command, `❌ | ${response}`, 'Red');
     if (message instanceof Message) {
         setTimeout(() => message.delete(), 10000);
     }
 }
 
 export async function warn(command: CommandInteraction, response: InteractionReplyOptions) {
-    return await reply(command, `⚠ | ${response}`, 'YELLOW');
+    return await reply(command, `⚠ | ${response}`, 'Yellow');
 }
 
 export async function success(command: CommandInteraction, response: InteractionReplyOptions) {
-    return await reply(command, `✅ | ${response}`, 'GREEN');
+    return await reply(command, `✅ | ${response}`, 'Green');
 }
 
 export async function info(command: CommandInteraction, response: InteractionReplyOptions) {
-    return await reply(command, `ℹ | ${response}`, 'BLUE')
+    return await reply(command, `ℹ | ${response}`, 'Blue')
 }
 
 export async function updateIllust(query: string) {
